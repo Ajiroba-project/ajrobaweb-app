@@ -3,7 +3,7 @@
  <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
 </p> -->
 
-<h1 align="center">ajirobawebapp</h1>
+<h1 align="center">Ajiroba Web App</h1>
 
 <div align="center">
 
@@ -17,7 +17,7 @@
 ---
 
 <p align="center"> E-commerce website.
-    <br> 
+    <br>
 </p>
 
 ## 📝 Table of Contents
@@ -42,7 +42,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- must have node installed 
+- must have node installed
 
 
 First, run the development server:
