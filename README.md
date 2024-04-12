@@ -1,6 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<!-- <p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+</p> -->
 
-## Getting Started
+<h1 align="center">ajirobawebapp</h1>
+
+<div align="center">
+
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/Ajiroba-project/ajrobaweb/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/Ajiroba-project/ajrobaweb/pulls)
+<!-- [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE) -->
+
+</div>
+
+---
+
+<p align="center"> E-commerce website.
+    <br> 
+</p>
+
+## 📝 Table of Contents
+
+- [📝 Table of Contents](#-table-of-contents)
+- [🧐 About ](#-about-)
+- [🏁 Getting Started ](#-getting-started-)
+  - [Prerequisites](#prerequisites)
+  - [🎈 Usage ](#-usage-)
+  - [🚀 Deployment ](#-deployment-)
+  - [⛏️ Built Using ](#️-built-using-)
+  - [✍️ Authors ](#️-authors-)
+  - [🎉 Acknowledgements ](#-acknowledgements-)
+
+## 🧐 About <a name = "about"></a>
+
+Ecommerce website made for Nigerians and the Diaspora.
+
+## 🏁 Getting Started <a name = "getting_started"></a>
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+- must have node installed 
+
 
 First, run the development server:
 
@@ -13,24 +56,31 @@ pnpm dev
 # or
 bun dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+End with an example of getting some data out of the system or using it for a little demo.
 
-## Learn More
+### 🎈 Usage <a name="usage"></a>
 
-To learn more about Next.js, take a look at the following resources:
+Add notes about how to use the system.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🚀 Deployment <a name = "deployment"></a>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Add additional notes about how to deploy this on a live system.
 
-## Deploy on Vercel
+### ⛏️ Built Using <a name = "built_using"></a>
+- [NextTsx](https://vuejs.org/) - Web Framework
+- [NodeJs](https://nodejs.org/en/) - Server Environment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ✍️ Authors <a name = "authors"></a>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [@Akin Femi](https://github.com/) - Lead Frontend Developer
+- -[@Peter Samuel](https://github.com/petsamuel) - jnr Frontend Developer
+
+
+See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+
+### 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
+-[@Peter Samuel](https://github.com/) - jnr Frontend Developer
