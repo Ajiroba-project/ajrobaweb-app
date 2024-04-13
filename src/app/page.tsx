@@ -1,10 +1,12 @@
 function page() {
   return (
-    <section className='py-24'>
+    <>
+    <section className=''>
       <div className='container'>
-        <h1 className='text-3xl font-bold'>Ajiroba Web App</h1>
+        <h1 className='text-3xl font-bold '>Ajiroba Web App</h1>
       </div>
     </section>
+    </>
   )
 }
 
