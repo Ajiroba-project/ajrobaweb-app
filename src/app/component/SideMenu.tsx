@@ -7,7 +7,6 @@ return (
     <section>
         <ul>
            {
-            
             categoriesMenu.map((val, index)=>(
                 <li key={index}>{val.name}</li>
             ))

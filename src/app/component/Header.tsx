@@ -40,10 +40,10 @@ export const Header = () => {
           <div className='Brand-logo'>
             <Image src={Brand} alt='brand-logo' />
           </div>
-          <nav >
-            <ul className='flex gap-5 items-center'>
+          <nav className="relative">
+            <ul className='lg:flex gap-5 items-center '>
               {headerMenu.map((val, index) => (
-                <li key={index} className={`${active ===index ? "text-[#F25E26]":"text-[#A09F9F]"} cursor-pointer px-4 hover:text-[#F25E26]`} onClick={()=>{setActive(index)}}>
+                <li key={index} className={` ${active ===index ? "text-[#F25E26]":"text-[#A09F9F]"} cursor-pointer px-4 hover:text-[#F25E26]`} onClick={()=>{setActive(index)}}>
                   <Link href={val.path} className="flex gap-2 items-center">
                   {val.name} 
                   {val.submenu ? <>
@@ -62,8 +62,8 @@ export const Header = () => {
             </ul>
           </nav>
           <div className='icon flex gap-4 item-center'>
-            <div><BiBell className="text-xl text-[#A09F9F]"/></div>
-            <div><IoCartOutline className="text-xl text-[#A09F9F]"/></div>
+            <div><BiBell className="text-xl text-[#A09F9F] cursor-pointer"/></div>
+            <div><IoCartOutline className="text-xl text-[#A09F9F] cursor-pointer"/></div>
           </div>
         </div>
       </header>

@@ -114,3 +114,52 @@ export const socialIcon =[
   icon:<FaLinkedin/>,
   link:"#"},
 ]
+
+export const quickLinks=[{
+  name:"Home",
+  links:"",
+},
+{
+  name:"Auction Deals",
+  links:"",
+},
+{
+  name:"Category",
+  links:"",
+},
+{
+  name:"Ralfle Draw Process",
+  links:"",
+},
+]
+export const ourCompany=[{
+  name:"Contact us",
+  links:"",
+},
+{
+  name:"About Us",
+  links:"",
+},
+{
+  name:"FAQ",
+  links:"",
+},
+
+]
+export const getInTouch=[{
+  name:"1, Praisehill estate, Arepo, ogun State",
+  links:"",
+  icon:""
+},
+{
+  name:"(+234) 9169 881 005",
+  links:"",
+  icon:""
+},
+{
+  name:"Support@goprus.com",
+  links:"",
+  icon:""
+},
+
+]
