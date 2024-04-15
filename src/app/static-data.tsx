@@ -163,3 +163,10 @@ export const getInTouch=[{
 },
 
 ]
+
+export const carouselImg =[
+  {
+    name:"",
+    image:"",
+  }
+]

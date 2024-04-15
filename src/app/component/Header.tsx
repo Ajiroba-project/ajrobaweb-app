@@ -41,7 +41,7 @@ export const Header = () => {
             <Image src={Brand} alt='brand-logo' />
           </div>
           <nav className="relative">
-            <ul className='lg:flex gap-5 items-center '>
+            <ul className='lg:flex gap-4 items-center '>
               {headerMenu.map((val, index) => (
                 <li key={index} className={` ${active ===index ? "text-[#F25E26]":"text-[#A09F9F]"} cursor-pointer px-4 hover:text-[#F25E26]`} onClick={()=>{setActive(index)}}>
                   <Link href={val.path} className="flex gap-2 items-center">
