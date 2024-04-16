@@ -1,3 +1,6 @@
+import Image from "next/image"
+
+
 type cardDetails ={
     cardInfo: any[]
 }
@@ -14,18 +17,22 @@ export const Card =({cardInfo}:cardDetails)=>{
                 <p>on Auction </p>
                 <p className="p-2 bg-gray-50">Bid </p>
             </div>
-           <div>Image</div>
+
+           <div className="flex items-center justify-center">
+             <Image src={value.image} alt="product" className="w-fit"/>
+           </div>
+
            <div className="shadow-lg py-4">
             <div className="p-4">
                 <p>{value.name}</p>
-            <div>
-                <p>ticket price </p>
-                <p>stars</p>
-            </div>
-            <div>
-                <p>2:hr 45:min left</p>
-                <p></p>
-            </div>
+                <div>
+                    <p>ticket price </p>
+                    <p>stars</p>
+                </div>
+                <div>
+                    <p>2:hr 45:min left</p>
+                    <p></p>
+                </div>
             </div>
            </div>
         </div>
