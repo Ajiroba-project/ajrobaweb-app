@@ -1,5 +1,6 @@
 import { MdOutlineFacebook } from "react-icons/md";
 import { FaXTwitter, FaInstagram, FaYoutube, FaLinkedin   } from "react-icons/fa6";
+import imgCarousel1 from "@/app/asset/image/carousel.png"
 
 export const headerMenu = [
   {
@@ -170,3 +171,51 @@ export const carouselImg =[
     image:"",
   }
 ]
+
+
+export const marqueeInfo = [
+    'Follow us on all our social media platforms : www.ajiroba.com.',
+    'Buy a ticket now and stand a chance to win ',
+    'your preferred goods in our raffle draw.'
+  ]
+
+
+
+  export const cardInfo =[{
+        name:"human hair",
+        image:"",
+        text:"",
+        price:"",
+        rating:"",
+        time:"",
+        percentge:""
+  },
+  {
+        name:"Rice",
+        image:"",
+        text:"",
+        price:"",
+        rating:"",
+        time:"",
+        percentge:""
+  },
+  {
+        name:"Smart Watch",
+        image:"",
+        text:"",
+        price:"",
+        rating:"",
+        time:"",
+        percentge:""
+  },
+    {
+        name:"Head Phone",
+        image:"",
+        text:"",
+        price:"",
+        rating:"",
+        time:"",
+        percentge:""
+  },
+ ]
+  
