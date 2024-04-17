@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { FaStar } from "react-icons/fa";
 
 
 type cardDetails ={
@@ -30,12 +31,15 @@ export const AuctionCard =({cardInfo}:cardDetails)=>{
                 <div className=" font-bold">{value.name}</div>
                    <div className="flex flex-col items-center">
                      <p className="text-sm">ticket price: <span className="text-[#F25E26] font-semibold">₦200.00</span> </p>
-                    <p>stars</p>
+                    <p className="p-4 flex "><FaStar className="text-[#F25E26]"/> <FaStar className="text-[#F25E26]"/> <FaStar className="text-[#F25E26]"/> <FaStar className="text-[#F25E26]"/> <FaStar  className="text-[#F25E26]"/></p>
                    </div>
                 </div>
                 <div>
-                    <p>2:hr 45:min left</p>
-                    <p></p>
+                    <p className="capitalize text-sm">2:hr 45:min left</p>
+                    <div className="w-full bg-white rounded-full h-2.5 border border-gray">
+                        <div className="bg-[#F25E26] h-2.5 rounded-full w-[45%]"></div>
+                    </div>
+
                 </div>
             </div>
            </div>
