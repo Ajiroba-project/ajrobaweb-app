@@ -71,12 +71,12 @@ Add additional notes about how to deploy this on a live system.
 
 ### ⛏️ Built Using <a name = "built_using"></a>
 - [NextTsx](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Node](https://nodejs.org/en/) - Server Environment
 
 ### ✍️ Authors <a name = "authors"></a>
 
 - [@Akin Femi](https://github.com/) - Lead Frontend Developer
-- -[@Peter Samuel](https://github.com/petsamuel) - jnr Frontend Developer
+- [@Peter Samuel](https://github.com/petsamuel) - jnr Frontend Developer
 
 
 See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
