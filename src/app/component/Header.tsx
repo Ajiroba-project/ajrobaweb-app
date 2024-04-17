@@ -16,19 +16,21 @@ export const Header = () => {
   return (
     <>
       <header className={` header-banner mb-9`}>
-        <div className='flex w-full items-center gap-4 bg-[#2A2A2A] p-3 px-14 text-sm text-white'>
+        <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white'>
           <AuctionMarquee info={marqueeInfo} />
 
           <div className='header-socials flex gap-3'>
             {socialIcon.map((val, index) => (
-              <p key={index}>{val.icon}</p>
+              <div  key={index} className="w-4"><Image src={val.icon} alt={"socials"}/></div>
             ))}
           </div>
         </div>
         {/* end of top Marquee */}
         <div className='flex items-center justify-between gap-5 bg-white  p-6 px-14 shadow-md'>
           <div className='Brand-logo'>
-            <Image src={Brand} alt='brand-logo' />
+            <Link href="/">
+             <Image src={Brand} alt='brand-logo' />
+           </Link>
           </div>
           <nav className='relative'>
             <ul className='items-center gap-4 lg:flex '>

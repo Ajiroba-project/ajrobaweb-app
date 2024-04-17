@@ -9,6 +9,12 @@ import product5 from "@/app/asset/image/product5.png"
 import product6 from "@/app/asset/image/product6.png"
 import product7 from "@/app/asset/image/product7.png"
 import product8 from "@/app/asset/image/product8.png"
+import Social from "@/app/asset/socials/Social.svg"
+import Social1 from "@/app/asset/socials/Social-1.svg"
+import Social2 from "@/app/asset/socials/Social-2.svg"
+import Social3 from "@/app/asset/socials/Social-3.svg"
+import Social4 from "@/app/asset/socials/Social-4.svg"
+
 
 export const headerMenu = [
   {
@@ -103,27 +109,27 @@ export const categoriesMenu = [
 export const socialIcon = [
   {
     name: "Facebook",
-    icon: <MdOutlineFacebook />,
+    icon: Social,
     link: "#"
   },
   {
     name: "x",
-    icon: <FaXTwitter />,
+    icon: Social1,
     link: "#"
   },
   {
     name: "Instagram",
-    icon: <FaInstagram />,
+    icon: Social2,
     link: "#"
   },
   {
     name: "Youtube",
-    icon: <FaYoutube />,
+    icon: Social3,
     link: "#"
   },
   {
     name: "LinkedIn",
-    icon: <FaLinkedin />,
+    icon: Social4,
     link: "#"
   },
 ]
@@ -145,6 +151,7 @@ export const quickLinks = [{
   links: "",
 },
 ]
+
 export const ourCompany = [{
   name: "Contact us",
   links: "",

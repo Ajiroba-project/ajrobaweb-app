@@ -13,11 +13,13 @@ export const Footer = () => {
       <section className="text-white p-12 mt-8">
         <div className="p-8 flex gap-24 flex-col lg:md:flex-row  lg:items-start items-center " >
           <div className="flex flex-col gap-4">
-            <Image src={Brand} alt="brand-logo"/>
+            <Link href="/">
+             <Image src={Brand} alt='brand-logo' />
+           </Link>
             <p className="text-white text-sm">... Your foremost consumer auction platform</p>
             <div className='header-socials flex gap-3'>
             {socialIcon.map((val, index) => (
-              <p key={index}>{val.icon}</p>
+              <div key={index}><Image  src={val.icon} alt={"socials"}/></div>
             ))}
           </div>
           </div>

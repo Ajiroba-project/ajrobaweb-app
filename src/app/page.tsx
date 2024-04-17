@@ -1,7 +1,7 @@
 import {Hero} from "./component/Hero";
 import {Heading} from "./component/Heading"
 import {SubHeading} from "./component/SubHeading"
-import {Card} from "./component/Card"
+import {AuctionCard} from "./component/Card"
 import {HIW} from "./component/How-it-works"
 import {cardInfo, Product} from "./static-data"
 
@@ -27,7 +27,7 @@ function page() {
             <Heading title="Auction Sales"/>
           </div>
           <div>
-            <Card cardInfo={cardInfo}/>
+            <AuctionCard cardInfo={cardInfo}/>
           </div>
       </section>
 
@@ -59,7 +59,7 @@ function page() {
             <Heading title="Featured Products"/>
           </div>
           <div>
-            <Card cardInfo={Product}/>
+            <AuctionCard cardInfo={Product}/>
           </div>
       
       </section>
@@ -73,7 +73,7 @@ function page() {
             <Heading title="Shop from Top Deals Collection"/>
           </div>
           <div>
-            <Card cardInfo={Product}/>
+            <AuctionCard cardInfo={Product}/>
           </div>
       
       </section>
@@ -93,7 +93,7 @@ function page() {
             <Heading title="This Week Top Product"/>
           </div>
           <div>
-            <Card cardInfo={Product}/>
+            <AuctionCard cardInfo={Product}/>
           </div>
       
       </section>

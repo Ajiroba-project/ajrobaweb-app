@@ -6,15 +6,18 @@ import { AuctionMarquee } from './Auction-Marquee'
 export const Hero = () => {
   return (
     <>
-      <section className='flex flex-col'>
-        <div className='flex  '>
-            <div className='p-12 bg-[#F6F6F6]'>
-              <SideMenu />
-            </div>
-            <div className='flex-auto'>
-              <Carousel />
+      <section className='flex flex-col '>
+        <div className="">
+            <div className='grid grid-cols-3 '>
+                <div className='bg-[#F6F6F6]'>
+                  <SideMenu />
+                </div>
+                <div className='col-span-2 mr-12'>
+                  <Carousel />
+                </div>
             </div>
         </div>
+    
         <div className='my-4 bg-[#F25E26] p-4 text-white '>
           <div className='container p-2 '>
             <AuctionMarquee info={marqueeInfo} />
