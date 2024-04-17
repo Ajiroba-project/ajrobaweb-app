@@ -15,13 +15,13 @@ export const Header = () => {
   // const [submenu, setSubmenu]= useState<boolean>();
   return (
     <>
-      <header className={` header-banner mb-9`}>
+      <header className={` header-banner mb-9 w-screen`}>
         <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white'>
           <AuctionMarquee info={marqueeInfo} />
 
-          <div className='header-socials flex gap-3'>
+          <div className='header-socials lg:flex gap-3 hidden'>
             {socialIcon.map((val, index) => (
-              <div  key={index} className="w-4"><Image src={val.icon} alt={"socials"}/></div>
+              <div key={index} className="w-4"><Image src={val.icon} alt={"socials"}/></div>
             ))}
           </div>
         </div>

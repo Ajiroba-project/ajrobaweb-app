@@ -14,6 +14,9 @@ import Social1 from "@/app/asset/socials/Social-1.svg"
 import Social2 from "@/app/asset/socials/Social-2.svg"
 import Social3 from "@/app/asset/socials/Social-3.svg"
 import Social4 from "@/app/asset/socials/Social-4.svg"
+import { IoLocationOutline } from 'react-icons/io5'
+import { FiPhoneCall } from "react-icons/fi";
+import { LuMail } from "react-icons/lu";
 
 
 export const headerMenu = [
@@ -22,17 +25,17 @@ export const headerMenu = [
     path: '/'
   },
   {
-    name: 'Aution Deals',
-    path: '/'
+    name: 'Auction Deals',
+    path: 'auction-deals'
   },
 
   {
     name: 'Categories',
-    path: '/'
+    path: 'Categories'
   },
   {
     name: 'Recharge',
-    path: '/'
+    path: 'recharge'
   },
   {
     name: 'Account',
@@ -50,58 +53,212 @@ export const categoriesMenu = [
   {
     name: 'FoodStuff',
     path: '/',
-    categories: {
-      name: 'Home',
+    categories: [{
+      name: 'Fruits',
+      path: 'Category/Fruits'
+    },{
+      name: 'Vegetable',
+      path: 'Category/vegetable'
+    },
+  {
+      name: 'Tubers',
+      path: 'Category/tubers'
+    },
+  {
+      name: 'Cereal',
       path: '/'
-    }
+    },
+  {
+      name: 'Legumes',
+      path: '/'
+    },
+  {
+      name: 'Diary',
+      path: '/'
+    },
+    {
+      name: 'Meat',
+      path: '/'
+    },]
   },
   {
     name: 'Fashion and Beauty',
-    path: '/',
-    categories: {
+    path: 'Categories/FB',
+    categories: [{
       name: 'Home',
       path: '/'
-    }
+    }]
   },
   {
     name: 'Electronics',
-    path: '/',
-    categories: {
-      name: 'Home',
+    path: 'Categories/Electronics',
+    categories: [{
+      name: 'Television',
       path: '/'
-    }
+    },
+  {
+      name: 'Smart Tv`s',
+      path: '/'
+    },
+  {
+      name: 'Sound Bars ',
+      path: '/'
+    },
+   {
+      name: 'Video ',
+      path: '/'
+    },
+  {
+      name: 'Projectors',
+      path: '/'
+    }, 
+  {
+      name: 'Digital Camera',
+      path: '/'
+    },
+   {
+      name: 'Camcoder',
+      path: '/'
+    },
+   {
+      name: 'Generators ',
+      path: '/'
+    },
+   {
+      name: 'Inverters ',
+      path: '/'
+    }, ]
   },
   {
     name: 'Phones',
-    path: '/',
-    categories: {
-      name: 'Home',
+    path: 'Categories/Phones',
+    categories: [{
+      name: 'Smart Phones',
       path: '/'
-    }
+    },
+  {
+      name: 'Basic Phones',
+      path: '/'
+    },
+  {
+      name: 'Refubished',
+      path: '/'
+    },
+      {
+      name: 'Ipad',
+      path: '/'
+    },
+      {
+      name: 'Andriod Tablets',
+      path: '/'
+    },
+      {
+      name: 'Educational Tablets',
+      path: '/'
+    },
+      {
+      name: 'Tablets Accessory',
+      path: '/'
+    },
+      {
+      name: 'Earphones',
+      path: '/'
+    },
+     {
+      name: 'Chargers',
+      path: '/'
+    },
+  ]
   },
   {
     name: 'Computing',
-    path: '/',
-    categories: {
-      name: 'Home',
+    path: 'Categories/Computing',
+    categories: [{
+      name: 'Desktop',
       path: '/'
-    }
+    },
+    {
+      name: 'Laptop',
+      path: '/'
+    },
+    {
+      name: 'USB',
+      path: '/'
+    },
+    {
+      name: 'Hard Drives',
+      path: '/'
+    },
+    {
+      name: 'Printers',
+      path: '/'
+    },
+    {
+      name: 'Mouse',
+      path: '/'
+    },
+    {
+      name: 'Batteries',
+      path: '/'
+    },
+    {
+      name: 'Scanner',
+      path: '/'
+    },
+    {
+      name: 'Chargers',
+      path: '/'
+    },
+  
+  ]
   },
   {
     name: 'Mother and Child ',
-    path: '/',
-    categories: {
-      name: 'Home',
+    path: 'Categories/Mc',
+    categories: [{
+      name: 'Toys',
       path: '/'
-    }
+    },{
+      name: 'Bibs',
+      path: '/'
+    },
+    {
+      name: 'Diapers',
+      path: '/'
+    },
+    {
+      name: 'Bathing Tub',
+      path: '/'
+    },
+    {
+      name: 'Bathing Safety',
+      path: '/'
+    },
+    {
+      name: 'Towels',
+      path: '/'
+    },
+    {
+      name: 'Walkers',
+      path: '/'
+    },
+    {
+      name: 'Swings',
+      path: '/'
+    },
+    {
+      name: 'Jumpers',
+      path: '/'
+    },
+  ]
   },
   {
     name: 'Royalty',
-    path: '/',
-    categories: {
+    path: 'Categories/Royalty',
+    categories: [{
       name: 'Home',
       path: '/'
-    }
+    }]
   }
 
 ]
@@ -169,17 +326,17 @@ export const ourCompany = [{
 export const getInTouch = [{
   name: "1, Praisehill estate, Arepo, ogun State",
   links: "",
-  icon: ""
+  icon: <IoLocationOutline />
 },
 {
   name: "(+234) 9169 881 005",
   links: "",
-  icon: ""
+  icon: <FiPhoneCall />,
 },
 {
   name: "Support@goprus.com",
   links: "",
-  icon: ""
+  icon: <LuMail/>
 },
 
 ]

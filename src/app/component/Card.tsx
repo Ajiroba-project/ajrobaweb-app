@@ -10,7 +10,7 @@ export const AuctionCard =({cardInfo}:cardDetails)=>{
 
     return (
         <>
-            <div className="grid grid-cols-4  gap-4">
+            <div className="grid lg:grid-cols-4 grid-cols-2  gap-4">
         {
             cardInfo.map((value, index)=>(
             <div className="shadow-md rounded  " key={index}>

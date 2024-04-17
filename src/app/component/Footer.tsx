@@ -47,7 +47,9 @@ export const Footer = () => {
           <p  className="text-lg">Get In Touch </p>
            <ul className="py-2">
             {getInTouch.map((val, index)=>(
-               <li key={index} className="cursor-pointer py-2 hover:text-[#F25E26] text-sm"><Link href={val.links}>{val.name}</Link></li>
+               <li key={index} className="cursor-pointer py-2 hover:text-[#F25E26] text-sm flex gap-2 items-center">
+               {val.icon} <Link href={val.links}>{val.name}</Link>
+               </li>
 
             ))}
           </ul>

@@ -9,10 +9,10 @@ export const Hero = () => {
       <section className='flex flex-col '>
         <div className="">
             <div className='grid grid-cols-3 '>
-                <div className='bg-[#F6F6F6]'>
+                <div className='bg-[#F6F6F6] lg:block hidden'>
                   <SideMenu />
                 </div>
-                <div className='col-span-2 mr-12'>
+                <div className='lg:col-span-2 mr-12 col-span-3'>
                   <Carousel />
                 </div>
             </div>
