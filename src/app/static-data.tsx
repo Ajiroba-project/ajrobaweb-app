@@ -9,6 +9,12 @@ import product5 from "@/app/asset/image/product5.png"
 import product6 from "@/app/asset/image/product6.png"
 import product7 from "@/app/asset/image/product7.png"
 import product8 from "@/app/asset/image/product8.png"
+import fashionBeauty from "@/app/asset/image/fashionBeauty.png"
+import fashion from "@/app/asset/image/fashion.png"
+import computing from "@/app/asset/image/computing.png"
+import phones from "@/app/asset/image/phones.png"
+import mother from "@/app/asset/image/mother.png"
+import royalty from "@/app/asset/image/royalty.png"
 import Social from "@/app/asset/socials/Social.svg"
 import Social1 from "@/app/asset/socials/Social-1.svg"
 import Social2 from "@/app/asset/socials/Social-2.svg"
@@ -49,10 +55,12 @@ export const headerMenu = [
   }
 ]
 
-export const categoriesMenu = [
+export const categories = [
   {
     name: 'FoodStuff',
-    path: '/',
+    path: 'Categories/FoodStuff',
+    description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ",
+    image:product2,
     categories: [{
       name: 'Fruits',
       path: 'Category/Fruits'
@@ -83,15 +91,50 @@ export const categoriesMenu = [
   },
   {
     name: 'Fashion and Beauty',
-    path: 'Categories/FB',
-    categories: [{
-      name: 'Home',
-      path: '/'
-    }]
+    path: 'Categories/fashion and Beauty',
+    image:fashionBeauty,
+    description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ",
+    categories: [
+        {name: `Men's Fashion`,
+        subcategory:[{name:"Snickers", path:""},
+          {name:"Clothing", path:""},
+          {name:"Underwear", path:""},
+          {name:"T-shirt", path:""},
+          {name:"Polo", path:""},
+          {name:"knicker", path:""},
+          {name:"Jewelry", path:""},
+          {name:"Belt", path:""}
+        ]
+      }, 
+      {name: `Women's Fashion`,
+          subcategory:[{name:"Shoe", path:""},
+            {name:"Clothing", path:""},
+            {name:"Accessories", path:""},
+            {name:"Hand Bag", path:""},
+            {name:"Sleep Wear", path:""},
+            {name:"Matanity", path:""},
+            {name:"Dresses", path:""},
+            {name:"Traditional", path:""}
+          ]
+        }, 
+      {name: `Accessories`,
+          subcategory:[{name:'Men Sunglasses', path:""},
+            {name:"Men Watches", path:""},
+            {name:"Women Sunglasses", path:""},
+            {name:"Women Watches", path:""},
+          ]
+        }]
+  },
+  {name:"fashion", 
+    path: 'fashion',
+    image:fashion,
+    description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi "
   },
   {
     name: 'Electronics',
     path: 'Categories/Electronics',
+    image:product4,
+    description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
     categories: [{
       name: 'Television',
       path: '/'
@@ -132,6 +175,8 @@ export const categoriesMenu = [
   {
     name: 'Phones',
     path: 'Categories/Phones',
+    image:phones,
+    description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
     categories: [{
       name: 'Smart Phones',
       path: '/'
@@ -173,6 +218,9 @@ export const categoriesMenu = [
   {
     name: 'Computing',
     path: 'Categories/Computing',
+    image:computing,
+    description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+    
     categories: [{
       name: 'Desktop',
       path: '/'
@@ -214,7 +262,9 @@ export const categoriesMenu = [
   },
   {
     name: 'Mother and Child ',
-    path: 'Categories/Mc',
+    path: 'Categories/Mother and Child',
+    description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+    image:mother, 
     categories: [{
       name: 'Toys',
       path: '/'
@@ -255,10 +305,46 @@ export const categoriesMenu = [
   {
     name: 'Royalty',
     path: 'Categories/Royalty',
+    description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+    image:royalty,
     categories: [{
-      name: 'Home',
+      name: 'Bead',
       path: '/'
-    }]
+    },
+  {
+      name: 'Walking Stick',
+      path: '/'
+    },
+  {
+      name: 'Staff',
+      path: '/'
+    },
+   {
+      name: 'Capes',
+      path: '/'
+    }, 
+  {
+      name: 'Crown',
+      path: '/'
+    },
+  {
+      name: 'Hair Pin',
+      path: '/'
+    },
+  {
+      name: 'Fan',
+      path: '/'
+    },
+    {
+      name: 'Anklet',
+      path: '/'
+    },
+    {
+      name: 'Bracelet',
+      path: '/'
+    },
+  
+  ]
   }
 
 ]

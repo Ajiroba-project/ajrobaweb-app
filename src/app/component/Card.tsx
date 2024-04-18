@@ -1,6 +1,10 @@
+'use client'
+import { Poppins } from "next/font/google";
 import Image from "next/image"
 import { FaStar } from "react-icons/fa";
+import Link from 'next/link'
 
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
 type cardDetails ={
     cardInfo: any[]
@@ -53,3 +57,35 @@ export const AuctionCard =({cardInfo}:cardDetails)=>{
     )
 }
 
+
+export const CategoryCard =({cardInfo}:cardDetails)=>{
+    return (
+        <>
+            <div className={`${poppins.className} grid lg:grid-cols-4 grid-cols-2  gap-4 my-4`}>
+        {
+            cardInfo.map((value, index)=>(
+            <div className="shadow-md rounded-2xl" key={index}>
+                <div className="bg-[#F6F6F6] rounded-t-2xl">
+                    <div className="flex items-center justify-center">
+                        <Image src={value.image} alt="product" className="h-[200px] w-fit "/>
+                    </div>
+                </div>
+
+                <div className="py-2 bg-white rounded-b-2xl">
+                        <div className="p-2 flex flex-col gap-2">
+                                <div className="capitalize"><p className="text-lg text-[#353131]">{value.name}</p> </div>
+                                <div className="flex flex-col items-center">
+                                    <p classNam="text-[#A09F9F]">{value.description}</p>
+                                    <Link href={value.path} className="p-2 bg-[#FCDFD4] w-full my-4 text-center text-[#111111]">Explore</Link>
+                                </div>
+                        </div>
+                </div>
+           </div>
+
+            ))
+            
+        }
+        </div>
+        </>
+    )
+}

@@ -1,41 +1,55 @@
 'use client'
 import {useState, Fragment} from "react"
-import {categoriesMenu} from '../static-data'
+import {categories} from '../static-data'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Link from 'next/link'
 import { Poppins, Inter } from "next/font/google";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 const inter = Inter({ subsets: ["latin"], weight: ["500", "900"], });
 
+type MenuState =  number | null
+
+
 export const SideMenu= ()=>{
-    const [active, setActive] = useState<number>();
-    const [submenu, setSubmenu] = useState<string>();
+    const [active, setActive] = useState<MenuState>(null);
     
-
-
 return (
     <>
-    <section className="p-12  ">
-        <ul className="relative">
+    <section className="p-12">
+        <ul className="relative ">
            {
-                categoriesMenu.map((val, index)=>(
+                categories.map((val, index)=>(
                 <Fragment key={index}>
+
                     <div  className="relative"> 
-                        <li className={`${poppins.className} ${active === index ?"text-[#F25E26]":""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `} onClick={()=>{setActive(index), setSubmenu(val.name)}}>
+                        <li className={`${poppins.className} ${active === index ?"text-[#F25E26]":""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `} onClick={()=>{setActive(active === index ? null : index)}}>
                             <span className="flex gap-2 items-center ">
                                 <p>{val.name}</p> {active === index ? <IoIosArrowUp/>:<IoIosArrowDown/>}    
                             </span>
                         </li>
-
                     </div>
 
-                    {active === index && (<ul className={`${inter.className} bg-white absolute shadow-md -top-4 -right-12 rounded z-20 w-[14rem] text-sm`}>
-                    {val.categories?.map((subcategory) => (
-                    <li key={subcategory.name} className="my-4 cursor-pointer p-2 hover:bg-[#FCDFD4]">
-                    <Link href={subcategory.path} className="  ">{subcategory.name}</Link>
-                                </li>
-                                ))}
-                            </ul>)}
+
+                    {active === index && (
+                    <div className={`${inter.className} z-20 bg-white ${active === 1 ? "flex gap-3 w-full -top-0 -right-32":"w-[60%] -top-4 -right-12"} shadow-md rounded text-sm absolute`}>
+
+                        {val.categories?.map((subcategory) => (
+                            <div key={subcategory.name} className={` ${active === 1 ? "": "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
+                                <Link href={"#"} className={` `}>{subcategory.name}</Link>
+                                
+                                {subcategory.subcategory && (
+                                    <ul className="z-50 ">
+                                        {subcategory.subcategory?.map((subSubcategory) => (
+                                            <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
+                                                <Link href={subSubcategory.path || ''} className="py-2">{subSubcategory.name}</Link>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    
+                    </div>)}
                     
                 </Fragment>))
             } 

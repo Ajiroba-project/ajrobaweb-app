@@ -1,14 +1,18 @@
-
+import {Title} from "../component/Title"
+import {CategoryCard} from "../component/Card"
+import {categories} from '../static-data'
 
 const page =()=> {
 
     return (
         <>
             <main>
+                <Title title="Categories"/>
+
                 <div className="container">
-                    Welcome to categories
+                    <CategoryCard cardInfo={categories}/>
                 </div>
-                </main>
+            </main>
         </>
     )
 }
