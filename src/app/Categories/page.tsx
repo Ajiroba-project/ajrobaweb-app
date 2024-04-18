@@ -8,7 +8,6 @@ const page =()=> {
         <>
             <main>
                 <Title title="Categories"/>
-
                 <div className="container">
                     <CategoryCard cardInfo={categories}/>
                 </div>

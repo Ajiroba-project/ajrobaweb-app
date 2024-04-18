@@ -63,7 +63,8 @@ export const categories = [
     image:product2,
     categories: [{
       name: 'Fruits',
-      path: 'Category/Fruits'
+      path: 'Category/Fruits',
+      price:""
     },{
       name: 'Vegetable',
       path: 'Category/vegetable'
@@ -96,7 +97,7 @@ export const categories = [
     description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ",
     categories: [
         {name: `Men's Fashion`,
-        subcategory:[{name:"Snickers", path:""},
+        subcategory:[{name:"Snickers", path:"" },
           {name:"Clothing", path:""},
           {name:"Underwear", path:""},
           {name:"T-shirt", path:""},
@@ -107,7 +108,7 @@ export const categories = [
         ]
       }, 
       {name: `Women's Fashion`,
-          subcategory:[{name:"Shoe", path:""},
+          subcategory:[{name:"Shoe", path:"", },
             {name:"Clothing", path:""},
             {name:"Accessories", path:""},
             {name:"Hand Bag", path:""},
@@ -431,7 +432,7 @@ export const carouselImg = [
   {
     name: "",
     image: "",
-  }
+  },
 ]
 
 
@@ -441,116 +442,123 @@ export const marqueeInfo = [
   'your preferred goods in our raffle draw.'
 ]
 
-
-
-export const cardInfo = [{
-  name: "human hair",
-  image: product1,
-  text: "",
-  price: "",
-  rating: "",
-  time: "",
-  percentge: ""
-},
-{
-  name: "Rice",
-  image: product2,
-  text: "",
-  price: "",
-  rating: "",
-  time: "",
-  percentge: ""
-},
-{
-  name: "Smart Watch",
-  image: product3,
-  text: "",
-  price: "",
-  rating: "",
-  time: "",
-  percentge: ""
-},
-{
-  name: "Head Phone",
-  image: product4,
-  text: "",
-  price: "",
-  rating: "",
-  time: "",
-  percentge: ""
-},
-]
-
 export const Product = [{
   name: "human hair",
   image: product1,
-  text: "",
+  description: "",
   price: "",
+  previousPrice:"",
   rating: "",
   time: "",
-  percentge: ""
+  category:"Fashion"
 },
 {
   name: "Rice",
   image: product2,
-  text: "",
+  description: "",
   price: "",
-  rating: "",
+  previousPrice:"",
   time: "",
-  percentge: ""
+  rating: "",
+  category:"FoodStuff"
 },
 {
   name: "Smart Watch",
   image: product3,
-  text: "",
+  description: "",
   price: "",
+  previousPrice:"",
   rating: "",
   time: "",
-  percentge: ""
+  category:"Phones"
 },
 {
   name: "Head Phone",
   image: product4,
-  text: "",
+  description: "",
   price: "",
-  rating: "",
+  previousPrice:"",
   time: "",
-  percentge: ""
+  rating: "",
+  category:"Phones"
 },
 {
   name: "Head Phone",
   image: product5,
-  text: "",
+  description: "",
   price: "",
+  previousPrice:"",
   rating: "",
   time: "",
-  percentge: ""
+  category:"Phones"
 },
 {
   name: "Head Phone",
   image: product6,
-  text: "",
+  description: "",
   price: "",
-  rating: "",
+  previousPrice:"",
   time: "",
-  percentge: ""
+  rating: "",
+  category:"Phones"
 },
 {
   name: "Head Phone",
   image: product7,
-  text: "",
+  description: "",
   price: "",
+  previousPrice:"",
   rating: "",
   time: "",
-  percentge: ""
+  category:""
 },
 {
   name: "Head Phone",
   image: product8,
-  text: "",
+  description: "",
   price: "",
+  previousPrice:"",
+  time: "",
+  rating: "",
+  category:"Phones",
+},{
+  name: "human hair",
+  image: product1,
+  description: "",
+  price: "",
+  previousPrice:"",
   rating: "",
   time: "",
-  percentge: ""
+  category:"Fashion"
+},
+{
+  name: "Rice",
+  image: product2,
+  description: "",
+  price: "",
+  previousPrice:"",
+  time: "",
+  rating: "",
+  category:"FoodStuff"
+},
+{
+  name: "Smart Watch",
+  image: product3,
+  description: "",
+  price: "",
+  previousPrice:"",
+  rating: "",
+  time: "",
+  category:"Phones"
+},
+{
+  name: "Head Phone",
+  image: product4,
+  description: "",
+  price: "",
+  previousPrice:"",
+  time: "",
+  rating: "",
+  category:"Phones"
 },
 ]
