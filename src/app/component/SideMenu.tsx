@@ -21,7 +21,7 @@ return (
                 categories.map((val, index)=>(
                 <Fragment key={index}>
 
-                    <div  className="relative"> 
+                    <div  className="relative "> 
                         <li className={`${poppins.className} ${active === index ?"text-[#F25E26]":""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `} onClick={()=>{setActive(active === index ? null : index)}}>
                             <span className="flex gap-2 items-center ">
                                 <p>{val.name}</p> {active === index ? <IoIosArrowUp/>:<IoIosArrowDown/>}    
@@ -58,4 +58,57 @@ return (
     </>
 
 )
+}
+
+
+export const MobileSideMenu =()=>{
+    const [active, setActive] = useState<MenuState>(null);
+    return (
+         <>
+    <section className="bg-[#F6F6F6] p-6">
+        <ul className="relative ">
+           {
+                categories.map((val, index)=>(
+                <Fragment key={index}>
+
+                    <div  className="relative bg-[#F6F6F6] p-2"> 
+                        <li className={`${poppins.className} ${active === index ?"":""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `} onClick={()=>{setActive(active === index ? null : index)}}>
+                            <span className="flex gap-2 items-center ">
+                                <p className={``}>{val.name}</p> {active === index ? <IoIosArrowUp/>:<IoIosArrowDown/>}    
+                            </span>
+                        </li>
+
+                    {active === index && (
+                    <div className={`${inter.className} px-4 z-20  ${active === 1 ? " gap-2 -top-0 ":""} rounded text-sm `}>
+
+                        {val.categories?.map((subcategory) => (
+                            <div key={subcategory.name} className={` ${active === 1 ? "": "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
+                                <Link href={"#"} className={`${active === 1 ? "font-bold":""} `}>{subcategory.name}</Link>
+                                
+                                {subcategory.subcategory && (
+                                    <ul className="z-50 ">
+                                        {subcategory.subcategory?.map((subSubcategory) => (
+                                            <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
+                                                <Link href={subSubcategory.path || ''} className="py-2">{subSubcategory.name}</Link>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    
+                    </div>)}
+
+                    </div>
+
+
+                    
+                </Fragment>))
+            } 
+        </ul>
+    </section>
+    </>
+
+
+    )
 }

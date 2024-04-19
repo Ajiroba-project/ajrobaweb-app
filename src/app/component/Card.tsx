@@ -13,7 +13,7 @@ interface cardDetails {
 export const ProductCard =({cardInfo}:cardDetails)=>{
     return (
         <>
-            <div className={`${poppins.className} grid lg:grid-cols-4 grid-cols-2  gap-4 my-4`}>
+            <div className={`${poppins.className} grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  gap-4 my-4`}>
         {
             cardInfo.map((value, index)=>(
             <div className="shadow-md rounded-2xl" key={index}>
@@ -28,7 +28,7 @@ export const ProductCard =({cardInfo}:cardDetails)=>{
                                 <div className="capitalize"><p className="text-lg text-[#353131]">{value.name}</p> </div>
                                 <div className="flex flex-col items-center">
                                     <p className="text-[#A09F9F]">{value.description}</p>
-                                    <Link href={value.path} className="p-2 bg-[#FCDFD4] w-full my-4 text-center text-[#111111]">Explore</Link>
+                                    {/* <Link href={value.path} className="p-2 bg-[#FCDFD4] w-full my-4 text-center text-[#111111]">Explore</Link> */}
                                 </div>
                         </div>
                 </div>
@@ -47,7 +47,7 @@ export const AuctionCard =({cardInfo}:cardDetails)=>{
 
     return (
         <>
-            <div className="grid lg:grid-cols-4 grid-cols-2  gap-4">
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  gap-4">
         {
             cardInfo.map((value, index)=>(
             <div className="shadow-md rounded  " key={index}>
@@ -94,7 +94,7 @@ export const AuctionCard =({cardInfo}:cardDetails)=>{
 export const CategoryCard =({cardInfo}:cardDetails)=>{
     return (
         <>
-            <div className={`${poppins.className} grid lg:grid-cols-4 grid-cols-2  gap-4 my-4`}>
+            <div className={`${poppins.className} grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 my-4`}>
         {
             cardInfo.map((value, index)=>(
             <div className="shadow-md rounded-2xl" key={index}>

@@ -2,6 +2,7 @@ import {Title} from "../component/Title"
 import {CategoryCard} from "../component/Card"
 import {categories} from '../static-data'
 
+
 const page =()=> {
 
     return (

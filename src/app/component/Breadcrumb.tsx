@@ -1,24 +1,49 @@
-import Link from "next/link"
-import { Poppins } from "next/font/google";
-import { useRouter } from 'next/router'
 
-interface BreadcrubProps {
-    // path:string
-    text:string
-}
+import Link from "next/link"
+import {Fragment} from "react"
+import { Poppins } from "next/font/google";
+import {useState, useEffect} from "react"
+
+
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
-export const Breadcrumb =()=>{
-      const router = useRouter()
-      const { param } = router.query
+
+type BreadcrubProps ={
+    text:string[]
+}
+
+export const Breadcrumb =({paths}:BreadcrubProps)=>{
+    const [Category, setCategory]= useState()
+    
+        useEffect(() => {
+        if (paths.length > 0) {
+            setCategory(paths[paths.length - 1]);
+        }
+    }, [paths])
 
     return (
         <section className={`${poppins.className} bg-[#F6F6F6] -mt-8`}>
             <div className=" flex gap-2 text-sm container py-10">
                 <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link> 
-                <Link href="" className="underline hover:text-[#F25E26]">Categories</Link>
-                <Link href="" className="underline">{param}</Link>                
+                {
+                    paths.map((path, index) => (
+                        <Fragment key={index}>
+                            <span> > </span>
+                            <Link
+                            href={`/${paths.slice(0, index + 1).join("/")}`}
+                            className={`${poppins.className} underline hover:text-[#F25E26] `}
+                            >
+                            {path}
+                            </Link>
+                        </Fragment>
+                    ))
+                }
+                          
             </div>
+            <div className="container mb-4">
+                 <p className={`${poppins.className} capitalize text-xl pb-4`}>{Category}</p>   
+            </div>
+            
         </section>
     )
 }

@@ -127,7 +127,7 @@ export const categories = [
         }]
   },
   {name:"fashion", 
-    path: 'fashion',
+    path: 'Categories/fashion',
     image:fashion,
     description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi "
   },
@@ -262,7 +262,7 @@ export const categories = [
   ]
   },
   {
-    name: 'Mother and Child ',
+    name: 'Mother and Child',
     path: 'Categories/Mother and Child',
     description:"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
     image:mother, 
@@ -442,7 +442,7 @@ export const marqueeInfo = [
   'your preferred goods in our raffle draw.'
 ]
 
-export const Product = [{
+export const Products = [{
   name: "human hair",
   image: product1,
   description: "",
@@ -450,7 +450,7 @@ export const Product = [{
   previousPrice:"",
   rating: "",
   time: "",
-  category:"Fashion"
+  category:"Fashion",
 },
 {
   name: "Rice",
@@ -510,7 +510,7 @@ export const Product = [{
   previousPrice:"",
   rating: "",
   time: "",
-  category:""
+  category:"Mother and Child"
 },
 {
   name: "Head Phone",
@@ -532,7 +532,7 @@ export const Product = [{
   category:"Fashion"
 },
 {
-  name: "Rice",
+  name: "Oloyin Beans",
   image: product2,
   description: "",
   price: "",
@@ -549,7 +549,7 @@ export const Product = [{
   previousPrice:"",
   rating: "",
   time: "",
-  category:"Phones"
+  category:"Mother and Child"
 },
 {
   name: "Head Phone",
@@ -559,6 +559,6 @@ export const Product = [{
   previousPrice:"",
   time: "",
   rating: "",
-  category:"Phones"
+  category:"Royalty"
 },
 ]

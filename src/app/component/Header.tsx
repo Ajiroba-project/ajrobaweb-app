@@ -15,8 +15,8 @@ export const Header = () => {
   // const [submenu, setSubmenu]= useState<boolean>();
   return (
     <>
-      <header className={` header-banner mb-9 w-screen`}>
-        <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white'>
+      <header className={` mb-9 `}>
+        <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white w-screen'>
           <AuctionMarquee info={marqueeInfo} />
 
           <div className='header-socials lg:flex gap-3 hidden'>
@@ -26,7 +26,7 @@ export const Header = () => {
           </div>
         </div>
         {/* end of top Marquee */}
-        <div className='flex items-center justify-between gap-5 bg-white  p-6 px-14 shadow-md'>
+        <div className='flex items-center justify-between gap-5 bg-white  p-6 lg:px-14 px-7 shadow-md'>
           <div className='Brand-logo'>
             <Link href="/">
              <Image src={Brand} alt='brand-logo' />
