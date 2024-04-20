@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import {Header} from "./component/Header";
-import {Footer} from "./component/Footer"
+import { Header } from "./component/Header";
+import { Footer } from "./component/Footer"
 import "./globals.css";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
 export const metadata: Metadata = {
-  title: "Ajirobi ",
+  title: "Ajiroba ",
   description: "Your foremost consumer auction platform",
 };
 
@@ -18,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Header/>
+        {/* <Header /> */}
         {children}
-        <Footer/>
-        </body>
-      
+        {/* <Footer /> */}
+      </body>
+
     </html>
   );
 }

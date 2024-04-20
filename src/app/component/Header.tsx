@@ -8,53 +8,69 @@ import { usePathname } from 'next/navigation';
 import { IoCartOutline } from 'react-icons/io5'
 import { BiBell } from 'react-icons/bi'
 import { CiSearch } from 'react-icons/ci'
-import { IoIosArrowDown } from 'react-icons/io'
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AuctionMarquee } from './Auction-Marquee'
 
 export const Header = () => {
-    const pathname = usePathname();
+  const pathname = usePathname();
   const isRootPath = pathname === '/';
   const [active, setActive] = useState<number>(0)
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
   // const [submenu, setSubmenu]= useState<boolean>();
   return (
     <>
       <header className={` mb-9 `}>
         <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white f-full'>
-          {/* <AuctionMarquee info={marqueeInfo} /> */}
+          <AuctionMarquee info={marqueeInfo} />
           <div className='header-socials flex gap-3 '>
             {socialIcon.map((val, index) => (
-              <div key={index} className="w-4"><Image src={val.icon} alt={"socials"}/></div>
+              <div key={index} className="w-4"><Image src={val.icon} alt={"socials"} /></div>
             ))}
           </div>
         </div>
         {/* end of top Marquee */}
-        
+
         <div className='flex items-center justify-between gap-5 bg-white  p-6 lg:px-14 px-7 shadow-md'>
           <div className='Brand-logo'>
             <Link href={"/"}>
-             <Image src={Brand} alt='brand-logo' />
-           </Link>
+              <Image src={Brand} alt='brand-logo' />
+            </Link>
           </div>
+
           <nav className='relative'>
             <ul className='items-center gap-4 lg:flex '>
               {headerMenu.map((val, index) => (
                 <li
                   key={index}
-                  className={` ${active === index ? 'text-[#F25E26]' : 'text-[#A09F9F]'} cursor-pointer px-4 hover:text-[#F25E26]`}
+                  className={`cursor-pointer px-4 ${activeMenu === index ? 'text-[#F25E26]' : 'text-[#A09F9F]'
+                    } hover:text-[#F25E26]`}
                   onClick={() => {
-                    setActive(index)
+                    setActiveMenu(activeMenu === index ? null : index);
                   }}
                 >
-                  <Link href={isRootPath ? val.path : `${pathname}/${val.path}`} className='flex items-center gap-2'>
-                    {val.name}
-                    {val.submenu ? (
-                      <>
-                        <IoIosArrowDown />
-                      </>
-                    ) : (
-                      ''
-                    )}
-                  </Link>
+                  {val.submenu ? (
+                    <div className="relative">
+                      <span className='flex items-center gap-2'>
+                        {val.name} {activeMenu === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                      </span>
+                      {activeMenu === index && (
+                        <ul className="absolute z-10 left-0 mt-2 bg-white shadow-md rounded-md">
+                          {/* {val.submenu.map((subItem, subIndex) => (
+                            <li key={subIndex} className="py-2 text-[#A09F9F] hover:text-[#F25E26] px-4 hover:bg-gray-100">{subItem.name}</li>
+                          ))} */}
+                          {val.submenu.map((subItem, subIndex) => (
+                            <li key={subIndex} className="py-2 px-4 text-sm  hover:bg-gray-100 text-[#A09F9F] hover:text-[#F25E26]">
+                              <Link href={subItem.path}>{subItem.name}</Link> {/* Link to the submenu item */}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ) : (
+                    <Link href={isRootPath ? val.path : `${pathname}/${val.path}`} className='flex items-center gap-2'>
+                      {val.name}
+                    </Link>
+                  )}
                 </li>
               ))}
               <li className='relative flex'>
@@ -63,6 +79,9 @@ export const Header = () => {
               </li>
             </ul>
           </nav>
+
+
+
           <div className='icon item-center flex gap-4'>
             <div>
               <BiBell className='cursor-pointer text-xl text-[#A09F9F]' />
