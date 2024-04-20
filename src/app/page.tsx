@@ -3,7 +3,7 @@ import {Heading} from "./component/Heading"
 import {SubHeading} from "./component/SubHeading"
 import {AuctionCard} from "./component/Card"
 import {HIW} from "./component/How-it-works"
-import {cardInfo, Product} from "./static-data"
+import {Products} from "./static-data"
 
 
 
@@ -18,7 +18,7 @@ function page() {
         </div>
       </section>
 
-    {/* Auction section */}
+    {/*  Auction section  */}
       <section className="flex flex-col container gap-4 my-24">
           <div>
             <SubHeading title="Today"/>
@@ -27,11 +27,11 @@ function page() {
             <Heading title="Auction Sales"/>
           </div>
           <div>
-            <AuctionCard cardInfo={cardInfo}/>
+            <AuctionCard cardInfo={Products}/>
           </div>
       </section>
 
-      {/* How it works */}
+      {/*  How it works  */}
       <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="How it works"/>
@@ -39,7 +39,7 @@ function page() {
         <HIW/>
       </section>
 
-      {/* Categories */}
+      {/* {/* Categories  */}
       <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Categories"/>
@@ -50,7 +50,7 @@ function page() {
       
       </section>
 
-      {/* Featured Product */}
+      {/* {/* Featured Product  */}
       <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Featured"/>
@@ -59,12 +59,12 @@ function page() {
             <Heading title="Featured Products"/>
           </div>
           <div>
-            <AuctionCard cardInfo={Product}/>
+            <AuctionCard cardInfo={Products}/>
           </div>
       
       </section>
 
-      {/* Shop from top deals collection */}
+      {/* {/* Shop from top deals collection  */}
        <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Deals"/>
@@ -73,18 +73,18 @@ function page() {
             <Heading title="Shop from Top Deals Collection"/>
           </div>
           <div>
-            <AuctionCard cardInfo={Product}/>
+            <AuctionCard cardInfo={Products}/>
           </div>
       
       </section>
 
-      {/* community */}
+      {/* {/* community  */}
 
       <section>
         Community
       </section>
 
-      {/* Top product */}
+      {/* {/* Top product  */}
       <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Top Product"/>
@@ -93,10 +93,10 @@ function page() {
             <Heading title="This Week Top Product"/>
           </div>
           <div>
-            <AuctionCard cardInfo={Product}/>
+            <AuctionCard cardInfo={Products}/>
           </div>
       
-      </section>
+      </section> 
 
       {/* hero section */}
 
