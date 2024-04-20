@@ -9,7 +9,7 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
 
 type BreadcrubProps ={
-    text:string[]
+    text:any
 }
 
 export const Breadcrumb =({paths}:BreadcrubProps)=>{

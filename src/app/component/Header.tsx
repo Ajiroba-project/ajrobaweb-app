@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { socialIcon, headerMenu, marqueeInfo } from '../static-data'
 import Image from 'next/image'
 import Brand from '../asset/logo.svg'
-import Link from 'next/link'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { IoCartOutline } from 'react-icons/io5'
 import { BiBell } from 'react-icons/bi'
 import { CiSearch } from 'react-icons/ci'
@@ -11,24 +12,26 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { AuctionMarquee } from './Auction-Marquee'
 
 export const Header = () => {
+    const pathname = usePathname();
+  const isRootPath = pathname === '/';
   const [active, setActive] = useState<number>(0)
   // const [submenu, setSubmenu]= useState<boolean>();
   return (
     <>
       <header className={` mb-9 `}>
-        <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white w-screen'>
-          <AuctionMarquee info={marqueeInfo} />
-
-          <div className='header-socials lg:flex gap-3 hidden'>
+        <div className='flex items-center gap-2 bg-[#2A2A2A] p-3 px-12 text-sm text-white f-full'>
+          {/* <AuctionMarquee info={marqueeInfo} /> */}
+          <div className='header-socials flex gap-3 '>
             {socialIcon.map((val, index) => (
               <div key={index} className="w-4"><Image src={val.icon} alt={"socials"}/></div>
             ))}
           </div>
         </div>
         {/* end of top Marquee */}
+        
         <div className='flex items-center justify-between gap-5 bg-white  p-6 lg:px-14 px-7 shadow-md'>
           <div className='Brand-logo'>
-            <Link href="/">
+            <Link href={"/"}>
              <Image src={Brand} alt='brand-logo' />
            </Link>
           </div>
@@ -42,7 +45,7 @@ export const Header = () => {
                     setActive(index)
                   }}
                 >
-                  <Link href={val.path} className='flex items-center gap-2'>
+                  <Link href={isRootPath ? val.path : `${pathname}/${val.path}`} className='flex items-center gap-2'>
                     {val.name}
                     {val.submenu ? (
                       <>

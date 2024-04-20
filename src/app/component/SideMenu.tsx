@@ -2,6 +2,8 @@
 import {useState, Fragment} from "react"
 import {categories} from '../static-data'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { FiMenu } from 'react-icons/fi'
+import { IoClose } from 'react-icons/io5'
 import Link from 'next/link'
 import { Poppins, Inter } from "next/font/google";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
@@ -21,7 +23,7 @@ return (
                 categories.map((val, index)=>(
                 <Fragment key={index}>
 
-                    <div  className="relative "> 
+                    <div  className="relative"> 
                         <li className={`${poppins.className} ${active === index ?"text-[#F25E26]":""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `} onClick={()=>{setActive(active === index ? null : index)}}>
                             <span className="flex gap-2 items-center ">
                                 <p>{val.name}</p> {active === index ? <IoIosArrowUp/>:<IoIosArrowDown/>}    
@@ -37,7 +39,7 @@ return (
                             <div key={subcategory.name} className={` ${active === 1 ? "": "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
                                 <Link href={"#"} className={` `}>{subcategory.name}</Link>
                                 
-                                {subcategory.subcategory && (
+                                {('subcategory' in subcategory) && (
                                     <ul className="z-50 ">
                                         {subcategory.subcategory?.map((subSubcategory) => (
                                             <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
@@ -85,7 +87,7 @@ export const MobileSideMenu =()=>{
                             <div key={subcategory.name} className={` ${active === 1 ? "": "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
                                 <Link href={"#"} className={`${active === 1 ? "font-bold":""} `}>{subcategory.name}</Link>
                                 
-                                {subcategory.subcategory && (
+                                {('subcategory' in subcategory) && (
                                     <ul className="z-50 ">
                                         {subcategory.subcategory?.map((subSubcategory) => (
                                             <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
@@ -112,3 +114,6 @@ export const MobileSideMenu =()=>{
 
     )
 }
+
+
+
