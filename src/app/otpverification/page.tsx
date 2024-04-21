@@ -6,6 +6,7 @@ import AuthHero from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { HiArrowLongLeft } from "react-icons/hi2";
 
 function Page() {
     const router = useRouter();
@@ -35,6 +36,8 @@ function Page() {
 
     const handleVerify = () => {
         console.log(otp?.join(""), "sortedotp");
+        setOtp(["", "", "", "", "", ""])
+        router.push('/verification')
     };
 
     return (
@@ -85,9 +88,19 @@ function Page() {
                             <nav className="flex gap-2">
                                 <small className="text-base">Didn’t get email?</small>
                                 <small className="text-base">
-                                    <Link href={"/"} className="text-[#F25E26] text-sm">
+                                    <button onClick={() => handleVerify()} className="text-[#F25E26] text-sm">
                                         Click to resend
-                                    </Link>
+                                    </button>
+                                </small>
+                            </nav>
+                        </div>
+
+
+                        <div className="flex cursor-pointer justify-center items-center mt-4">
+                            <nav onClick={() => router.back()} className="flex items-center gap-2">
+                                <HiArrowLongLeft />
+                                <small className="text-base">
+                                    Back
                                 </small>
                             </nav>
                         </div>
