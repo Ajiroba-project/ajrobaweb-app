@@ -5,9 +5,6 @@
  import { HIW } from "../component/How-it-works"
  import { Products } from "../static-data"
 
-
-
-
 function page() {
   return (
     <>

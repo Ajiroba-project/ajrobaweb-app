@@ -10,8 +10,12 @@ import * as yup from "yup";
 import Input from "../component/Input";
 import Select from "../component/Select";
 import { useRouter } from 'next/navigation'
+import { useMutateData } from "@/hooks/useMutateData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
+
     type dataProps = {
         first_name: string;
         last_name: string;
@@ -31,7 +35,6 @@ function Page() {
     const schema = yup.object().shape({
         first_name: yup.string().required("Full Name is required"),
         last_name: yup.string().required("Full Name is required"),
-
         email: yup
             .string()
             .matches(
@@ -66,16 +69,54 @@ function Page() {
         resolver: yupResolver(schema),
     });
 
-    const sumbitForm = async (data: dataProps) => {
-        console.log(data);
 
-        reset();
-        router.push('/otpverification')
+
+    const handleSuccess = (data: any) => {
+        // console.log("Mutation successful:", data);
+
+        if (data.status === 201) {
+            reset();
+            router.push('/otpverification')
+        } else if (data.status === 400 || data.status === 409) {
+            toast.error(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            reset();
+        }
     };
+
+    const handleError = (error: any) => {
+        console.error("Mutation failed:", error);
+
+    };
+
+    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+        "signup",
+        handleSuccess,
+        handleError,
+    );
+
+
+    const sumbitForm = (data: dataProps) => {
+        mutate({
+            url: "/api/auth",
+            payload: data
+        });
+    };
+
 
     return (
         <>
             <div className="px-4">
+                <ToastContainer closeOnClick />
                 <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />
@@ -269,7 +310,7 @@ function Page() {
                             <DefaultButton
                                 type="submit"
                                 className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Create Account"
+                                text={status === 'pending' ? 'loading...' : "Create Account"}
                                 handleClick={() => console.log("clcikeddd")}
                             />
                         </div>
