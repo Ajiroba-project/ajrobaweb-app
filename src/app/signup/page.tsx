@@ -72,11 +72,24 @@ function Page() {
 
 
     const handleSuccess = (data: any) => {
-        // console.log("Mutation successful:", data);
+
 
         if (data.status === 201) {
+
+            toast.success(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                onClose: () => router.push('/otpverification')
+
+            })
             reset();
-            router.push('/otpverification')
+
         } else if (data.status === 400 || data.status === 409) {
             toast.error(`${data?.data?.message}`, {
                 position: "top-right",

@@ -1,54 +1,28 @@
 import { NextResponse } from "next/server";
-// import ls from "localstorage-slim";
 
 export async function POST(request) {
-    const body = await request.json();
-
-
-
-    const cacheBuster = `cache=${Date.now()}`;
-
-
-    const myHeaders = {
-        "Content-Type": "application/json",
-        // "Authorization": `token ${authorizationHeader}`
-    };
-
-
-
-    const res = await fetch(`${process.env.BASE_URL}/auth/signup_admin/?${cacheBuster}`, {
-        method: 'POST',
-        maxBodyLength: Infinity,
-        headers: myHeaders,
-        body: JSON.stringify(body),
-    });
-
-    const contentType = res.headers.get('Content-Type');
-    let data;
-    let status;
-
     try {
+        const body = await request.json();
+        const cacheBuster = `cache=${Date.now()}`;
 
-        if (contentType && contentType.includes('application/json')) {
-            data = await res.json();
-        } else {
+        const res = await fetch(`${process.env.BASE_URL}/auth/signup_admin/?${cacheBuster}`, {
+            method: 'POST',
+            maxBodyLength: Infinity,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
 
-            data = await res.text();
-        }
+        // Parse response body as JSON
+        const data = await res.json();
+        const status = res.status;
 
-        status = res.status;
+        // Return JSON response with data and status
+        return NextResponse.json({ data, status });
     } catch (error) {
-
-        console.error('Error parsing response:', error.message);
-        data = null;
-        status = 500;
+        // Handle any errors gracefully
+        console.error('Error processing request:', error.message);
+        return NextResponse.error(new Error('Internal Server Error'));
     }
-
-
-    const responseData = { data, status };
-    // console.log(responseData, 'responsedatata')
-    return NextResponse.json(responseData);
 }
-
-
-

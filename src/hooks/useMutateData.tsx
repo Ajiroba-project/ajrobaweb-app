@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 interface RequestPayload {
     url: string;
-    payload: any; // Define the type of payload as needed
+    payload: any;
 }
 
 const postData = async (request: RequestPayload): Promise<any> => {
