@@ -7,6 +7,9 @@ import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { HiArrowLongLeft } from "react-icons/hi2";
+import { useMutateData } from "@/hooks/useMutateData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
     const router = useRouter();
@@ -34,15 +37,84 @@ function Page() {
         }
     };
 
+
+
+    const handleSuccess = (data: any) => {
+
+
+        if (data.status === 200) {
+
+            toast.success(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                onClose: () => router.push('/verification')
+
+            })
+            setOtp(["", "", "", "", "", ""])
+
+
+        } else if (data.status === 400) {
+            toast.error(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            setOtp(["", "", "", "", "", ""])
+
+        }
+    };
+
+    const handleError = (error: any) => {
+        console.error("Mutation failed:", error);
+
+    };
+
+    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+        "signup",
+        handleSuccess,
+        handleError,
+    );
+
+    // console.log(data, 'datatta')
+
+
+
     const handleVerify = () => {
-        console.log(otp?.join(""), "sortedotp");
-        setOtp(["", "", "", "", "", ""])
-        router.push('/verification')
+
+        const Payload = {
+            otp: otp?.join("")
+        }
+
+
+        mutate({
+            url: "/api/verifyaccount",
+            payload: Payload
+        });
+
+    };
+
+    const resendotp = () => {
+
+        router.push('/resendotp')
+
     };
 
     return (
         <>
             <div className="px-8">
+                <ToastContainer closeOnClick />
                 <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />
@@ -79,7 +151,7 @@ function Page() {
                             <DefaultButton
                                 type="submit"
                                 className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Verify"
+                                text={status === 'pending' ? 'loading...' : 'Verify'}
                                 handleClick={() => handleVerify()}
                             />
                         </div>
@@ -88,7 +160,7 @@ function Page() {
                             <nav className="flex gap-2">
                                 <small className="text-base">Didn’t get email?</small>
                                 <small className="text-base">
-                                    <button onClick={() => handleVerify()} className="text-[#F25E26] text-sm">
+                                    <button onClick={() => resendotp()} className="text-[#F25E26] text-sm">
                                         Click to resend
                                     </button>
                                 </small>

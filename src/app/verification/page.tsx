@@ -12,7 +12,7 @@ function Page() {
     const router = useRouter();
 
     const handleVerify = () => {
-        router.push("/");
+        router.push("/signin");
     };
 
     return (
