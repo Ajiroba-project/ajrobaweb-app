@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Input from "../component/Input";
 import Select from "../component/Select";
+import { useRouter } from 'next/navigation'
 
 function Page() {
     type dataProps = {
@@ -24,6 +25,8 @@ function Page() {
         residential: string;
         gender: string;
     };
+
+    const router = useRouter()
 
     const schema = yup.object().shape({
         first_name: yup.string().required("Full Name is required"),
@@ -65,7 +68,9 @@ function Page() {
 
     const sumbitForm = async (data: dataProps) => {
         console.log(data);
+
         reset();
+        router.push('/otpverification')
     };
 
     return (
