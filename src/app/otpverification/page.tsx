@@ -50,8 +50,8 @@ function Page() {
                 </nav>
 
                 <AuthHero
-                    title="Register"
-                    menu="Start using our e-commerce for all your needs, buy a ticket and start winning through a raffle draw"
+                    title="OTP Verification"
+                    menu="Please provide the 6-digit security code sents to your e-mail address"
                 />
 
                 <div className=" flex justify-center mb-20 mt-12 ">

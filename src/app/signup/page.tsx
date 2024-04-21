@@ -290,7 +290,7 @@ function Page() {
                         <div className="flex justify-center items-center mt-4">
                             <small className="text-base">
                                 Already have an account?
-                                <span className="text-[#F25E26] text-sm"> Sign in</span>
+                                <span onClick={() => router.push('/signin')} className="text-[#F25E26] text-sm"> Sign in</span>
                             </small>
                         </div>
                     </form>
