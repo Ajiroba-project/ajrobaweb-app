@@ -102,6 +102,19 @@ function Page() {
 
             });
             reset();
+        } else {
+            toast.error(`${'An Error Occured'}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            reset();
         }
     };
 
@@ -343,7 +356,7 @@ function Page() {
                         <div className="flex justify-center items-center mt-4">
                             <small className="text-base">
                                 Already have an account?
-                                <span onClick={() => router.push('/signin')} className="text-[#F25E26] text-sm"> Sign in</span>
+                                <span onClick={() => router.push('/signin')} className="text-[#F25E26] text-sm cursor-pointer "> Sign in</span>
                             </small>
                         </div>
                     </form>

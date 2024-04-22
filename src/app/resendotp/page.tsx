@@ -67,7 +67,7 @@ function Page() {
             })
             reset()
 
-        } else if (data.status === 400) {
+        } else if (data.status === 403 || data.status === 404) {
             toast.error(`${data?.data?.message}`, {
                 position: "top-right",
                 autoClose: 5000,
@@ -80,6 +80,19 @@ function Page() {
 
             });
             reset()
+        } else {
+            toast.error(`${'An Error Occured'}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            reset();
         }
     };
 
@@ -97,10 +110,7 @@ function Page() {
 
 
     const sumbitForm = async (data: dataProps) => {
-        // console.log(data);
         reset();
-        // router.push("/otpverification");
-
         mutate({
             url: "/api/resendotp",
             payload: data

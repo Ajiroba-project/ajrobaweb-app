@@ -1,34 +1,28 @@
 "use client";
 import Link from "next/link";
 import Brand from "../asset/logo.svg";
+import passwordlock from "../asset/passwordlock.svg";
 import Image from "next/image";
 import AuthHero from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import Input from "../component/Input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Input from "../component/Input";
-import { useRouter } from 'next/navigation'
-import { FaRegEyeSlash } from "react-icons/fa";
-import { FaRegEye } from "react-icons/fa6";
+import { HiArrowLongLeft } from "react-icons/hi2";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
     type dataProps = {
-
         email: string;
-
-        password: string;
-
     };
 
-    const router = useRouter()
-
+    const router = useRouter();
     const schema = yup.object().shape({
-
-
         email: yup
             .string()
             .matches(
@@ -36,13 +30,6 @@ function Page() {
                 "Valid email is required",
             )
             .required("Email is required"),
-
-
-        password: yup
-            .string()
-            .required("Password is required")
-            .min(6, "Can't be lesser than 6 digits"),
-
     });
 
     const {
@@ -60,6 +47,7 @@ function Page() {
     });
 
 
+
     const handleSuccess = (data: any) => {
 
 
@@ -74,10 +62,10 @@ function Page() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-                onClose: () => router.push('/')
+                onClose: () => router.push('/otpverification')
 
             })
-            reset();
+            reset()
 
         } else if (data.status === 403 || data.status === 404) {
             toast.error(`${data?.data?.message}`, {
@@ -91,7 +79,7 @@ function Page() {
                 theme: "light",
 
             });
-            reset();
+            reset()
         } else {
             toast.error(`${'An Error Occured'}`, {
                 position: "top-right",
@@ -120,16 +108,18 @@ function Page() {
     );
 
 
+
     const sumbitForm = async (data: dataProps) => {
+        reset();
         mutate({
-            url: "/api/signin",
+            url: "/api/resendpassotp",
             payload: data
         });
     };
 
     return (
         <>
-            <div className="px-4 ">
+            <div className="px-8">
                 <ToastContainer closeOnClick />
                 <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
                     <Link href={"/"}>
@@ -138,21 +128,28 @@ function Page() {
                 </nav>
 
                 <AuthHero
-                    title="Welcome Back"
-                    menu="Sign in to shop on Ajiroba"
+                    title="Resend OTP"
+                    menu="No worries! An OTP will be sent to reset your password"
                 />
 
-                <div className=" flex justify-center mb-20 ">
+                <section className="flex justify-center items-center mb-8 mt-10">
+                    <Image
+                        src={passwordlock}
+                        alt="password-logo"
+                        width={60}
+                        height={60}
+                    />
+                </section>
+
+                <div className=" flex justify-center ">
                     <form onSubmit={handleSubmit(sumbitForm)}>
-                        <div className="grid xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 2xl:grid-cols-1 grid-cols-1 gap-8 px-3 mt-12">
-
-
+                        <div className="grid xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 2xl:grid-cols-1 grid-cols-1 gap-8 px-3 ">
                             <div className="flex flex-col">
                                 <Input
                                     label="Email"
                                     type="text"
                                     name="email"
-                                    placeholder="Email Address/Phone Number*"
+                                    placeholder="Enter Email Address"
                                     register={register}
                                     errors={errors.email}
                                 />
@@ -160,64 +157,23 @@ function Page() {
                                     {errors?.email?.message}
                                 </div>
                             </div>
-
-
-                            <div className="flex flex-col">
-                                <Input
-                                    label=" Password"
-                                    type="password"
-                                    name="password"
-                                    placeholder="****"
-                                    register={register}
-                                    errors={errors.password}
-                                    HiEyeSlash={<FaRegEyeSlash />}
-                                    HiEye={<FaRegEye />}
-
-                                />
-                                <div className="text-xs text-red-700">
-                                    {errors?.password?.message}
-                                </div>
-                            </div>
-
-
-
-
                         </div>
                         <div className="flex justify-center items-center mt-4">
                             <DefaultButton
                                 type="submit"
                                 className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Sign In"
+                                text="Proceed"
                                 handleClick={() => console.log("")}
                             />
                         </div>
 
-                        <div className="flex flex-wrap gap-2 justify-between items-center mt-4">
-                            <div>
-                                <input
-                                    type="checkbox"
-                                    id="agreement"
-                                    value="true"
-                                    className="mr-2 text-wdc-inactivebutton"
-                                />
-                                <span className="text-sm">
-                                    Remember me
 
-                                </span>
-                            </div>
-                            <div onClick={() => router.push('forgot-password')} >
-                                <span className="cursor-pointer" >Forgot password?</span>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center items-center mt-4">
-                            <small className="text-base">
-                                Don`t have an account?
-                                <span onClick={() => router.push('/signup')} className="text-[#F25E26] text-sm  cursor-pointer "> Sign up</span>
-                            </small>
-                        </div>
                     </form>
+
+
+
                 </div>
+
             </div>
         </>
     );

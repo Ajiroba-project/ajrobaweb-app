@@ -62,7 +62,6 @@ function Page() {
     });
 
     const sumbitForm = async (data: dataProps) => {
-        console.log(data);
         reset();
         router.push("/passwordverified");
     };

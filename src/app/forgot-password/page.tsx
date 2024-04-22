@@ -12,6 +12,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { HiArrowLongLeft } from "react-icons/hi2";
+import { useMutateData } from "@/hooks/useMutateData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
     type dataProps = {
@@ -43,15 +46,76 @@ function Page() {
         resolver: yupResolver(schema),
     });
 
+
+    const handleSuccess = (data: any) => {
+
+
+        if (data.status === 200) {
+
+            toast.success(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                onClose: () => router.push('/forgotpassword')
+
+            })
+            reset();
+
+        } else if (data.status === 403 || data.status === 404) {
+            toast.error(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            reset();
+        } else {
+            toast.error(`${'An Error Occured'}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+        }
+    };
+
+    const handleError = (error: any) => {
+        console.error("Mutation failed:", error);
+
+    };
+
+    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+        "signup",
+        handleSuccess,
+        handleError,
+    );
+
     const sumbitForm = async (data: dataProps) => {
-        console.log(data);
-        reset();
-        router.push("/otpverification");
+        mutate({
+            url: "/api/forgotpassword",
+            payload: data
+        });
     };
 
     return (
         <>
             <div className="px-8">
+                <ToastContainer closeOnClick />
                 <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />

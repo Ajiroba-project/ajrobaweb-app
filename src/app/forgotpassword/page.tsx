@@ -116,7 +116,7 @@ function Page() {
 
     const resendotp = () => {
 
-        router.push('/resendotp')
+        router.push('/resendpassotp')
 
     };
 
