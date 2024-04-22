@@ -1,19 +1,14 @@
-import { Hero } from "./component/Hero";
-import { Heading } from "./component/Heading"
-import { SubHeading } from "./component/SubHeading"
-import { AuctionCard } from "./component/Card"
-import { HIW } from "./component/How-it-works"
-import { Products } from "./static-data"
-import { Header } from "./component/Header";
-import { Footer } from "./component/Footer";
-import './globals.css'
-
-
+ import { Hero } from "../component/Hero";
+ import { Heading } from "../component/Heading"
+ import { SubHeading } from "../component/SubHeading"
+ import { AuctionCard } from "../component/Card"
+ import { HIW } from "../component/How-it-works"
+ import { Products } from "../static-data"
 
 function page() {
   return (
     <>
-      <Header />
+
       <main className=''>
         {/* hero section */}
         <section>
@@ -108,7 +103,6 @@ function page() {
 
 
       </main>
-      <Footer />
     </>
   )
 }
