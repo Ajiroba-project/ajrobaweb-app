@@ -19,7 +19,7 @@ function page() {
       </section>
 
     {/*  Auction section  */}
-      <section className="flex flex-col container gap-4 my-24">
+      {/* <section className="flex flex-col container gap-4 my-24">
           <div>
             <SubHeading title="Today"/>
           </div>
@@ -29,18 +29,20 @@ function page() {
           <div>
             <AuctionCard cardInfo={Products}/>
           </div>
-      </section>
+      </section> */}
 
       {/*  How it works  */}
-      <section className="flex flex-col container gap-4  my-28">
+
+      {/* <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="How it works"/>
         </div>
         <HIW/>
-      </section>
+      </section> */}
 
       {/* {/* Categories  */}
-      <section className="flex flex-col container gap-4  my-28">
+
+      {/* <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Categories"/>
         </div>
@@ -48,10 +50,10 @@ function page() {
             <Heading title="Shop by Categories"/>
           </div>
       
-      </section>
+      </section> */}
 
       {/* {/* Featured Product  */}
-      <section className="flex flex-col container gap-4  my-28">
+      {/* <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Featured"/>
         </div>
@@ -62,10 +64,10 @@ function page() {
             <AuctionCard cardInfo={Products}/>
           </div>
       
-      </section>
+      </section> */}
 
       {/* {/* Shop from top deals collection  */}
-       <section className="flex flex-col container gap-4  my-28">
+       {/* <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Deals"/>
         </div>
@@ -76,7 +78,7 @@ function page() {
             <AuctionCard cardInfo={Products}/>
           </div>
       
-      </section>
+      </section> */}
 
       {/* {/* community  */}
 
@@ -85,7 +87,7 @@ function page() {
       </section>
 
       {/* {/* Top product  */}
-      <section className="flex flex-col container gap-4  my-28">
+      {/* <section className="flex flex-col container gap-4  my-28">
         <div>
            <SubHeading title="Top Product"/>
         </div>
@@ -96,7 +98,7 @@ function page() {
             <AuctionCard cardInfo={Products}/>
           </div>
       
-      </section> 
+      </section>  */}
 
       {/* hero section */}
 

@@ -17,7 +17,7 @@ export const SideMenu= ()=>{
     
 return (
     <>
-    <section className="p-12">
+    <section className="p-14">
         <ul className="relative ">
            {
                 categories.map((val, index)=>(
