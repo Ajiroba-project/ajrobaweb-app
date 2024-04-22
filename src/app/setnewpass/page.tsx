@@ -12,6 +12,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { HiArrowLongLeft } from "react-icons/hi2";
+import { useMutateData } from "@/hooks/useMutateData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
     type dataProps = {
@@ -32,21 +35,6 @@ function Page() {
 
     });
 
-    // const schema = yup.object().shape({
-    //     username: yup.string("username should be a string")
-    //         .required("username is required"),
-
-    //     new_password: yup
-    //         .string()
-    //         .required('Password is required')
-    //         .min(6, 'Password must be at least 6 characters'),
-    //     // confirmPassword: yup
-    //     //     .string()
-    //     //     .oneOf([yup.ref('password'), null], 'Passwords must match')
-    //     //     .required('Confirm Password is required'),
-    // });
-
-
     const {
         reset,
         register,
@@ -61,14 +49,98 @@ function Page() {
         resolver: yupResolver(schema),
     });
 
-    const sumbitForm = async (data: dataProps) => {
+
+    const handleSuccess = (data: any) => {
+
+
+        if (data.status === 201) {
+
+            toast.success(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                onClose: () => router.push('/passset')
+
+            })
+            reset();
+
+        } else if (data.status === 400 || data.status === 409) {
+            toast.error(`${data?.data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            reset();
+        } else {
+            toast.error(`${'An Error Occured'}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+
+            });
+            reset();
+        }
+    };
+
+    const handleError = (error: any) => {
+
+        toast.error(`${'An Error Occured'}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+
+        });
         reset();
-        router.push("/passwordverified");
+    };
+
+    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+        "signup",
+        handleSuccess,
+        handleError,
+    );
+
+
+
+    const sumbitForm = async (data: dataProps) => {
+
+
+        const Payload = {
+            password: data.password
+        }
+
+        mutate({
+            url: "/api/newpass",
+            payload: data
+        });
+
+
     };
 
     return (
         <>
             <div className="px-8">
+                <ToastContainer closeOnClick />
                 <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />
