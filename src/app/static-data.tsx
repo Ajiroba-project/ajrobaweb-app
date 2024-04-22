@@ -45,7 +45,12 @@ export const headerMenu = [
   {
     name: 'Account',
     path: '/',
-    submenu: []
+    submenu: [
+
+      { name: 'Sign Up', path: '/signup' },
+      { name: 'Sign In', path: '/signin' },
+      { name: 'Profile', path: '/profile' },
+    ],
   },
   {
     name: 'Help',

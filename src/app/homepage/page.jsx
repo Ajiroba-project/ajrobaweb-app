@@ -1,19 +1,14 @@
-import { Hero } from "./component/Hero";
-import { Heading } from "./component/Heading"
-import { SubHeading } from "./component/SubHeading"
-import { AuctionCard } from "./component/Card"
-import { HIW } from "./component/How-it-works"
-import { Products } from "./static-data"
-import { Header } from "./component/Header";
-import { Footer } from "./component/Footer";
-import './globals.css'
-
-
+ import { Hero } from "../component/Hero";
+ import { Heading } from "../component/Heading"
+ import { SubHeading } from "../component/SubHeading"
+ import { AuctionCard } from "../component/Card"
+ import { HIW } from "../component/How-it-works"
+ import { Products } from "../static-data"
 
 function page() {
   return (
     <>
-      <Header />
+
       <main className=''>
         {/* hero section */}
         <section>
@@ -22,8 +17,6 @@ function page() {
           </div>
         </section>
 
-    {/*  Auction section  */}
-      {/* <section className="flex flex-col container gap-4 my-24">
         {/*  Auction section  */}
         <section className="flex flex-col container gap-4 my-24">
           <div>
@@ -35,17 +28,8 @@ function page() {
           <div>
             <AuctionCard cardInfo={Products} />
           </div>
-      </section> */}
         </section>
 
-      {/*  How it works  */}
-
-      {/* <section className="flex flex-col container gap-4  my-28">
-        <div>
-           <SubHeading title="How it works"/>
-        </div>
-        <HIW/>
-      </section> */}
         {/*  How it works  */}
         <section className="flex flex-col container gap-4  my-28">
           <div>
@@ -54,14 +38,6 @@ function page() {
           <HIW />
         </section>
 
-      {/* {/* Categories  */}
-
-      {/* <section className="flex flex-col container gap-4  my-28">
-        <div>
-           <SubHeading title="Categories"/>
-        </div>
-        <div>
-            <Heading title="Shop by Categories"/>
         {/* {/* Categories  */}
         <section className="flex flex-col container gap-4  my-28">
           <div>
@@ -70,18 +46,9 @@ function page() {
           <div>
             <Heading title="Shop by Categories" />
           </div>
-      
-      </section> */}
 
         </section>
 
-      {/* {/* Featured Product  */}
-      {/* <section className="flex flex-col container gap-4  my-28">
-        <div>
-           <SubHeading title="Featured"/>
-        </div>
-        <div>
-            <Heading title="Featured Products"/>
         {/* {/* Featured Product  */}
         <section className="flex flex-col container gap-4  my-28">
           <div>
@@ -93,18 +60,9 @@ function page() {
           <div>
             <AuctionCard cardInfo={Products} />
           </div>
-      
-      </section> */}
 
         </section>
 
-      {/* {/* Shop from top deals collection  */}
-       {/* <section className="flex flex-col container gap-4  my-28">
-        <div>
-           <SubHeading title="Deals"/>
-        </div>
-        <div>
-            <Heading title="Shop from Top Deals Collection"/>
         {/* {/* Shop from top deals collection  */}
         <section className="flex flex-col container gap-4  my-28">
           <div>
@@ -116,8 +74,6 @@ function page() {
           <div>
             <AuctionCard cardInfo={Products} />
           </div>
-      
-      </section> */}
 
         </section>
 
@@ -127,13 +83,6 @@ function page() {
           Community
         </section>
 
-      {/* {/* Top product  */}
-      {/* <section className="flex flex-col container gap-4  my-28">
-        <div>
-           <SubHeading title="Top Product"/>
-        </div>
-        <div>
-            <Heading title="This Week Top Product"/>
         {/* {/* Top product  */}
         <section className="flex flex-col container gap-4  my-28">
           <div>
@@ -145,8 +94,6 @@ function page() {
           <div>
             <AuctionCard cardInfo={Products} />
           </div>
-      
-      </section>  */}
 
         </section>
 
@@ -156,7 +103,6 @@ function page() {
 
 
       </main>
-      <Footer />
     </>
   )
 }
