@@ -4,16 +4,12 @@ import { SubHeading } from "./component/SubHeading"
 import { AuctionCard } from "./component/Card"
 import { HIW } from "./component/How-it-works"
 import { Products } from "./static-data"
-import { Header } from "./component/Header";
-import { Footer } from "./component/Footer";
-import './globals.css'
 
 
 
 function page() {
   return (
     <>
-      <Header />
       <main className=''>
         {/* hero section */}
         <section>
@@ -108,7 +104,6 @@ function page() {
 
 
       </main>
-      <Footer />
     </>
   )
 }
