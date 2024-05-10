@@ -29,7 +29,6 @@ function Page() {
         residential: string;
         gender: string;
     };
-
     const router = useRouter()
 
     const schema = yup.object().shape({
@@ -71,8 +70,6 @@ function Page() {
 
 
     const handleSuccess = (data: any) => {
-
-
         if (data.status === 201) {
 
             toast.success(`${data?.data?.message}`, {

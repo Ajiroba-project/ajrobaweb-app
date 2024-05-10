@@ -1,47 +1,57 @@
-"use client"
-import {useState} from 'react'
+'use client'
+import { useState } from 'react'
 import { SideMenu, MobileSideMenu } from './SideMenu'
 import { Carousel } from './Carousel'
 import { marqueeInfo } from '../static-data'
 import { AuctionMarquee } from './Auction-Marquee'
-import { FiMenu } from "react-icons/fi";
-import { IoClose } from "react-icons/io5";
+import { FiMenu } from 'react-icons/fi'
+import { IoClose } from 'react-icons/io5'
 
 type menuprops = boolean | null
 
 export const Hero = () => {
-  const [active, setActive] = useState<menuprops>(false);
+  const [active, setActive] = useState<menuprops>(false)
   return (
     <>
       <section className='flex flex-col '>
-        <div className="">
-            <div className='lg:grid lg:grid-cols-3 md:grid-cols-3 flex flex-col'>
-
-              <div className="lg:hidden md:hidden bg-[#F6F6F6] flex flex-col items-center ">
-                    <div className="container py-4 relative"  >
-                      <div className="flex items-center gap-4 z-40" onClick={()=>{setActive(!active ? !active :null)}}>
-                        {active ? <IoClose className="w-2xl cursor-pointer"/> : <FiMenu className="w-2xl cursor-pointer" /> }
-                        <p className="cursor-pointer "> Categories </p>
-                      </div>
-
-                      {active && <div className="absolute h-full z-30  left-0 top-2.8 w-full"><MobileSideMenu /></div>}
-
-                    </div>
+        <div className=''>
+          <div className='flex flex-col md:grid-cols-3 lg:grid lg:grid-cols-3'>
+            <div className='flex flex-col items-center bg-[#F6F6F6] md:hidden lg:hidden '>
+              <div className='container relative py-4'>
+                <div
+                  className='z-40 flex items-center gap-4'
+                  onClick={() => {
+                    setActive(!active ? !active : null)
+                  }}
+                >
+                  {active ? (
+                    <IoClose className='w-2xl cursor-pointer' />
+                  ) : (
+                    <FiMenu className='w-2xl cursor-pointer' />
+                  )}
+                  <p className='cursor-pointer '> Categories </p>
                 </div>
 
-                  <div className='bg-[#F6F6F6] lg:block hidden '>
-                    <SideMenu />
+                {active && (
+                  <div className='top-2.8 absolute left-0  z-30 h-full w-full'>
+                    <MobileSideMenu />
                   </div>
-
-                <div className='lg:col-span-2 lg:mr-12 md:mr-12 col-span-3'>
-                  <Carousel />
-                </div>
-
+                )}
+              </div>
             </div>
+
+            <div className='hidden bg-[#F6F6F6] lg:block '>
+              <SideMenu />
+            </div>
+
+            <div className='col-span-3 lg:col-span-2  lg:mr-12'>
+              <Carousel />
+            </div>
+          </div>
         </div>
-    
+
         <div className='my-4 bg-[#F25E26] p-4 text-white '>
-          <div className='container p-2 '>
+          <div className=' p-2 px-5'>
             <AuctionMarquee info={marqueeInfo} />
           </div>
         </div>

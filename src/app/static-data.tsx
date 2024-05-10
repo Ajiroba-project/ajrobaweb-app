@@ -15,6 +15,10 @@ import computing from '@/app/asset/image/computing.png'
 import phones from '@/app/asset/image/phones.png'
 import mother from '@/app/asset/image/mother.png'
 import royalty from '@/app/asset/image/royalty.png'
+import phone from "@/app/asset/image/phone.png"
+import fashions from "@/app/asset/image/fashions.png"
+import foodstuff from "@/app/asset/image/foodstuff.png"
+import mc from "@/app/asset/image/m&c.png"
 import Social from '@/app/asset/socials/Social.svg'
 import Social1 from '@/app/asset/socials/Social-1.svg'
 import Social2 from '@/app/asset/socials/Social-2.svg'
@@ -66,6 +70,8 @@ export const categories = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     image: product2,
+    image2:foodstuff,
+    
     categories: [
       {
         name: 'Fruits',
@@ -102,6 +108,7 @@ export const categories = [
     name: 'Fashion and Beauty',
     path: 'Categories/fashion and Beauty',
     image: fashionBeauty,
+    image2:fashions,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     categories: [
@@ -146,6 +153,7 @@ export const categories = [
     name: 'fashion',
     path: 'Categories/fashion',
     image: fashion,
+    image2:fashions,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi '
   },
@@ -153,6 +161,7 @@ export const categories = [
     name: 'Electronics',
     path: 'Categories/Electronics',
     image: product4,
+    image2:phone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     categories: [
@@ -198,6 +207,7 @@ export const categories = [
     name: 'Phones',
     path: 'Categories/Phones',
     image: phones,
+    image2:phone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi',
     categories: [
@@ -243,6 +253,7 @@ export const categories = [
     name: 'Computing',
     path: 'Categories/Computing',
     image: computing,
+    image2:phone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
 
@@ -291,6 +302,7 @@ export const categories = [
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
+    image2:mc,
     categories: [
       {
         name: 'Toys',
@@ -336,6 +348,7 @@ export const categories = [
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,
+    image2:mc,
     categories: [
       {
         name: 'Bead',
@@ -474,8 +487,8 @@ export const Products = [
     name: 'human hair',
     image: product1,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '100,000',
+    previousPrice: '400,000',
     rating: '',
     time: '',
     category: 'Fashion'
@@ -484,8 +497,8 @@ export const Products = [
     name: 'Rice',
     image: product2,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '1000',
+    previousPrice: '20,000',
     time: '',
     rating: '',
     category: 'FoodStuff'
@@ -494,8 +507,8 @@ export const Products = [
     name: 'Smart Watch',
     image: product3,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '10,000',
+    previousPrice: '400,000',
     rating: '',
     time: '',
     category: 'Phones'
@@ -504,90 +517,92 @@ export const Products = [
     name: 'Head Phone',
     image: product4,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '20,000',
+    previousPrice: '40,000',
     time: '',
     rating: '',
     category: 'Phones'
   },
   {
-    name: 'Head Phone',
+    name: 'Washing Machine',
     image: product5,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '200,000',
+    previousPrice: '500,000',
     rating: '',
     time: '',
-    category: 'Phones'
+    category: 'Electronic'
   },
   {
-    name: 'Head Phone',
+    name: 'Iphone XR',
     image: product6,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '120,000',
+    previousPrice: '700,000',
     time: '',
     rating: '',
     category: 'Phones'
   },
   {
-    name: 'Head Phone',
+    name: 'beads',
     image: product7,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '2000',
+    previousPrice: '5000',
     rating: '',
     time: '',
     category: 'Mother and Child'
   },
   {
-    name: 'Head Phone',
+    name: 'Bead',
     image: product8,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '120,000',
+    previousPrice: '400,000',
     time: '',
     rating: '',
     category: 'Phones'
   },
-  {
-    name: 'human hair',
-    image: product1,
-    description: '',
-    price: '',
-    previousPrice: '',
-    rating: '',
-    time: '',
-    category: 'Fashion'
-  },
-  {
-    name: 'Oloyin Beans',
-    image: product2,
-    description: '',
-    price: '',
-    previousPrice: '',
-    time: '',
-    rating: '',
-    category: 'FoodStuff'
-  },
-  {
-    name: 'Smart Watch',
-    image: product3,
-    description: '',
-    price: '',
-    previousPrice: '',
-    rating: '',
-    time: '',
-    category: 'Mother and Child'
-  },
-  {
-    name: 'Head Phone',
-    image: product4,
-    description: '',
-    price: '',
-    previousPrice: '',
-    time: '',
-    rating: '',
-    category: 'Royalty'
-  }
+  // {
+  //   name: 'human hair',
+  //   image: product1,
+  //   description: '',
+  //   price: '200,000',
+  //   previousPrice: '600,000',
+  //   rating: '',
+  //   time: '',
+  //   category: 'Fashion'
+  // },
+  // {
+  //   name: 'Oloyin Beans',
+  //   image: product2,
+  //   description: '',
+  //   price: '5000',
+  //   previousPrice: '7000',
+  //   time: '',
+  //   rating: '',
+  //   category: 'FoodStuff'
+  // },
+  // {
+  //   name: 'Smart Watch',
+  //   image: product3,
+  //   description: '',
+  //   price: '2500',
+  //   previousPrice: '5000',
+  //   rating: '',
+  //   time: '',
+  //   category: 'Phones'
+  // },
+  // {
+  //   name: 'Head Phone',
+  //   image: product4,
+  //   description: '',
+  //   price: '1500',
+  //   previousPrice: '4000',
+  //   time: '',
+  //   rating: '',
+  //   category: 'Phone'
+  // }
 ]
+
+

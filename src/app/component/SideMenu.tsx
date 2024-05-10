@@ -17,13 +17,13 @@ export const SideMenu= ()=>{
     
 return (
     <>
-    <section className="p-14">
-        <ul className="relative ">
+    <section className="px-[4rem] ">
+        <ul className="relative pt-6">
            {
                 categories.map((val, index)=>(
                 <Fragment key={index}>
 
-                    <div  className="relative"> 
+                    <div  className="relative "> 
                         <li className={`${poppins.className} ${active === index ?"text-[#F25E26]":""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `} onClick={()=>{setActive(active === index ? null : index)}}>
                             <span className="flex gap-2 items-center ">
                                 <p>{val.name}</p> {active === index ? <IoIosArrowUp/>:<IoIosArrowDown/>}    
