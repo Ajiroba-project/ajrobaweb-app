@@ -24,6 +24,10 @@ import Social1 from '@/app/asset/socials/Social-1.svg'
 import Social2 from '@/app/asset/socials/Social-2.svg'
 import Social3 from '@/app/asset/socials/Social-3.svg'
 import Social4 from '@/app/asset/socials/Social-4.svg'
+import catPhone from '@/app/asset/image/phones.svg'
+import catwc from '@/app/asset/image/wc.svg'
+import catgroup from '@/app/asset/image/Group.svg'
+import catfash from '@/app/asset/image/fash.svg'
 import { IoLocationOutline } from 'react-icons/io5'
 import { FiPhoneCall } from 'react-icons/fi'
 import { LuMail } from 'react-icons/lu'
@@ -70,8 +74,9 @@ export const categories = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     image: product2,
-    image2:foodstuff,
-    
+    image2: foodstuff,
+    svg: catgroup,
+
     categories: [
       {
         name: 'Fruits',
@@ -108,7 +113,8 @@ export const categories = [
     name: 'Fashion and Beauty',
     path: 'Categories/fashion and Beauty',
     image: fashionBeauty,
-    image2:fashions,
+    image2: fashions,
+    svg: catfash,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     categories: [
@@ -153,7 +159,8 @@ export const categories = [
     name: 'fashion',
     path: 'Categories/fashion',
     image: fashion,
-    image2:fashions,
+    image2: fashions,
+    svg: catfash,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi '
   },
@@ -161,7 +168,9 @@ export const categories = [
     name: 'Electronics',
     path: 'Categories/Electronics',
     image: product4,
-    image2:phone,
+    image2: phone,
+    svg: catPhone,
+
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     categories: [
@@ -207,7 +216,8 @@ export const categories = [
     name: 'Phones',
     path: 'Categories/Phones',
     image: phones,
-    image2:phone,
+    image2: phone,
+    svg: catPhone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi',
     categories: [
@@ -253,7 +263,8 @@ export const categories = [
     name: 'Computing',
     path: 'Categories/Computing',
     image: computing,
-    image2:phone,
+    image2: phone,
+    svg: catPhone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
 
@@ -302,7 +313,8 @@ export const categories = [
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
-    image2:mc,
+    image2: mc,
+    svg: catwc,
     categories: [
       {
         name: 'Toys',
@@ -348,7 +360,8 @@ export const categories = [
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,
-    image2:mc,
+    image2: mc,
+    svg: catfash,
     categories: [
       {
         name: 'Bead',

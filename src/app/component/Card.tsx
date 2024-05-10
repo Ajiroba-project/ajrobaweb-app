@@ -204,7 +204,8 @@ export const CategoryFeatureCard = ({ cardInfo, currentPage }: cardDetails) => {
           <div className='flex items-center justify-center relative'>
             <Image src={value.image2} alt='product' className='w-fit' />
 
-          <div className='flex items-center justify-between p-4 absolute'>
+          <div className='flex items-center justify-between p-4 absolute flex-col gap-3'>
+            <Image src={value.svg} alt='product' className='w-fit' />
             <p className='text-sm text-white'>{value.name} </p>
           </div>
           </div>
