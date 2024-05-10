@@ -43,8 +43,8 @@ export const Header = () => {
         </div>
         {/* end of top Marquee */}
 
-        <div className='relative bg-white p-4  shadow-md'>
-          <div className='flex w-full items-center lg:gap-[1em] gap-0 sm:justify-between md:justify-between lg:justify-around '>
+        <div className='relative bg-white p-2  shadow-md'>
+          <div className='flex w-full items-center lg:gap-[1em] gap-0 justify-between md:justify-between lg:justify-around '>
             <div className='flex cursor-pointer items-center gap-2'>
               <Link href={'/'}>
                 <Image src={Brand} alt='brand-logo' />
@@ -114,7 +114,7 @@ export const Header = () => {
                           )}
                         </span>
                         {activeMenu === index && (
-                          <ul className='absolute left-0 z-10 mt-2 rounded-md bg-white shadow-md'>
+                          <ul className='absolute left-0 z-10 mt-2 rounded-md bg-white shadow-md w-max'>
                             {/* {val.submenu.map((subItem, subIndex) => (
                                   <li key={subIndex} className="py-2 text-[#A09F9F] hover:text-[#F25E26] px-4 hover:bg-gray-100">{subItem.name}</li>
                                 ))} */}

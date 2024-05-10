@@ -54,16 +54,21 @@ export const headerMenu = [
     name: 'Account',
     path: '/',
     submenu: [
-
       { name: 'Sign Up', path: '/signup' },
       { name: 'Sign In', path: '/signin' },
-      { name: 'Profile', path: '/profile' },
-    ],
+      { name: 'Profile', path: '/profile' }
+    ]
   },
   {
     name: 'Help',
     path: '/',
-    submenu: []
+    submenu: [
+      { name: 'FAQ', path: '/faq' },
+      { name: 'About Us', path: '/aboutUs' },
+      { name: 'Contact Us', path: '/contactUs' },
+      { name: 'Live Chat', path: '/#' },
+      { name: 'Privacy Policy', path: '/#' },
+    ]
   }
 ]
 
@@ -434,7 +439,7 @@ export const socialIcon = [
 export const quickLinks = [
   {
     name: 'Home',
-    links: ''
+    links: '/'
   },
   {
     name: 'Auction Deals',
@@ -453,15 +458,15 @@ export const quickLinks = [
 export const ourCompany = [
   {
     name: 'Contact us',
-    links: ''
+    links: '/contactUs'
   },
   {
     name: 'About Us',
-    links: ''
+    links: '/AboutUs'
   },
   {
     name: 'FAQ',
-    links: ''
+    links: '/faq'
   }
 ]
 export const getInTouch = [
@@ -619,3 +624,37 @@ export const Products = [
 ]
 
 
+export const faq = [
+  {
+    question: 'How does raffle draw work on your platform?',
+    answer: ''
+  },
+  {
+    question: 'Are the raffle draw conducted fairly?',
+    answer: ''
+  },
+  {
+    question: 'What kind of price can I expect to win?',
+    answer: ''
+  },
+  {
+    question: 'How do I know if I have won?',
+    answer: ''
+  },
+  {
+    question: 'Is there a limit to the number of ticket i can buy?',
+    answer: ''
+  },
+  {
+    question: 'What measure do you take to protect user privacy and data security?',
+    answer: ''
+  },
+   {
+    question: 'Can I participate in the raffle draw from anywhere in the world?',
+    answer: ''
+  },
+   {
+    question: 'How can I contact customer support if I have further questions or concerns?',
+    answer: ''
+  }
+]

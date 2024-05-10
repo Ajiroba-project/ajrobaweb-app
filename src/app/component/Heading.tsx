@@ -11,3 +11,13 @@ export const Heading = ({ title }: titleProp) => {
         </>
     )
 }
+
+
+export const HeadingText =({title}:titleProp)=>{
+    return (
+        <>
+        <h1 className="font-bold text-2xl">{title}</h1>
+        
+        </>
+    )
+}
