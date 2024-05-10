@@ -13,11 +13,12 @@ import { AuctionMarquee } from './Auction-Marquee'
 import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
 
+
 export const Header = () => {
   const pathname = usePathname()
   const isRootPath = pathname === '/'
   const [active, setActive] = useState<number>(0)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean|null>(null)
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
   // const [submenu, setSubmenu]= useState<boolean>();
 
@@ -63,7 +64,7 @@ export const Header = () => {
               className={
                 isOpen
                   ? `hidden items-center lg:flex `
-                  : 'fixed left-0 top-0 z-50 py-5 w-1/3 h-screen items-center bg-white lg:relative lg:h-fit'
+                  : 'fixed left-0 top-0 z-50 py-5 h-screen items-center bg-white lg:relative lg:h-fit'
               }
             >
               {/* brand logo for small screen */}
@@ -88,7 +89,7 @@ export const Header = () => {
                 className={
                   !isOpen
                     ? `flex w-max flex-col items-baseline gap-3  lg:flex-row`
-                    : 'w-full items-center gap-2 lg:flex py-4'
+                    : 'w-full items-center gap-2 lg:flex py-2'
                 }
               >
                 {headerMenu.map((val, index) => (
@@ -97,7 +98,7 @@ export const Header = () => {
                     className={`cursor-pointer px-4 ${
                       activeMenu === index ? 'text-[#F25E26]' : 'text-[#A09F9F]'
                     } hover:text-[#F25E26]
-                    ${!isOpen ? "py-4 lg:py-1":""}
+                    ${!isOpen ? "py-2 lg:py-1":""}
                     `}
                     onClick={() => {
                       setActiveMenu(activeMenu === index ? null : index)
