@@ -125,7 +125,7 @@ function Page() {
     };
 
     const { data, error, isError, isSuccess, mutate, status } = useMutateData(
-        "signup",
+        "signin",
         handleSuccess,
         handleError,
     );
@@ -198,7 +198,7 @@ function Page() {
                             <DefaultButton
                                 type="submit"
                                 className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Sign In"
+                                text={status === 'pending' ? 'loading...' : "Sign in"}
                                 handleClick={() => console.log("")}
                             />
                         </div>

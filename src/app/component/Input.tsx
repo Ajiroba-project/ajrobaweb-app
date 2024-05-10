@@ -6,7 +6,7 @@ interface InputProps {
     name: string;
     placeholder: string;
     register: any;
-    errors: any;
+    errors?: any;
     className?: string;
     HiEye?: any;
     HiEyeSlash?: any;

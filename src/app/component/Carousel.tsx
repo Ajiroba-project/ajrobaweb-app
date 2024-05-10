@@ -24,11 +24,11 @@ export const CarouselSwiper = () => {
     //   onSlideChange={() => console.log('slide change')}
     >
       <SwiperSlide>
-        <Image src={carousel} alt="carousel"/>
+        <Image src={carousel} alt="carousel" />
       </SwiperSlide>
 
-      <SwiperSlide> <Image src={carousel} alt="carousel"/></SwiperSlide>
-      <SwiperSlide> <Image src={carousel} alt="carousel"/></SwiperSlide>
+      <SwiperSlide> <Image src={carousel} alt="carousel" /></SwiperSlide>
+      <SwiperSlide> <Image src={carousel} alt="carousel" /></SwiperSlide>
       <SwiperSlide>Slide 4</SwiperSlide>
     </Swiper>
   )
