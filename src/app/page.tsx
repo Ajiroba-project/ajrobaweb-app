@@ -5,6 +5,7 @@ import { Heading } from "./component/Heading"
 import { SubHeading } from "./component/SubHeading"
 import { AuctionCard, CategoryFeatureCard, ProductCard } from './component/Card'
 import { HIW } from "./component/How-it-works"
+import {Banner} from "./component/Banner"
 import { Community } from './component/Community'
 import { Products,categories } from "./static-data"
 import { Header } from "./component/Header";
@@ -17,6 +18,7 @@ import './globals.css'
 
 const Page = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
+  const [categoryCurrentPage, setCategoryCurrentPage] = useState<number>(0)
   const totalCards = Products.length
   const cardsPerPage = 4
 
@@ -28,6 +30,8 @@ const Page = () => {
   const moveRight = () => {
     setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages - 1))
   };
+
+  
 
 
 
@@ -82,8 +86,16 @@ const Page = () => {
           <div className='flex items-center justify-between'>
             <SubHeading title='Categories' />
             <div className='flex items-center gap-2'>
-              <FaArrowLeft className='text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black' />
-              <FaArrowRight className='cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black' />
+              <FaArrowLeft
+                className='text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black'
+                onClick={()=>{setCategoryCurrentPage(prevPage => Math.max(0, prevPage - 1))}}
+              />
+              <FaArrowRight
+                className='cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black'
+                onClick={()=>{setCategoryCurrentPage(prevPage =>
+                  Math.min(prevPage + 1, totalPages - 1)
+                )}}
+              />
             </div>
           </div>
 
@@ -93,7 +105,7 @@ const Page = () => {
           <div className='flex flex-col justify-center'>
             <CategoryFeatureCard
               cardInfo={categories}
-              currentPage={currentPage}
+              currentPage={categoryCurrentPage}
             />
             <div className='flex justify-center pt-4'>
               <DefaultButton
@@ -178,8 +190,8 @@ const Page = () => {
         </section>
 
         {/* hero section */}
-        <section>
-          
+        <section className='bg-[#F25E26]'>
+          <Banner />
         </section>
       </main>
       <Footer />

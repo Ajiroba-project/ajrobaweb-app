@@ -29,7 +29,7 @@ export const Header = () => {
       <header className={` mb-9 `}>
         <div className='bg-[#2A2A2A] p-3 text-sm text-white'>
           <div className='flex items-center justify-between gap-3 px-7'>
-            <div className=' '>
+            <div className='w-full  '>
               <AuctionMarquee info={marqueeInfo} />
             </div>
             <div className='header-socials mr-3 hidden gap-3 lg:flex '>
