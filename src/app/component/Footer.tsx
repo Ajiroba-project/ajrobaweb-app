@@ -10,7 +10,7 @@ export const Footer = () => {
   
   return (
     <footer className={`${lato.className} bg-[#111111]`}>
-      <section className="text-white p-12 mt-8">
+      <section className="text-white p-12 ">
         <div className="p-8 flex gap-24 flex-col lg:md:flex-row  lg:items-start items-center " >
           <div className="flex flex-col gap-4">
             <Link href="/">

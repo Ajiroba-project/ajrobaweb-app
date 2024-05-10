@@ -6,14 +6,14 @@ import {categories} from '../static-data'
 const page =()=> {
 
     return (
-        <>
-            <main>
-                <Title title="Categories"/>
-                <div className="container">
-                    <CategoryCard cardInfo={categories}/>
-                </div>
-            </main>
-        </>
+      <>
+        <main>
+          <Title title='Categories' />
+          <div className='container'>
+            <CategoryCard cardInfo={categories} currentPage={0} />
+          </div>
+        </main>
+      </>
     )
 }
 

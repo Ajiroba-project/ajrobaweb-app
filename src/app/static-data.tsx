@@ -15,11 +15,19 @@ import computing from '@/app/asset/image/computing.png'
 import phones from '@/app/asset/image/phones.png'
 import mother from '@/app/asset/image/mother.png'
 import royalty from '@/app/asset/image/royalty.png'
+import phone from "@/app/asset/image/phone.png"
+import fashions from "@/app/asset/image/fashions.png"
+import foodstuff from "@/app/asset/image/foodstuff.png"
+import mc from "@/app/asset/image/m&c.png"
 import Social from '@/app/asset/socials/Social.svg'
 import Social1 from '@/app/asset/socials/Social-1.svg'
 import Social2 from '@/app/asset/socials/Social-2.svg'
 import Social3 from '@/app/asset/socials/Social-3.svg'
 import Social4 from '@/app/asset/socials/Social-4.svg'
+import catPhone from '@/app/asset/image/phones.svg'
+import catwc from '@/app/asset/image/wc.svg'
+import catgroup from '@/app/asset/image/Group.svg'
+import catfash from '@/app/asset/image/fash.svg'
 import { IoLocationOutline } from 'react-icons/io5'
 import { FiPhoneCall } from 'react-icons/fi'
 import { LuMail } from 'react-icons/lu'
@@ -46,16 +54,21 @@ export const headerMenu = [
     name: 'Account',
     path: '/',
     submenu: [
-
       { name: 'Sign Up', path: '/signup' },
       { name: 'Sign In', path: '/signin' },
-      { name: 'Profile', path: '/profile' },
-    ],
+      { name: 'Profile', path: '/profile' }
+    ]
   },
   {
     name: 'Help',
     path: '/',
-    submenu: []
+    submenu: [
+      { name: 'FAQ', path: '/faq' },
+      { name: 'About Us', path: '/aboutUs' },
+      { name: 'Contact Us', path: '/contactUs' },
+      { name: 'Live Chat', path: '/#' },
+      { name: 'Privacy Policy', path: '/#' },
+    ]
   }
 ]
 
@@ -66,6 +79,9 @@ export const categories = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     image: product2,
+    image2: foodstuff,
+    svg: catgroup,
+
     categories: [
       {
         name: 'Fruits',
@@ -102,6 +118,8 @@ export const categories = [
     name: 'Fashion and Beauty',
     path: 'Categories/fashion and Beauty',
     image: fashionBeauty,
+    image2: fashions,
+    svg: catfash,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     categories: [
@@ -146,6 +164,8 @@ export const categories = [
     name: 'fashion',
     path: 'Categories/fashion',
     image: fashion,
+    image2: fashions,
+    svg: catfash,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi '
   },
@@ -153,6 +173,9 @@ export const categories = [
     name: 'Electronics',
     path: 'Categories/Electronics',
     image: product4,
+    image2: phone,
+    svg: catPhone,
+
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     categories: [
@@ -198,6 +221,8 @@ export const categories = [
     name: 'Phones',
     path: 'Categories/Phones',
     image: phones,
+    image2: phone,
+    svg: catPhone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi',
     categories: [
@@ -243,6 +268,8 @@ export const categories = [
     name: 'Computing',
     path: 'Categories/Computing',
     image: computing,
+    image2: phone,
+    svg: catPhone,
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
 
@@ -291,6 +318,8 @@ export const categories = [
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
+    image2: mc,
+    svg: catwc,
     categories: [
       {
         name: 'Toys',
@@ -336,6 +365,8 @@ export const categories = [
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,
+    image2: mc,
+    svg: catfash,
     categories: [
       {
         name: 'Bead',
@@ -408,7 +439,7 @@ export const socialIcon = [
 export const quickLinks = [
   {
     name: 'Home',
-    links: ''
+    links: '/'
   },
   {
     name: 'Auction Deals',
@@ -427,15 +458,15 @@ export const quickLinks = [
 export const ourCompany = [
   {
     name: 'Contact us',
-    links: ''
+    links: '/contactUs'
   },
   {
     name: 'About Us',
-    links: ''
+    links: '/AboutUs'
   },
   {
     name: 'FAQ',
-    links: ''
+    links: '/faq'
   }
 ]
 export const getInTouch = [
@@ -474,8 +505,8 @@ export const Products = [
     name: 'human hair',
     image: product1,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '100,000',
+    previousPrice: '400,000',
     rating: '',
     time: '',
     category: 'Fashion'
@@ -484,8 +515,8 @@ export const Products = [
     name: 'Rice',
     image: product2,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '1000',
+    previousPrice: '20,000',
     time: '',
     rating: '',
     category: 'FoodStuff'
@@ -494,8 +525,8 @@ export const Products = [
     name: 'Smart Watch',
     image: product3,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '10,000',
+    previousPrice: '400,000',
     rating: '',
     time: '',
     category: 'Phones'
@@ -504,90 +535,126 @@ export const Products = [
     name: 'Head Phone',
     image: product4,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '20,000',
+    previousPrice: '40,000',
     time: '',
     rating: '',
     category: 'Phones'
   },
   {
-    name: 'Head Phone',
+    name: 'Washing Machine',
     image: product5,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '200,000',
+    previousPrice: '500,000',
     rating: '',
     time: '',
-    category: 'Phones'
+    category: 'Electronic'
   },
   {
-    name: 'Head Phone',
+    name: 'Iphone XR',
     image: product6,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '120,000',
+    previousPrice: '700,000',
     time: '',
     rating: '',
     category: 'Phones'
   },
   {
-    name: 'Head Phone',
+    name: 'beads',
     image: product7,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '2000',
+    previousPrice: '5000',
     rating: '',
     time: '',
     category: 'Mother and Child'
   },
   {
-    name: 'Head Phone',
+    name: 'Bead',
     image: product8,
     description: '',
-    price: '',
-    previousPrice: '',
+    price: '120,000',
+    previousPrice: '400,000',
     time: '',
     rating: '',
     category: 'Phones'
   },
+  // {
+  //   name: 'human hair',
+  //   image: product1,
+  //   description: '',
+  //   price: '200,000',
+  //   previousPrice: '600,000',
+  //   rating: '',
+  //   time: '',
+  //   category: 'Fashion'
+  // },
+  // {
+  //   name: 'Oloyin Beans',
+  //   image: product2,
+  //   description: '',
+  //   price: '5000',
+  //   previousPrice: '7000',
+  //   time: '',
+  //   rating: '',
+  //   category: 'FoodStuff'
+  // },
+  // {
+  //   name: 'Smart Watch',
+  //   image: product3,
+  //   description: '',
+  //   price: '2500',
+  //   previousPrice: '5000',
+  //   rating: '',
+  //   time: '',
+  //   category: 'Phones'
+  // },
+  // {
+  //   name: 'Head Phone',
+  //   image: product4,
+  //   description: '',
+  //   price: '1500',
+  //   previousPrice: '4000',
+  //   time: '',
+  //   rating: '',
+  //   category: 'Phone'
+  // }
+]
+
+
+export const faq = [
   {
-    name: 'human hair',
-    image: product1,
-    description: '',
-    price: '',
-    previousPrice: '',
-    rating: '',
-    time: '',
-    category: 'Fashion'
+    question: 'How does raffle draw work on your platform?',
+    answer: ''
   },
   {
-    name: 'Oloyin Beans',
-    image: product2,
-    description: '',
-    price: '',
-    previousPrice: '',
-    time: '',
-    rating: '',
-    category: 'FoodStuff'
+    question: 'Are the raffle draw conducted fairly?',
+    answer: ''
   },
   {
-    name: 'Smart Watch',
-    image: product3,
-    description: '',
-    price: '',
-    previousPrice: '',
-    rating: '',
-    time: '',
-    category: 'Mother and Child'
+    question: 'What kind of price can I expect to win?',
+    answer: ''
   },
   {
-    name: 'Head Phone',
-    image: product4,
-    description: '',
-    price: '',
-    previousPrice: '',
-    time: '',
-    rating: '',
-    category: 'Royalty'
+    question: 'How do I know if I have won?',
+    answer: ''
+  },
+  {
+    question: 'Is there a limit to the number of ticket i can buy?',
+    answer: ''
+  },
+  {
+    question: 'What measure do you take to protect user privacy and data security?',
+    answer: ''
+  },
+   {
+    question: 'Can I participate in the raffle draw from anywhere in the world?',
+    answer: ''
+  },
+   {
+    question: 'How can I contact customer support if I have further questions or concerns?',
+    answer: ''
   }
 ]
