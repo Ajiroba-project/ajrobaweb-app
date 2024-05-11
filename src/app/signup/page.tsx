@@ -21,7 +21,7 @@ function Page() {
         last_name: string;
         email: string;
         phone: string;
-        referral: string;
+        referral?: string;
         address: string;
         state: string;
         lga: string;
@@ -42,7 +42,7 @@ function Page() {
             )
             .required("Email is required"),
         phone: yup.string().required("Mobile number should be a string"),
-        referral: yup.string().required("referral should be a string"),
+        // referral: yup.string().required("referral should be a string"),
         address: yup.string().required("address should be a string"),
         state: yup.string().required("state should be a string"),
         lga: yup.string().required("lga should be a string"),
@@ -139,6 +139,7 @@ function Page() {
 
 
     const sumbitForm = (data: dataProps) => {
+        // console.log(data, 'datatat')
         mutate({
             url: "/api/auth",
             payload: data
@@ -241,10 +242,11 @@ function Page() {
                                     name="referral"
                                     placeholder="Referal code"
                                     register={register}
-                                    errors={errors.referral}
+                                // errors={errors.referral}
                                 />
                                 <div className="text-xs text-red-700">
-                                    {errors?.referral?.message}
+
+
                                 </div>
                             </div>
 
@@ -292,7 +294,7 @@ function Page() {
                                     name="residential"
                                     placeholder="residential Number"
                                     register={register}
-                                    errors={errors.referral}
+                                // errors={errors.referral}
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.residential?.message}

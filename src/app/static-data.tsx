@@ -116,7 +116,7 @@ export const categories = [
   },
   {
     name: 'Fashion and Beauty',
-    path: 'Categories/fashion and Beauty',
+    path: 'categories/fashion and Beauty',
     image: fashionBeauty,
     image2: fashions,
     svg: catfash,
@@ -162,7 +162,7 @@ export const categories = [
   },
   {
     name: 'fashion',
-    path: 'Categories/fashion',
+    path: 'categories/fashion',
     image: fashion,
     image2: fashions,
     svg: catfash,
@@ -171,7 +171,7 @@ export const categories = [
   },
   {
     name: 'Electronics',
-    path: 'Categories/Electronics',
+    path: 'categories/Electronics',
     image: product4,
     image2: phone,
     svg: catPhone,
@@ -219,7 +219,7 @@ export const categories = [
   },
   {
     name: 'Phones',
-    path: 'Categories/Phones',
+    path: 'categories/Phones',
     image: phones,
     image2: phone,
     svg: catPhone,
@@ -266,7 +266,7 @@ export const categories = [
   },
   {
     name: 'Computing',
-    path: 'Categories/Computing',
+    path: 'categories/Computing',
     image: computing,
     image2: phone,
     svg: catPhone,
@@ -314,7 +314,7 @@ export const categories = [
   },
   {
     name: 'Mother and Child',
-    path: 'Categories/Mother and Child',
+    path: 'categories/Mother and Child',
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
@@ -361,7 +361,7 @@ export const categories = [
   },
   {
     name: 'Royalty',
-    path: 'Categories/Royalty',
+    path: 'categories/Royalty',
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,
@@ -627,7 +627,8 @@ export const Products = [
 export const faq = [
   {
     question: 'How does raffle draw work on your platform?',
-    answer: ''
+    answer:
+      ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque dolores, ex, labore dignissimos laudantium vero similique vitae architecto numquam magni a blanditiis quod accusantium temporibus modi magnam quo, eum officiis?'
   },
   {
     question: 'Are the raffle draw conducted fairly?',
@@ -646,15 +647,18 @@ export const faq = [
     answer: ''
   },
   {
-    question: 'What measure do you take to protect user privacy and data security?',
+    question:
+      'What measure do you take to protect user privacy and data security?',
     answer: ''
   },
-   {
-    question: 'Can I participate in the raffle draw from anywhere in the world?',
+  {
+    question:
+      'Can I participate in the raffle draw from anywhere in the world?',
     answer: ''
   },
-   {
-    question: 'How can I contact customer support if I have further questions or concerns?',
+  {
+    question:
+      'How can I contact customer support if I have further questions or concerns?',
     answer: ''
   }
 ]

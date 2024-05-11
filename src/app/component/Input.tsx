@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 interface InputProps {
-    label: string;
+    label?: string;
     type: string;
     name: string;
     placeholder: string;
     register: any;
-    errors: any;
+    errors?: any;
     className?: string;
     HiEye?: any;
     HiEyeSlash?: any;
@@ -31,9 +31,9 @@ const Input: React.FC<InputProps> = ({
 
     return (
         <div className="flex flex-col">
-            <label htmlFor={name} className="text-sm">
+            {label && (<label htmlFor={name} className="text-sm">
                 {label}*
-            </label>
+            </label>)}
             <div className="relative">
                 <input
                     id={name}
