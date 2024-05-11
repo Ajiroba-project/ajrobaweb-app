@@ -25,26 +25,24 @@ const Page = () => {
                 onClick={() => setActive(active === index ? null : index)}
               >
                 <div
-                  className={` my-2 flex w-full  flex-col  rounded  bg-[#F7F7F7] p-5`}
+                  className={` my-2 flex w-full  flex-col  rounded  bg-[#F7F7F7] `}
                 >
                   <div
-                    className={
-                      ' flex  cursor-pointer justify-between font-semibold items-center'
-                    }
+                    className={`${active === index ? 'p-5  shadow-xl' : ' p-5'} flex  cursor-pointer items-center justify-between font-semibold`}
                   >
                     <p>{val.question} </p>
+                    {active === index ? (
+                      <FaMinus className='cursor-pointer' />
+                    ) : (
+                      <FaPlus className='cursor-pointer' />
+                    )}
+                  </div>
+                  {/* answer */}
                   {active === index ? (
-                    <FaMinus className='cursor-pointer' />
-                  ) : (
-                    <FaPlus className='cursor-pointer' />
-                  )}
-                  </div>
-                {/* answer */}
-                {active === index ? (
-                  <div className='py-5'>
-                    <p>{val.answer}</p>
-                  </div>
-                ) : null}
+                    <div className='py-5'>
+                      <p className='p-5'>{val.answer}</p>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             ))}
