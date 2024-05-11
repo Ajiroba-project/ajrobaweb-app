@@ -19,7 +19,9 @@ export const AllCategories = () => {
 
     const handleSubClick = (subCategoryName: string) => {
         setActiveSub(activeSub === subCategoryName ? null : subCategoryName);
+
         console.log(`Subcategory clicked: ${subCategoryName}`);
+        setActive(null)
     };
 
     return (
@@ -50,7 +52,7 @@ export const AllCategories = () => {
                                                     <ul className="z-50 ">
                                                         {subcategory.subcategory?.map((subSubcategory) => (
                                                             <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
-                                                                <Link href={subSubcategory.path || ''} className="py-2">{subSubcategory.name}</Link>
+                                                                <Link href={subSubcategory.path || ''} className="py-2" onClick={() => handleSubClick(subSubcategory.name)}>{subSubcategory.name}</Link>
                                                             </div>
                                                         ))}
                                                     </ul>
