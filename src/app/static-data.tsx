@@ -116,7 +116,7 @@ export const categories = [
   },
   {
     name: 'Fashion and Beauty',
-    path: 'Categories/fashion and Beauty',
+    path: 'categories/fashion and Beauty',
     image: fashionBeauty,
     image2: fashions,
     svg: catfash,
@@ -162,7 +162,7 @@ export const categories = [
   },
   {
     name: 'fashion',
-    path: 'Categories/fashion',
+    path: 'categories/fashion',
     image: fashion,
     image2: fashions,
     svg: catfash,
@@ -171,7 +171,7 @@ export const categories = [
   },
   {
     name: 'Electronics',
-    path: 'Categories/Electronics',
+    path: 'categories/Electronics',
     image: product4,
     image2: phone,
     svg: catPhone,
@@ -219,7 +219,7 @@ export const categories = [
   },
   {
     name: 'Phones',
-    path: 'Categories/Phones',
+    path: 'categories/Phones',
     image: phones,
     image2: phone,
     svg: catPhone,
@@ -266,7 +266,7 @@ export const categories = [
   },
   {
     name: 'Computing',
-    path: 'Categories/Computing',
+    path: 'categories/Computing',
     image: computing,
     image2: phone,
     svg: catPhone,
@@ -314,7 +314,7 @@ export const categories = [
   },
   {
     name: 'Mother and Child',
-    path: 'Categories/Mother and Child',
+    path: 'categories/Mother and Child',
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
@@ -361,7 +361,7 @@ export const categories = [
   },
   {
     name: 'Royalty',
-    path: 'Categories/Royalty',
+    path: 'categories/Royalty',
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,

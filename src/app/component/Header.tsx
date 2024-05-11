@@ -92,11 +92,10 @@ export const Header = () => {
                   {headerMenu.map((val, index) => (
                     <li
                       key={index}
-                      className={`cursor-pointer px-4 ${
-                        activeMenu === index
+                      className={`cursor-pointer px-4 ${activeMenu === index
                           ? 'text-[#F25E26]'
                           : 'text-[#A09F9F]'
-                      } hover:text-[#F25E26]
+                        } hover:text-[#F25E26]
                     ${!isOpen ? 'py-2 lg:py-1' : ''}
                     `}
                       onClick={() => {
