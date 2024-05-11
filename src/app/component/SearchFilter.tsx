@@ -1,4 +1,5 @@
-import React from 'react'
+import { usePathname } from 'next/navigation'
+import React, { useState } from 'react'
 // import { categories } from '@/app/static-data'
 // import { Products } from '@/app/static-data'
 import { FiMenu } from 'react-icons/fi'
@@ -60,12 +61,78 @@ export const PriceFilter = () => {
 
 export const SearchFilter = () => {
 
+  const [isOpen, setIsOpen] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('Foodstuff');
+  const pathname = usePathname();
+
+  const isRootPath = pathname === '/'
+
+  const decodedPaths = pathname
+    .split("/")
+    .filter((path) => path !== "")
+    .map((path) => decodeURIComponent(path));
+
+  console.log(decodedPaths[decodedPaths.length - 1], 'ddd')
+
+
+  const categories = [
+    {
+      name: 'Foodstuff',
+      subCategories: ['Fruits', 'Beans'],
+    },
+    {
+      name: 'Fashion And Beauty',
+      subCategories: ['Sneakers', 'Wristwatch'],
+    },
+    {
+      name: 'Fashion',
+      subCategories: ['Bags', 'Belts'],
+    },
+    // Add more categories here
+  ];
+
+
+  const currentCategory = categories.find((category) => category.name.toLowerCase() === decodedPaths[decodedPaths.length - 1].toLowerCase());
+
+  console.log(currentCategory, 'currentca')
+
+
   return (
     <div>
-      <div className='flex cursor-pointer items-center gap-3 p-3'>
+      {/* <div className='flex cursor-pointer items-center gap-3 p-3'>
         <FiMenu />
         <p> All Category</p>
+      </div> */}
+      <div className='flex cursor-pointer items-center gap-3 p-3'>
+        <FiMenu />
+        {/* <p onClick={() => setIsOpen(!isOpen)}>All Category</p> */}
+        <p >All Category</p>
       </div>
+
+      {/* {isOpen && ( */}
+
+      <div className='pl-3'>
+        {currentCategory && (
+          <div key={currentCategory.name}>
+            <p
+              onClick={() => setSelectedCategory(currentCategory.name)}
+              className={`${selectedCategory === currentCategory.name ? 'font-bold' : ''}`}
+            >
+              {currentCategory.name}
+            </p>
+            {/* {selectedCategory === currentCategory.name && ( */}
+            <ul>
+              {currentCategory.subCategories.map((subCategory) => (
+                <li key={subCategory}>{subCategory}</li>
+              ))}
+            </ul>
+            {/* )} */}
+          </div>
+        )}
+      </div>
+      {/* )} */}
+
+
 
       {/* Lists of categories */}
       <div>{/* {paths} */}</div>
