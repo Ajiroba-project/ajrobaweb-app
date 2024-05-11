@@ -4,6 +4,7 @@ import React, { useState } from "react";
 // import { categories } from '@/app/static-data'
 // import { Products } from '@/app/static-data'
 import { FiMenu } from "react-icons/fi";
+import { AllCategories } from "./AllCategories";
 // import {SideNav} from '../component/SideMenu'
 
 export const PriceFilter = () => {
@@ -61,7 +62,7 @@ export const PriceFilter = () => {
 };
 
 export const SearchFilter = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Foodstuff");
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -106,9 +107,20 @@ export const SearchFilter = () => {
       </div> */}
       <div className="flex cursor-pointer items-center gap-3 p-3">
         <FiMenu />
-        {/* <p onClick={() => setIsOpen(!isOpen)}>All Category</p> */}
-        <p>All Category</p>
+        <p onClick={() => setIsOpen(!isOpen)}>All Category</p>
+        {/* <p>All Category</p> */}
       </div>
+
+      {
+        isOpen &&
+
+        <div className='hidden bg-[#FFFFFF] lg:block  '>
+          <div className="" >
+            <AllCategories />
+          </div>
+
+        </div>
+      }
 
       {/* {isOpen && ( */}
 
@@ -145,6 +157,9 @@ export const SearchFilter = () => {
         )}
       </div>
       {/* )} */}
+
+
+
 
       {/* Lists of categories */}
       <div>{/* {paths} */}</div>
