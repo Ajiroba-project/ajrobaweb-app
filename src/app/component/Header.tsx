@@ -48,7 +48,7 @@ export const Header = () => {
               <Link href={'/'}>
                 <Image src={Brand} alt='brand-logo' />
               </Link>
-              {!isOpen ? (
+              {isOpen ? (
                 <IoClose
                   onClick={hamburgerfunc}
                   className='text-xl lg:hidden'
@@ -59,7 +59,7 @@ export const Header = () => {
 
               <div
                 className={
-                  isOpen
+                  !isOpen
                     ? `hidden items-center lg:flex `
                     : 'fixed left-0 top-0 z-50 h-screen items-center bg-white py-5 lg:relative lg:h-fit'
                 }
@@ -69,7 +69,7 @@ export const Header = () => {
                   <Link href={'/'}>
                     <Image src={Brand} alt='brand-logo' />
                   </Link>
-                  {!isOpen ? (
+                  {isOpen ? (
                     <IoClose
                       onClick={hamburgerfunc}
                       className='text-xl lg:hidden'

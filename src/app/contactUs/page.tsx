@@ -3,6 +3,7 @@ import React,{Fragment} from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import {HeadingText} from "../component/Heading"
+import { ChatBox } from '../component/ChatBox'
 import Image from "next/image"
 import call from "../asset/image/call.png"
 import message from "../asset/image/message.png"
@@ -142,7 +143,7 @@ const Page = () => {
           </p>
         </div>
 
-        <div className='m-[4rem] pb-4 flex flex-col justify-between gap-4 lg:flex-row'>
+        <div className='m-[4rem] flex flex-col justify-between gap-4 pb-4 lg:flex-row'>
           <div className='flex flex-col items-center gap-2'>
             <Image src={call} alt='call' />
             <p className='font-semibold'>Phone Number</p>
@@ -170,7 +171,7 @@ const Page = () => {
             our dedicated team will get back to you as soon as possible.
           </p>
           <form
-            className='my-[4rem] grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 items-center justify-center gap-3'
+            className='my-[4rem] grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2 lg:grid-cols-2'
             onSubmit={handleSubmit(sumbitForm)}
           >
             <Input
@@ -206,26 +207,29 @@ const Page = () => {
               className='bg-[#F6F6F6] text-[#504D4D]'
             />
 
-            <div className='lg:col-span-2 md:col-span-2'>
+            <div className='md:col-span-2 lg:col-span-2'>
               <textarea
                 placeholder='Message'
                 rows={3}
-                className='w-full border bg-[#F6F6F6] px-8 py-4 text-[#504D4D] focus:text-[#504D4D] resize-none'
+                className='w-full resize-none border bg-[#F6F6F6] px-8 py-4 text-[#504D4D] focus:text-[#504D4D]'
                 {...register('message', { required: true })}
               ></textarea>
               <div className='text-xs text-red-700'>
                 {errors?.['message']?.message}
               </div>
             </div>
-            <div className="flex lg:justify-start md:justify-start justify-center">
+            <div className='flex justify-center md:justify-start lg:justify-start'>
               <DefaultButton
-                text={`${status ==='pending' ? 'Sending...': 'Send Message'}`}
+                text={`${status === 'pending' ? 'Sending...' : 'Send Message'}`}
                 type='submit'
-                className='bg-[#FCDFD4] p-4 px-8 rounded-md'
+                className='rounded-md bg-[#FCDFD4] p-4 px-8'
                 handleClick={() => {}}
               />
             </div>
           </form>
+        </div>
+        <div className='fixed bottom-20'>
+          <ChatBox />
         </div>
       </main>
       <Footer />
