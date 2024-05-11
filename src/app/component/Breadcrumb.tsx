@@ -9,7 +9,8 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
 
 type BreadcrubProps ={
-    text:any
+    // text:any
+    paths:any;
 }
 
 export const Breadcrumb =({paths}:BreadcrubProps)=>{
@@ -26,9 +27,9 @@ export const Breadcrumb =({paths}:BreadcrubProps)=>{
             <div className=" flex gap-2 text-sm container py-10">
                 <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link> 
                 {
-                    paths.map((path, index) => (
+                    paths?.map((path:string, index:number) => (
                         <Fragment key={index}>
-                            <span> > </span>
+                            <span> {`>`} </span>
                             <Link
                             href={`/${paths.slice(0, index + 1).join("/")}`}
                             className={`${poppins.className} underline hover:text-[#F25E26] `}

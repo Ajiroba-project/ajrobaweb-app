@@ -627,7 +627,8 @@ export const Products = [
 export const faq = [
   {
     question: 'How does raffle draw work on your platform?',
-    answer: ''
+    answer:
+      ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque dolores, ex, labore dignissimos laudantium vero similique vitae architecto numquam magni a blanditiis quod accusantium temporibus modi magnam quo, eum officiis?'
   },
   {
     question: 'Are the raffle draw conducted fairly?',
@@ -646,15 +647,18 @@ export const faq = [
     answer: ''
   },
   {
-    question: 'What measure do you take to protect user privacy and data security?',
+    question:
+      'What measure do you take to protect user privacy and data security?',
     answer: ''
   },
-   {
-    question: 'Can I participate in the raffle draw from anywhere in the world?',
+  {
+    question:
+      'Can I participate in the raffle draw from anywhere in the world?',
     answer: ''
   },
-   {
-    question: 'How can I contact customer support if I have further questions or concerns?',
+  {
+    question:
+      'How can I contact customer support if I have further questions or concerns?',
     answer: ''
   }
 ]
