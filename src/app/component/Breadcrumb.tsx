@@ -18,8 +18,10 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
     const [Category, setCategory] = useState()
 
     useEffect(() => {
+
+
         if (paths.length > 0) {
-            setCategory(paths[paths.length - 1]);
+            setCategory(paths[paths.length - 2]);
         }
     }, [paths])
 
@@ -36,6 +38,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
                                 className={`${poppins.className} underline hover:text-[#F25E26] `}
                             >
                                 {path}
+                                {/* {console.log(path)} */}
                             </Link>
                         </Fragment>
                     ))

@@ -93,8 +93,8 @@ export const Header = () => {
                     <li
                       key={index}
                       className={`cursor-pointer px-4 ${activeMenu === index
-                          ? 'text-[#F25E26]'
-                          : 'text-[#A09F9F]'
+                        ? 'text-[#F25E26]'
+                        : 'text-[#A09F9F]'
                         } hover:text-[#F25E26]
                     ${!isOpen ? 'py-2 lg:py-1' : ''}
                     `}
@@ -134,7 +134,8 @@ export const Header = () => {
                       ) : (
                         <Link
                           href={
-                            isRootPath ? val.path : `${pathname}/${val.path}`
+                            // isRootPath ? val.path : `${pathname}/${val.path}`
+                            isRootPath ? val.path : `/${val.path}`
                           }
                           className='flex items-center gap-2'
                         >
