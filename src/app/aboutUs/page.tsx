@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
+import {ChatBox} from "../component/ChatBox";
 import {HeadingText} from "../component/Heading"
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
@@ -49,7 +50,7 @@ const Page = () => {
   return (
     <Fragment>
       <Header />
-      <main className='container my-10'>
+      <main className='container my-12'>
         <div className='flex flex-col items-center justify-center py-2'>
           <HeadingText title='About us' />
           <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
@@ -91,11 +92,11 @@ const Page = () => {
           </p>
         </div>
         <div className='m-[4rem] flex flex-col place-content-center items-center justify-center gap-2 lg:flex-row'>
-          <div className='flex justify-between lg:w-3/4'>
+          <div className='flex justify-between mx-4 flex-col lg:flex-row gap-2'>
             {whyChooseUs.map((val, index) => (
-              <div key={index} className='flex gap-3 '>
+              <div key={index} className='flex gap-3 ' >
                 <div>
-                  <Image src={val.icon} alt='icon' />
+                  <Image src={val.icon} alt='icon' className="w-1/2"/>
                 </div>
 
                 <div className='flex flex-col  gap-2'>
@@ -105,6 +106,9 @@ const Page = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div className="fixed bottom-20">
+          <ChatBox/>
         </div>
       </main>
       <Footer />
