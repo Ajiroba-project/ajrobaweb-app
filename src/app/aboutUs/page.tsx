@@ -103,8 +103,8 @@ const Page = () => {
           <div className='flex justify-between mx-4 flex-col lg:flex-row gap-2'>
             {whyChooseUs.map((val, index) => (
               <div key={index} className='flex gap-3 ' >
-                <div>
-                  <Image src={val.icon} alt='icon' />
+                <div className="w-full">
+                  <Image src={val.icon} alt='icon' className="w-full" />
                 </div>
 
                 <div className='flex flex-col  gap-2'>

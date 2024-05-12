@@ -2,11 +2,6 @@
 import Link from "next/link"
 import { Fragment } from "react"
 import { useState, useEffect } from "react"
-import { Poppins } from "next/font/google";
-
-
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
-
 
 type BreadcrubProps = {
     text?: any,
@@ -24,7 +19,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
     }, [paths])
 
     return (
-        <section className={`${poppins.className} bg-[#F6F6F6] -mt-8`}>
+        <section className={` bg-[#F6F6F6] -mt-8`}>
             <div className=" flex gap-2 text-sm container py-4">
                 <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link>
                 {
@@ -33,7 +28,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
                             <span> {`>`} </span>
                             <Link
                                 href={`/${paths.slice(0, index + 1).join("/")}`}
-                                className={`${poppins.className} underline hover:text-[#F25E26] `}
+                                className={` underline hover:text-[#F25E26] `}
                             >
                                 {path}
                             </Link>
@@ -43,7 +38,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
 
             </div>
             <div className="container mb-4">
-                <p className={`${poppins.className} capitalize text-xl pb-4`}>{Category}</p>
+                <p className={` capitalize text-xl pb-4`}>{Category}</p>
             </div>
 
         </section>
@@ -52,7 +47,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
 
 export const DefaultBreadCrumb = ({paths}:BreadcrubProps)=>{
     return (
-        <section className={`${poppins.className}`}>
+        <section className={``}>
             <div className=" flex gap-2 text-sm container pb-4">
                 <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link>
                 {
@@ -61,7 +56,7 @@ export const DefaultBreadCrumb = ({paths}:BreadcrubProps)=>{
                             <span> {`>`}  </span>
                             <Link
                                 href={`/${paths.slice(0, index + 1).join("/")}`}
-                                className={`${poppins.className} text-[#F25E26] capitalize`}
+                                className={` text-[#F25E26] capitalize`}
                             >
                                 {path}
                             </Link>

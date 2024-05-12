@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import RQProviders from "@/utils/provider";
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "600", "900"], });
 
 export const metadata: Metadata = {
   title: "Ajiroba ",

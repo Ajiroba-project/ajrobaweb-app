@@ -92,7 +92,7 @@ export const Header = () => {
                   {headerMenu.map((val, index) => (
                     <li
                       key={index}
-                      className={`cursor-pointer px-4 ${activeMenu === index
+                      className={`cursor-pointer px-4 py-4 ${activeMenu === index
                           ? 'text-[#F25E26]'
                           : 'text-[#A09F9F]'
                         } hover:text-[#F25E26]
