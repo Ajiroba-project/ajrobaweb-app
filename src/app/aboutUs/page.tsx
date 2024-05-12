@@ -1,16 +1,23 @@
+'use client'
 import React, {Fragment} from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import {ChatBox} from "../component/ChatBox";
+import {DefaultBreadCrumb} from "../component/Breadcrumb";
 import {HeadingText} from "../component/Heading"
+import {usePathName} from '@/hooks/usePathname'
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
-import verify from "../asset/verify.svg"
-
+import verify from "../asset/image/check.png"
 import Image from "next/image"
+import { Poppins } from "next/font/google";
+
+
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
 
 const Page = () => {
+    const decodedPaths = usePathName()
 
   const about = [
     {
@@ -50,7 +57,8 @@ const Page = () => {
   return (
     <Fragment>
       <Header />
-      <main className='container my-12'>
+      <main className={`${poppins.className} container my-12`}>
+        <DefaultBreadCrumb paths={decodedPaths}/>
         <div className='flex flex-col items-center justify-center py-2'>
           <HeadingText title='About us' />
           <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
@@ -96,7 +104,7 @@ const Page = () => {
             {whyChooseUs.map((val, index) => (
               <div key={index} className='flex gap-3 ' >
                 <div>
-                  <Image src={val.icon} alt='icon' className="w-1/2"/>
+                  <Image src={val.icon} alt='icon' />
                 </div>
 
                 <div className='flex flex-col  gap-2'>

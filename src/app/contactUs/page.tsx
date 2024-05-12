@@ -4,6 +4,8 @@ import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import {HeadingText} from "../component/Heading"
 import { ChatBox } from '../component/ChatBox'
+import {DefaultBreadCrumb} from "../component/Breadcrumb";
+import { usePathName } from '@/hooks/usePathname'
 import Image from "next/image"
 import call from "../asset/image/call.png"
 import message from "../asset/image/message.png"
@@ -28,6 +30,7 @@ type dataProps = {
 
 const Page = () => {
   const router = useRouter()
+  const decodedPaths = usePathName()
 
   const schema = yup.object().shape({
         name:yup.string().required("Name is required"),
@@ -133,7 +136,8 @@ const Page = () => {
     <Fragment>
       <Header />
       <ToastContainer closeOnClick />
-      <main className='container my-[3rem] '>
+      <main className='container mt-[3rem] '>
+        <DefaultBreadCrumb paths={decodedPaths}/>
         <div className='flex flex-col items-center justify-center'>
           <HeadingText title='Contact us' />
           <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
