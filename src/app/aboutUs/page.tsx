@@ -6,14 +6,11 @@ import {ChatBox} from "../component/ChatBox";
 import {DefaultBreadCrumb} from "../component/Breadcrumb";
 import {HeadingText} from "../component/Heading"
 import {usePathName} from '@/hooks/usePathname'
+import {FaCheck} from 'react-icons/fa'
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
-import verify from "../asset/image/check.png"
+// import verify from "../asset/image/check.png"
 import Image from "next/image"
-import { Poppins } from "next/font/google";
-
-
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 
 
 const Page = () => {
@@ -36,19 +33,16 @@ const Page = () => {
   const whyChooseUs = [
     {
       name: 'Reliable',
-      icon: verify,
       description:
         'We consistently conduct our business in a manner that makes our customers and stakeholders trust us why holding ourselves reliable for all our actions.'
     },
     {
       name: 'Transparent',
-      icon: verify,
       description:
         'We always promise what we can deliver and deliver what we promise.  Our transactions are conducted without any form of biase in all our processes.'
     },
     {
       name: 'Customer-Centric',
-      icon: verify,
       description:
         'Our awareness of and response to customers’ needs and feed back is second to none. We place premium on anything that has to do with our customers because we know that we are the business mainly because of our customers.'
     }
@@ -57,11 +51,11 @@ const Page = () => {
   return (
     <Fragment>
       <Header />
-      <main className={`${poppins.className} container my-12`}>
+      <main className={` container my-12`}>
         <DefaultBreadCrumb paths={decodedPaths}/>
         <div className='flex flex-col items-center justify-center py-2'>
           <HeadingText title='About us' />
-          <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
+          <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4 '>
             Ajiroba Technologies Ltd (“Ajiroba”) is a royal name that is
             connected to a  KING, which means the person that a KING will see
             first of all as the KING wakes up. Going by our royal name, we see
@@ -102,9 +96,9 @@ const Page = () => {
         <div className='m-[4rem] flex flex-col place-content-center items-center justify-center gap-2 lg:flex-row'>
           <div className='flex justify-between mx-4 flex-col lg:flex-row gap-2'>
             {whyChooseUs.map((val, index) => (
-              <div key={index} className='flex gap-3 ' >
-                <div className="w-full">
-                  <Image src={val.icon} alt='icon' className="w-full" />
+              <div key={index} className='flex justify-start' >
+                <div className=" rounded-full p-2 bg-[#F25E26] h-fit mx-2">
+                  <FaCheck className="text-white" /> 
                 </div>
 
                 <div className='flex flex-col  gap-2'>

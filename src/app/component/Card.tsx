@@ -46,7 +46,7 @@ export const ProductCard = ({ cardInfo }: cardDetails) => {
 
                   {/* stars */}
                   <p className='flex justify-end text-left'>
-                    {star.map((val, index) => (
+                    {star.map((_, index) => (
                       <span key={index}>
                         <FaStar className='text-[#F25E26]' />
                       </span>
@@ -72,7 +72,7 @@ export const CategoryCard = ({ cardInfo }: cardDetails) => {
         className={`${poppins.className} my-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4`}
       >
         {cardInfo.map((value, index) => (
-          <div className='rounded-2xl shadow-md' key={index}>
+          <div className='rounded-2xl shadow-md hover:shadow-lg cursor-pointer' key={index}>
             <div className='rounded-t-2xl bg-[#F6F6F6]'>
               <div className='flex items-center justify-center'>
                 <Image
@@ -120,7 +120,7 @@ export const AuctionCard = ({ cardInfo, currentPage }: cardDetails) => {
     for (let i = startIndex; i < endIndex; i++) {
       const value = cardInfo[i]
       cards.push(
-        <div className=' w-full rounded bg-[#F6F6F6] shadow-md' key={i}>
+        <div className=' w-full rounded bg-[#F6F6F6] shadow-md hover:scale-105 hover:-translate-y-6 cursor-pointer' key={i}>
           <div className=''>
             <div className='flex items-center justify-between p-4'>
               <p className='text-sm text-[#A09F9F]'>On Auction </p>
@@ -200,7 +200,7 @@ export const CategoryFeatureCard = ({ cardInfo, currentPage }: cardDetails) => {
     for (let i = startIndex; i < endIndex; i++) {
       const value = cardInfo[i]
       cards.push(
-        <div className='rounded ' key={i}>
+        <div className='rounded hover:shadow-xl hover:scale-110 cursor-pointer' key={i}>
           <div className='flex items-center justify-center relative'>
             <Image src={value.image2} alt='product' className='w-fit' />
 
