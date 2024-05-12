@@ -1,5 +1,5 @@
 'use client'
-import React, {Fragment} from 'react'
+import React, {Fragment, useState} from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import {ChatBox} from "../component/ChatBox";
@@ -9,12 +9,14 @@ import {usePathName} from '@/hooks/usePathname'
 import {FaCheck} from 'react-icons/fa'
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
-// import verify from "../asset/image/check.png"
 import Image from "next/image"
 
 
 const Page = () => {
     const decodedPaths = usePathName()
+    const [isOpen, setIsOpen]=useState<boolean >(false)
+
+
 
   const about = [
     {
@@ -52,7 +54,7 @@ const Page = () => {
     <Fragment>
       <Header />
       <main className={` container my-12`}>
-        <DefaultBreadCrumb paths={decodedPaths}/>
+        <DefaultBreadCrumb paths={decodedPaths} />
         <div className='flex flex-col items-center justify-center py-2'>
           <HeadingText title='About us' />
           <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4 '>
@@ -94,14 +96,14 @@ const Page = () => {
           </p>
         </div>
         <div className='m-[4rem] flex flex-col place-content-center items-center justify-center gap-2 lg:flex-row'>
-          <div className='flex justify-between mx-4 flex-col lg:flex-row gap-2'>
+          <div className='mx-4 flex flex-col justify-between gap-2 lg:flex-row'>
             {whyChooseUs.map((val, index) => (
-              <div key={index} className='flex justify-start' >
-                <div className=" rounded-full p-2 bg-[#F25E26] h-fit mx-2">
-                  <FaCheck className="text-white" /> 
+              <div key={index} className='flex justify-start'>
+                <div className=' mx-2 h-fit rounded-full bg-[#F25E26] p-2'>
+                  <FaCheck className='text-white' />
                 </div>
 
-                <div className='flex flex-col  gap-2'>
+                <div className='flex flex-col  gap-2 '>
                   <h3 className='font-semibold'>{val.name}</h3>
                   <p className='text-[#808080] '>{val.description}</p>
                 </div>
@@ -109,8 +111,11 @@ const Page = () => {
             ))}
           </div>
         </div>
-        <div className="fixed bottom-20">
-          <ChatBox/>
+        <div className={'fixed bottom-10'}>
+          <ChatBox
+            isOpen={isOpen}
+            
+          />
         </div>
       </main>
       <Footer />
