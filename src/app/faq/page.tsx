@@ -9,10 +9,12 @@ import {ChatBox} from "../component/ChatBox"
 
 const Page = () => {
   const [active, setActive] = useState<number | null>(null)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+
   return (
     <Fragment>
       <Header />
-      <main className='container mt-8 mb-[5rem]'>
+      <main className='container mb-[5rem] mt-8'>
         <div className='flex items-center justify-center'>
           <HeadingText title='Frequently Asked Questions' />
         </div>
@@ -49,8 +51,11 @@ const Page = () => {
             ))}
           </div>
         </div>
-        <div className="fixed bottom-20">
-          <ChatBox/>
+        <div className='fixed bottom-[1rem]'>
+          <ChatBox
+            isOpen={isOpen}
+            
+          />
         </div>
       </main>
       <Footer />
