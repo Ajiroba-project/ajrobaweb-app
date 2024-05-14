@@ -58,7 +58,7 @@ const Page = () => {
 
 
 
-    console.log(paths, path)
+    // console.log(paths, path)
 
 
     // const filteredProducts =
