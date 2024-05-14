@@ -1,20 +1,20 @@
 'use client'
-import React, {Fragment, useState} from 'react'
+import React, { Fragment, useState } from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
-import {ChatBox} from "../component/ChatBox";
-import {DefaultBreadCrumb} from "../component/Breadcrumb";
-import {HeadingText} from "../component/Heading"
-import {usePathName} from '@/hooks/usePathname'
-import {FaCheck} from 'react-icons/fa'
+import { ChatBox } from "../component/ChatBox";
+import { DefaultBreadCrumb } from "../component/Breadcrumb";
+import { HeadingText } from "../component/Heading"
+import { usePathName } from '@/hooks/usePathname'
+import { FaCheck } from 'react-icons/fa'
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
 import Image from "next/image"
 
 
 const Page = () => {
-    const decodedPaths = usePathName()
-    const [isOpen, setIsOpen]=useState<boolean >(false)
+  const decodedPaths = usePathName()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
 
 
@@ -66,7 +66,7 @@ const Page = () => {
             challenging economic terrain. Therefore, Ajiroba is designed as a
             retail auction platform that will appear by default to our
             customers, each time they wake up, as a trusted one-stop shop for
-             buying their basic daily needs by auction so that they can continue
+            buying their basic daily needs by auction so that they can continue
             to live like kings and queens.
           </p>
         </div>
@@ -114,7 +114,7 @@ const Page = () => {
         <div className={'fixed bottom-10'}>
           <ChatBox
             isOpen={isOpen}
-            
+
           />
         </div>
       </main>
