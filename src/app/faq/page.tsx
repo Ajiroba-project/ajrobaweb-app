@@ -5,13 +5,16 @@ import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
 import { FaPlus, FaMinus } from 'react-icons/fa6'
 import { faq } from '@/app/static-data'
+import {ChatBox} from "../component/ChatBox"
 
 const Page = () => {
   const [active, setActive] = useState<number | null>(null)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+
   return (
     <Fragment>
       <Header />
-      <main className='container my-8 '>
+      <main className='container mb-[5rem] mt-8'>
         <div className='flex items-center justify-center'>
           <HeadingText title='Frequently Asked Questions' />
         </div>
@@ -47,6 +50,12 @@ const Page = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div className='fixed bottom-[1rem]'>
+          <ChatBox
+            isOpen={isOpen}
+            
+          />
         </div>
       </main>
       <Footer />

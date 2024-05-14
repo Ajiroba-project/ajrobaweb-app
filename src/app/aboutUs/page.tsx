@@ -1,15 +1,22 @@
-import React, {Fragment} from 'react'
+'use client'
+import React, {Fragment, useState} from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
+import {ChatBox} from "../component/ChatBox";
+import {DefaultBreadCrumb} from "../component/Breadcrumb";
 import {HeadingText} from "../component/Heading"
+import {usePathName} from '@/hooks/usePathname'
+import {FaCheck} from 'react-icons/fa'
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
-import verify from "../asset/verify.svg"
-
 import Image from "next/image"
 
 
 const Page = () => {
+    const decodedPaths = usePathName()
+    const [isOpen, setIsOpen]=useState<boolean >(false)
+
+
 
   const about = [
     {
@@ -28,19 +35,16 @@ const Page = () => {
   const whyChooseUs = [
     {
       name: 'Reliable',
-      icon: verify,
       description:
         'We consistently conduct our business in a manner that makes our customers and stakeholders trust us why holding ourselves reliable for all our actions.'
     },
     {
       name: 'Transparent',
-      icon: verify,
       description:
         'We always promise what we can deliver and deliver what we promise.  Our transactions are conducted without any form of biase in all our processes.'
     },
     {
       name: 'Customer-Centric',
-      icon: verify,
       description:
         'Our awareness of and response to customers’ needs and feed back is second to none. We place premium on anything that has to do with our customers because we know that we are the business mainly because of our customers.'
     }
@@ -49,10 +53,11 @@ const Page = () => {
   return (
     <Fragment>
       <Header />
-      <main className='container my-10'>
+      <main className={` container my-12`}>
+        <DefaultBreadCrumb paths={decodedPaths} />
         <div className='flex flex-col items-center justify-center py-2'>
           <HeadingText title='About us' />
-          <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
+          <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4 '>
             Ajiroba Technologies Ltd (“Ajiroba”) is a royal name that is
             connected to a  KING, which means the person that a KING will see
             first of all as the KING wakes up. Going by our royal name, we see
@@ -91,20 +96,26 @@ const Page = () => {
           </p>
         </div>
         <div className='m-[4rem] flex flex-col place-content-center items-center justify-center gap-2 lg:flex-row'>
-          <div className='flex justify-between lg:w-3/4'>
+          <div className='mx-4 flex flex-col justify-between gap-2 lg:flex-row'>
             {whyChooseUs.map((val, index) => (
-              <div key={index} className='flex gap-3 '>
-                <div>
-                  <Image src={val.icon} alt='icon' />
+              <div key={index} className='flex justify-start'>
+                <div className=' mx-2 h-fit rounded-full bg-[#F25E26] p-2'>
+                  <FaCheck className='text-white' />
                 </div>
 
-                <div className='flex flex-col  gap-2'>
+                <div className='flex flex-col  gap-2 '>
                   <h3 className='font-semibold'>{val.name}</h3>
                   <p className='text-[#808080] '>{val.description}</p>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+        <div className={'fixed bottom-10'}>
+          <ChatBox
+            isOpen={isOpen}
+            
+          />
         </div>
       </main>
       <Footer />
