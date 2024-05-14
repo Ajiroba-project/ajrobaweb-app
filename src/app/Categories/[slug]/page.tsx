@@ -43,7 +43,12 @@ const Page = () => {
         .map((path) => decodeURIComponent(path));
 
     const paths = useMemo(() => [...decodedPaths, sub], [decodedPaths, sub]);
+    // const paths = useMemo(() => [...decodedPaths.map(path => path.toLowerCase()), sub.toLowerCase()], [decodedPaths, sub]);
 
+    // const paths = useMemo(() => {
+    //     const subValue = sub !== null ? sub.toLowerCase() : '';
+    //     return [...decodedPaths.map(path => path.toLowerCase()), subValue];
+    // }, [decodedPaths, sub]);
 
     useEffect(() => {
         if (paths.length > 0) {
@@ -51,12 +56,34 @@ const Page = () => {
         }
     }, [paths]);
 
-    const filteredProducts = Products
-    // path !== undefined
-    //     ? Products.filter((product) =>
-    //         product.category.toLowerCase().includes(path.toLowerCase())
-    //     )
-    //     : [];
+
+
+    console.log(paths, path)
+
+
+    // const filteredProducts =
+    //     paths !== undefined
+    //         ? Products.filter((product) =>
+    //             paths.includes(product.category) ||
+    //             paths.includes(product?.subCategory)
+    //         )
+    //         : Products;
+
+    const filteredProducts =
+        paths !== undefined
+            ? Products.filter((product) =>
+                paths?.some(path =>
+                    product.category === path ||
+                    (product.subCategory && product.subCategory.toLowerCase() === path?.toLowerCase())
+                )
+            )
+            : Products;
+
+
+    // console.log(filteredProducts)
+
+
+
 
 
     return (

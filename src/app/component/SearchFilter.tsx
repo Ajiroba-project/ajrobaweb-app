@@ -4,7 +4,8 @@ import React, { useState } from "react";
 // import { categories } from '@/app/static-data'
 // import { Products } from '@/app/static-data'
 import { FiMenu } from "react-icons/fi";
-import { AllCategories } from "./AllCategories";
+import { AllCategories, MobileSideMenu } from "./AllCategories";
+import { CatMobileSideMenu } from "./SideMenu";
 // import {SideNav} from '../component/SideMenu'
 
 export const PriceFilter = () => {
@@ -80,11 +81,11 @@ export const SearchFilter = () => {
   const categories = [
     {
       name: "Foodstuff",
-      subCategories: ["Fruits", "Beans"],
+      subCategories: ["Fruits", "Vegetable", "Tubers", "Cereal", "Legumes", "Diary", "Meat", "Beans"],
     },
     {
       name: "Fashion And Beauty",
-      subCategories: ["Sneakers", "Wristwatch"],
+      subCategories: ["Men's Fashion", "Women Fashion", "Accessories"],
     },
     {
       name: "Fashion",
@@ -121,6 +122,12 @@ export const SearchFilter = () => {
 
         </div>
       }
+
+      {isOpen && (
+        <div className='  z-30 h-full w-full'>
+          <CatMobileSideMenu />
+        </div>
+      )}
 
       {/* {isOpen && ( */}
 
