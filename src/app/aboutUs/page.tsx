@@ -1,4 +1,5 @@
 'use client'
+
 import React, { Fragment, useState } from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
@@ -7,14 +8,17 @@ import { DefaultBreadCrumb } from "../component/Breadcrumb";
 import { HeadingText } from "../component/Heading"
 import { usePathName } from '@/hooks/usePathname'
 import { FaCheck } from 'react-icons/fa'
+
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
 import Image from "next/image"
 
 
 const Page = () => {
+
   const decodedPaths = usePathName()
   const [isOpen, setIsOpen] = useState<boolean>(false)
+
 
 
 
@@ -114,7 +118,6 @@ const Page = () => {
         <div className={'fixed bottom-10'}>
           <ChatBox
             isOpen={isOpen}
-
           />
         </div>
       </main>
