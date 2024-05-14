@@ -509,7 +509,8 @@ export const Products = [
     previousPrice: '400,000',
     rating: '',
     time: '',
-    category: 'Fashion'
+    category: 'Fashion',
+    subCategory: 'Women'
   },
   {
     name: 'Rice',
@@ -519,7 +520,19 @@ export const Products = [
     previousPrice: '20,000',
     time: '',
     rating: '',
-    category: 'FoodStuff'
+    category: 'FoodStuff',
+    subCategory: 'Food'
+  },
+  {
+    name: 'Orange',
+    image: product2,
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Fruits'
   },
   {
     name: 'Smart Watch',
@@ -529,7 +542,9 @@ export const Products = [
     previousPrice: '400,000',
     rating: '',
     time: '',
-    category: 'Phones'
+    category: 'Fashion And Beauty',
+    subCategory: 'Smart'
+
   },
   {
     name: 'Head Phone',
@@ -539,7 +554,8 @@ export const Products = [
     previousPrice: '40,000',
     time: '',
     rating: '',
-    category: 'Phones'
+    category: 'Phones',
+    subCategory: 'Smart'
   },
   {
     name: 'Washing Machine',
@@ -549,7 +565,8 @@ export const Products = [
     previousPrice: '500,000',
     rating: '',
     time: '',
-    category: 'Electronic'
+    category: 'Electronic',
+    subCategory: 'Smart'
   },
   {
     name: 'Iphone XR',
@@ -559,7 +576,8 @@ export const Products = [
     previousPrice: '700,000',
     time: '',
     rating: '',
-    category: 'Phones'
+    category: 'Phones',
+    subCategory: 'Smart'
   },
   {
     name: 'beads',
@@ -569,7 +587,8 @@ export const Products = [
     previousPrice: '5000',
     rating: '',
     time: '',
-    category: 'Mother and Child'
+    category: 'Fashion And Beauty',
+    subCategory: 'Accessories'
   },
   {
     name: 'Bead',
@@ -579,7 +598,8 @@ export const Products = [
     previousPrice: '400,000',
     time: '',
     rating: '',
-    category: 'Phones'
+    category: 'Phones',
+    subCategory: 'Smart'
   },
   // {
   //   name: 'human hair',

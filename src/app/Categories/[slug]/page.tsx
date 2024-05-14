@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { usePathname } from "next/navigation";
 import { useRouter } from 'next/router'
 import { Breadcrumb } from '@/app/component/Breadcrumb'
@@ -17,12 +17,17 @@ import Brand from '../../asset/logo.svg'
 import { IoClose } from 'react-icons/io5';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { CiSearch } from 'react-icons/ci';
+import { useSearchParams } from 'next/navigation'
 
 
 
 const Page = () => {
     const pathname = usePathname();
-    const [path, setPath] = useState("");
+    const searchParams = useSearchParams()
+
+
+    const [path, setPath] = useState<string | null>(null)
+    const sub = searchParams.get('sub')
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [activeMenu, setActiveMenu] = useState<number | null>(null)
     const isRootPath = pathname === '/'
@@ -37,24 +42,54 @@ const Page = () => {
         .filter((path) => path !== "")
         .map((path) => decodeURIComponent(path));
 
-    useEffect(() => {
-        if (decodedPaths.length > 0) {
-            setPath(decodedPaths[decodedPaths.length - 1]);
-        }
-    }, [decodedPaths]);
+    const paths = useMemo(() => [...decodedPaths, sub], [decodedPaths, sub]);
+    // const paths = useMemo(() => [...decodedPaths.map(path => path.toLowerCase()), sub.toLowerCase()], [decodedPaths, sub]);
 
-    const filteredProducts = Products
-    // path !== undefined
-    //     ? Products.filter((product) =>
-    //         product.category.toLowerCase().includes(path.toLowerCase())
-    //     )
-    //     : [];
+    // const paths = useMemo(() => {
+    //     const subValue = sub !== null ? sub.toLowerCase() : '';
+    //     return [...decodedPaths.map(path => path.toLowerCase()), subValue];
+    // }, [decodedPaths, sub]);
+
+    useEffect(() => {
+        if (paths.length > 0) {
+            setPath(paths[paths.length - 1]);
+        }
+    }, [paths]);
+
+
+
+    // console.log(paths, path)
+
+
+    // const filteredProducts =
+    //     paths !== undefined
+    //         ? Products.filter((product) =>
+    //             paths.includes(product.category) ||
+    //             paths.includes(product?.subCategory)
+    //         )
+    //         : Products;
+
+    const filteredProducts =
+        paths !== undefined
+            ? Products.filter((product) =>
+                paths?.some(path =>
+                    product.category === path ||
+                    (product.subCategory && product.subCategory.toLowerCase() === path?.toLowerCase())
+                )
+            )
+            : Products;
+
+
+    // console.log(filteredProducts)
+
+
+
 
 
     return (
         <main>
             <Header />
-            <Breadcrumb paths={decodedPaths} text={undefined} />
+            <Breadcrumb paths={paths} text={undefined} />
             <div className="flex gap-4 container justify-around ">
                 <div className="hidden 2xl:block xl:block md:block lg:block   bg-[#F6F6F6]  shadow h-full 2xl:w-3/12 xl:w-3/12 lg:w-3/12 px-8 ">
                     <SearchFilter />
