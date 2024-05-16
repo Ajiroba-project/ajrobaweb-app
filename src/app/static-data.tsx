@@ -15,10 +15,10 @@ import computing from '@/app/asset/image/computing.png'
 import phones from '@/app/asset/image/phones.png'
 import mother from '@/app/asset/image/mother.png'
 import royalty from '@/app/asset/image/royalty.png'
-import phone from "@/app/asset/image/phone.png"
-import fashions from "@/app/asset/image/fashions.png"
-import foodstuff from "@/app/asset/image/foodstuff.png"
-import mc from "@/app/asset/image/m&c.png"
+import phone from '@/app/asset/image/phone.png'
+import fashions from '@/app/asset/image/fashions.png'
+import foodstuff from '@/app/asset/image/foodstuff.png'
+import mc from '@/app/asset/image/m&c.png'
 import Social from '@/app/asset/socials/Social.svg'
 import Social1 from '@/app/asset/socials/Social-1.svg'
 import Social2 from '@/app/asset/socials/Social-2.svg'
@@ -39,7 +39,7 @@ export const headerMenu = [
   },
   {
     name: 'Auction Deals',
-    path: 'auction-deals'
+    path: 'auction'
   },
 
   {
@@ -67,7 +67,7 @@ export const headerMenu = [
       { name: 'About Us', path: '/aboutUs' },
       { name: 'Contact Us', path: '/contactUs' },
       { name: 'Live Chat', path: '/#' },
-      { name: 'Privacy Policy', path: '/#' },
+      { name: 'Privacy Policy', path: '/privacy-policy' }
     ]
   }
 ]
@@ -487,13 +487,6 @@ export const getInTouch = [
   }
 ]
 
-export const carouselImg = [
-  {
-    name: '',
-    image: ''
-  }
-]
-
 export const marqueeInfo = [
   'Follow us on all our social media platforms : www.ajiroba.com.',
   'Buy a ticket now and stand a chance to win ',
@@ -544,7 +537,6 @@ export const Products = [
     time: '',
     category: 'Fashion And Beauty',
     subCategory: 'Smart'
-
   },
   {
     name: 'Head Phone',
@@ -601,48 +593,47 @@ export const Products = [
     category: 'Phones',
     subCategory: 'Smart'
   },
-  // {
-  //   name: 'human hair',
-  //   image: product1,
-  //   description: '',
-  //   price: '200,000',
-  //   previousPrice: '600,000',
-  //   rating: '',
-  //   time: '',
-  //   category: 'Fashion'
-  // },
-  // {
-  //   name: 'Oloyin Beans',
-  //   image: product2,
-  //   description: '',
-  //   price: '5000',
-  //   previousPrice: '7000',
-  //   time: '',
-  //   rating: '',
-  //   category: 'FoodStuff'
-  // },
-  // {
-  //   name: 'Smart Watch',
-  //   image: product3,
-  //   description: '',
-  //   price: '2500',
-  //   previousPrice: '5000',
-  //   rating: '',
-  //   time: '',
-  //   category: 'Phones'
-  // },
-  // {
-  //   name: 'Head Phone',
-  //   image: product4,
-  //   description: '',
-  //   price: '1500',
-  //   previousPrice: '4000',
-  //   time: '',
-  //   rating: '',
-  //   category: 'Phone'
-  // }
+  {
+    name: 'human hair',
+    image: product1,
+    description: '',
+    price: '200,000',
+    previousPrice: '600,000',
+    rating: '',
+    time: '',
+    category: 'Fashion'
+  },
+  {
+    name: 'Oloyin Beans',
+    image: product2,
+    description: '',
+    price: '5000',
+    previousPrice: '7000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff'
+  },
+  {
+    name: 'Smart Watch',
+    image: product3,
+    description: '',
+    price: '2500',
+    previousPrice: '5000',
+    rating: '',
+    time: '',
+    category: 'Phones'
+  },
+  {
+    name: 'Head Phone',
+    image: product4,
+    description: '',
+    price: '1500',
+    previousPrice: '4000',
+    time: '',
+    rating: '',
+    category: 'Phone'
+  }
 ]
-
 
 export const faq = [
   {
@@ -680,5 +671,33 @@ export const faq = [
     question:
       'How can I contact customer support if I have further questions or concerns?',
     answer: ''
+  }
+]
+
+import { FaSquarePhone } from 'react-icons/fa6'
+import { CgData } from 'react-icons/cg'
+import { PiTelevisionSimple } from 'react-icons/pi'
+import { RiLightbulbFlashFill } from 'react-icons/ri'
+import {RxDashboard } from 'react-icons/rx'
+export const UserMenu = [
+  {
+    name: 'Dashboard',
+    icon: <RxDashboard />
+  },
+  {
+    name: 'Airtime',
+    icon: <FaSquarePhone />
+  },
+  {
+    name: 'Data',
+    icon: <CgData />
+  },
+  {
+    name: 'Cable Subscription',
+    icon: <PiTelevisionSimple/>
+  },
+  {
+    name:"Electricity",
+    icon: <RiLightbulbFlashFill/>
   }
 ]

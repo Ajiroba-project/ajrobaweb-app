@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 
+
+.brand1{
+    color:#F25E26
+}
+.brand2{
+color:#FCDFD4
+}
+.brand3{
+    color:#6E6E6E
+}
+
 .swiper-pagination-bullet-active {
     opacity: var(--swiper-pagination-bullet-opacity, 1);
     background: #F25E26 !important ;
