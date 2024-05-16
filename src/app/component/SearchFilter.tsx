@@ -10,7 +10,7 @@ interface SelectedItem {
   id: number;
 }
 
-export const SearchableCheckboxList = () => {
+export const BrandFilter = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const searchParams = useSearchParams();
@@ -49,7 +49,7 @@ export const SearchableCheckboxList = () => {
     if (selectedBrandIds) {
       params.set('selectedBrands', selectedBrandIds);
     } else {
-      params.delete('selectedBrands');
+      params.delete('selectedBrands', selectedBrandIds);
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -74,6 +74,82 @@ export const SearchableCheckboxList = () => {
             <li key={item.id}>
               <input
                 type="checkbox"
+                checked={selectedItems.includes(item.id)}
+                onChange={() => handleCheckboxChange(item)}
+              />
+              <span className="ml-2">{item.name}</span>
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+};
+
+
+export const RatingFilter = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const items = [
+    { id: 1, name: 'LG' },
+    { id: 2, name: 'Hisense' },
+    { id: 3, name: 'Sony' },
+    { id: 4, name: 'Samsung' },
+  ];
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+  };
+
+
+
+  const handleCheckboxChange = (item: SelectedItem) => {
+    const selectedIndex = selectedItems.indexOf(item.id);
+    let newSelectedItems = [...selectedItems];
+
+    if (selectedIndex === -1) {
+      newSelectedItems.push(item.id);
+    } else {
+      newSelectedItems.splice(selectedIndex, 1);
+    }
+
+    setSelectedItems(newSelectedItems);
+
+    const selectedBrandIds = newSelectedItems.join(',');
+    const params = new URLSearchParams(searchParams);
+    if (selectedBrandIds) {
+      params.set('selectedBrands', selectedBrandIds);
+    } else {
+      params.delete('selectedBrands', selectedBrandIds);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+
+  return (
+    <div>
+      <p className="p-2 mb-2 text-[#2A2A2A] mt-4" >Rating</p>
+      {/* <input
+        type="search"
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Search"
+        className=" w-auto p-2 mb-2"
+      /> */}
+      <ul>
+        {items
+          .filter(item => {
+            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+          })
+          .map(item => (
+            <li key={item.id}>
+              <input
+                type="radio"
                 checked={selectedItems.includes(item.id)}
                 onChange={() => handleCheckboxChange(item)}
               />
@@ -127,7 +203,7 @@ export const PriceFilter = () => {
   }
 
   return (
-    <div className="py-6">
+    <div className="py-6 ">
       <p>Price</p>
 
       <div>
@@ -238,7 +314,7 @@ export const SearchFilter = () => {
 
 
   return (
-    <div>
+    <div className="mb-8">
 
       <div className="flex cursor-pointer items-center gap-3 p-3">
         <FiMenu />
@@ -279,9 +355,7 @@ export const SearchFilter = () => {
                   className={`${sub === subCategory ? "text-[#F25E26]" : ""}`}
 
                   onClick={() => handlesubcat(subCategory)}
-
                 >
-
                   {subCategory}
                 </li>
               ))}
@@ -292,7 +366,9 @@ export const SearchFilter = () => {
 
       <PriceFilter />
 
-      <SearchableCheckboxList />
+      <BrandFilter />
+
+      <RatingFilter />
 
 
     </div>
