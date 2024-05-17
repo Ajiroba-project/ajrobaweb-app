@@ -5,8 +5,8 @@ import {DefaultButton} from '../../component/Button'
 
 
 export const DataPayment = () => {
-  const dataDetails  = DataPurchase(state => state.DataPurchase)
-  const setStepper = DataPurchase(state => state.DataPurchase)
+  const dataDetails = DataPurchase(state => state.dataDetails)
+  const setStepper = DataPurchase(state => state.setStepper)
   
   return (
     <div className='my-5 mt-[4rem] flex  flex-col gap-4 rounded'>
@@ -48,13 +48,13 @@ export const DataPayment = () => {
               type='button'
               text='Pay with Wallet'
               className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-              handleClick={() => {}}
+              handleClick={() => {setStepper(2)}}
             />
             <DefaultButton
               type='button'
               text='Pay Online'
               className='rounded-lg border-2 border-[#f25e26] px-8 py-3 text-[#f25e26]'
-              handleClick={() => {}}
+              handleClick={() => setStepper(2)}
             />
           </div>
         </form>
