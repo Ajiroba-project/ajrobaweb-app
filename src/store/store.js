@@ -10,7 +10,7 @@ export const userNavStore = create(set => ({
 
 
 export const DataPurchase = create(set => ({
-  stepper: 1,
+  stepper: 0,
   dataDetails: {
     network: '',
     data: '',
