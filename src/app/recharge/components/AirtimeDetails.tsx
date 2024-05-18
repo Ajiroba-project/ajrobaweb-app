@@ -2,21 +2,21 @@ import React from 'react'
 import { useMutateData } from '@/hooks/useMutateData'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { Rechargeschema } from './YupValidations'
+import { Airtimeschema } from './YupValidations'
 import { DefaultButton } from '../../component/Button'
 import { InputField, SelectField } from './FormField'
-import { DataPurchase } from '@/store/store'
-import {Formtitle} from './Formtitle'
+import { AirtimePurchase } from '@/store/store'
+import { Formtitle } from './Formtitle'
 
-type DataProps = {
+type AirtimeProps = {
   network: string
-  data: string
+  amount: string
   phone: string
 }
 
-export const DataDetails = () => {
-  const  setDataDetails  = DataPurchase(state => state.setDataDetails)
-  const  setStepper = DataPurchase(state => state.setStepper)
+export const AirtimeDetails = () => {
+  const setAirtimeDetails = AirtimePurchase(state => state.setAirtimeDetails)
+  const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
 
   const {
     reset,
@@ -29,20 +29,23 @@ export const DataDetails = () => {
     setValue
   } = useForm({
     mode: 'all',
-    resolver: yupResolver(Rechargeschema)
+    resolver: yupResolver(Airtimeschema)
   })
   const network = ['MTN', 'Airtel', 'Glo']
-  const dataPlan = ['1day 100MB -₦100', '60dayS 1TB -₦20,000']
 
-  const sumbitForm = (data: DataProps) => {
+
+  const sumbitForm = (data: AirtimeProps) => {
     console.log('data=>', data)
-    setDataDetails(data)
-    setStepper(1)
+    setAirtimeDetails(data)
+    setAirtimeStepper(1)
   }
 
   return (
     <div className='container mt-[2rem] flex flex-col items-center justify-center gap-4 bg-[#F6F6F6]'>
-      <Formtitle title='Payment' subtitle='We have Different Data plan that suit your needs'/>
+      <Formtitle
+        title='Buy Airtime'
+        subtitle='Top up your airtime on our platform'
+      />
       <div>
         <form
           className='flex flex-col gap-3'
@@ -56,14 +59,7 @@ export const DataDetails = () => {
             label='Network Provider'
             showlabel={false}
           />
-          <SelectField
-            name='data'
-            register={register}
-            errors='errors'
-            options={dataPlan}
-            label='Data Bundle'
-            showlabel={false}
-          />
+          
           <InputField
             name='phone'
             register={register}
@@ -77,9 +73,9 @@ export const DataDetails = () => {
             errors={errors}
             type='text'
             placeholder='Amount'
-            isdisabled={true}
+            
           />
-          <p className='text-end text-[#f25e26]'>Beneficiaries</p>
+          <p className='text-end text-[#f25e26] underine'>Beneficiaries</p>
 
           <div className='mb-6'>
             <DefaultButton

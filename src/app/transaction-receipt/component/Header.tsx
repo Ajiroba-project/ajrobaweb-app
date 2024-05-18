@@ -16,7 +16,7 @@ export const Header = () => {
         <Image src={Brand} alt='brand-logo' />
         <h2 className='text-2xl leading-3'>Data Recharge</h2>
       </div>
-      <p className="brand1 py-4 cursor-pointer" onClick={()=>router.back()}>Back</p>
+      <p className="brand1 py-4 cursor-pointer"  onClick={()=>router.back()}>Back</p>
     </section>
   )
 }

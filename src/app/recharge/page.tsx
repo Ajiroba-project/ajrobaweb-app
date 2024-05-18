@@ -8,9 +8,13 @@ import { RecentTransaction } from './components/RecentTransaction'
 import { userNavStore } from '@/store/store'
 import { SideMenu } from './components/SideMenu'
 import { DataContent } from './components/DataContent'
+
+import { LuMenuSquare } from 'react-icons/lu'
 import banner from '../asset/image/recharge-banner.png'
 const Page = () => {
   const userNavMenu = userNavStore(state => state.userNav)
+  const sidebar = userNavStore(state => state.sidebar)
+  const toggleSidebar = userNavStore(state =>state.toggleSidebar)
 
   return (
     <Fragment>
@@ -30,11 +34,23 @@ const Page = () => {
       ) : (
         <main className='relative flex '>
           {/* sidemenu */}
-          <section className='-mt-8 h-full  w-[30%] bg-[#F6F6F6] p-6 lg:w-[20%]'>
-            <SideMenu />
+          <section
+            className={`${sidebar ? 'absolute h-screen bg-[#F6F6F6]' : 'absolute'} z-20 -mt-8  lg:relative`}
+          >
+            <div
+              className={`${sidebar ? 'absolute  h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none' : 'hidden h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none'} `}
+            >
+              <SideMenu />
+            </div>
+            <div
+              className=' absolute left-4 top-5 cursor-pointer text-[#f25e26] lg:hidden'
+              onClick={() => toggleSidebar(!sidebar)}
+            >
+              <LuMenuSquare className='text-3xl' />
+            </div>
           </section>
           <section className='container -mt-8 h-full'>
-            <DataContent />
+            {userNavMenu === 'Dashboard' ? 'Dashboard' : <DataContent />}
           </section>
         </main>
       )}
