@@ -10,10 +10,11 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 interface cardDetails {
   cardInfo: any[]
   currentPage?: number
+  cardsNum?: number
 }
 
 export const ProductCard = ({ cardInfo }: cardDetails) => {
-    const star=[1, 2, 3,4, 5]
+  const star = [1, 2, 3, 4, 5]
   return (
     <>
       <div
@@ -72,7 +73,10 @@ export const CategoryCard = ({ cardInfo }: cardDetails) => {
         className={`${poppins.className} my-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4`}
       >
         {cardInfo.map((value, index) => (
-          <div className='rounded-2xl shadow-md hover:shadow-lg cursor-pointer' key={index}>
+          <div
+            className='cursor-pointer rounded-2xl shadow-md hover:shadow-lg'
+            key={index}
+          >
             <div className='rounded-t-2xl bg-[#F6F6F6]'>
               <div className='flex items-center justify-center'>
                 <Image
@@ -106,11 +110,15 @@ export const CategoryCard = ({ cardInfo }: cardDetails) => {
   )
 }
 
-export const AuctionCard = ({ cardInfo, currentPage }: cardDetails) => {
+export const AuctionCard = ({
+  cardInfo,
+  currentPage,
+  cardsNum
+}: cardDetails) => {
   const star = [1, 2, 3, 4, 5]
 
   const totalCards = cardInfo.length
-  const cardsPerPage = 4
+  const cardsPerPage = cardsNum ? cardsNum : cardInfo.length
   const renderCards = () => {
     const startIndex = (currentPage ?? 0) * cardsPerPage
     const endIndex = Math.min(startIndex + cardsPerPage, totalCards)
@@ -120,7 +128,10 @@ export const AuctionCard = ({ cardInfo, currentPage }: cardDetails) => {
     for (let i = startIndex; i < endIndex; i++) {
       const value = cardInfo[i]
       cards.push(
-        <div className=' w-full rounded bg-[#F6F6F6] shadow-md hover:scale-105 hover:-translate-y-6 cursor-pointer' key={i}>
+        <div
+          className=' w-full cursor-pointer rounded bg-[#F6F6F6] shadow-md hover:-translate-y-2.5 hover:scale-105'
+          key={i}
+        >
           <div className=''>
             <div className='flex items-center justify-between p-4'>
               <p className='text-sm text-[#A09F9F]'>On Auction </p>
@@ -182,7 +193,7 @@ export const AuctionCard = ({ cardInfo, currentPage }: cardDetails) => {
 
   return (
     <>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
         {renderCards()}
       </div>
     </>
@@ -200,16 +211,22 @@ export const CategoryFeatureCard = ({ cardInfo, currentPage }: cardDetails) => {
     for (let i = startIndex; i < endIndex; i++) {
       const value = cardInfo[i]
       cards.push(
-        <div className='rounded hover:shadow-xl hover:scale-110 cursor-pointer' key={i}>
-          <div className='flex items-center justify-center relative'>
-            <Image src={value.image2} alt='product' className='w-fit' />
+        <div
+          className='cursor-pointer rounded hover:scale-110 hover:shadow-xl'
+          key={i}
+        >
+          <div className='relative flex items-center justify-center'>
+            <Image
+              src={value.image2}
+              alt='product'
+              className='w-fit bg-cover'
+            />
 
-          <div className='flex items-center justify-between p-4 absolute flex-col gap-3'>
-            <Image src={value.svg} alt='product' className='w-fit' />
-            <p className='text-sm text-white'>{value.name} </p>
+            <div className='absolute flex flex-col items-center justify-between gap-3 p-4'>
+              <Image src={value.svg} alt='product' className='w-fit bg-cover' />
+              <p className='text-sm text-white'>{value.name} </p>
+            </div>
           </div>
-          </div>
-
         </div>
       )
     }
