@@ -104,7 +104,7 @@ export const SelectField =({showlabel, label, name, register, errors, options, m
           className={`xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
         >
           <option value='' className='text-wdc-textbody'>
-            {label ? ` Select a ${label}` : ''}
+            {label ? ` Select  ${label}` : ''}
           </option>
           {options.map((val: string, key: number) => (
             <option key={key} className='text-wdc-textbody' value={val}>
@@ -112,7 +112,6 @@ export const SelectField =({showlabel, label, name, register, errors, options, m
             </option>
           ))}
         </select>
-
         <div className='pt-1 text-xs text-rose-500'>
           {errors?.[name]?.message}
         </div>

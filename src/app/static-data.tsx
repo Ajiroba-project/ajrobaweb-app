@@ -701,3 +701,21 @@ export const UserMenu = [
     icon: <RiLightbulbFlashFill/>
   }
 ]
+import { RxFileText } from 'react-icons/rx'
+import { IoReceiptOutline } from 'react-icons/io5'
+import { BsCreditCard2Back } from 'react-icons/bs'
+
+export const stepperList = [
+   {
+     name: 'Enter Details',
+     icons: <RxFileText />
+   },
+   {
+     name: 'Payment',
+     icons: <BsCreditCard2Back />
+   },
+   {
+     name: 'Receipts',
+     icons: <IoReceiptOutline />
+   }
+ ]
