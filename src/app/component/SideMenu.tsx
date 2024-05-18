@@ -15,6 +15,24 @@ type MenuState = number | null
 
 export const SideMenu = () => {
     const [active, setActive] = useState<MenuState>(null);
+    const [subcategory, SetSubcategory] = useState<string | null>(null);
+
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+
+
+    const handlesubcat = (subCategory: string, val?: { name: string }) => {
+        setActive(null);
+
+        const params = new URLSearchParams(searchParams);
+        if (subCategory) {
+            params.set("sub", subCategory);
+        } else {
+            params.delete("sub");
+        }
+
+        replace(`/categories/${val?.name}?${params.toString()}`);
+    };
 
     return (
         <>
@@ -36,7 +54,7 @@ export const SideMenu = () => {
                                 {active === index && (
                                     <div className={`${inter.className} z-20 bg-white ${active === 1 ? "flex gap-3 w-full -top-0 -right-32" : "w-[60%] -top-4 -right-12"} shadow-md rounded text-sm absolute`}>
 
-                                        {val.categories?.map((subcategory) => (
+                                        {/* {val.categories?.map((subcategory) => (
                                             <div key={subcategory.name} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
                                                 <Link href={"#"} className={` `}>{subcategory.name}</Link>
 
@@ -45,6 +63,31 @@ export const SideMenu = () => {
                                                         {subcategory.subcategory?.map((subSubcategory) => (
                                                             <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
                                                                 <Link href={subSubcategory.path || ''} className="py-2">{subSubcategory.name}</Link>
+                                                            </div>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        ))} */}
+                                        {val.categories?.map((subcategory) => (
+                                            <div
+                                                onClick={() => handlesubcat(subcategory.name, val)}
+                                                key={subcategory.name}
+                                                className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
+                                            >
+                                                {subcategory.name}
+
+                                                {"subcategory" in subcategory && (
+                                                    <ul className="z-50 ">
+                                                        {subcategory.subcategory?.map((subSubcategory) => (
+                                                            <div
+                                                                onClick={() =>
+                                                                    handlesubcat(subSubcategory.name, val)
+                                                                }
+                                                                key={subSubcategory.name}
+                                                                className="hover:bg-[#FCDFD4] py-2"
+                                                            >
+                                                                {subSubcategory.name}
                                                             </div>
                                                         ))}
                                                     </ul>
@@ -66,6 +109,24 @@ export const SideMenu = () => {
 
 export const MobileSideMenu = () => {
     const [active, setActive] = useState<MenuState>(null);
+
+
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+
+
+    const handlesubcat = (subCategory: string, val?: { name: string }) => {
+        setActive(null);
+
+        const params = new URLSearchParams(searchParams);
+        if (subCategory) {
+            params.set("sub", subCategory);
+        } else {
+            params.delete("sub");
+        }
+
+        replace(`/categories/${val?.name}?${params.toString()}`);
+    };
     return (
         <>
             <section className="bg-[#F6F6F6] p-6">
@@ -84,7 +145,7 @@ export const MobileSideMenu = () => {
                                     {active === index && (
                                         <div className={`${inter.className} px-4 z-20  ${active === 1 ? " gap-2 -top-0 " : ""} rounded text-sm `}>
 
-                                            {val.categories?.map((subcategory) => (
+                                            {/* {val.categories?.map((subcategory) => (
                                                 <div key={subcategory.name} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
                                                     <Link href={"#"} className={`${active === 1 ? "font-bold" : ""} `}>{subcategory.name}</Link>
 
@@ -93,6 +154,31 @@ export const MobileSideMenu = () => {
                                                             {subcategory.subcategory?.map((subSubcategory) => (
                                                                 <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
                                                                     <Link href={subSubcategory.path || ''} className="py-2">{subSubcategory.name}</Link>
+                                                                </div>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
+                                            ))} */}
+                                            {val.categories?.map((subcategory) => (
+                                                <div
+                                                    onClick={() => handlesubcat(subcategory.name, val)}
+                                                    key={subcategory.name}
+                                                    className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
+                                                >
+                                                    {subcategory.name}
+
+                                                    {"subcategory" in subcategory && (
+                                                        <ul className="z-50 ">
+                                                            {subcategory.subcategory?.map((subSubcategory) => (
+                                                                <div
+                                                                    onClick={() =>
+                                                                        handlesubcat(subSubcategory.name, val)
+                                                                    }
+                                                                    key={subSubcategory.name}
+                                                                    className="hover:bg-[#FCDFD4] py-2"
+                                                                >
+                                                                    {subSubcategory.name}
                                                                 </div>
                                                             ))}
                                                         </ul>
