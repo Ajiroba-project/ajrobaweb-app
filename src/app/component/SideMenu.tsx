@@ -6,6 +6,7 @@ import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
 import Link from 'next/link'
 import { Poppins, Inter } from "next/font/google";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"], });
 const inter = Inter({ subsets: ["latin"], weight: ["500", "900"], });
 
@@ -119,12 +120,30 @@ export const MobileSideMenu = () => {
 export const CatMobileSideMenu = () => {
     const [active, setActive] = useState<MenuState>(null);
 
-    const handleSubClick = (subCategoryName: string) => {
-        setActive(null);
-        // setActiveSub(activeSub === subCategoryName ? null : subCategoryName);
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+    const sub = searchParams.get("sub");
 
-        // router.push(`/categories/${subcategory}?sub=${subCategoryName}`);
-    };
+    // const handleSubClick = (subCategoryName: string) => {
+    //     setActive(null);
+    // };
+
+
+    const handlesubcat = (subCategory: string, val?: { name: string }) => {
+
+        setActive(null);
+
+        const params = new URLSearchParams(searchParams);
+        if (subCategory) {
+            params.set('sub', subCategory);
+        } else {
+            params.delete('sub');
+        }
+        replace(`/categories/${val?.name}?${params.toString()}`);
+
+    }
+
     return (
         <>
             <section className="bg-[#F6F6F6] px-6 py-2">
@@ -145,27 +164,19 @@ export const CatMobileSideMenu = () => {
 
                                             {val.categories?.map((subcategory) => (
                                                 <div key={subcategory.name} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
-                                                    <Link href={{
-                                                        pathname: `/categories/${val.name}`,
-                                                        query: { sub: subcategory.name },
-                                                    }} className={`${active === 1 ? "font-bold" : ""} `} onClick={() =>
-                                                        handleSubClick(subcategory.name)
-                                                    }>{subcategory.name}</Link>
+
+
+                                                    <p
+                                                        className={`${active === 1 ? "font-bold" : ""} `} onClick={() =>
+                                                            handlesubcat(subcategory.name, val)
+                                                        }>{subcategory.name}</p>
 
                                                     {('subcategory' in subcategory) && (
                                                         <ul className="z-50 ">
                                                             {subcategory.subcategory?.map((subSubcategory) => (
-                                                                <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
-                                                                    <Link href={{
-                                                                        pathname: `/categories/${val.name}`,
-                                                                        query: { sub: subSubcategory.name },
+                                                                <div onClick={() => handlesubcat(subSubcategory.name, val)} key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
 
-                                                                    }} className="py-2"
-
-                                                                        onClick={() =>
-                                                                            handleSubClick(subSubcategory.name)
-                                                                        }
-                                                                    >{subSubcategory.name}</Link>
+                                                                    {subSubcategory.name}
                                                                 </div>
                                                             ))}
                                                         </ul>
@@ -176,8 +187,6 @@ export const CatMobileSideMenu = () => {
                                         </div>)}
 
                                 </div>
-
-
 
                             </Fragment>))
                     }

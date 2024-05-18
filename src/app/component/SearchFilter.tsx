@@ -4,10 +4,17 @@ import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import { AllCategories, MobileSideMenu } from "./AllCategories";
 import { CatMobileSideMenu } from "./SideMenu";
+import { FaStar } from "react-icons/fa6";
+import { it } from "node:test";
 
 
 interface SelectedItem {
   id: number;
+}
+
+interface SelectedRating {
+  id: number
+  rating: any
 }
 
 export const BrandFilter = () => {
@@ -89,43 +96,48 @@ export const BrandFilter = () => {
 export const RatingFilter = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const items = [
-    { id: 1, name: 'LG' },
-    { id: 2, name: 'Hisense' },
-    { id: 3, name: 'Sony' },
-    { id: 4, name: 'Samsung' },
-  ];
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const searchTerm = e.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
+
+  const generateStars = (rating: number): JSX.Element[] => {
+    const stars = [];
+    for (let i = 0; i < rating; i++) {
+      stars.push(<FaStar key={i} className='text-[#F25E26]' />);
+    }
+    return stars;
   };
 
 
 
-  const handleCheckboxChange = (item: SelectedItem) => {
-    const selectedIndex = selectedItems.indexOf(item.id);
-    let newSelectedItems = [...selectedItems];
+  const items = [
+    { id: 5, name: generateStars(5), rating: 5, tag: 'five_star' },
+    { id: 4, name: generateStars(4), rating: 4, tag: 'four_star' },
+  ];
+
+
+
+  const handleCheckboxChange = (item: SelectedRating) => {
+    const selectedIndex = selectedRatings.indexOf(item.rating);
+    let newSelectedRatings = [...selectedRatings];
 
     if (selectedIndex === -1) {
-      newSelectedItems.push(item.id);
+      newSelectedRatings.push(item.rating);
     } else {
-      newSelectedItems.splice(selectedIndex, 1);
+      newSelectedRatings.splice(selectedIndex, 1);
     }
 
-    setSelectedItems(newSelectedItems);
+    setSelectedRatings(newSelectedRatings);
 
-    const selectedBrandIds = newSelectedItems.join(',');
+    const selectedRatingIds = newSelectedRatings.join(',');
     const params = new URLSearchParams(searchParams);
-    if (selectedBrandIds) {
-      params.set('selectedBrands', selectedBrandIds);
+    if (selectedRatingIds) {
+      params.set('selectedRatings', selectedRatingIds);
     } else {
-      params.delete('selectedBrands', selectedBrandIds);
+      params.delete('selectedRatings', selectedRatingIds);
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -133,29 +145,23 @@ export const RatingFilter = () => {
 
   return (
     <div>
-      <p className="p-2 mb-2 text-[#2A2A2A] mt-4" >Rating</p>
-      {/* <input
-        type="search"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Search"
-        className=" w-auto p-2 mb-2"
-      /> */}
+      <p className="p-2 mb-2 text-[#2A2A2A] mt-4">Rating</p>
       <ul>
-        {items
-          .filter(item => {
-            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
-          })
-          .map(item => (
-            <li key={item.id}>
-              <input
-                type="radio"
-                checked={selectedItems.includes(item.id)}
-                onChange={() => handleCheckboxChange(item)}
-              />
-              <span className="ml-2">{item.name}</span>
-            </li>
-          ))}
+
+        {items.map(item => (
+          <li key={item.id} className="flex mb-4">
+            <input
+              type="radio"
+              name="rating"
+              id={item.tag}
+              value={item.tag}
+              checked={selectedRatings.includes(item.id)}
+              onChange={() => handleCheckboxChange(item)}
+            />
+            <span className="ml-2 flex">{item.name}</span>
+          </li>
+        ))}
+
       </ul>
     </div>
   );

@@ -55,8 +55,8 @@ const Page = () => {
         if (paths.length > 0) {
             setPath(paths[paths.length - 1]);
         }
-        console.log(paths, 'pathsss')
-        console.log(paths[paths.length - 3])
+        // console.log(paths, 'pathsss')
+        // console.log(paths[paths.length - 3])
     }, [paths]);
 
 
