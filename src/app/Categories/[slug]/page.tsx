@@ -66,11 +66,11 @@ const Page = () => {
             .map((param) => param && param.toLowerCase())
             .filter(Boolean);
         const lowerCaseCategory = product.category.toLowerCase();
-        const lowerCaseSubCategory = product.subCategory.toLowerCase();
+        const lowerCaseSubCategory = product?.subCategory?.toLowerCase();
 
         return (
             lowerCaseParams.includes(lowerCaseCategory) ||
-            lowerCaseParams.includes(lowerCaseSubCategory)
+            (lowerCaseSubCategory && lowerCaseParams.includes(lowerCaseSubCategory))
         );
     });
 
