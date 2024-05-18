@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo, SetStateAction } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
 import { Header } from "@/app/component/Header";
 import { Footer } from "@/app/component/Footer";
@@ -13,6 +13,9 @@ import image3 from "../../../asset/image/rice3.jpeg"
 import image4 from "../../../asset/image/rice4.jpeg"
 import './style.css'
 import { FaStar } from "react-icons/fa6";
+import profile_head from '../../../asset/image/profile_head.svg'
+import { RelatedProducts } from "@/app/component/RelatedProducts";
+import { Products, RelatedData } from "@/app/static-data";
 
 
 export const ProductReview = () => {
@@ -69,6 +72,241 @@ export const ProductReview = () => {
     )
 }
 
+export const CustomerReview = () => {
+
+    const star = [1, 2, 3, 4, 5]
+    const rating = 5;
+
+    return (
+        <div className="container py-4 mb-12 " >
+
+            <div>
+                <h1 className="text-[#1B1B1A] font-bold text-lg text-center 2xl:text-start xl:text-start lg:text-start md:text-start " >Customer Review</h1>
+            </div>
+
+            <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
+
+                <div className=" w-1/2">
+
+                    <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
+                        {star.map((val, index) => (
+                            <span key={index}>
+
+                                <span key={index}>
+                                    <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
+                                </span>
+                            </span>
+                        ))}
+                        (300) Reviews
+                    </p>
+
+
+                    <div className="flex gap-4 items-center py-2">
+                        <div><span>5 stars</span></div>
+
+                        <div className="flex-1">
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-[#E84526] h-2.5 rounded-full" style={{ width: '65%' }}></div>
+                            </div>
+                        </div>
+
+
+
+                        <div>
+                            <small>200</small>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 items-center py-2">
+                        <div><span>4 stars</span></div>
+
+                        <div className="flex-1">
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-[#E84526] h-2.5 rounded-full" style={{ width: '55%' }}></div>
+                            </div>
+                        </div>
+
+
+
+                        <div>
+                            <small>60</small>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 items-center py-2">
+                        <div><span>3 stars</span></div>
+
+                        <div className="flex-1">
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-[#E84526] h-2.5 rounded-full" style={{ width: '45%' }}></div>
+                            </div>
+                        </div>
+
+
+
+                        <div>
+                            <small>26</small>
+                        </div>
+                    </div>
+
+                    <div className="mt-4" >
+                        <p>Filter By:</p>
+                    </div>
+
+                    <div className="flex gap-2 flex-wrap" >
+
+
+                        <button
+                            className="border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-bold rounded"
+
+                        >
+                            1 Star
+                        </button>
+
+                        <button
+                            className="border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-bold rounded"
+
+                        >
+                            2 Star
+                        </button>
+
+                        <button
+                            className="border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-bold rounded"
+
+                        >
+                            3 Star
+                        </button>
+
+                        <button
+                            className="border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-bold rounded"
+
+                        >
+                            4 Star
+                        </button>
+
+                        <button
+                            className=" mt-4 px-4 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
+
+                        >
+                            5 Star
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div className="w-1/2" >
+
+                    <div className="flex gap-2" >
+                        <div>
+
+                            <Image src={profile_head} alt="Profile Image" className="rounded-full object-cover   " style={{ borderRadius: '50%' }} />
+
+
+
+                        </div>
+
+                        <div>
+                            <p>Klara Cole</p>
+                            <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
+                                {star.map((val, index) => (
+                                    <span key={index}>
+
+                                        <span key={index}>
+                                            <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
+                                        </span>
+                                    </span>
+                                ))}
+                                22/11/2022
+                            </p>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Eu leo magna iaculis aliquam
+                                imperdiet dictumst gravida pellentesque in. Dolor consequat lectus sit proin. Leo dictum ipsum mauris quis eget.
+                                Lectus urna egestas molestie netus amet facilisi fringilla nullam nisl. Interdum .
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-2 mt-4" >
+                        <div>
+
+                            <Image src={profile_head} alt="Profile Image" className="rounded-full object-cover   " style={{ borderRadius: '50%' }} />
+
+
+
+                        </div>
+
+                        <div  >
+                            <p>Klara Cole</p>
+                            <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
+                                {star.map((val, index) => (
+                                    <span key={index}>
+
+                                        <span key={index}>
+                                            <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
+                                        </span>
+                                    </span>
+                                ))}
+                                22/11/2022
+                            </p>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Eu leo magna iaculis aliquam
+                                imperdiet dictumst gravida pellentesque in. Dolor consequat lectus sit proin. Leo dictum ipsum mauris quis eget.
+                                Lectus urna egestas molestie netus amet facilisi fringilla nullam nisl. Interdum .
+                            </p>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </div>
+
+        </div>
+    )
+
+
+}
+
+
+export const RelatedProduct = () => {
+
+
+    // const filteredProducts = Products.filter((product) => {
+    //     const lowerCaseParams = paths
+    //         .map((param) => param && param.toLowerCase())
+    //         .filter(Boolean);
+    //     const lowerCaseCategory = product.category.toLowerCase();
+    //     const lowerCaseSubCategory = product.subCategory.toLowerCase();
+
+    //     return (
+    //         lowerCaseParams.includes(lowerCaseCategory) ||
+    //         lowerCaseParams.includes(lowerCaseSubCategory)
+    //     );
+    // });
+
+    return (
+
+        <div className="container py-4 mb-12 " >
+            <div>
+                <h1 className="text-[#1B1B1A] font-bold text-lg text-center 2xl:text-start xl:text-start lg:text-start md:text-start " >Other Related Products</h1>
+            </div>
+
+
+            <div>
+                <RelatedProducts cardInfo={RelatedData} />
+            </div>
+        </div>
+    )
+}
+
 
 const Page = ({ params }: any) => {
 
@@ -80,6 +318,8 @@ const Page = ({ params }: any) => {
     const query = searchParams.get("query");
     const selectedBrands = searchParams.get("selectedBrands");
     const min_max = searchParams.get("min_max");
+
+    const router = useRouter()
 
     const star = [1, 2, 3, 4, 5]
     const rating = 4;
@@ -138,7 +378,7 @@ const Page = ({ params }: any) => {
             <Header />
             <Breadcrumb paths={verifiedpaths} text={undefined} />
 
-            <div>
+            <div onClick={() => router.back()} >
                 <div className=" cursor-pointer container  flex justify-start" ><p className="text-[#E84526] text-base">Back</p></div>
             </div>
 
@@ -248,6 +488,10 @@ const Page = ({ params }: any) => {
             </div>
 
             <ProductReview />
+
+            <CustomerReview />
+
+            <RelatedProduct />
 
 
             <Footer />

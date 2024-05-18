@@ -643,6 +643,44 @@ export const Products = [
   // }
 ]
 
+export const RelatedData = [
+  {
+    name: 'human hair',
+    image: product1,
+    description: '',
+    price: '100,000',
+    previousPrice: '400,000',
+    rating: '',
+    time: '',
+    category: 'Fashion',
+    subCategory: 'Women'
+  },
+  {
+    name: 'Rice',
+    image: product2,
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Food'
+  },
+  {
+    name: 'Orange',
+    image: product2,
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Fruits'
+  },
+
+]
+
+
 
 export const faq = [
   {

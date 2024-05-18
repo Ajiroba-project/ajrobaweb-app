@@ -93,22 +93,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
             </div>
 
             <div className='flex justify-center items-center mb-20 ' >
-                {/* <div className="">
-                    <button
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded"
-                        onClick={handlePreviousPage}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <button
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded"
-                        onClick={handleNextPage}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
-                </div> */}
+
                 <div className="flex justify-center mt-4">
                     <button
                         className="px-4 py-2 bg-[#F6F6F6] border  hover:bg-orange-700 text-[#D2D2D2] font-bold rounded"
