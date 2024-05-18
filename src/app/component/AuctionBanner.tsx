@@ -1,0 +1,21 @@
+import Image from 'next/image'
+
+type BannerProps = {
+  text: string
+  banner: any
+}
+
+export const AuctionBanner = ({ text, banner }: BannerProps) => {
+  return (
+    <>
+      <section className="my-4">
+        <div className='flex justify-center text-center mb-4'>
+          <h1 className='text-4xl capitalize'>{text}</h1>
+        </div>
+        <div className="">
+          <Image src={banner} alt='image' className="bg-cover"/>
+        </div>
+      </section>
+    </>
+  )
+}

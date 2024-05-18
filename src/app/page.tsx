@@ -11,7 +11,7 @@ import { Products, categories } from "./static-data"
 import { Header } from "./component/Header";
 import { Footer } from "./component/Footer";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import { useState } from "react"
+import { useState} from "react"
 import './globals.css'
 
 
@@ -19,22 +19,18 @@ import './globals.css'
 const Page = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [categoryCurrentPage, setCategoryCurrentPage] = useState<number>(0)
+    const [displayedProducts, setDisplayedProducts] = useState<any | []>(
+      Products.slice(0, 12)
+    )
+
   const totalCards = Products.length
   const cardsPerPage = 4
-
-  const totalPages = Math.ceil(totalCards / cardsPerPage)
-  const moveLeft = () => {
-    setCurrentPage((prevPage) => Math.max(0, prevPage - 1));
-  };
-
-  const moveRight = () => {
-    setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages - 1))
-  };
-
-
-
-
-
+  const totalPages = Math.ceil(totalCards / cardsPerPage) 
+  const isFirstPage = currentPage === 0
+  const isLastPage = currentPage === totalPages - 1
+  const categoryFirstPage = currentPage === 0
+  const categoryLastPage = currentPage === totalPages - 1
+  
   return (
     <>
       <Header />
@@ -52,12 +48,18 @@ const Page = () => {
             <SubHeading title='Today' />
             <div className='flex items-center gap-2'>
               <FaArrowLeft
-                className='text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black'
-                onClick={moveLeft}
+                className={`text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black ${isFirstPage ? 'pointer-events-none opacity-50' : ''}`}
+                onClick={() =>
+                  setCurrentPage(prevPage => Math.max(0, prevPage - 1))
+                }
               />
               <FaArrowRight
-                className='cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black'
-                onClick={moveRight}
+                className={`cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black ${isLastPage ? 'pointer-events-none opacity-50' : ''}`}
+                onClick={() =>
+                  setCurrentPage(prevPage =>
+                    Math.min(prevPage + 1, totalPages - 1)
+                  )
+                }
               />
             </div>
           </div>
@@ -66,7 +68,11 @@ const Page = () => {
             <Heading title='Auction Sales' />
           </div>
           <div className='flex justify-center'>
-            <AuctionCard cardInfo={Products} currentPage={currentPage} />
+            <AuctionCard
+              cardInfo={Products}
+              currentPage={currentPage}
+              cardsNum={cardsPerPage}
+              />
           </div>
         </section>
 
@@ -87,11 +93,13 @@ const Page = () => {
             <SubHeading title='Categories' />
             <div className='flex items-center gap-2'>
               <FaArrowLeft
-                className='text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black'
-                onClick={() => { setCategoryCurrentPage(prevPage => Math.max(0, prevPage - 1)) }}
+                className={`text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black ${categoryFirstPage ? 'pointer-events-none opacity-50' : ''}`}
+                onClick={() => {
+                  setCategoryCurrentPage(prevPage => Math.max(0, prevPage - 1))
+                }}
               />
               <FaArrowRight
-                className='cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black'
+                className={`cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black ${categoryLastPage ? 'pointer-events-none opacity-50' : ''}`}
                 onClick={() => {
                   setCategoryCurrentPage(prevPage =>
                     Math.min(prevPage + 1, totalPages - 1)
@@ -113,7 +121,7 @@ const Page = () => {
               <DefaultButton
                 text='view all Categories'
                 type='button'
-                handleClick={() => { }}
+                handleClick={() => {}}
                 className='rounded-lg bg-[#FCDFD4] p-2'
               />
             </div>
@@ -129,12 +137,12 @@ const Page = () => {
             <Heading title='Featured Products' />
           </div>
           <div>
-            <ProductCard cardInfo={Products} />
+            <ProductCard cardInfo={displayedProducts} />
             <div className='flex justify-center pt-4'>
               <DefaultButton
                 text='view all Features'
                 type='button'
-                handleClick={() => { }}
+                handleClick={() => {}}
                 className='rounded-lg bg-[#FCDFD4] p-2'
               />
             </div>
@@ -150,12 +158,12 @@ const Page = () => {
             <Heading title='Shop from Top Deals Collection' />
           </div>
           <div>
-            <ProductCard cardInfo={Products} />
+            <ProductCard cardInfo={displayedProducts} />
             <div className='flex justify-center pt-4'>
               <DefaultButton
                 text='view all Deals'
                 type='button'
-                handleClick={() => { }}
+                handleClick={() => {}}
                 className='rounded-lg bg-[#FCDFD4] p-2'
               />
             </div>
@@ -179,12 +187,12 @@ const Page = () => {
             <Heading title='This Week Top Product' />
           </div>
           <div>
-            <ProductCard cardInfo={Products} />
+            <ProductCard cardInfo={displayedProducts} />
             <div className='flex justify-center pt-4'>
               <DefaultButton
                 text='view all Products'
                 type='button'
-                handleClick={() => { }}
+                handleClick={() => {}}
                 className='rounded-lg bg-[#FCDFD4] p-2'
               />
             </div>

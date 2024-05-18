@@ -2,29 +2,32 @@
 import { useState, Fragment } from "react";
 import { categories } from "../static-data";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { FiMenu } from "react-icons/fi";
-import { IoClose } from "react-icons/io5";
 import Link from "next/link";
 import { Poppins, Inter } from "next/font/google";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"] });
 const inter = Inter({ subsets: ["latin"], weight: ["500", "900"] });
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type MenuState = number | null;
 
 export const AllCategories = () => {
     const [active, setActive] = useState<MenuState>(null);
-
-    const [activeSub, setActiveSub] = useState<string | null>(null);
     const [subcategory, SetSubcategory] = useState<string | null>(null);
 
-    const router = useRouter();
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
 
-    const handleSubClick = (subCategoryName: string) => {
+    const handlesubcat = (subCategory: string, val?: { name: string }) => {
         setActive(null);
-        setActiveSub(activeSub === subCategoryName ? null : subCategoryName);
 
-        // router.push(`/categories/${subcategory}?sub=${subCategoryName}`);
+        const params = new URLSearchParams(searchParams);
+        if (subCategory) {
+            params.set("sub", subCategory);
+        } else {
+            params.delete("sub");
+        }
+
+        replace(`/categories/${val?.name}?${params.toString()}`);
     };
 
     return (
@@ -53,39 +56,23 @@ export const AllCategories = () => {
                                 >
                                     {val.categories?.map((subcategory) => (
                                         <div
+                                            onClick={() => handlesubcat(subcategory.name, val)}
                                             key={subcategory.name}
                                             className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
                                         >
-                                            <Link
-                                                href={{
-                                                    pathname: `/categories/${val.name}`,
-                                                    query: { sub: subcategory.name },
-                                                }}
-                                                className={` `}
-                                                onClick={() => handleSubClick(subcategory.name)}
-                                            >
-                                                {subcategory.name}
-                                            </Link>
+                                            {subcategory.name}
 
                                             {"subcategory" in subcategory && (
                                                 <ul className="z-50 ">
                                                     {subcategory.subcategory?.map((subSubcategory) => (
                                                         <div
+                                                            onClick={() =>
+                                                                handlesubcat(subSubcategory.name, val)
+                                                            }
                                                             key={subSubcategory.name}
                                                             className="hover:bg-[#FCDFD4] py-2"
                                                         >
-                                                            <Link
-                                                                href={{
-                                                                    pathname: `/categories/${val.name}`,
-                                                                    query: { sub: subSubcategory.name },
-                                                                }}
-                                                                className="py-2"
-                                                                onClick={() =>
-                                                                    handleSubClick(subSubcategory.name)
-                                                                }
-                                                            >
-                                                                {subSubcategory.name}
-                                                            </Link>
+                                                            {subSubcategory.name}
                                                         </div>
                                                     ))}
                                                 </ul>

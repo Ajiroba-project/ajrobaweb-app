@@ -22,7 +22,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
 
     return (
         <section className={` bg-[#F6F6F6] -mt-8`}>
-            <div className=" flex gap-2 text-sm container py-4">
+            <div className=" flex gap-2 text-sm container py-4  flex-wrap">
                 <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link>
                 {
                     paths?.map((path: string, index: number) => (
@@ -48,7 +48,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
     )
 }
 
-export const DefaultBreadCrumb = ({paths}:BreadcrubProps)=>{
+export const DefaultBreadCrumb = ({ paths }: BreadcrubProps) => {
     return (
         <section className={``}>
             <div className=" flex gap-2 text-sm container pb-4">
@@ -68,7 +68,7 @@ export const DefaultBreadCrumb = ({paths}:BreadcrubProps)=>{
                 }
 
             </div>
-        
+
         </section>
     )
 }

@@ -5,6 +5,7 @@ import { FaStar } from 'react-icons/fa'
 import Link from 'next/link'
 import { useState } from 'react'
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
+import { useRouter } from 'next/navigation'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
@@ -25,6 +26,8 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
     const endIndex = startIndex + itemsPerPage;
     const paginatedCardInfo = cardInfo.slice(startIndex, endIndex);
 
+    const router = useRouter()
+
 
 
 
@@ -42,7 +45,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                 className={`${poppins.className} my-4 grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 mb-8 mt-4`}
             >
                 {paginatedCardInfo?.map((value, index) => (
-                    <div className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
+                    <div onClick={() => router.push(`/categories/productdetails/${value.name}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
                                 <Image src={value.image} alt='product' className='w-fit' />
@@ -90,22 +93,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
             </div>
 
             <div className='flex justify-center items-center mb-20 ' >
-                {/* <div className="">
-                    <button
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded"
-                        onClick={handlePreviousPage}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <button
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-700 text-white font-bold rounded"
-                        onClick={handleNextPage}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
-                </div> */}
+
                 <div className="flex justify-center mt-4">
                     <button
                         className="px-4 py-2 bg-[#F6F6F6] border  hover:bg-orange-700 text-[#D2D2D2] font-bold rounded"
