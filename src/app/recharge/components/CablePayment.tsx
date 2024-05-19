@@ -9,7 +9,7 @@ export const CablePayment = () => {
   const setCableStepper = CablePurchase(state => state.setCableStepper)
   const walletModal = userNavStore(state => state.walletModal)
   const setWalletModal = userNavStore(state => state.setWalletModal)
-  const [ussd, setUssd]=useState(true)
+  const [ussd, setUssd]=useState(false)
 
   return (
     <div className='my-5 mt-[4rem] flex  flex-col gap-4 rounded'>

@@ -84,7 +84,7 @@ export const CableDetails = () => {
             label='Package Bundle'
             showlabel={false}
           />
-          <p className='underine text-end text-[#f25e26]'>Beneficiaries</p>
+          <p className='underline cursor-pointer text-end text-[#f25e26]'>Beneficiaries</p>
 
           <div className='mb-6'>
             <DefaultButton

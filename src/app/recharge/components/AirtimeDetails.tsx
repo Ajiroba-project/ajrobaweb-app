@@ -75,7 +75,7 @@ export const AirtimeDetails = () => {
             placeholder='Amount'
             
           />
-          <p className='text-end text-[#f25e26] underine'>Beneficiaries</p>
+          <p className='text-end text-[#f25e26] underline cursor-pointer'>Beneficiaries</p>
 
           <div className='mb-6'>
             <DefaultButton

@@ -26,12 +26,15 @@ export const DataContent = () => {
   const userNavMenu = userNavStore(state => state.userNav)
 
   const Step = ({props}:any)=>{
+
+    
     return (
       <div className='lg:my-[4.5rem] md:my-[2rem] flex lg:flex-col gap-4 lg:place-content-start md:place-content-center'>
         {stepperList.map((val, index) => (
           <div
-            key={index}
-            className={` flex items-center gap-2 rounded-md border p-4 px-10 text-[#A09F9F] ${index === props || index <= props ? 'cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#f25e26]' :'border-2 opacity-50'} border-[#A09F9F] `}
+          key={index}
+          className={`flex items-center gap-2 rounded-md border p-4 px-10 text-[#A09F9F] ${index === props || index <= props ? 'cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#f25e26]' :'border-2 opacity-50'} border-[#A09F9F] `}
+          
           >
             <div>{val.icons}</div>
             <p className='w-max'>{val.name}</p>
