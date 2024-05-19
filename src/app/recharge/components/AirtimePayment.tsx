@@ -1,11 +1,13 @@
 import React from 'react'
 import { Formtitle } from './Formtitle'
-import { AirtimePurchase } from '@/store/store'
+import { AirtimePurchase, userNavStore } from '@/store/store'
 import { DefaultButton } from '../../component/Button'
-
+import { WalletPin } from './WalletPin'
 export const AirtimePayment = () => {
   const AirtimeDetails = AirtimePurchase(state => state.AirtimeDetails)
   const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
+  const walletModal = userNavStore(state => state.walletModal)
+  const setWalletModal = userNavStore(state => state.setWalletModal)
 
   return (
     <div className='my-5 mt-[4rem] flex  flex-col gap-4 rounded'>
@@ -29,7 +31,7 @@ export const AirtimePayment = () => {
             <h3 className='text-[#6E6E6E]'>Phone Number</h3>
             <p>{AirtimeDetails?.phone}</p>
           </div>
-          
+
           <div>
             <h3 className='text-[#6E6E6E]'>Amount</h3>
             <p>{AirtimeDetails?.amount}</p>
@@ -43,9 +45,7 @@ export const AirtimePayment = () => {
               type='button'
               text='Pay with Wallet'
               className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-              handleClick={() => {
-                setAirtimeStepper(2)
-              }}
+              handleClick={setWalletModal}
             />
             <DefaultButton
               type='button'
@@ -55,6 +55,11 @@ export const AirtimePayment = () => {
             />
           </div>
         </form>
+      </div>
+      <div
+        className={`${walletModal ? 'absolute left-0 top-0 z-50 -mt-[9rem] h-screen w-full' : 'hidden'}`}
+      >
+        <WalletPin />
       </div>
     </div>
   )

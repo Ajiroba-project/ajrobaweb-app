@@ -1,13 +1,16 @@
+'use client'
 import React from 'react'
 import { Formtitle } from './Formtitle'
-import { DataPurchase } from '@/store/store'
-import {DefaultButton} from '../../component/Button'
-
+import { DataPurchase, userNavStore } from '@/store/store'
+import { DefaultButton } from '../../component/Button'
+import { WalletPin } from './WalletPin'
 
 export const DataPayment = () => {
   const dataDetails = DataPurchase(state => state.dataDetails)
+  const walletModal = userNavStore(state => state.walletModal)
   const setStepper = DataPurchase(state => state.setStepper)
-  
+  const setWalletModal = userNavStore(state => state.setWalletModal)
+
   return (
     <div className='my-5 mt-[4rem] flex  flex-col gap-4 rounded'>
       <p className='brand1 cursor-pointer' onClick={() => setStepper(0)}>
@@ -48,7 +51,7 @@ export const DataPayment = () => {
               type='button'
               text='Pay with Wallet'
               className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-              handleClick={() => {setStepper(2)}}
+              handleClick={setWalletModal}
             />
             <DefaultButton
               type='button'
@@ -58,6 +61,11 @@ export const DataPayment = () => {
             />
           </div>
         </form>
+      </div>
+      <div
+        className={`${walletModal ? 'absolute left-0 top-0 z-50 -mt-[9rem] h-screen w-full' : 'hidden'}`}
+      >
+        <WalletPin />
       </div>
     </div>
   )

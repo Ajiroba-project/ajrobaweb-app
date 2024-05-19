@@ -24,21 +24,35 @@ export const DataContent = () => {
   const ElectricityStepper = ElectricityPurchase(state => state.ElectricityStepper)
 
   const userNavMenu = userNavStore(state => state.userNav)
-  
-  
-  return (
-    <section className='flex flex-col-reverse gap-4 lg:flex-row '>
-      <div className='my-[4.5rem] flex flex-col gap-4'>
+
+  const Step = ({props}:any)=>{
+    return (
+      <div className='lg:my-[4.5rem] md:my-[2rem] flex lg:flex-col gap-4 lg:place-content-start md:place-content-center'>
         {stepperList.map((val, index) => (
           <div
             key={index}
-            className={` flex items-center gap-2 rounded-md border p-4 px-10 text-[#A09F9F] ${index === stepper || index <= stepper ? 'cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#f25e26]' : index === AirtimeStepper || index <= AirtimeStepper ? 'cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#f25e26]' : 'border-2 opacity-50'} border-[#A09F9F] `}
+            className={` flex items-center gap-2 rounded-md border p-4 px-10 text-[#A09F9F] ${index === props || index <= props ? 'cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#f25e26]' :'border-2 opacity-50'} border-[#A09F9F] `}
           >
             <div>{val.icons}</div>
             <p className='w-max'>{val.name}</p>
           </div>
         ))}
       </div>
+    )
+  }
+  
+  return (
+    <section className='flex flex-col-reverse gap-4 md:flex-col lg:flex-row '>
+      {userNavMenu === 'Data' ? (
+        <Step props={stepper} />
+      ) : userNavMenu === 'Airtime' ? (
+        <Step props={AirtimeStepper} />
+      ) : userNavMenu === 'Cable Subscription' ? (
+        <Step props={CableStepper} />
+      ) : userNavMenu === 'Electricity' ? (
+        <Step props={ElectricityStepper} />
+      ) : null}
+
       {userNavMenu === 'Data' && (
         <div className='container'>
           {stepper === 0 ? (

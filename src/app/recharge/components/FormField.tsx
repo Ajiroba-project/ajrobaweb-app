@@ -10,7 +10,6 @@ type inputProps ={
     placeholder?:string,
     register?: any,
     errors?:any,
-    showPassword?:boolean,
     classname?:any, 
     value?:string
     isdisabled?:boolean
@@ -51,12 +50,11 @@ export const InputField = ({
   name,
   register,
   errors,
-  showPassword,
   classname,
   value,
   isdisabled
 }: inputProps) => {
-  const [toggle, setToggle] = useState(showPassword)
+  const [toggle, setToggle] = useState(false)
 
   const handleTogglePasswordVisibility = () => {
     setToggle(!toggle)
@@ -75,7 +73,7 @@ export const InputField = ({
           disabled={isdisabled}
         />
 
-        {showPassword && (
+        {type=== "password"||type === "Password"? (
           <span
             onClick={handleTogglePasswordVisibility}
             className={`absolute right-3 top-14 cursor-pointer  text-xl transition duration-200 ${
@@ -84,7 +82,7 @@ export const InputField = ({
           >
             {toggle ? <FaRegEye /> : <FaRegEyeSlash />}
           </span>
-        )}
+        ):null}
 
         <div className='pt-1 text-xs text-rose-500'>
           {errors?.[name]?.message}

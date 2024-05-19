@@ -1,14 +1,17 @@
-import React from 'react'
+import React, {useState} from 'react'
 import verify from '../../asset/verify.svg'
 import Image from 'next/image'
 import { Formtitle } from './Formtitle'
 import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
+import {FaToggleOn, FaToggleOff} from 'react-icons/fa'
+
 export const Receipt = () => {
   const router = useRouter()
+  const [toggle, setToggle]=useState(false)
   return (
     <section className='p-5 '>
-      <div className='my-5 pt-[5em] flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6]'>
+      <div className='my-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
         <div>
           <Image src={verify} alt='successfully' />
         </div>
@@ -25,8 +28,16 @@ export const Receipt = () => {
           />
         </div>
       </div>
-      <div className='flex justify-center items-center flex-col'>
+      <div
+        className='flex items-center justify-center gap-2'
+        onClick={() => setToggle(!toggle)}
+      >
         <p>Save as beneficiary</p>
+        {toggle ? (
+          <FaToggleOn className='text-[#F25E26] cursor-pointer text-3xl' />
+        ) : (
+          <FaToggleOff className='cursor-pointer text-3xl text-gray-300' />
+        )}
       </div>
     </section>
   )
