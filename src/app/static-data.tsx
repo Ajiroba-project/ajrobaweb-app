@@ -34,8 +34,8 @@ import { LuMail } from 'react-icons/lu'
 
 export const headerMenu = [
   {
-    name: "Home",
-    path: "/",
+    name: 'Home',
+    path: '/'
   },
   {
     name: 'Auction Deals',
@@ -43,25 +43,25 @@ export const headerMenu = [
   },
 
   {
-    name: "Categories",
-    path: "categories",
+    name: 'Categories',
+    path: 'Categories'
   },
   {
-    name: "Recharge",
-    path: "recharge",
+    name: 'Recharge',
+    path: 'recharge'
   },
   {
-    name: "Account",
-    path: "/",
+    name: 'Account',
+    path: '/',
     submenu: [
-      { name: "Sign Up", path: "/signup" },
-      { name: "Sign In", path: "/signin" },
-      { name: "Profile", path: "/profile" },
-    ],
+      { name: 'Sign Up', path: '/signup' },
+      { name: 'Sign In', path: '/signin' },
+      { name: 'Profile', path: '/profile' }
+    ]
   },
   {
-    name: "Help",
-    path: "/",
+    name: 'Help',
+    path: '/',
     submenu: [
       { name: 'FAQ', path: '/faq' },
       { name: 'About Us', path: '/aboutUs' },
@@ -74,411 +74,411 @@ export const headerMenu = [
 
 export const categories = [
   {
-    name: "FoodStuff",
-    path: "categories/FoodStuff",
+    name: 'FoodStuff',
+    path: 'Categories/FoodStuff',
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ",
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     image: product2,
     image2: foodstuff,
     svg: catgroup,
 
     categories: [
       {
-        name: "Fruits",
-        path: "category/Fruits",
-        price: "",
+        name: 'Fruits',
+        path: 'category/Fruits',
+        price: ''
       },
       {
-        name: "Vegetable",
-        path: "category/vegetable",
+        name: 'Vegetable',
+        path: 'category/vegetable'
       },
       {
-        name: "Tubers",
-        path: "category/tubers",
+        name: 'Tubers',
+        path: 'category/tubers'
       },
       {
-        name: "Cereal",
-        path: "/",
+        name: 'Cereal',
+        path: '/'
       },
       {
-        name: "Legumes",
-        path: "/",
+        name: 'Legumes',
+        path: '/'
       },
       {
-        name: "Diary",
-        path: "/",
+        name: 'Diary',
+        path: '/'
       },
       {
-        name: "Meat",
-        path: "/",
-      },
-    ],
+        name: 'Meat',
+        path: '/'
+      }
+    ]
   },
   {
-    name: "Fashion and Beauty",
-    path: "categories/fashion and Beauty",
+    name: 'Fashion and Beauty',
+    path: 'Categories/fashion and Beauty',
     image: fashionBeauty,
     image2: fashions,
     svg: catfash,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ",
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     categories: [
       {
         name: `Men's Fashion`,
         subcategory: [
-          { name: "Snickers", path: "" },
-          { name: "Clothing", path: "" },
-          { name: "Underwear", path: "" },
-          { name: "T-shirt", path: "" },
-          { name: "Polo", path: "" },
-          { name: "knicker", path: "" },
-          { name: "Jewelry", path: "" },
-          { name: "Belt", path: "" },
-        ],
+          { name: 'Snickers', path: '' },
+          { name: 'Clothing', path: '' },
+          { name: 'Underwear', path: '' },
+          { name: 'T-shirt', path: '' },
+          { name: 'Polo', path: '' },
+          { name: 'knicker', path: '' },
+          { name: 'Jewelry', path: '' },
+          { name: 'Belt', path: '' }
+        ]
       },
       {
         name: `Women's Fashion`,
         subcategory: [
-          { name: "Shoe", path: "" },
-          { name: "Clothing", path: "" },
-          { name: "Accessories", path: "" },
-          { name: "Hand Bag", path: "" },
-          { name: "Sleep Wear", path: "" },
-          { name: "Matanity", path: "" },
-          { name: "Dresses", path: "" },
-          { name: "Traditional", path: "" },
-        ],
+          { name: 'Shoe', path: '' },
+          { name: 'Clothing', path: '' },
+          { name: 'Accessories', path: '' },
+          { name: 'Hand Bag', path: '' },
+          { name: 'Sleep Wear', path: '' },
+          { name: 'Matanity', path: '' },
+          { name: 'Dresses', path: '' },
+          { name: 'Traditional', path: '' }
+        ]
       },
       {
         name: `Accessories`,
         subcategory: [
-          { name: "Men Sunglasses", path: "" },
-          { name: "Men Watches", path: "" },
-          { name: "Women Sunglasses", path: "" },
-          { name: "Women Watches", path: "" },
-        ],
-      },
-    ],
+          { name: 'Men Sunglasses', path: '' },
+          { name: 'Men Watches', path: '' },
+          { name: 'Women Sunglasses', path: '' },
+          { name: 'Women Watches', path: '' }
+        ]
+      }
+    ]
   },
   {
-    name: "fashion",
-    path: "categories/fashion",
+    name: 'fashion',
+    path: 'Categories/fashion',
     image: fashion,
     image2: fashions,
     svg: catfash,
     description:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi '
   },
   {
-    name: "Electronics",
-    path: "categories/Electronics",
+    name: 'Electronics',
+    path: 'categories/Electronics',
     image: product4,
     image2: phone,
     svg: catPhone,
 
     description:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     categories: [
       {
-        name: "Television",
-        path: "/",
+        name: 'Television',
+        path: '/'
       },
       {
-        name: "Smart Tv`s",
-        path: "/",
+        name: 'Smart Tv`s',
+        path: '/'
       },
       {
-        name: "Sound Bars ",
-        path: "/",
+        name: 'Sound Bars ',
+        path: '/'
       },
       {
-        name: "Video ",
-        path: "/",
+        name: 'Video ',
+        path: '/'
       },
       {
-        name: "Projectors",
-        path: "/",
+        name: 'Projectors',
+        path: '/'
       },
       {
-        name: "Digital Camera",
-        path: "/",
+        name: 'Digital Camera',
+        path: '/'
       },
       {
-        name: "Camcoder",
-        path: "/",
+        name: 'Camcoder',
+        path: '/'
       },
       {
-        name: "Generators ",
-        path: "/",
+        name: 'Generators ',
+        path: '/'
       },
       {
-        name: "Inverters ",
-        path: "/",
-      },
-    ],
+        name: 'Inverters ',
+        path: '/'
+      }
+    ]
   },
   {
-    name: "Phones",
-    path: "categories/Phones",
+    name: 'Phones',
+    path: 'categories/Phones',
     image: phones,
     image2: phone,
     svg: catPhone,
     description:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi',
     categories: [
       {
-        name: "Smart Phones",
-        path: "/",
+        name: 'Smart Phones',
+        path: '/'
       },
       {
-        name: "Basic Phones",
-        path: "/",
+        name: 'Basic Phones',
+        path: '/'
       },
       {
-        name: "Refubished",
-        path: "/",
+        name: 'Refubished',
+        path: '/'
       },
       {
-        name: "Ipad",
-        path: "/",
+        name: 'Ipad',
+        path: '/'
       },
       {
-        name: "Andriod Tablets",
-        path: "/",
+        name: 'Andriod Tablets',
+        path: '/'
       },
       {
-        name: "Educational Tablets",
-        path: "/",
+        name: 'Educational Tablets',
+        path: '/'
       },
       {
-        name: "Tablets Accessory",
-        path: "/",
+        name: 'Tablets Accessory',
+        path: '/'
       },
       {
-        name: "Earphones",
-        path: "/",
+        name: 'Earphones',
+        path: '/'
       },
       {
-        name: "Chargers",
-        path: "/",
-      },
-    ],
+        name: 'Chargers',
+        path: '/'
+      }
+    ]
   },
   {
-    name: "Computing",
-    path: "categories/Computing",
+    name: 'Computing',
+    path: 'Categories/Computing',
     image: computing,
     image2: phone,
     svg: catPhone,
     description:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
 
     categories: [
       {
-        name: "Desktop",
-        path: "/",
+        name: 'Desktop',
+        path: '/'
       },
       {
-        name: "Laptop",
-        path: "/",
+        name: 'Laptop',
+        path: '/'
       },
       {
-        name: "USB",
-        path: "/",
+        name: 'USB',
+        path: '/'
       },
       {
-        name: "Hard Drives",
-        path: "/",
+        name: 'Hard Drives',
+        path: '/'
       },
       {
-        name: "Printers",
-        path: "/",
+        name: 'Printers',
+        path: '/'
       },
       {
-        name: "Mouse",
-        path: "/",
+        name: 'Mouse',
+        path: '/'
       },
       {
-        name: "Batteries",
-        path: "/",
+        name: 'Batteries',
+        path: '/'
       },
       {
-        name: "Scanner",
-        path: "/",
+        name: 'Scanner',
+        path: '/'
       },
       {
-        name: "Chargers",
-        path: "/",
-      },
-    ],
+        name: 'Chargers',
+        path: '/'
+      }
+    ]
   },
   {
-    name: "Mother and Child",
-    path: "categories/Mother and Child",
+    name: 'Mother and Child',
+    path: 'Categories/Mother and Child',
     description:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
     image2: mc,
     svg: catwc,
     categories: [
       {
-        name: "Toys",
-        path: "/",
+        name: 'Toys',
+        path: '/'
       },
       {
-        name: "Bibs",
-        path: "/",
+        name: 'Bibs',
+        path: '/'
       },
       {
-        name: "Diapers",
-        path: "/",
+        name: 'Diapers',
+        path: '/'
       },
       {
-        name: "Bathing Tub",
-        path: "/",
+        name: 'Bathing Tub',
+        path: '/'
       },
       {
-        name: "Bathing Safety",
-        path: "/",
+        name: 'Bathing Safety',
+        path: '/'
       },
       {
-        name: "Towels",
-        path: "/",
+        name: 'Towels',
+        path: '/'
       },
       {
-        name: "Walkers",
-        path: "/",
+        name: 'Walkers',
+        path: '/'
       },
       {
-        name: "Swings",
-        path: "/",
+        name: 'Swings',
+        path: '/'
       },
       {
-        name: "Jumpers",
-        path: "/",
-      },
-    ],
+        name: 'Jumpers',
+        path: '/'
+      }
+    ]
   },
   {
-    name: "Royalty",
-    path: "categories/Royalty",
+    name: 'Royalty',
+    path: 'Categories/Royalty',
     description:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ",
+      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,
     image2: mc,
     svg: catfash,
     categories: [
       {
-        name: "Bead",
-        path: "/",
+        name: 'Bead',
+        path: '/'
       },
       {
-        name: "Walking Stick",
-        path: "/",
+        name: 'Walking Stick',
+        path: '/'
       },
       {
-        name: "Staff",
-        path: "/",
+        name: 'Staff',
+        path: '/'
       },
       {
-        name: "Capes",
-        path: "/",
+        name: 'Capes',
+        path: '/'
       },
       {
-        name: "Crown",
-        path: "/",
+        name: 'Crown',
+        path: '/'
       },
       {
-        name: "Hair Pin",
-        path: "/",
+        name: 'Hair Pin',
+        path: '/'
       },
       {
-        name: "Fan",
-        path: "/",
+        name: 'Fan',
+        path: '/'
       },
       {
-        name: "Anklet",
-        path: "/",
+        name: 'Anklet',
+        path: '/'
       },
       {
-        name: "Bracelet",
-        path: "/",
-      },
-    ],
-  },
-];
+        name: 'Bracelet',
+        path: '/'
+      }
+    ]
+  }
+]
 
 export const socialIcon = [
   {
-    name: "Facebook",
+    name: 'Facebook',
     icon: Social,
-    link: "#",
+    link: '#'
   },
   {
-    name: "x",
+    name: 'x',
     icon: Social1,
-    link: "#",
+    link: '#'
   },
   {
-    name: "Instagram",
+    name: 'Instagram',
     icon: Social2,
-    link: "#",
+    link: '#'
   },
   {
-    name: "Youtube",
+    name: 'Youtube',
     icon: Social3,
-    link: "#",
+    link: '#'
   },
   {
-    name: "LinkedIn",
+    name: 'LinkedIn',
     icon: Social4,
-    link: "#",
-  },
-];
+    link: '#'
+  }
+]
 
 export const quickLinks = [
   {
-    name: "Home",
-    links: "/",
+    name: 'Home',
+    links: '/'
   },
   {
-    name: "Auction Deals",
-    links: "",
+    name: 'Auction Deals',
+    links: ''
   },
   {
-    name: "Category",
-    links: "",
+    name: 'Category',
+    links: ''
   },
   {
-    name: "Ralfle Draw Process",
-    links: "",
-  },
-];
+    name: 'Ralfle Draw Process',
+    links: ''
+  }
+]
 
 export const ourCompany = [
   {
-    name: "Contact us",
-    links: "/contactUs",
+    name: 'Contact us',
+    links: '/contactUs'
   },
   {
-    name: "About Us",
-    links: "/AboutUs",
+    name: 'About Us',
+    links: '/AboutUs'
   },
   {
-    name: "FAQ",
-    links: "/faq",
-  },
-];
+    name: 'FAQ',
+    links: '/faq'
+  }
+]
 export const getInTouch = [
   {
-    name: "1, Praisehill estate, Arepo, ogun State",
-    links: "",
-    icon: <IoLocationOutline />,
+    name: '1, Praisehill estate, Arepo, ogun State',
+    links: '',
+    icon: <IoLocationOutline />
   },
   {
-    name: "(+234) 9169 881 005",
-    links: "",
-    icon: <FiPhoneCall />,
+    name: '(+234) 9169 881 005',
+    links: '',
+    icon: <FiPhoneCall />
   },
   {
     name: 'Support@goprus.com',
@@ -488,47 +488,47 @@ export const getInTouch = [
 ]
 
 export const marqueeInfo = [
-  "Follow us on all our social media platforms : www.ajiroba.com.",
-  "Buy a ticket now and stand a chance to win ",
-  "your preferred goods in our raffle draw.",
-];
+  'Follow us on all our social media platforms : www.ajiroba.com.',
+  'Buy a ticket now and stand a chance to win ',
+  'your preferred goods in our raffle draw.'
+]
 
 export const Products = [
   {
-    name: "human hair",
+    name: 'human hair',
     image: product1,
-    description: "",
-    price: "100,000",
-    previousPrice: "400,000",
-    rating: "",
-    time: "",
-    category: "Fashion",
-    subCategory: "Women",
+    description: '',
+    price: '100,000',
+    previousPrice: '400,000',
+    rating: '',
+    time: '',
+    category: 'Fashion',
+    subCategory: 'Women'
   },
   {
-    name: "Rice",
+    name: 'Rice',
     image: product2,
-    description: "",
-    price: "1000",
-    previousPrice: "20,000",
-    time: "",
-    rating: "",
-    category: "FoodStuff",
-    subCategory: "Food",
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Food'
   },
   {
-    name: "Orange",
+    name: 'Orange',
     image: product2,
-    description: "",
-    price: "1000",
-    previousPrice: "20,000",
-    time: "",
-    rating: "",
-    category: "FoodStuff",
-    subCategory: "Fruits",
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Fruits'
   },
   {
-    name: "Smart Watch",
+    name: 'Smart Watch',
     image: product3,
     description: '',
     price: '10,000',
@@ -539,59 +539,59 @@ export const Products = [
     subCategory: 'Smart'
   },
   {
-    name: "Head Phone",
+    name: 'Head Phone',
     image: product4,
-    description: "",
-    price: "20,000",
-    previousPrice: "40,000",
-    time: "",
-    rating: "",
-    category: "Phones",
-    subCategory: "Smart",
+    description: '',
+    price: '20,000',
+    previousPrice: '40,000',
+    time: '',
+    rating: '',
+    category: 'Phones',
+    subCategory: 'Smart'
   },
   {
-    name: "Washing Machine",
+    name: 'Washing Machine',
     image: product5,
-    description: "",
-    price: "200,000",
-    previousPrice: "500,000",
-    rating: "",
-    time: "",
-    category: "Electronic",
-    subCategory: "Smart",
+    description: '',
+    price: '200,000',
+    previousPrice: '500,000',
+    rating: '',
+    time: '',
+    category: 'Electronic',
+    subCategory: 'Smart'
   },
   {
-    name: "Iphone XR",
+    name: 'Iphone XR',
     image: product6,
-    description: "",
-    price: "120,000",
-    previousPrice: "700,000",
-    time: "",
-    rating: "",
-    category: "Phones",
-    subCategory: "Smart",
+    description: '',
+    price: '120,000',
+    previousPrice: '700,000',
+    time: '',
+    rating: '',
+    category: 'Phones',
+    subCategory: 'Smart'
   },
   {
-    name: "beads",
+    name: 'beads',
     image: product7,
-    description: "",
-    price: "2000",
-    previousPrice: "5000",
-    rating: "",
-    time: "",
-    category: "Fashion And Beauty",
-    subCategory: "Accessories",
+    description: '',
+    price: '2000',
+    previousPrice: '5000',
+    rating: '',
+    time: '',
+    category: 'Fashion And Beauty',
+    subCategory: 'Accessories'
   },
   {
-    name: "Bead",
+    name: 'Bead',
     image: product8,
-    description: "",
-    price: "120,000",
-    previousPrice: "400,000",
-    time: "",
-    rating: "",
-    category: "Phones",
-    subCategory: "Smart",
+    description: '',
+    price: '120,000',
+    previousPrice: '400,000',
+    time: '',
+    rating: '',
+    category: 'Phones',
+    subCategory: 'Smart'
   },
   {
     name: 'human hair',
@@ -635,37 +635,73 @@ export const Products = [
   }
 ]
 
+export const RelatedData = [
+  {
+    name: 'human hair',
+    image: product1,
+    description: '',
+    price: '100,000',
+    previousPrice: '400,000',
+    rating: '',
+    time: '',
+    category: 'Fashion',
+    subCategory: 'Women'
+  },
+  {
+    name: 'Rice',
+    image: product2,
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Food'
+  },
+  {
+    name: 'Orange',
+    image: product2,
+    description: '',
+    price: '1000',
+    previousPrice: '20,000',
+    time: '',
+    rating: '',
+    category: 'FoodStuff',
+    subCategory: 'Fruits'
+  }
+]
+
 export const faq = [
   {
-    question: "How does raffle draw work on your platform?",
+    question: 'How does raffle draw work on your platform?',
     answer:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque dolores, ex, labore dignissimos laudantium vero similique vitae architecto numquam magni a blanditiis quod accusantium temporibus modi magnam quo, eum officiis?",
+      ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque dolores, ex, labore dignissimos laudantium vero similique vitae architecto numquam magni a blanditiis quod accusantium temporibus modi magnam quo, eum officiis?'
   },
   {
-    question: "Are the raffle draw conducted fairly?",
-    answer: "",
+    question: 'Are the raffle draw conducted fairly?',
+    answer: ''
   },
   {
-    question: "What kind of price can I expect to win?",
-    answer: "",
+    question: 'What kind of price can I expect to win?',
+    answer: ''
   },
   {
-    question: "How do I know if I have won?",
-    answer: "",
+    question: 'How do I know if I have won?',
+    answer: ''
   },
   {
-    question: "Is there a limit to the number of ticket i can buy?",
-    answer: "",
-  },
-  {
-    question:
-      "What measure do you take to protect user privacy and data security?",
-    answer: "",
+    question: 'Is there a limit to the number of ticket i can buy?',
+    answer: ''
   },
   {
     question:
-      "Can I participate in the raffle draw from anywhere in the world?",
-    answer: "",
+      'What measure do you take to protect user privacy and data security?',
+    answer: ''
+  },
+  {
+    question:
+      'Can I participate in the raffle draw from anywhere in the world?',
+    answer: ''
   },
   {
     question:
@@ -678,7 +714,7 @@ import { FaSquarePhone } from 'react-icons/fa6'
 import { CgData } from 'react-icons/cg'
 import { PiTelevisionSimple } from 'react-icons/pi'
 import { RiLightbulbFlashFill } from 'react-icons/ri'
-import {RxDashboard } from 'react-icons/rx'
+import { RxDashboard } from 'react-icons/rx'
 export const UserMenu = [
   {
     name: 'Dashboard',
@@ -694,11 +730,11 @@ export const UserMenu = [
   },
   {
     name: 'Cable Subscription',
-    icon: <PiTelevisionSimple/>
+    icon: <PiTelevisionSimple />
   },
   {
-    name:"Electricity",
-    icon: <RiLightbulbFlashFill/>
+    name: 'Electricity',
+    icon: <RiLightbulbFlashFill />
   }
 ]
 import { RxFileText } from 'react-icons/rx'
@@ -706,16 +742,16 @@ import { IoReceiptOutline } from 'react-icons/io5'
 import { BsCreditCard2Back } from 'react-icons/bs'
 
 export const stepperList = [
-   {
-     name: 'Enter Details',
-     icons: <RxFileText />
-   },
-   {
-     name: 'Payment',
-     icons: <BsCreditCard2Back />
-   },
-   {
-     name: 'Receipts',
-     icons: <IoReceiptOutline />
-   }
- ]
+  {
+    name: 'Enter Details',
+    icons: <RxFileText />
+  },
+  {
+    name: 'Payment',
+    icons: <BsCreditCard2Back />
+  },
+  {
+    name: 'Receipts',
+    icons: <IoReceiptOutline />
+  }
+]
