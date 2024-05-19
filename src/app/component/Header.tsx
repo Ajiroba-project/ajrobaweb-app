@@ -4,7 +4,7 @@ import { socialIcon, headerMenu, marqueeInfo } from '../static-data'
 import Image from 'next/image'
 import Brand from '../asset/logo.svg'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { IoCartOutline } from 'react-icons/io5'
 import { BiBell } from 'react-icons/bi'
 import { CiSearch } from 'react-icons/ci'
@@ -23,6 +23,8 @@ export const Header = () => {
   const hamburgerfunc = () => {
     setIsOpen(!isOpen)
   }
+
+  const router = useRouter()
   return (
     <>
       <header className={` mb-9 `}>
@@ -124,6 +126,7 @@ export const Header = () => {
                                   <li key={subIndex} className="py-2 text-[#A09F9F] hover:text-[#F25E26] px-4 hover:bg-gray-100">{subItem.name}</li>
                                 ))} */}
                               {val.submenu.map((subItem, subIndex) => (
+                                // <li onClick={() => router.push(`${subItem.path}`)}
                                 <li
                                   key={subIndex}
                                   className='px-4 py-2 text-sm  text-[#A09F9F] hover:bg-gray-100 hover:text-[#F25E26]'
@@ -131,6 +134,7 @@ export const Header = () => {
                                   <Link href={subItem.path}>
                                     {subItem.name}
                                   </Link>{' '}
+                                  {/* {subItem.name} */}
                                   {/* Link to the submenu item */}
                                 </li>
                               ))}
