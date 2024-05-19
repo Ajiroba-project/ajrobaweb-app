@@ -33,9 +33,9 @@ const Page = () => {
       <Header />
       <AuctionBanner text='Auction Deals' banner={auctionImg} />
       <main className='container my-4'>
-        <section className='my-5 flex justify-between'>
+        <section className='my-5 flex justify-between lg:flex-row flex-col gap-5 items-center'>
           <div>
-            <Link className='text-xl text-[#F25E26] underline' href={'#'}>
+            <Link className=' text-[#F25E26] underline lg:text-xl ' href={'#'}>
               View All Raffle Draw Video
             </Link>
           </div>
