@@ -1,61 +1,269 @@
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import React, { useState } from "react";
-// import { categories } from '@/app/static-data'
-// import { Products } from '@/app/static-data'
 import { FiMenu } from "react-icons/fi";
 import { AllCategories, MobileSideMenu } from "./AllCategories";
 import { CatMobileSideMenu } from "./SideMenu";
-// import {SideNav} from '../component/SideMenu'
+import { FaStar } from "react-icons/fa6";
+import { it } from "node:test";
+
+
+interface SelectedItem {
+  id: number;
+}
+
+interface SelectedRating {
+  id: number
+  rating: any
+}
+
+export const BrandFilter = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const items = [
+    { id: 1, name: 'LG' },
+    { id: 2, name: 'Hisense' },
+    { id: 3, name: 'Sony' },
+    { id: 4, name: 'Samsung' },
+  ];
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+  };
+
+
+
+  const handleCheckboxChange = (item: SelectedItem) => {
+    const selectedIndex = selectedItems.indexOf(item.id);
+    let newSelectedItems = [...selectedItems];
+
+    if (selectedIndex === -1) {
+      newSelectedItems.push(item.id);
+    } else {
+      newSelectedItems.splice(selectedIndex, 1);
+    }
+
+    setSelectedItems(newSelectedItems);
+
+    const selectedBrandIds = newSelectedItems.join(',');
+    const params = new URLSearchParams(searchParams);
+    if (selectedBrandIds) {
+      params.set('selectedBrands', selectedBrandIds);
+    } else {
+      params.delete('selectedBrands', selectedBrandIds);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+
+  return (
+    <div>
+      <p className="mb-2 text-[#2A2A2A]" >Brand</p>
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Search"
+        className=" w-auto p-2 mb-2"
+      />
+      <ul>
+        {items
+          .filter(item => {
+            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+          })
+          .map(item => (
+            <li key={item.id}>
+              <input
+                type="checkbox"
+                checked={selectedItems.includes(item.id)}
+                onChange={() => handleCheckboxChange(item)}
+              />
+              <span className="ml-2">{item.name}</span>
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
+};
+
+
+export const RatingFilter = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+
+
+  const generateStars = (rating: number): JSX.Element[] => {
+    const stars = [];
+    for (let i = 0; i < rating; i++) {
+      stars.push(<FaStar key={i} className='text-[#F25E26]' />);
+    }
+    return stars;
+  };
+
+
+
+  const items = [
+    { id: 5, name: generateStars(5), rating: 5, tag: 'five_star' },
+    { id: 4, name: generateStars(4), rating: 4, tag: 'four_star' },
+  ];
+
+
+
+  const handleCheckboxChange = (item: SelectedRating) => {
+    const selectedIndex = selectedRatings.indexOf(item.rating);
+    let newSelectedRatings = [...selectedRatings];
+
+    if (selectedIndex === -1) {
+      newSelectedRatings.push(item.rating);
+    } else {
+      newSelectedRatings.splice(selectedIndex, 1);
+    }
+
+    setSelectedRatings(newSelectedRatings);
+
+    const selectedRatingIds = newSelectedRatings.join(',');
+    const params = new URLSearchParams(searchParams);
+    if (selectedRatingIds) {
+      params.set('selectedRatings', selectedRatingIds);
+    } else {
+      params.delete('selectedRatings', selectedRatingIds);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+
+  return (
+    <div>
+      <p className="p-2 mb-2 text-[#2A2A2A] mt-4">Rating</p>
+      <ul>
+
+        {items.map(item => (
+          <li key={item.id} className="flex mb-4">
+            <input
+              type="radio"
+              name="rating"
+              id={item.tag}
+              value={item.tag}
+              checked={selectedRatings.includes(item.id)}
+              onChange={() => handleCheckboxChange(item)}
+            />
+            <span className="ml-2 flex">{item.name}</span>
+          </li>
+        ))}
+
+      </ul>
+    </div>
+  );
+};
+
 
 export const PriceFilter = () => {
+
+  const [selectedPrice, setSelectedPrice] = useState('');
+
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const [minvalue, setMinvalue] = useState('');
+  const [maxvalue, setMaxvalue] = useState('');
+
+
+
+
+  const handlePriceSelection = (price: string) => {
+    setSelectedPrice(price);
+
+    const params = new URLSearchParams(searchParams);
+    if (price) {
+      params.set('query', price);
+    } else {
+      params.delete('query');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }
+
+
+  const handleminandmax = (min: string, max: string) => {
+    setMinvalue('')
+    setMaxvalue('')
+    console.log(min, max)
+    const params = new URLSearchParams(searchParams);
+    if (min && max) {
+      params.set('min_max', min + '&' + max);
+    } else {
+      params.delete('min_max');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }
+
   return (
-    <div className="py-6">
+    <div className="py-6 ">
       <p>Price</p>
 
       <div>
+
+
         <input
           type="radio"
           name="price1"
-          value="cvvcvc"
-          id=""
+          value="<2000"
+          id="under2000"
           className="mr-3"
+          onChange={() => handlePriceSelection('<2000')}
         />
-        <label htmlFor="huey">under ₦2000</label>
+        <label htmlFor="under2000">under 2000</label>
+
       </div>
 
       <div>
         <input
           type="radio"
           name="price1"
-          value="cvvcvc"
-          id=""
+          value="2000-5000"
+          id="2000-5000"
           className="mr-3"
+          onChange={() => handlePriceSelection('2000-5000')}
+
         />
-        <label htmlFor="huey">₦2000 - ₦5000</label>
+        <label htmlFor="2000-5000">₦2000 - ₦5000</label>
       </div>
 
       <div>
         <input
           type="radio"
           name="price1"
-          value="cvvcvc"
-          id=""
+          value="₦5000-Above"
+          id="₦5000-Above"
           className="mr-3"
         />
-        <label htmlFor="huey">₦5000 - Above</label>
+        <label htmlFor="₦5000-Above">₦5000 - Above</label>
       </div>
-      {/* custome price */}
+
+
       <div className="gap-2">
         <p className="py-5">Custom Price Range</p>
-        <div className="flex gap-3">
-          <input type="text" placeholder="min" className="w-14 p-2" />
-          <input type="text" placeholder="max" className="w-14 p-2" />
-          <input
-            type="button"
-            value="Apply"
-            className=" rounded border-2 border-[#F25E26] text-[#F25E26] p-3"
-          />
+        <div >
+          <form onSubmit={(e) => e.preventDefault()} className="flex gap-3 flex-wrap">
+            <input value={minvalue} onChange={(e) => setMinvalue(e.target.value)} type="text" name="minvalue" placeholder="min" className="w-14 p-2" />
+            <input value={maxvalue} type="text" name="maxvalue" placeholder="max" className="w-14 p-2" onChange={(e) => setMaxvalue(e.target.value)} />
+            <input onClick={() => handleminandmax(minvalue, maxvalue)}
+              type="button"
+              value="Apply"
+              className=" rounded border-2 border-[#F25E26] text-[#F25E26] p-3"
+            />
+          </form>
         </div>
       </div>
     </div>
@@ -67,16 +275,14 @@ export const SearchFilter = () => {
   const [selectedCategory, setSelectedCategory] = useState("Foodstuff");
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { replace } = useRouter();
   const sub = searchParams.get("sub");
-
-  const isRootPath = pathname === "/";
 
   const decodedPaths = pathname
     .split("/")
     .filter((path) => path !== "")
     .map((path) => decodeURIComponent(path));
 
-  // console.log(decodedPaths[decodedPaths.length - 1], 'ddd')
 
   const categories = [
     {
@@ -91,7 +297,6 @@ export const SearchFilter = () => {
       name: "Fashion",
       subCategories: ["Bags", "Belts"],
     },
-    // Add more categories here
   ];
 
   const currentCategory = categories.find(
@@ -100,16 +305,26 @@ export const SearchFilter = () => {
       decodedPaths[decodedPaths.length - 1].toLowerCase(),
   );
 
+
+  const handlesubcat = (subCategory: string) => {
+
+    const params = new URLSearchParams(searchParams);
+    if (subCategory) {
+      params.set('sub', subCategory);
+    } else {
+      params.delete('sub');
+    }
+    replace(`${pathname}?${params.toString()}`);
+
+  }
+
+
   return (
-    <div>
-      {/* <div className='flex cursor-pointer items-center gap-3 p-3'>
-        <FiMenu />
-        <p> All Category</p>
-      </div> */}
+    <div className="mb-8">
+
       <div className="flex cursor-pointer items-center gap-3 p-3">
         <FiMenu />
         <p onClick={() => setIsOpen(!isOpen)}>All Category</p>
-        {/* <p>All Category</p> */}
       </div>
 
       {
@@ -129,8 +344,6 @@ export const SearchFilter = () => {
         </div>
       )}
 
-      {/* {isOpen && ( */}
-
       <div className="pl-3">
         {currentCategory && (
           <div key={currentCategory.name}>
@@ -140,43 +353,33 @@ export const SearchFilter = () => {
             >
               {currentCategory.name}
             </p>
-            {/* {selectedCategory === currentCategory.name && ( */}
+
             <ul>
               {currentCategory.subCategories.map((subCategory) => (
                 <li
                   key={subCategory}
                   className={`${sub === subCategory ? "text-[#F25E26]" : ""}`}
+
+                  onClick={() => handlesubcat(subCategory)}
                 >
-                  <Link
-                    key={subCategory}
-                    href={{
-                      pathname: `/categories/${currentCategory.name}`,
-                      query: { sub: subCategory },
-                    }}
-                  >
-                    {subCategory}
-                  </Link>
+                  {subCategory}
                 </li>
               ))}
             </ul>
-            {/* )} */}
           </div>
         )}
       </div>
-      {/* )} */}
 
-
-
-
-      {/* Lists of categories */}
-      <div>{/* {paths} */}</div>
-
-      {/* price */}
       <PriceFilter />
 
-      {/* brand  */}
+      <BrandFilter />
 
-      {/* rating */}
+      <RatingFilter />
+
+
     </div>
   );
 };
+
+
+

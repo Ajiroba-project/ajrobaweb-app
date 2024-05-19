@@ -31,7 +31,6 @@ export const AirtimePayment = () => {
             <h3 className='text-[#6E6E6E]'>Phone Number</h3>
             <p>{AirtimeDetails?.phone}</p>
           </div>
-
           <div>
             <h3 className='text-[#6E6E6E]'>Amount</h3>
             <p>{AirtimeDetails?.amount}</p>
