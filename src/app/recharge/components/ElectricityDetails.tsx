@@ -100,7 +100,7 @@ export const ElectricityDetails = () => {
             placeholder='Phone Number'
           />
 
-          <p className='underine text-end text-[#f25e26]'>Beneficiaries</p>
+          <p className='underline text-end text-[#f25e26] cursor-pointer'>Beneficiaries</p>
 
           <div className='mb-6'>
             <DefaultButton

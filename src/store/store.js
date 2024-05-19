@@ -1,13 +1,17 @@
 import { create } from 'zustand'
 
 export const userNavStore = create(set => ({
+  headerNav: 'home',
   userNav: '',
   isNavbarOpen: false,
-  sidebar:false,
+  sidebar: false,
+  walletModal: false,
 
   setUserNav: text => set({ userNav: text }),
+  setHeaderNav: text => set({ headerNav: text }),
   toggleNavbar: () => set(state => ({ isNavbarOpen: !state.isNavbarOpen })),
-  toggleSidebar: () => set(state => ({ sidebar: !state.sidebar }))
+  toggleSidebar: () => set(state => ({ sidebar: !state.sidebar })),
+  setWalletModal: () => set(state => ({ walletModal: !state.walletModal }))
 }))
 
 
@@ -19,9 +23,11 @@ export const DataPurchase = create(set => ({
     phone: '',
     amount: ''
   },
+  
 
   setStepper: text => set({ stepper: text }),
-  setDataDetails: text => set({ dataDetails: text })
+  setDataDetails: text => set({ dataDetails: text }),
+  
 }))
 
 export const AirtimePurchase = create(set => ({
@@ -31,9 +37,11 @@ export const AirtimePurchase = create(set => ({
     phone: '',
     amount: ''
   },
+  walletModal:false,
 
   setAirtimeStepper: text => set({ AirtimeStepper: text }),
-  setAirtimeDetails: text => set({ AirtimeDetails: text })
+  setAirtimeDetails: text => set({ AirtimeDetails: text }),
+  
 }))
 
 
@@ -44,23 +52,27 @@ export const CablePurchase = create(set => ({
     network: '',
     smartcard: '',
     netpackage: '',
+    amount:'--'
   },
 
+
   setCableStepper: text => set({ CableStepper: text }),
-  setCableDetails: text => set({ CableDetails: text })
+  setCableDetails: text => set({ CableDetails: text }),
+ 
 }))
 
 export const ElectricityPurchase = create(set => ({
   ElectricityStepper: 0,
   ElectricityDetails: {
-    disco:'',
+    disco: '',
     meter: '',
     phone: '',
     package: '',
-    meter_no:"", 
-    amount:""
+    meter_no: '',
+    amount: ''
   },
+  walletModal:false,
 
   setElectricityStepper: text => set({ ElectricityStepper: text }),
-  setElectricityDetails: text => set({ ElectricityDetails: text })
+  setElectricityDetails: text => set({ ElectricityDetails: text }),
 }))
