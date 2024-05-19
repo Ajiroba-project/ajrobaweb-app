@@ -1,32 +1,32 @@
 'use client'
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState, useEffect, useMemo } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { AuctionBanner } from '../component/AuctionBanner'
 import { Products } from '../static-data'
 import { AuctionCard } from '../component/Card'
-import {Pagination} from '../component/Pagination'
+import { Pagination } from '../component/Pagination'
 import Link from 'next/link'
 import auctionImg from '../asset/image/auction-banner.png'
 
 const Page = () => {
-    const [currentPage, setCurrentPage] = useState<number>(0);
-    const [filteredData, setFilteredData] = useState<any>([]);
-    const [itemsPerPage] = useState<number>(12);
-    
-    useEffect(() => {
-    
-      const filteredProducts = Products.slice(
-        currentPage * itemsPerPage,
-        (currentPage + 1) * itemsPerPage)
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [filteredData, setFilteredData] = useState<any>([]);
+  const [itemsPerPage] = useState<number>(12);
 
-       setFilteredData(filteredProducts);
-    }, [currentPage, filteredData, itemsPerPage]);
-    
-    const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber)
-    }
-    const pageCount = Math.ceil(Products.length / itemsPerPage)
+  useMemo(() => {
+
+    const filteredProducts = Products.slice(
+      currentPage * itemsPerPage,
+      (currentPage + 1) * itemsPerPage)
+
+    setFilteredData(filteredProducts);
+  }, [currentPage, itemsPerPage]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+  }
+  const pageCount = Math.ceil(Products.length / itemsPerPage)
 
   return (
     <Fragment>
