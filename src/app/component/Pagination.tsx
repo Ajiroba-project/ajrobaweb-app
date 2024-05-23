@@ -44,7 +44,7 @@ export const CustomPagination = ({
   pageRangeDisplayed
 }: PaginationProps) => {
   return (
-    <div className={`my-12`}>
+    <div className={`my-4`}>
       <ReactPaginate
         breakLabel='...'
         nextLabel='>'
@@ -54,13 +54,13 @@ export const CustomPagination = ({
         pageCount={pageCount}
         renderOnZeroPageCount={null}
         className={className}
-        pageLinkClassName='px-5 py-3 bg-gray-100 text-2xl text-[#D2D2D2]'
-        activeClassName='text-[#F25E26]  font-semibold'
-        activeLinkClassName='border-[#f25e26] border-2'
-        nextClassName='px-5 py-3 bg-gray-100 text-[#D2D2D2] text-2xl'
-        nextLinkClassName=''
-        previousClassName='px-5 py-3 bg-gray-100 text-[#D2D2D2] text-xl'
-        previousLinkClassName=''
+        pageLinkClassName='px-5 py-3 rounded-md text-sm text-[#D2D2D2]'
+        activeClassName=' font-semibold'
+        activeLinkClassName='border-[#f25e26] border-2 text-black'
+        nextClassName='px-5 py-3 rounded-md text-[#D2D2D2] text-sm'
+        nextLinkClassName='border rounded-md px-5 py-3 text-black'
+        previousClassName='  text-[#D2D2D2] text-sm '
+        previousLinkClassName='border px-5 py-3 rounded-md text-black'
       />
     </div>
   )

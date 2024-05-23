@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Pipeline } from './Pipeline'
 import { AllOrder } from './AllOrder'
 import { CompletedOrder } from './CompletedOrder'
@@ -6,21 +6,33 @@ import { PendingOrder } from './PendingOrder'
 import { IconButton } from '../../component/Button'
 import { transactions } from '@/app/static-data'
 import { MdOutlineFileDownload } from 'react-icons/md'
+import {CustomPagination } from "../../component/Pagination"
 
 export const OrderDetails = () => {
   const orderSwitch = ['all', 'completed', 'pending']
+  const tableHeader = ["orderID", "product details", "amount", "date", "status", " "]
   const [pipeline, setPipeline] = useState<string>('all')
   const [completedFilter, setcompletedFilter] = useState<any>()
   const [pendingFilter, setpendingFilter] = useState<any>()
 
+   const [currentPage, setCurrentPage] = useState<number>(0)
+  const [categoryCurrentPage, setCategoryCurrentPage] = useState<number>(0)
+    // const [displayedProducts, setDisplayedProducts] = useState<any | []>(
+    //   Products.slice(0, 12)
+    // )
+    
+
   useEffect(() => {
     const complete = transactions.filter(transac =>
-      transac.status.includes('completed')
+      transac.status.includes(orderSwitch[1])
     )
+    setcompletedFilter(complete)
     const pending = transactions.filter(transac =>
-      transac.status.includes('pending')
+      transac.status.includes(orderSwitch[2], )
     )
-  })
+    setpendingFilter(pending)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <section className='mb-6 flex w-[50dvw] flex-col'>
@@ -35,44 +47,45 @@ export const OrderDetails = () => {
       </div>
       <Pipeline props={orderSwitch} setProps={setPipeline} start={pipeline} />
 
-      <div className='relative w-full overflow-x-auto shadow-lg'>
-        <table className='mt-6 w-full table-auto rounded-xl border bg-white shadow-lg rtl:text-right'>
-          <thead className='rounded-t-xl bg-gray-50 text-sm'>
-            <tr className='rounded-t-xl '>
-              <th scope='col' className='py-6 font-semibold'>
-                OrderId
-              </th>
-              <th scope='col' className='py-6 font-semibold'>
-                Product Details
-              </th>
-              <th scope='col' className='py-6 font-semibold'>
-                Amount
-              </th>
-              <th scope='col' className='py-6 font-semibold'>
-                Date
-              </th>
-              <th scope='col' className='py-6 font-semibold'>
-                Status
-              </th>
+      <div className='relative mt-6 w-full overflow-x-auto rounded-xl shadow-xl'>
+        <table className='mb-6 w-full table-auto rounded-xl bg-white '>
+          <thead className='table-header-group rounded-t-xl bg-gray-50 '>
+            <tr className=' tracking-wide'>
+              {tableHeader.map((val, index) => (
+                <th
+                  key={index}
+                  className='w-max p-6 text-left text-sm font-semibold capitalize tracking-wide '
+                  scope='col'
+                >
+                  {val}
+                </th>
+              ))}
             </tr>
           </thead>
 
-          <tbody>
-            <td>new</td>
-          </tbody>
-
-          {/* <tbody className='text-sm'>
+          <tbody className=''>
             {pipeline === orderSwitch[0] ? (
               <AllOrder transac={transactions} />
             ) : pipeline === orderSwitch[1] ? (
-              <CompletedOrder />
+              <CompletedOrder transac={completedFilter} />
             ) : (
-              <PendingOrder />
+              <PendingOrder transac={pendingFilter} />
             )}
-          </tbody> */}
+          </tbody>
 
           {/* pagination */}
-          <div className='my-3 flex justify-center'>12345</div>
+          <tfoot className=''>
+            <tr className=' text-center'>
+              <td colSpan={6} className='pt-3 text-center'>
+                <CustomPagination
+                  pageCount={4}
+                  className='flex items-center justify-center gap-3'
+                  pageRangeDisplayed={10}
+                  onPageChange={() => {}}
+                />
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </section>
