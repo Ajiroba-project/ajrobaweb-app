@@ -86,7 +86,7 @@ const Page = () => {
     }, 0);
 
     return (
-        <Suspense>
+        <Suspense fallback={<>Loading...</>}>
             <main>
                 <Header />
 
