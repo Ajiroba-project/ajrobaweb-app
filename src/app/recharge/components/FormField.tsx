@@ -63,7 +63,7 @@ export const InputField = ({
   return (
     <>
       <div className='relative flex flex-col'>
-        {label && <label className='py-2'>{label}</label>}
+        {label && <label className='py-2 text-sm'>{label}</label>}
         <input
           name={name}
           type={toggle ? 'text' : type}
@@ -95,7 +95,7 @@ export const InputField = ({
 export const SelectField =({showlabel, label, name, register, errors, options, multiple}:selectProps)=>{
     return (
       <div className='relative flex flex-col'>
-        {showlabel && <label className='py-2'>{label} </label>}
+        {showlabel && <label className='py-2 text-sm'>{label} </label>}
         <select
           {...register(name, { required: true })}
           name={name}
@@ -119,7 +119,7 @@ export const SelectField =({showlabel, label, name, register, errors, options, m
 export const TextAreaField =({label, name, register, errors, placeholder}:textareaProps)=>{
     return (
         <div className="relative flex flex-col ">
-             <label className="py-2">{label}: </label>
+             <label className="py-2 text-sm">{label}: </label>
             <textarea name={name} className={`resize-none px-5 h-24 focus:text-black border rounded w-auto xl:w-[350px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] p-4`} {...register(name, { required: true })} placeholder={placeholder}>
                 
             </textarea>
