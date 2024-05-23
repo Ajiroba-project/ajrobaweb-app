@@ -1,3 +1,9 @@
+import { NextResponse } from "next/server";
+
 export async function GET(req, res) {
-    // Your GET handler code
+    try {
+        return NextResponse.json({});
+    } catch (error) {
+        return NextResponse.error(new Error('Internal Server Error'));
+    }
 }

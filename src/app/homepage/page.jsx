@@ -5,7 +5,7 @@
  import { HIW } from "../component/How-it-works"
  import { Products } from "../static-data"
 
-function page() {
+function Page() {
   return (
     <>
 
@@ -107,4 +107,4 @@ function page() {
   )
 }
 
-export default page
+export default Page
