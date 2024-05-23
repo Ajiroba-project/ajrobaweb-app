@@ -1,5 +1,5 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Breadcrumb } from "../component/Breadcrumb";
 import { Header } from "../component/Header";
@@ -14,20 +14,8 @@ import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { Suspense } from 'react'
 
 const Page = () => {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const [path, setPath] = useState<string | null>(null);
-
 
     const router = useRouter();
-
-    const decodedPaths = pathname
-        .split("/")
-        .filter((path) => path !== "")
-        .map((path) => decodeURIComponent(path));
-
-
-
 
 
     const [cartItems, setCartItems] = useState([
