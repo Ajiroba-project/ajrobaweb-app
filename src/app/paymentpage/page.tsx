@@ -12,11 +12,19 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import ModalComponent from '../component/ModalComponent'
 import Input from "../component/Input";
+import { IoLocationOutline } from "react-icons/io5";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const Page = () => {
     const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [confirmordermodal, setConfirmOrder] = useState(false);
+    const [isPaymentMethodConfirmed, setIsPaymentMethodConfirmed] = useState(false);
+
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -29,6 +37,47 @@ const Page = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
+    const showConfirmOrder = () => {
+        setConfirmOrder(true);
+    };
+
+    const handleConfirmOrder = () => {
+        setConfirmOrder(false);
+    };
+
+    const handlecloseOrder = () => {
+        setConfirmOrder(false);
+    };
+
+    const confirmPaymentMethod = () => {
+        setIsPaymentMethodConfirmed(true);
+    };
+
+
+    const schema = yup.object().shape({
+
+        password: yup
+            .string()
+            .required("Password is required")
+            .min(6, "Can't be lesser than 6 digits"),
+
+    });
+
+    const {
+        reset,
+        register,
+        control,
+        handleSubmit,
+        formState: { errors },
+        trigger,
+        watch,
+        setValue,
+    } = useForm({
+        mode: "all",
+        resolver: yupResolver(schema),
+    });
+
 
     return (
         <Suspense fallback={<>Loading...</>}>
@@ -157,7 +206,7 @@ const Page = () => {
                                 </div>
 
                                 <div className="flex justify-end mt-2" >
-                                    <button className=" flex justify-center cursor-pointer text-[#E84526] text-sm">Confirm Payment Method </button>
+                                    <button onClick={confirmPaymentMethod} className=" flex justify-center cursor-pointer text-[#E84526] text-sm">Confirm Payment Method </button>
                                 </div>
                             </div>
                         </div>
@@ -220,11 +269,13 @@ const Page = () => {
                             </div>
 
 
-                            <button className=" w-full mt-4 px-12 py-2 text-sm bg-[#D2D2D2] hover:bg-[#D2D2D2] text-[#F6F6F6] font-bold rounded">
-
+                            <button onClick={showConfirmOrder}
+                                className={`w-full mt-4 px-12 py-2 text-sm font-bold rounded ${isPaymentMethodConfirmed ? 'bg-[#E84526] text-[#FFFFFF] cursor-pointer' : 'bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed'
+                                    }`}
+                                disabled={!isPaymentMethodConfirmed}
+                            >
                                 Confirm Order
                             </button>
-
 
                         </div>
                     </div>
@@ -233,15 +284,128 @@ const Page = () => {
                 <Footer />
 
                 <ModalComponent
-                    content={<div>
-                        <input type="text" name="location" placeholder="Enter your new address" />
+                    content={<div className="flex flex-col justify-center" >
+                        <div>
+                            <input className="border px-2 py-2 rounded border-[#D2D2D2] text-#B7B7B7" type="text" name="location" placeholder="Enter your new address" />
+                        </div>
 
 
-                    </div>}
+                        <div className="flex mt-4 gap-4" >
+                            <div>
+                                <IoLocationOutline color="#F25E26" size={24} />
+                            </div>
+
+                            <div>
+                                <button className="text-[#2A2A2A]" >Use my location</button>
+                            </div>
+                        </div>
+
+
+                        <div className="flex mt-4 gap-4" >
+                            <div>
+                                <IoLocationOutline color="#F25E26" size={24} />
+                            </div>
+
+                            <div>
+                                <p className="text-[#2A2A2A]" >32, Ajiroba street,arepo,lagos</p>
+                            </div>
+                        </div>
+
+
+
+                        <div className="flex mt-4 gap-4" >
+                            <div>
+                                <IoLocationOutline color="#F25E26" size={24} />
+                            </div>
+
+                            <div>
+                                <p className="text-[#2A2A2A]" >45, jasper james, lekki</p>
+                            </div>
+                        </div>
+
+
+                        <div className="flex gap-4 justify-center mt-4" >
+
+                            <div>
+                                <button className="rounded px-4 py-2 bg-[white] border border-[#E84526] text-[#E84526]">Cancel</button>
+                            </div>
+
+                            <div>
+                                <button className="rounded px-4 py-2 bg-[#E84526] border border-[#E84526] text-[#FFFFFF]">Change</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    }
+
+
+
                     isModalOpen={isModalOpen}
                     showModal={showModal}
                     handleOk={handleOk}
                     handleCancel={handleCancel}
+
+                />
+
+
+                <ModalComponent
+                    content={<div className="flex flex-col justify-center" >
+                        <div className="flex justify-center items-center flex-col" >
+                            <p className="text-[#2A2A2A] font-bold text-xl font-Poppins" >Wallet Pin</p>
+                            <small className="text-[#504D4D] text-lg font-Poppins">Kindly enter your wallet pin</small>
+                        </div>
+
+
+                        <form action="" className="flex justify-center items-center flex-col mt-8 mb-4" >
+
+
+                            <div className="flex flex-col">
+                                <Input
+                                    label="Enter Pin"
+                                    type="password"
+                                    name="password"
+                                    placeholder="****"
+                                    register={register}
+                                    errors={errors.password}
+                                    HiEyeSlash={<FaRegEyeSlash />}
+                                    HiEye={<FaRegEye />}
+
+                                />
+                                <div className="text-xs text-red-700">
+                                    {errors?.password?.message}
+                                </div>
+
+
+                                <button
+                                    className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+
+                                >
+                                    Pay
+                                </button>
+                            </div>
+
+
+
+
+
+                        </form>
+
+
+
+
+                    </div>
+
+
+                    }
+                    isModalOpen={confirmordermodal}
+                    showModal={showConfirmOrder}
+                    handleOk={handleConfirmOrder}
+                    handleCancel={handlecloseOrder}
+
                 />
             </main>
         </Suspense>
