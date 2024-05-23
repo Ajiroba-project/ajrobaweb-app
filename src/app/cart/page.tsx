@@ -185,7 +185,7 @@ const Page = () => {
 
                             <hr className="mt-4" />
                             {/* Checkout total */}
-                            <button className="mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:bg-[#FCDFD4] text-[#2A2A2A] font-bold rounded">
+                            <button onClick={() => router.push('/paymentpage')} className="mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:bg-[#FCDFD4] text-[#2A2A2A] font-bold rounded">
                                 Check out (N {grandTotal.toLocaleString()})
                             </button>
 
