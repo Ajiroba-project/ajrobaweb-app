@@ -16,6 +16,8 @@ import { FaStar } from "react-icons/fa6";
 import profile_head from '../../../asset/image/profile_head.svg'
 import { RelatedProducts } from "@/app/component/RelatedProducts";
 import { Products, RelatedData } from "@/app/static-data";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export const ProductReview = () => {
@@ -370,11 +372,31 @@ const Page = ({ params }: any) => {
     };
 
 
+    const notify = () => {
+        toast('🦄 ‘Mama Gold Rice’ has been added to cart', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+            style: {
+                backgroundColor: "#08B504",
+                color: "#FFFFFF",
+            },
+        });
+    };
+
+
 
 
 
     return (
         <main>
+            <ToastContainer />
             <Header />
             <Breadcrumb paths={verifiedpaths} text={undefined} />
 
@@ -475,7 +497,7 @@ const Page = ({ params }: any) => {
 
 
                         <button
-                            className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
+                            onClick={notify} className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
 
                         >
                             Add to Cart

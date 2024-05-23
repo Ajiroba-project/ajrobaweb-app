@@ -164,7 +164,7 @@ export const Header = () => {
 
             <div className='flex gap-4'>
               <BiBell className='cursor-pointer text-xl text-[#A09F9F]' />
-              <IoCartOutline className='cursor-pointer text-xl text-[#A09F9F]' />
+              <IoCartOutline onClick={() => router.push('/cart')} className='cursor-pointer text-xl text-[#A09F9F]' />
             </div>
           </div>
         </div>
