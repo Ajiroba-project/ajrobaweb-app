@@ -20,7 +20,7 @@ import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export const ProductReview = () => {
+const ProductReview = () => {
     return (
         <div className="container py-4 mb-12 " >
 
@@ -74,7 +74,7 @@ export const ProductReview = () => {
     )
 }
 
-export const CustomerReview = () => {
+const CustomerReview = () => {
 
     const star = [1, 2, 3, 4, 5]
     const rating = 5;
@@ -278,7 +278,7 @@ export const CustomerReview = () => {
 }
 
 
-export const RelatedProduct = () => {
+const RelatedProduct = () => {
 
 
     // const filteredProducts = Products.filter((product) => {
