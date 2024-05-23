@@ -50,7 +50,7 @@ export const WalletPin = () => {
     handleError
   )
 
-  const sumbitForm = (data: any) => {
+  const submitForm = (data: any) => {
     mutate(data)
   }
 
@@ -90,7 +90,7 @@ export const WalletPin = () => {
         </div>
 
         <form
-          onSubmit={handleSubmit(sumbitForm)}
+          onSubmit={handleSubmit(submitForm)}
           className='flex w-2/3 flex-col justify-center gap-8'
         >
           <InputField

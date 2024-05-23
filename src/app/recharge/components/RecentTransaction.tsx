@@ -1,28 +1,10 @@
 'use client'
 import React,{Fragment, useState} from 'react'
+import {transactions} from '@/app/static-data'
 
 export const RecentTransaction = () => {
-    const transac = [
-      {
-        logo: '',
-        title: 'You just Bought ₦200 MTN Airtime',
-        amount: '200',
-        time: '3:15'
-      },
-      {
-        logo: '',
-        title: 'You just Bought 3000 unit',
-        amount: '1000',
-        time: '3:15'
-      },
-      {
-        logo: '',
-        title: 'You just Bought ₦200 MTN Airtime',
-        amount: '200',
-        time: '3:15'
-      }
-    ]
-    const [allTransaction, setAllTransaction]=useState(transac.slice(0,2))
+
+  const [allTransaction, setAllTransaction]=useState(transactions.slice(0,2))
 
 
   return (
@@ -31,9 +13,9 @@ export const RecentTransaction = () => {
         <div className='flex justify-between'>
           <h3 className='text-xl font-semibold'> Recent Transaction</h3>
           <p
-            className={`'text-[#F25E26] cursor-pointer '${allTransaction.length === transac.length ? 'pointer-events-none opacity-50 hidden' : ''}`}
+            className={`'text-[#F25E26] cursor-pointer '${allTransaction.length === transactions.length ? 'pointer-events-none opacity-50 hidden' : ''}`}
             onClick={() => {
-              setAllTransaction(transac)
+              setAllTransaction(transactions)
             }}
           >
             View all
