@@ -10,6 +10,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import image2 from "../asset/image/rice2.jpeg";
 import image3 from "../asset/image/rice3.jpeg";
 import image4 from "../asset/image/rice4.jpeg";
+import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 
 const Page = ({ params }: any) => {
     const pathname = usePathname();
@@ -70,6 +71,25 @@ const Page = ({ params }: any) => {
         }
     ]);
 
+
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12; // adjust this value to change the number of items per page
+    const totalPages = Math.ceil(cartItems.length / itemsPerPage);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedCartInfo = cartItems.slice(startIndex, endIndex);
+
+    const handleFirstPage = () => {
+        setCurrentPage(1);
+    };
+
+    const handleLastPage = () => {
+        setCurrentPage(totalPages);
+    };
+
     const handleIncrement = (id: number) => {
         setCartItems(cartItems.map(item =>
             item.id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -112,7 +132,7 @@ const Page = ({ params }: any) => {
                     <div className="border rounded border-[#D2D2D2] px-4 py-4">
                         <p>Cart ({cartItems.length})</p>  {/* Cart Total */}
 
-                        {cartItems.map((item) => (
+                        {paginatedCartInfo.map((item) => (
                             <div key={item.id} className="border rounded border-[#D2D2D2] px-4 py-2 my-4">
                                 <div className="flex justify-between flex-wrap 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col gap-4">
                                     <div>
@@ -196,7 +216,48 @@ const Page = ({ params }: any) => {
                         <button className="mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:bg-[#FCDFD4] text-[#2A2A2A] font-bold rounded">
                             Check out (N {grandTotal.toLocaleString()})
                         </button>
+
+                        <div className="mt-4" >
+                            <small className="  text-[#F25E26]">Excluding delivery charges</small>
+
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div className='flex justify-center items-center mb-20 ' >
+
+                <div className="flex justify-center mt-4">
+                    <button
+                        className="px-4 py-2 bg-[#F6F6F6] border  hover:bg-orange-700 text-[#D2D2D2] font-bold rounded"
+                        onClick={handleFirstPage}
+                        disabled={currentPage === 1}
+                    >
+                        <FaAngleDoubleLeft />
+                        {/* First */}
+                    </button>
+                    {Array(totalPages)
+                        .fill(0)
+                        .map((_, index) => (
+                            <button
+                                key={index}
+                                className={`px-4 py-2 ${currentPage === index + 1
+                                    ? 'bg-[#F6F6F6] border-[#F25E26] text-[#F25E26]'
+                                    : 'bg-[#F6F6F6] border text-[#D2D2D2]'
+                                    } hover:bg-orange-700 font-bold rounded`}
+                                onClick={() => setCurrentPage(index + 1)}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+                    <button
+                        className="px-4 py-2 bg-[#F6F6F6] border  hover:bg-orange-700 text-[#D2D2D2] font-bold rounded"
+                        onClick={handleLastPage}
+                        disabled={currentPage === totalPages}
+                    >
+                        {/* Last  */}
+                        <FaAngleDoubleRight />
+                    </button>
                 </div>
             </div>
 
