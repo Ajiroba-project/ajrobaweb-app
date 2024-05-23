@@ -4,11 +4,12 @@
  import { AuctionCard } from "../component/Card"
  import { HIW } from "../component/How-it-works"
  import { Products } from "../static-data"
+ import { Suspense } from 'react'
 
 function Page() {
   return (
     <>
-
+ <Suspense>
       <main className=''>
         {/* hero section */}
         <section>
@@ -103,6 +104,7 @@ function Page() {
 
 
       </main>
+      </Suspense>
     </>
   )
 }
