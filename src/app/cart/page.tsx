@@ -13,14 +13,11 @@ import image4 from "../asset/image/rice4.jpeg";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { Suspense } from 'react'
 
-const Page = ({ params }: any) => {
+const Page = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [path, setPath] = useState<string | null>(null);
-    const sub = searchParams.get("sub");
-    const query = searchParams.get("query");
-    const selectedBrands = searchParams.get("selectedBrands");
-    const min_max = searchParams.get("min_max");
+
 
     const router = useRouter();
 
@@ -29,21 +26,9 @@ const Page = ({ params }: any) => {
         .filter((path) => path !== "")
         .map((path) => decodeURIComponent(path));
 
-    const paths = useMemo(
-        () => [...decodedPaths, sub, query, min_max, selectedBrands],
-        [decodedPaths, sub, query, min_max, selectedBrands],
-    );
 
-    const verifiedpaths = useMemo(
-        () => [...decodedPaths, sub],
-        [decodedPaths, sub],
-    );
 
-    useEffect(() => {
-        if (paths.length > 0) {
-            setPath(paths[paths.length - 1]);
-        }
-    }, [paths]);
+
 
     const [cartItems, setCartItems] = useState([
         {
@@ -71,9 +56,6 @@ const Page = ({ params }: any) => {
             quantity: 1,
         }
     ]);
-
-
-
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12; // adjust this value to change the number of items per page
@@ -119,7 +101,7 @@ const Page = ({ params }: any) => {
         <Suspense>
             <main>
                 <Header />
-                <Breadcrumb paths={verifiedpaths} text={undefined} />
+
 
                 <div onClick={() => router.back()}>
                     <div className="cursor-pointer container flex justify-start">
