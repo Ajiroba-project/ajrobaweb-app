@@ -106,7 +106,7 @@ export const ProfileForm = () => {
             errors={errors}
           />
         </div>
-        <div className='flex items-center  '>
+        <div className='flex lg:items-center  lg:flex-row flex-col py-2 lg:py-0'>
           <InputField
             name='pass'
             type='text'
@@ -115,10 +115,10 @@ export const ProfileForm = () => {
             errors={errors}
             label='Password'
             isdisabled
-            classname='p-3 bg-transparent outline-none w-1/2'
+            classname='lg:p-3  bg-transparent outline-none lg:w-1/2 w-full'
           />
           <div>
-            <p className='brand1 cursor-pointer' onClick={setEditPassword}>
+            <p className='brand1 cursor-pointer w-fit lg:text-md text-xs' onClick={setEditPassword}>
               Change password
             </p>
           </div>

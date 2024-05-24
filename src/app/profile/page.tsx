@@ -9,7 +9,9 @@ const Page = () => {
   const profile = userProfile(state=>state.profile)
   return (
     <section>
-      <Header />
+      <header className="z-50">
+        <Header />
+      </header>
       <main className='container'>
         <Profile />
       </main>

@@ -16,8 +16,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
               <Image
                 src={val.image}
                 alt={val.name}
-                
-                className='h-auto w-auto rounded-md bg-gray-100'
+                width={300}
+                className='h-auto w-auto rounded-md bg-gray-100 bg-contain'
               />
               <div className='flex flex-col gap-3 capitalize'>
                 <p className=' font-semibold'>{val.name}</p>
@@ -28,7 +28,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                     val.tag.map((value: string, index: number) => (
                       <p
                         key={index}
-                        className={`${value === 'open' || value === 'delivered' ? 'bg-green-200 text-emerald-800' : value === 'close' ? 'bg-rose-200 text-red-800' : value === 'redeem items' ? 'bg-blue-700 text-white' : 'bg-[#F25E26] text-white'} rounded-xl px-2.5  py-1 text-sm`}
+                        className={`text-xs ${value === 'open' || value === 'delivered' ? 'bg-green-200 text-emerald-800' : value === 'close' ? 'bg-rose-200 text-red-800' : value === 'redeem items' ? 'bg-blue-700 text-white' : 'bg-[#F25E26] text-white'} rounded-xl px-2.5  py-1 `}
                       >
                         {value}
                       </p>

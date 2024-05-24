@@ -35,13 +35,13 @@ export const OrderDetails = () => {
   }, [])
 
   return (
-    <section className='mb-6 flex w-[50dvw] flex-col'>
-      <div className='flex justify-between'>
+    <section className='mb-6 flex lg:w-[50dvw] w-full flex-col'>
+      <div className='flex lg:justify-between lg:flex-row flex-col justify-center lg:my-0 my-4'>
         <h3 className='mb-1.5 text-2xl  font-semibold'>Transactions</h3>
         <IconButton
           type='button'
           text='export Csv'
-          className='flex items-center gap-2 rounded-md bg-[#F25E26] p-2 capitalize text-white'
+          className='flex items-center gap-2 rounded-md bg-[#F25E26] p-2 capitalize text-white  w-fit justify-items-center'
           icon={<MdOutlineFileDownload className='text-xl' />}
         />
       </div>

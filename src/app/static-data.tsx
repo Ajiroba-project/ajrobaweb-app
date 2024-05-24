@@ -764,25 +764,40 @@ export const stepperList = [
 ]
 
 export const transactions = [
-      {
-        logo: '',
-        title: 'You just Bought ₦200 MTN Airtime',
-        amount: '200',
-        time: '3:15',
-        status:["pending"]
-      },
-      {
-        logo: '',
-        title: 'You just Bought 3000 unit',
-        amount: '1000',
-        time: '3:15', 
-        status:["completed"]
-      },
-      {
-        logo: '',
-        title: 'You just Bought ₦200 MTN Airtime',
-        amount: '200',
-        time: '3:15', 
-        status:["delivered"]
-      }
-    ]
+  {
+    logo: '',
+    title: 'You just Bought ₦200 MTN Airtime',
+    amount: '200',
+    time: '3:15',
+    status: ['pending'],
+    type: 'purchase',
+    brand:"MTN"
+  },
+  {
+    logo:"",
+    brand: 'IKEDC',
+    title: 'You just Bought 3000 unit',
+    amount: '1000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'purchase'
+  },
+  {
+    logo:"",
+    brand: 'MTN',
+    title: 'You just Bought ₦200 MTN Airtime',
+    amount: '200',
+    time: '3:15',
+    status: ['delivered'],
+    type: 'purchase'
+  },
+  {
+    logo:"",
+    brand: 'GTB',
+    title: 'You just Received ₦ 20,0000',
+    amount: '20,000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'received'
+  }
+]

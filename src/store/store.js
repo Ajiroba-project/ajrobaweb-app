@@ -21,14 +21,15 @@ export const userProfile = create(set => ({
   editPassword: false,
   successModal: false,
   userDetails: {
-    firstname: 'samuella',
+    firstname: 'alex',
     lastname: 'ajiroba',
     email: 'ajiroba@demo.com',
     phone: '+234-340-340-34',
     address: '123,alabukun street, off afterfive',
     state: 'lagos state',
     lga: 'somolu',
-    residency: '11222333444'
+    residency: '11222333444',
+    balance:""
   },
   setEditProfile: () => set(state => ({ editProfile: !state.editProfile })),
   setProfile: () => set(state => ({ profile: !state.profile })),

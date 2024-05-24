@@ -15,7 +15,7 @@ export const Pipeline = ({props, setProps, start}:PipelineProps) => {
     }, [pipeline, setProps])  
       
   return (
-    <div className='flex items-center gap-8'>
+    <div className='flex lg:items-center lg:gap-8 lg:flex-row md:flex-row flex-col gap-2 '>
       {props.map((val: string, index: number) => (
         <label
           key={index}

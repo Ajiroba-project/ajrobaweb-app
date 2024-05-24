@@ -21,7 +21,7 @@ export const AuctionDetails = () => {
   }, [])
 
   return (
-    <section className='mb-6  flex w-[50dvw] flex-col '>
+    <section className='mb-6  flex lg:w-[50dvw] w-full  flex-col '>
       <Pipeline props={auctionSwitch} setProps={setPipeline} start={pipeline} />
       <div className='mt-6 rounded-md  border-2 p-4'>
         {pipeline === auctionSwitch[0] ? (

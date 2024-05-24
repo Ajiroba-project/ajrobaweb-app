@@ -9,7 +9,7 @@ export const ProfileDetails = () => {
   }))
 
   return (
-    <section className='mb-6  w-[50dvw] '>
+    <section className='mb-6  lg:w-[50dvw] w-full md:full '>
       {!editProfile ? (
         <div className='mt-4 flex flex-col gap-8 p-8 shadow-lg'>
           <div>
