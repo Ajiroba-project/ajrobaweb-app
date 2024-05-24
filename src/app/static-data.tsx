@@ -41,7 +41,7 @@ export const headerMenu = [
 
   {
     name: 'Categories',
-    path: 'Categories'
+    path: 'categories'
   },
   {
     name: 'Recharge',
@@ -72,7 +72,7 @@ export const headerMenu = [
 export const categories = [
   {
     name: 'FoodStuff',
-    path: 'Categories/FoodStuff',
+    path: 'categories/FoodStuff',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
     image: product2,
@@ -113,7 +113,7 @@ export const categories = [
   },
   {
     name: 'Fashion and Beauty',
-    path: 'Categories/fashion and Beauty',
+    path: 'categories/fashion and Beauty',
     image: fashionBeauty,
     image2: fashions,
     svg: catfash,
@@ -159,7 +159,7 @@ export const categories = [
   },
   {
     name: 'fashion',
-    path: 'Categories/fashion',
+    path: 'categories/fashion',
     image: fashion,
     image2: fashions,
     svg: catfash,
@@ -263,7 +263,7 @@ export const categories = [
   },
   {
     name: 'Computing',
-    path: 'Categories/Computing',
+    path: 'categories/Computing',
     image: computing,
     image2: phone,
     svg: catPhone,
@@ -311,7 +311,7 @@ export const categories = [
   },
   {
     name: 'Mother and Child',
-    path: 'Categories/Mother and Child',
+    path: 'categories/Mother and Child',
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: mother,
@@ -358,7 +358,7 @@ export const categories = [
   },
   {
     name: 'Royalty',
-    path: 'Categories/Royalty',
+    path: 'categories/Royalty',
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ',
     image: royalty,

@@ -62,6 +62,8 @@ function Page() {
 
     const handleSuccess = (data: any) => {
 
+        console.log(data, 'datatta')
+
 
         if (data.status === 200) {
 

@@ -156,23 +156,12 @@ export const Header = () => {
                 </div>
               </div>
 
-              <div className='flex gap-4 text-xl text-[#A09F9F]'>
-                <BiBell className='cursor-pointer  ' />
-                <IoCartOutline className='cursor-pointer  ' />
-                {isOpen ? (
-                  <IoClose
-                    onClick={hamburgerfunc}
-                    className=' lg:hidden '
-                  />
-                ) : (
-                  <FiMenu
-                    onClick={hamburgerfunc}
-                    className=' lg:hidden'
-                  />
-                )}
-              </div>
+            <div className='flex gap-4'>
+              <BiBell className='cursor-pointer text-xl text-[#A09F9F]' />
+              <IoCartOutline onClick={() => router.push('/cart')} className='cursor-pointer text-xl text-[#A09F9F]' />
             </div>
           </div>
+        </div>
         </div>
       </header>
     </>

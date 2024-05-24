@@ -4,11 +4,12 @@
  import { AuctionCard } from "../component/Card"
  import { HIW } from "../component/How-it-works"
  import { Products } from "../static-data"
+ import { Suspense } from 'react'
 
-function page() {
+function Page() {
   return (
     <>
-
+ <Suspense>
       <main className=''>
         {/* hero section */}
         <section>
@@ -103,8 +104,9 @@ function page() {
 
 
       </main>
+      </Suspense>
     </>
   )
 }
 
-export default page
+export default Page
