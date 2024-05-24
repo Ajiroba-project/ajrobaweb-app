@@ -14,14 +14,18 @@ import {
 } from '@/store/store'
 
 export const WalletPin = () => {
-  const setWalletModal = userNavStore(state => state.setWalletModal)
-  const userNav = userNavStore(state => state.userNav)
-  const setStepper = DataPurchase(state => state.setStepper)
-  const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
-  const setCableStepper = CablePurchase(state => state.setCableStepper)
-  const setElectricityStepper = ElectricityPurchase(
-    state => state.setElectricityStepper
-  )
+  const {
+    setWalletModal,
+    userNav,
+    setStepper,
+    setAirtimeStepper,
+    setCableStepper,
+    setElectricityStepper
+  }
+   = userNavStore(state => ({setWalletModal:state.setWalletModal, userNav:state.userNav, setStepper:state.setStepper, setAirtimeStepper:state.setAirtimeStepper, setElectricityStepper:state.setElectricityStepper, 
+  setCableStepper:state.setCableStepper
+
+    }))
 
   const pinSchema = yup.object().shape({
     pin: yup.string().required('pin is required')

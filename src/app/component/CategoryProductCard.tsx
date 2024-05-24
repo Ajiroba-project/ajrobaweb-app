@@ -28,9 +28,6 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
 
     const router = useRouter()
 
-
-
-
     const handleFirstPage = () => {
         setCurrentPage(1);
     };

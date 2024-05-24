@@ -20,17 +20,17 @@ export const Profile = () => {
 
   const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community']
   return (
-    <section className='relative flex gap-5'>
+    <section className='relative flex gap-5 '>
       <span
-        className={`absolute top-0 left-0 cursor-pointer text-[#f25e26] lg:hidden `}
+        className={`absolute left-0 top-0 cursor-pointer text-[#f25e26] lg:hidden `}
         onClick={() => setSideNav(!sideNav)}
       >
         <LuMenuSquare className='text-2xl' />
       </span>
       <section
-        className={`${sideNav ? 'fixed right-0 top-0 h-full lg:h-fit w-fit lg:w-[20dvw]  flex-col bg-white px-4 pt-[4rem] lg:pt-0 ' : 'hidden lg:relative lg:flex lg:h-fit'} lg:h-fit lg:pt-0  z-40 lg:relative  lg:flex lg:w-[20dvw] lg:bg-transparent`}
+        className={`  ${sideNav ? 'fixed right-0 top-0 h-full w-fit flex-col bg-white  px-4 pt-[4rem] lg:h-fit lg:w-[20dvw] lg:pt-0 ' : 'hidden lg:relative lg:flex lg:h-fit'} z-40   lg:flex lg:h-fit  lg:w-[20dvw] lg:bg-transparent lg:pt-0 lg:relative `}
       >
-        <div className='flex flex-col justify-center '>
+        <div className='flex flex-col justify-center lg:w-full'>
           <p className='w-max'>Hello, Alex </p>
           <h3 className='my-5 w-full text-xl font-semibold lg:text-3xl'>
             {activeMenu === 'my profile'
@@ -43,8 +43,8 @@ export const Profile = () => {
                     ? 'My Wallet'
                     : 'Community'}
           </h3>
-          <div className='flex flex-col '>
-            <div className='relative'>
+          <div className='flex flex-col lg:border lg:border-gray-500 rounded-md px-2'>
+            <div className='relative justify-center flex items-center mt-2 '>
               <Image
                 src={photo}
                 alt={'profile'}
@@ -52,7 +52,7 @@ export const Profile = () => {
                 draggable={false}
               />
               <span
-                className='absolute bottom-[0.7rem] right-[5rem] cursor-pointer rounded-full bg-[#FCDFD4] p-1'
+                className='absolute bottom-[0.7rem] lg:bottom-[0.3rem] right-[5rem] lg:right-[3.3rem] cursor-pointer rounded-full bg-[#FCDFD4] p-1'
                 onClick={setProfile}
               >
                 <IoIosCamera className='text-xl text-[#F25E26]' />
@@ -75,15 +75,15 @@ export const Profile = () => {
         </div>
       </section>
 
-      <section className='flex w-full flex-col span-2'>
-        <div className='flex  justify-end z-auto'>
+      <section className='span-2 flex w-full flex-col lg:items-center'>
+        <div className='z-auto  flex justify-end items-end w-full'>
           {activeMenu === 'my profile' ? (
-            <p className='brand1 cursor-pointer justify-end  underline w-fit'>
+            <p className='brand1 w-fit cursor-pointer  lg:text-left  justify-end underline' onClick={setEditProfile}>
               {!editProfile ? 'Edit Profile' : 'Cancel'}
             </p>
           ) : null}
         </div>
-        <div className='lg:mx-12 mt-5 flex lg:self-center  '>
+        <div className='mt-5 flex lg:mx-12  '>
           <ProfileContent />
         </div>
       </section>

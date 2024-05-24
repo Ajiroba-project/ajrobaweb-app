@@ -24,7 +24,7 @@ export const Pipeline = ({props, setProps, start}:PipelineProps) => {
           onClick={() => setPipeline(val)}
         >
           <input
-            className='mx-2'
+            className='mx-2 accent-black'
             type='radio'
             name='switch'
             id={val}

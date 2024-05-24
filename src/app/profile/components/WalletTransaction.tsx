@@ -31,8 +31,8 @@ export const WalletTransaction = () => {
                 </div>
               </div>
               {/*  */}
-              <div className="flex flex-col justify-center items-center lg:items-baseline  lg:justify-start w-full lg:w-fit">
-                <p className='font-medium text-lg'>₦ {val.amount}</p>
+              <div className="flex flex-col justify-center items-center lg:items-baseline  lg:justify-start w-full lg:w-max">
+                <p className='font-medium text-lg w-max'>₦ {val.amount}</p>
                 <p>{val.time}</p>
                 <p className='brand1 w-max cursor-pointer pt-4 text-xs capitalize underline'>
                   view receipt
