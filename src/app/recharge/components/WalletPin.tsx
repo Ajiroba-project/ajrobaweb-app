@@ -14,14 +14,18 @@ import {
 } from '@/store/store'
 
 export const WalletPin = () => {
-  const setWalletModal = userNavStore(state => state.setWalletModal)
-  const userNav = userNavStore(state => state.userNav)
-  const setStepper = DataPurchase(state => state.setStepper)
-  const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
-  const setCableStepper = CablePurchase(state => state.setCableStepper)
-  const setElectricityStepper = ElectricityPurchase(
-    state => state.setElectricityStepper
-  )
+  const {
+    setWalletModal,
+    userNav,
+    setStepper,
+    setAirtimeStepper,
+    setCableStepper,
+    setElectricityStepper
+  }
+   = userNavStore(state => ({setWalletModal:state.setWalletModal, userNav:state.userNav, setStepper:state.setStepper, setAirtimeStepper:state.setAirtimeStepper, setElectricityStepper:state.setElectricityStepper, 
+  setCableStepper:state.setCableStepper
+
+    }))
 
   const pinSchema = yup.object().shape({
     pin: yup.string().required('pin is required')
@@ -50,7 +54,7 @@ export const WalletPin = () => {
     handleError
   )
 
-  const sumbitForm = (data: any) => {
+  const submitForm = (data: any) => {
     mutate(data)
   }
 
@@ -90,7 +94,7 @@ export const WalletPin = () => {
         </div>
 
         <form
-          onSubmit={handleSubmit(sumbitForm)}
+          onSubmit={handleSubmit(submitForm)}
           className='flex w-2/3 flex-col justify-center gap-8'
         >
           <InputField

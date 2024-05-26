@@ -29,7 +29,7 @@ export const DataContent = () => {
 
     
     return (
-      <div className='lg:my-[4.5rem] md:my-[2rem] flex lg:flex-col gap-4 lg:place-content-start md:place-content-center'>
+      <div className='lg:my-[4.5rem] mb-[2rem]  flex flex-col gap-4 lg:place-content-start mx-4 lg:mx-0'>
         {stepperList.map((val, index) => (
           <div
           key={index}

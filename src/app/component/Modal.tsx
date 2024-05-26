@@ -1,5 +1,6 @@
 import { DefaultButton } from "@/app/component/Button";
 import Image from "next/image";
+import { ReactNode, useState } from "react";
 
 type ModalProps = {
   title: string;
@@ -73,3 +74,25 @@ export const Modal = ({
     </section>
   );
 };
+
+
+type CustomModal = {
+  children:ReactNode
+  isOpen?:boolean
+}
+
+
+export const CustomModal =({children, isOpen}:CustomModal)=>{
+ 
+return (
+  <>
+    {isOpen && (
+      <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
+        <div className='xs:w-[15em]  flex h-auto w-[20em] flex-col  gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
+          {children}
+        </div>
+      </section>
+    )}
+  </>
+)
+}

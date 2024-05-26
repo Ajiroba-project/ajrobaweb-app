@@ -1,6 +1,3 @@
-import { MdOutlineFacebook } from 'react-icons/md'
-import { FaXTwitter, FaInstagram, FaYoutube, FaLinkedin } from 'react-icons/fa6'
-import imgCarousel1 from '@/app/asset/image/carousel.png'
 import product1 from '@/app/asset/image/product1.png'
 import product2 from '@/app/asset/image/product2.png'
 import product3 from '@/app/asset/image/product3.png'
@@ -503,7 +500,8 @@ export const Products = [
     rating: '',
     time: '',
     category: 'Fashion',
-    subCategory: 'Women'
+    subCategory: 'Women',
+    tag: ["open"]
   },
   {
     name: 'Rice',
@@ -514,7 +512,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'FoodStuff',
-    subCategory: 'Food'
+    subCategory: 'Food',
+    tag:["open"]
   },
   {
     name: 'Orange',
@@ -525,7 +524,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'FoodStuff',
-    subCategory: 'Fruits'
+    subCategory: 'Fruits',
+    tag:["close"]
   },
   {
     name: 'Smart Watch',
@@ -536,7 +536,8 @@ export const Products = [
     rating: '',
     time: '',
     category: 'Fashion And Beauty',
-    subCategory: 'Smart'
+    subCategory: 'Smart',
+    tag:["open"]
   },
   {
     name: 'Head Phone',
@@ -547,7 +548,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'Phones',
-    subCategory: 'Smart'
+    subCategory: 'Smart', 
+    tag:["close", "redeem items", "winning advise"]
   },
   {
     name: 'Washing Machine',
@@ -558,7 +560,8 @@ export const Products = [
     rating: '',
     time: '',
     category: 'Electronic',
-    subCategory: 'Smart'
+    subCategory: 'Smart',
+    tag:["close", "redeem items", "winning advise"]
   },
   {
     name: 'Iphone XR',
@@ -569,7 +572,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'Phones',
-    subCategory: 'Smart'
+    subCategory: 'Smart', 
+    tag:["close", "redeem items", "winning advise"]
   },
   {
     name: 'beads',
@@ -580,7 +584,8 @@ export const Products = [
     rating: '',
     time: '',
     category: 'Fashion And Beauty',
-    subCategory: 'Accessories'
+    subCategory: 'Accessories',
+    tag:["delivered", "close"]
   },
   {
     name: 'Bead',
@@ -591,7 +596,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'Phones',
-    subCategory: 'Smart'
+    subCategory: 'Smart',
+    tag:["close", "redeem items", "winning advise"]
   },
   {
     name: 'human hair',
@@ -601,7 +607,8 @@ export const Products = [
     previousPrice: '600,000',
     rating: '',
     time: '',
-    category: 'Fashion'
+    category: 'Fashion',
+    tag:["open"]
   },
   {
     name: 'Oloyin Beans',
@@ -753,5 +760,44 @@ export const stepperList = [
   {
     name: 'Receipts',
     icons: <IoReceiptOutline />
+  }
+]
+
+export const transactions = [
+  {
+    logo: '',
+    title: 'You just Bought ₦200 MTN Airtime',
+    amount: '200',
+    time: '3:15',
+    status: ['pending'],
+    type: 'purchase',
+    brand:"MTN"
+  },
+  {
+    logo:"",
+    brand: 'IKEDC',
+    title: 'You just Bought 3000 unit',
+    amount: '1000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'purchase'
+  },
+  {
+    logo:"",
+    brand: 'MTN',
+    title: 'You just Bought ₦200 MTN Airtime',
+    amount: '200',
+    time: '3:15',
+    status: ['delivered'],
+    type: 'purchase'
+  },
+  {
+    logo:"",
+    brand: 'GTB',
+    title: 'You just Received ₦ 20,0000',
+    amount: '20,000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'received'
   }
 ]

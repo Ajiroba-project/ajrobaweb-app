@@ -1,21 +1,19 @@
 'use client'
-import { DefaultButton } from "./component/Button"
-import { Hero } from "./component/Hero";
-import { Heading } from "./component/Heading"
-import { SubHeading } from "./component/SubHeading"
+import { DefaultButton } from './component/Button'
+import { Hero } from './component/Hero'
+import { Heading } from './component/Heading'
+import { SubHeading } from './component/SubHeading'
 import { AuctionCard, CategoryFeatureCard, ProductCard } from './component/Card'
-import { HIW } from "./component/How-it-works"
-import { Banner } from "./component/Banner"
+import { HIW } from './component/How-it-works'
+import { Banner } from './component/Banner'
 import { Community } from './component/Community'
-import { Products, categories } from "./static-data"
-import { Header } from "./component/Header";
-import { Footer } from "./component/Footer";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import { useState } from "react"
+import { Products, categories } from './static-data'
+import { Header } from './component/Header'
+import { Footer } from './component/Footer'
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
+import { useState } from 'react'
 import './globals.css'
 import { Suspense } from 'react'
-
-
 
 const Page = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
@@ -36,6 +34,7 @@ const Page = () => {
     <>
       <Suspense>
         <Header />
+
         <main className=''>
           {/* hero section */}
           <section>
@@ -97,7 +96,9 @@ const Page = () => {
                 <FaArrowLeft
                   className={`text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black ${categoryFirstPage ? 'pointer-events-none opacity-50' : ''}`}
                   onClick={() => {
-                    setCategoryCurrentPage(prevPage => Math.max(0, prevPage - 1))
+                    setCategoryCurrentPage(prevPage =>
+                      Math.max(0, prevPage - 1)
+                    )
                   }}
                 />
                 <FaArrowRight
@@ -123,7 +124,7 @@ const Page = () => {
                 <DefaultButton
                   text='view all Categories'
                   type='button'
-                  handleClick={() => { }}
+                  handleClick={() => {}}
                   className='rounded-lg bg-[#FCDFD4] p-2'
                 />
               </div>
@@ -144,7 +145,7 @@ const Page = () => {
                 <DefaultButton
                   text='view all Features'
                   type='button'
-                  handleClick={() => { }}
+                  handleClick={() => {}}
                   className='rounded-lg bg-[#FCDFD4] p-2'
                 />
               </div>
@@ -165,7 +166,7 @@ const Page = () => {
                 <DefaultButton
                   text='view all Deals'
                   type='button'
-                  handleClick={() => { }}
+                  handleClick={() => {}}
                   className='rounded-lg bg-[#FCDFD4] p-2'
                 />
               </div>
@@ -194,7 +195,7 @@ const Page = () => {
                 <DefaultButton
                   text='view all Products'
                   type='button'
-                  handleClick={() => { }}
+                  handleClick={() => {}}
                   className='rounded-lg bg-[#FCDFD4] p-2'
                 />
               </div>
