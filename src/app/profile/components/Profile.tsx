@@ -52,7 +52,7 @@ export const Profile = () => {
                 draggable={false}
               />
               <span
-                className='absolute bottom-[0.7rem] lg:bottom-[0.3rem] right-[5rem] lg:right-[3.3rem] cursor-pointer rounded-full bg-[#FCDFD4] p-1'
+                className='absolute bottom-[0.3rem] lg:bottom-[0.3rem] right-[3.3rem] lg:right-[3.3rem] cursor-pointer rounded-full bg-[#FCDFD4] p-1'
                 onClick={setProfile}
               >
                 <IoIosCamera className='text-xl text-[#F25E26]' />

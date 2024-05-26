@@ -46,7 +46,7 @@ export const Header = () => {
 
         <div className='relative bg-white p-2  shadow-md'>
           <div
-            className={`${isOpen ? 'fixed left-0 top-0 z-50 h-screen w-screen bg-[#000000d1]' : 'h-auto w-auto bg-transparent '}`}
+            className={`${isOpen ? 'bg-opacity-4 fixed left-0 top-0 z-50 h-screen w-screen bg-[#000000d1]  bg-opacity-[0.9] bg-clip-padding backdrop-blur-sm backdrop-filter' : 'h-auto w-auto bg-transparent '}`}
           >
             <div className='flex w-full items-center justify-between gap-0 md:justify-between lg:justify-around lg:gap-[1em] '>
               <div className='flex cursor-pointer items-center gap-2'>
@@ -156,12 +156,26 @@ export const Header = () => {
                 </div>
               </div>
 
-            <div className='flex gap-4'>
-              <BiBell className='cursor-pointer text-xl text-[#A09F9F]' />
-              <IoCartOutline onClick={() => router.push('/cart')} className='cursor-pointer text-xl text-[#A09F9F]' />
+              <div className='flex gap-4'>
+                <BiBell className='cursor-pointer text-xl text-[#A09F9F]' />
+                <IoCartOutline
+                  onClick={() => router.push('/cart')}
+                  className='cursor-pointer text-xl text-[#A09F9F]'
+                />
+                {isOpen ? (
+                  <IoClose
+                    onClick={hamburgerfunc}
+                    className='text-xl text-[#A09F9F] lg:hidden'
+                  />
+                ) : (
+                  <FiMenu
+                    onClick={hamburgerfunc}
+                    className='text-xl text-[#A09F9F] lg:hidden'
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </header>
     </>
