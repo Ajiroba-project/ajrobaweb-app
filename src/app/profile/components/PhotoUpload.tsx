@@ -3,7 +3,7 @@ import { DefaultButton } from '@/app/component/Button'
 import { CustomModal } from '@/app/component/Modal'
 import { userProfile } from '@/store/store'
 import { IoClose } from 'react-icons/io5'
-import { useDropzone } from "React-dropzone";
+import { useDropzone } from 'react-dropzone'
 
 interface FileProps {
   name: string
