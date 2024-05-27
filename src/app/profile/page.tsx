@@ -2,12 +2,13 @@
 import React from 'react'
 import { Header } from '../component/Header'
 import { Profile } from './components/Profile'
-import {PhotoUpload} from "./components/PhotoUpload"
-import {userProfile} from "@/store/store"
+// import {PhotoUpload} from "./components/PhotoUpload"
+import { userProfile } from "@/store/store"
+import { PhotoUpload } from './components/PhotoUpload'
 
 const Page = () => {
-  const profile = userProfile(state=>state.profile)
-  
+  const profile = userProfile(state => state.profile)
+
   return (
     <section>
       <header className="z-50">
@@ -17,9 +18,9 @@ const Page = () => {
       <main className='container '>
         <Profile />
       </main>
-      
-        { profile && <PhotoUpload />}
-    
+
+      {profile && <PhotoUpload />}
+
     </section>
   )
 }
