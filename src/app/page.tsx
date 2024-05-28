@@ -33,9 +33,11 @@ const Page = () => {
   return (
     <>
       <Suspense>
-        <Header />
+        <header className="fixed z-30 w-full">
+          <Header/>
+        </header>
 
-        <main className=''>
+        <main className='pt-[10%] w-full'>
           {/* hero section */}
           <section>
             <div className=''>
