@@ -25,6 +25,7 @@ import catPhone from '@/app/asset/image/phones.svg'
 import catwc from '@/app/asset/image/wc.svg'
 import catgroup from '@/app/asset/image/Group.svg'
 import catfash from '@/app/asset/image/fash.svg'
+import raf from '@/app/asset/image/raf.png'
 import { IoLocationOutline } from 'react-icons/io5'
 import { FiPhoneCall } from 'react-icons/fi'
 import { LuMail } from 'react-icons/lu'
@@ -53,7 +54,10 @@ export const headerMenu = [
     submenu: [
       { name: 'Sign Up', path: '/signup' },
       { name: 'Sign In', path: '/signin' },
-      { name: 'Profile', path: '/profile' }
+      { name: 'Profile', path: '/profile' },
+      { name: 'Wallet', path: '#' },
+      { name: 'Referral Code', path: '#' },
+      { name: 'Community', path: '#' }
     ]
   },
   {
@@ -71,7 +75,7 @@ export const headerMenu = [
 
 export const categories = [
   {
-    name: 'FoodStuff',
+    name: 'Foodstuff',
     path: 'categories/FoodStuff',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
@@ -440,15 +444,15 @@ export const quickLinks = [
   },
   {
     name: 'Auction Deals',
-    links: ''
+    links: '/auction'
   },
   {
     name: 'Category',
-    links: ''
+    links: '/categories'
   },
   {
     name: 'Ralfle Draw Process',
-    links: ''
+    links: '/raffle'
   }
 ]
 
@@ -459,7 +463,7 @@ export const ourCompany = [
   },
   {
     name: 'About Us',
-    links: '/AboutUs'
+    links: '/aboutUs'
   },
   {
     name: 'FAQ',
@@ -501,7 +505,7 @@ export const Products = [
     time: '',
     category: 'Fashion',
     subCategory: 'Women',
-    tag: ["open"]
+    tag: ['open']
   },
   {
     name: 'Rice',

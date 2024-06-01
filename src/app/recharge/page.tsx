@@ -5,20 +5,39 @@ import { Footer } from '../component/Footer'
 import { Fragment } from 'react'
 import { RechargeCategory } from './components/RechargeCategory'
 import { RecentTransaction } from './components/RecentTransaction'
-import { userNavStore } from '@/store/store'
+import { userNavStore, useAuthStore } from '@/store/store'
+import { useRouter } from 'next/navigation'
 import { SideMenu } from './components/SideMenu'
 import { DataContent } from './components/DataContent'
 import { LuMenuSquare } from 'react-icons/lu'
 import banner from '../asset/image/recharge-banner.png'
 
+
+const Reroute =()=>{
+  const router = useRouter()
+   router.push('/signin')
+
+   return null
+}
+
 const Page = () => {
-  const userNavMenu = userNavStore(state => state.userNav)
-  const sidebar = userNavStore(state => state.sidebar)
-  const toggleSidebar = userNavStore(state =>state.toggleSidebar)
+  
+  const { userNavMenu, sidebar, toggleSidebar } = userNavStore(state => ({
+    userNavMenu: state.userNav,
+    sidebar: state.sidebar,
+    toggleSidebar: state.toggleSidebar
+  }))
+
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn
+  }))
 
   return (
     <Fragment>
-      <Header />
+      <header className='fixed z-50 w-full'>
+        <Header />
+      </header>
+
       {userNavMenu === '' ? (
         <main className='container'>
           <section className=''>
@@ -32,7 +51,7 @@ const Page = () => {
           </section>
         </main>
       ) : (
-        <main className='relative flex '>
+        <main className='relative flex pt-[23vh]'>
           {/* sidemenu */}
           <section
             className={`${sidebar ? 'absolute h-screen bg-[#F6F6F6]' : 'absolute'} z-20 -mt-8  lg:relative`}
@@ -50,7 +69,7 @@ const Page = () => {
             </div>
           </section>
           <section className='container -mt-8 h-full'>
-            {userNavMenu === 'Dashboard' ? 'Dashboard' : <DataContent />}
+            {userNavMenu === 'Dashboard' && !isLoggedIn ?  <Reroute/> : <DataContent />}
           </section>
         </main>
       )}

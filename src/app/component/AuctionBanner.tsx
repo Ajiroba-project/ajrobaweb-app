@@ -8,7 +8,7 @@ type BannerProps = {
 export const AuctionBanner = ({ text, banner }: BannerProps) => {
   return (
     <>
-      <section className="my-4">
+      <section className=" pt-[20vh]">
         <div className='flex justify-center text-center mb-4'>
           <h1 className='lg:text-4xl capitalize md:text-2xl text-lg'>{text}</h1>
         </div>
