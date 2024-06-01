@@ -196,7 +196,7 @@ const Page = () => {
                 <DefaultButton
                   text='View all Products'
                   type='button'
-                  handleClick={() => router.push('/Categories')}
+                  handleClick={() => router.push('/categories')}
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
