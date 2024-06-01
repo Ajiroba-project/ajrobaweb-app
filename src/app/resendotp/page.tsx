@@ -172,9 +172,10 @@ function Page() {
                         <div className="flex justify-center items-center mt-4">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Proceed"
-                                handleClick={() => console.log("")}
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                                // text="Proceed"
+                                text={status === 'pending' ? 'loading...' : "Proceed"}
+                            // handleClick={() => console.log("")}
                             />
                         </div>
 

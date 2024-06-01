@@ -38,7 +38,7 @@ function Page() {
                         <div className="flex justify-center items-center ">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
                                 text="Proceed"
                                 handleClick={() => handleVerify()}
                             />

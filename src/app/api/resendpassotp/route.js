@@ -19,7 +19,12 @@ export async function POST(request) {
         const status = res.status;
 
         // Return JSON response with data and status
+
+        // console.log(data, status, 'res')
         return NextResponse.json({ data, status });
+
+
+
     } catch (error) {
         // Handle any errors gracefully
         console.error('Error processing request:', error.message);
