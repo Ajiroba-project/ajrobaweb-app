@@ -46,7 +46,7 @@ function Page() {
 
     });
 
-    const {setUser, isLoggedIn} = useAuthStore(state =>({setUser:state.setUser, isLoggedIn:state.isLoggedIn}))
+    const {setUser, isLoggedIn, setAuthCookie} = useAuthStore(state =>({setUser:state.setUser, isLoggedIn:state.isLoggedIn}))
     
 
     const {
@@ -82,7 +82,9 @@ function Page() {
                 onClose: () => router.push('/')
 
             })
-            setUser(data)
+            setAuthCookie(data?.data?.token, 0)
+            setUser(data?.data)
+          
             reset();
 
         } else if (data.status === 403 || data.status === 404) {
