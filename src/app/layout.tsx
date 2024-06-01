@@ -17,14 +17,14 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Ajiroba ',
-  description: 'Your foremost consumer auction platform'
-}
+  title: "Ajiroba ",
+  description: "Your foremost consumer auction platform",
+};
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
 
 
@@ -36,5 +36,5 @@ export default function RootLayout({
       </RQProviders>
       {/* footer */}
     </html>
-  )
+  );
 }
