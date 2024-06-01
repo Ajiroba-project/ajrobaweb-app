@@ -30,7 +30,6 @@ export const RelatedProducts = ({ cardInfo }: cardDetails) => {
 
 
 
-
     const handleFirstPage = () => {
         setCurrentPage(1);
     };

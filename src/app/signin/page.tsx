@@ -13,6 +13,7 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
+import {useAuthStore} from "@/store/store"
 import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
@@ -45,6 +46,9 @@ function Page() {
 
     });
 
+    const {setUser, isLoggedIn} = useAuthStore(state =>({setUser:state.setUser, isLoggedIn:state.isLoggedIn}))
+    
+
     const {
         reset,
         register,
@@ -66,7 +70,6 @@ function Page() {
 
 
         if (data.status === 200) {
-
             toast.success(`${data?.data?.message}`, {
                 position: "top-right",
                 autoClose: 5000,
@@ -79,6 +82,7 @@ function Page() {
                 onClose: () => router.push('/')
 
             })
+            setUser(data)
             reset();
 
         } else if (data.status === 403 || data.status === 404) {

@@ -1,9 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { socialIcon, headerMenu, marqueeInfo } from '../static-data'
-import Image from 'next/image'
-import Brand from '../asset/logo.svg'
-import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { IoCartOutline } from 'react-icons/io5'
 import { BiBell } from 'react-icons/bi'
@@ -12,6 +9,10 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AuctionMarquee } from './Auction-Marquee'
 import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
+import { useAuthStore } from '@/store/store'
+import Image from 'next/image'
+import Brand from '../asset/logo.svg'
+import Link from 'next/link'
 
 export const Header = () => {
   const pathname = usePathname()
@@ -19,6 +20,9 @@ export const Header = () => {
   const [active, setActive] = useState<number>(0)
   const [isOpen, setIsOpen] = useState<boolean | null>(null)
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn
+  }))
 
   const hamburgerfunc = () => {
     setIsOpen(!isOpen)
@@ -93,16 +97,16 @@ export const Header = () => {
                           activeMenu === index
                             ? 'text-[#F25E26]'
                             : 'text-[#A09F9F]'
-
-                          // className={`cursor-pointer px-4 py-4 ${activeMenu === index
-                          //     ? 'text-[#F25E26]'
-                          //     : 'text-[#A09F9F]'
                         } hover:text-[#F25E26]
                     ${!isOpen ? 'py-2 lg:py-1' : ''}
                     `}
                         onClick={() => {
                           setActiveMenu(activeMenu === index ? null : index)
                         }}
+                        // onMouseEnter={() => 
+                        //   setActiveMenu(index)
+                        // }
+                        // onMouseLeave={() => setActiveMenu(null)}
                       >
                         {val.submenu ? (
                           <div className='relative'>
@@ -115,19 +119,17 @@ export const Header = () => {
                               )}
                             </span>
                             {activeMenu === index && (
-                              <ul className='absolute left-0 z-10 mt-2 w-max rounded-md bg-white shadow-md'>
-                                {/* {val.submenu.map((subItem, subIndex) => (
-                                  <li key={subIndex} className="py-2 text-[#A09F9F] hover:text-[#F25E26] px-4 hover:bg-gray-100">{subItem.name}</li>
-                                ))} */}
+                              <ul className='absolute left-0 z-10 mt-2 h-fit w-max rounded-md bg-white pb-2 shadow-md'>
+                                
                                 {val.submenu.map((subItem, subIndex) => (
-                                  // <li onClick={() => router.push(`${subItem.path}`)}
+                              
                                   <li
                                     key={subIndex}
-                                    className='px-4 py-2 text-sm  text-[#A09F9F] hover:bg-gray-100 hover:text-[#F25E26]'
+                                    className={` ${subItem.name === 'Profile' || subItem.name === 'Wallet' || subItem.name === 'Community' || (subItem.name === 'Referral Code' && !isLoggedIn) ? 'hidden' : 'block'} p-2 px-4 text-sm  text-[#A09F9F] hover:bg-gray-100 hover:text-[#F25E26] `}
                                   >
                                     <Link href={subItem.path}>
-                                      {subItem.name}
-                                    </Link>{' '}
+                                      <span> {subItem.name} </span>
+                                    </Link>
                                     {/* {subItem.name} */}
                                     {/* Link to the submenu item */}
                                   </li>

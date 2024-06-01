@@ -6,10 +6,11 @@ import { AuctionBanner } from '../component/AuctionBanner'
 import { Products } from '../static-data'
 import { AuctionCard } from '../component/Card'
 import { Pagination } from '../component/Pagination'
-import Link from 'next/link'
+import {useRouter} from 'next/navigation'
 import auctionImg from '../asset/image/auction-banner.png'
 
 const Page = () => {
+  const router = useRouter()
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [filteredData, setFilteredData] = useState<any>([]);
   const [itemsPerPage] = useState<number>(12);
@@ -30,14 +31,14 @@ const Page = () => {
 
   return (
     <Fragment>
-      <Header />
+      <header className='fixed z-30 w-full'>
+        <Header />
+      </header>
       <AuctionBanner text='Auction Deals' banner={auctionImg} />
       <main className='container my-4'>
-        <section className='my-5 flex justify-between lg:flex-row flex-col gap-5 items-center'>
-          <div>
-            <Link className=' text-[#F25E26] underline lg:text-xl ' href={'#'}>
+        <section className='my-5 flex flex-col items-center justify-between gap-5 lg:flex-row'>
+          <div className="text-[#F25E26] underline lg:text-xl cursor-pointer" onClick={()=>router.push("/raffle")}>
               View All Raffle Draw Video
-            </Link>
           </div>
 
           <div>
@@ -50,7 +51,7 @@ const Page = () => {
           </div>
         </section>
 
-        <section className='my-4'>
+        <section className='my-4 flex justify-center flex-col items-center'>
           <AuctionCard cardInfo={filteredData} />
           <Pagination
             pageCount={pageCount}

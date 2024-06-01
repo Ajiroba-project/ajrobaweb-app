@@ -33,7 +33,11 @@
   ) !important;
 }
 
-
+.custom-shape {
+  clip-path: polygon(0 0, 85% 0, 91% 33%, 96% 69%, 100% 100%, 84% 77%, 0% 75%);
+  /* width:247px;
+  height:87px; */
+}
 
 /* *{
     border:2px solid red;

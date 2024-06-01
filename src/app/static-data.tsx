@@ -25,6 +25,7 @@ import catPhone from '@/app/asset/image/phones.svg'
 import catwc from '@/app/asset/image/wc.svg'
 import catgroup from '@/app/asset/image/Group.svg'
 import catfash from '@/app/asset/image/fash.svg'
+import raf from '@/app/asset/image/raf.png'
 import { IoLocationOutline } from 'react-icons/io5'
 import { FiPhoneCall } from 'react-icons/fi'
 import { LuMail } from 'react-icons/lu'
@@ -53,7 +54,10 @@ export const headerMenu = [
     submenu: [
       { name: 'Sign Up', path: '/signup' },
       { name: 'Sign In', path: '/signin' },
-      { name: 'Profile', path: '/profile' }
+      { name: 'Profile', path: '/profile' },
+      { name: 'Wallet', path: '#' },
+      { name: 'Referral Code', path: '#' },
+      { name: 'Community', path: '#' }
     ]
   },
   {
@@ -71,7 +75,7 @@ export const headerMenu = [
 
 export const categories = [
   {
-    name: 'FoodStuff',
+    name: 'Foodstuff',
     path: 'categories/FoodStuff',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed dosed do ',
@@ -440,15 +444,15 @@ export const quickLinks = [
   },
   {
     name: 'Auction Deals',
-    links: ''
+    links: '/auction'
   },
   {
     name: 'Category',
-    links: ''
+    links: '/categories'
   },
   {
     name: 'Ralfle Draw Process',
-    links: ''
+    links: '/raffle'
   }
 ]
 
@@ -459,7 +463,7 @@ export const ourCompany = [
   },
   {
     name: 'About Us',
-    links: '/AboutUs'
+    links: '/aboutUs'
   },
   {
     name: 'FAQ',
@@ -501,7 +505,7 @@ export const Products = [
     time: '',
     category: 'Fashion',
     subCategory: 'Women',
-    tag: ["open"]
+    tag: ['open']
   },
   {
     name: 'Rice',
@@ -513,7 +517,7 @@ export const Products = [
     rating: '',
     category: 'FoodStuff',
     subCategory: 'Food',
-    tag:["open"]
+    tag: ['open']
   },
   {
     name: 'Orange',
@@ -525,7 +529,7 @@ export const Products = [
     rating: '',
     category: 'FoodStuff',
     subCategory: 'Fruits',
-    tag:["close"]
+    tag: ['close']
   },
   {
     name: 'Smart Watch',
@@ -537,7 +541,7 @@ export const Products = [
     time: '',
     category: 'Fashion And Beauty',
     subCategory: 'Smart',
-    tag:["open"]
+    tag: ['open']
   },
   {
     name: 'Head Phone',
@@ -548,8 +552,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'Phones',
-    subCategory: 'Smart', 
-    tag:["close", "redeem items", "winning advise"]
+    subCategory: 'Smart',
+    tag: ['close', 'redeem items', 'winning advise']
   },
   {
     name: 'Washing Machine',
@@ -561,7 +565,7 @@ export const Products = [
     time: '',
     category: 'Electronic',
     subCategory: 'Smart',
-    tag:["close", "redeem items", "winning advise"]
+    tag: ['close', 'redeem items', 'winning advise']
   },
   {
     name: 'Iphone XR',
@@ -572,8 +576,8 @@ export const Products = [
     time: '',
     rating: '',
     category: 'Phones',
-    subCategory: 'Smart', 
-    tag:["close", "redeem items", "winning advise"]
+    subCategory: 'Smart',
+    tag: ['close', 'redeem items', 'winning advise']
   },
   {
     name: 'beads',
@@ -585,7 +589,7 @@ export const Products = [
     time: '',
     category: 'Fashion And Beauty',
     subCategory: 'Accessories',
-    tag:["delivered", "close"]
+    tag: ['delivered', 'close']
   },
   {
     name: 'Bead',
@@ -597,7 +601,7 @@ export const Products = [
     rating: '',
     category: 'Phones',
     subCategory: 'Smart',
-    tag:["close", "redeem items", "winning advise"]
+    tag: ['close', 'redeem items', 'winning advise']
   },
   {
     name: 'human hair',
@@ -608,7 +612,7 @@ export const Products = [
     rating: '',
     time: '',
     category: 'Fashion',
-    tag:["open"]
+    tag: ['open']
   },
   {
     name: 'Oloyin Beans',
@@ -771,10 +775,10 @@ export const transactions = [
     time: '3:15',
     status: ['pending'],
     type: 'purchase',
-    brand:"MTN"
+    brand: 'MTN'
   },
   {
-    logo:"",
+    logo: '',
     brand: 'IKEDC',
     title: 'You just Bought 3000 unit',
     amount: '1000',
@@ -783,7 +787,7 @@ export const transactions = [
     type: 'purchase'
   },
   {
-    logo:"",
+    logo: '',
     brand: 'MTN',
     title: 'You just Bought ₦200 MTN Airtime',
     amount: '200',
@@ -792,7 +796,7 @@ export const transactions = [
     type: 'purchase'
   },
   {
-    logo:"",
+    logo: '',
     brand: 'GTB',
     title: 'You just Received ₦ 20,0000',
     amount: '20,000',
@@ -800,4 +804,58 @@ export const transactions = [
     status: ['completed'],
     type: 'received'
   }
+]
+
+export const raffle = [
+  {
+    name: 'live raffle draw',
+    video: raf,
+    description:
+      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
+    title: 'rice',
+    host: 'ajiroba',
+    date: '4 Aug 2024',
+    price:"300"
+  },
+   {
+    name: 'live raffle draw',
+    video: raf,
+    description:
+      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
+    title: 'rice',
+    host: 'ajiroba-2',
+    date: '4 Aug 2024',
+    price:"300"
+  },
+   {
+    name: 'live raffle draw',
+    video: raf,
+    description:
+      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
+    title: 'rice',
+    host: 'ajiroba-3',
+    date: '4 Aug 2024',
+    price:"300"
+  }
+]
+
+export const raffleWinner = [
+  {
+  sn:0,
+  product:"50kg Bag of Rice",
+  winner:"09023233443",
+  ticket:"500",
+},
+  {
+  sn:1,
+  product:"50kg Bag of Semo",
+  winner:"09023233443",
+  ticket:"500",
+},
+  {
+  sn:2,
+  product:"50kg Bag of Rice",
+  winner:"09023233443",
+  ticket:"500",
+}
 ]
