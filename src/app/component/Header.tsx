@@ -108,6 +108,10 @@ export const Header = () => {
                           setActiveMenu(activeMenu === index ? null : index)
                           setHeaderNav(val.name)
                         }}
+                      // onMouseEnter={() =>
+                      //   setActiveMenu(index)
+                      // }
+                      // onMouseLeave={() => setActiveMenu(null)}
                       >
                         {val.submenu ? (
                           <div className='relative'>
