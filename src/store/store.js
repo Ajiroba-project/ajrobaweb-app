@@ -27,14 +27,14 @@ export const userNavStore = create(set => ({
   isNavbarOpen: false,
   sidebar: false,
   walletModal: false,
-  headerNav:"",
+  headerNav: '',
 
   setUserNav: text => set({ userNav: text }),
   setHeaderNav: text => set({ headerNav: text }),
   toggleNavbar: () => set(state => ({ isNavbarOpen: !state.isNavbarOpen })),
   toggleSidebar: () => set(state => ({ sidebar: !state.sidebar })),
   setWalletModal: () => set(state => ({ walletModal: !state.walletModal })),
-  seHeaderNav: text => set({ headerNav: text }),
+  seHeaderNav: text => set({ headerNav: text })
 }))
 export const userProfile = create(set => ({
   activeMenu: 'my profile',

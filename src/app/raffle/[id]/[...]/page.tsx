@@ -10,7 +10,7 @@ import { HeadingText } from '@/app/component/Heading'
   const thead = ['SN', 'Product', `Winner's Number`, 'Ticket Price']
   return (
     <div className='flex flex-col justify-center items-center'>
-      <div className='w-full bg-[#F6F6F6] pt-[13vh]'>
+      <div className='w-full bg-[#F6F6F6] lg:pt-[13vh] md:pt-[13vh] pt-[10vh]'>
         <div className='container flex flex-col'>
           <p
             onClick={() => router.back()}
@@ -23,9 +23,9 @@ import { HeadingText } from '@/app/component/Heading'
           </div>
         </div>
       </div>
-      <div className='container my-8 flex flex-col items-center justify-center overflow-x-auto rounded-2xl p-4 lg:mx-12 bg-black w-fit'>
-        <table className='mb-6 table-auto  lg:w-[60rem]'>
-          <thead className=' bg-white pt-5 text-[#F25E26]'>
+      <div className='container my-8 flex flex-col items-center justify-center overflow-x-auto rounded-2xl p-4 bg-black '>
+        <table className='mb-6 table-auto min-w-full'>
+          <thead className=' bg-white pt-5 text-[#F25E26] '>
             <tr className='tracking-wide'>
               {thead.map(index => (
                 <th
