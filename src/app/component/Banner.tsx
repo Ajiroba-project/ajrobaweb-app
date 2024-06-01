@@ -1,4 +1,4 @@
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
 import Image from 'next/image'
 import banner from '../asset/image/banner.png'
 import { DefaultButton } from '../component/Button'
@@ -7,7 +7,7 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
 export const Banner = () => {
   const router = useRouter()
-  
+
   return (
     <div className={`${poppins.className}flex items-center justify-center`}>
       <div className='container flex flex-col items-center justify-between pt-[2rem] md:flex-row lg:flex-row'>

@@ -806,6 +806,61 @@ export const transactions = [
   }
 ]
 
+export const raffle = [
+  {
+    name: 'live raffle draw',
+    video: raf,
+    description:
+      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
+    title: 'rice',
+    host: 'ajiroba',
+    date: '4 Aug 2024',
+    price: "300"
+  },
+  {
+    name: 'live raffle draw',
+    video: raf,
+    description:
+      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
+    title: 'rice',
+    host: 'ajiroba-2',
+    date: '4 Aug 2024',
+    price: "300"
+  },
+  {
+    name: 'live raffle draw',
+    video: raf,
+    description:
+      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
+    title: 'rice',
+    host: 'ajiroba-3',
+    date: '4 Aug 2024',
+    price: "300"
+  }
+]
+
+export const raffleWinner = [
+  {
+    sn: 0,
+    product: "50kg Bag of Rice",
+    winner: "09023233443",
+    ticket: "500",
+  },
+  {
+    sn: 1,
+    product: "50kg Bag of Semo",
+    winner: "09023233443",
+    ticket: "500",
+  },
+  {
+    sn: 2,
+    product: "50kg Bag of Rice",
+    winner: "09023233443",
+    ticket: "500",
+  }
+]
+
+
 
 export const state_and_LGA = [
   {
@@ -1768,58 +1823,8 @@ export const state_and_LGA = [
   }
 ]
 
-export const raffleWinner = [
-  {
-    sn: 0,
-    product: "50kg Bag of Rice",
-    winner: "09023233443",
-    ticket: "500",
-  },
-  {
-    sn: 1,
-    product: "50kg Bag of Semo",
-    winner: "09023233443",
-    ticket: "500",
-  },
-  {
-    sn: 2,
-    product: "50kg Bag of Rice",
-    winner: "09023233443",
-    ticket: "500",
-  }
-]
 
 
-export const raffle = [
-  {
-    name: 'live raffle draw',
-    video: raf,
-    description:
-      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
-    title: 'rice',
-    host: 'ajiroba',
-    date: '4 Aug 2024',
-    price: "300"
-  },
-  {
-    name: 'live raffle draw',
-    video: raf,
-    description:
-      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
-    title: 'rice',
-    host: 'ajiroba-2',
-    date: '4 Aug 2024',
-    price: "300"
-  },
-  {
-    name: 'live raffle draw',
-    video: raf,
-    description:
-      'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
-    title: 'rice',
-    host: 'ajiroba-3',
-    date: '4 Aug 2024',
-    price: "300"
-  }
-]
+
+
 

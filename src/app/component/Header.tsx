@@ -23,15 +23,15 @@ export const Header = () => {
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn
   }))
-    const { setHeaderNav, headerNav } = userNavStore(state => ({
-      setHeaderNav: state.setHeaderNav,
-      headerNav: state.headerNav
-    }))
+  const { setHeaderNav, headerNav } = userNavStore(state => ({
+    setHeaderNav: state.setHeaderNav,
+    headerNav: state.headerNav
+  }))
 
   const hamburgerfunc = () => {
     setIsOpen(!isOpen)
   }
-  
+
 
   const router = useRouter()
   return (
@@ -98,11 +98,10 @@ export const Header = () => {
                     {headerMenu.map((val, index) => (
                       <li
                         key={index}
-                        className={`cursor-pointer px-4 ${
-                          val.name === headerNav
+                        className={`cursor-pointer px-4 ${val.name === headerNav
                             ? 'text-[#F25E26]'
                             : 'text-[#A09F9F]'
-                        } hover:text-[#F25E26]
+                          } hover:text-[#F25E26]
                     ${!isOpen ? 'py-2 lg:py-1' : ''}
                     `}
                         onClick={() => {
@@ -122,9 +121,9 @@ export const Header = () => {
                             </span>
                             {activeMenu === index && (
                               <ul className='absolute left-0 z-10 mt-2 h-fit w-max rounded-md bg-white pb-2 shadow-md'>
-                                
+
                                 {val.submenu.map((subItem, subIndex) => (
-                              
+
                                   <li
                                     key={subIndex}
                                     className={` ${subItem.name === 'Profile' || subItem.name === 'Wallet' || subItem.name === 'Community' || (subItem.name === 'Referral Code' && !isLoggedIn) ? 'hidden' : 'block'} p-2 px-4 text-sm  text-[#A09F9F] hover:bg-gray-100 hover:text-[#F25E26] `}
