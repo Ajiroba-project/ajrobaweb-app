@@ -10,32 +10,55 @@ import { Community } from './component/Community'
 import { Products, categories } from './static-data'
 import { Header } from './component/Header'
 import { Footer } from './component/Footer'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './globals.css'
 import { Suspense } from 'react'
+import { CircularPagination } from './component/Pagination'
+import { useRouter } from 'next/navigation'
 
 const Page = () => {
-  const [currentPage, setCurrentPage] = useState<number>(0)
   const [categoryCurrentPage, setCategoryCurrentPage] = useState<number>(0)
-  const [displayedProducts, setDisplayedProducts] = useState<any | []>(
-    Products.slice(0, 12)
-  )
+  const [auctionCurrentPage, setAuctionCurrentPage] = useState<number>(0)
+  const [displayedProducts] = useState<any | []>(Products.slice(0, 12))
+  const [cardsPerPage] = useState<number>(4)
+  const [filteredCatData, setFilteredCatData] = useState<any>([])
+  const [filteredAuctionData, setFilteredAuctionData] = useState<any>([])
 
-  const totalCards = Products.length
-  const cardsPerPage = 4
-  const totalPages = Math.ceil(totalCards / cardsPerPage)
-  const isFirstPage = currentPage === 0
-  const isLastPage = currentPage === totalPages - 1
-  const categoryFirstPage = currentPage === 0
-  const categoryLastPage = currentPage === totalPages - 1
+  const totalPages = Math.ceil(Products.length / cardsPerPage)
+  const catCount = Math.ceil(categories.length / cardsPerPage)
+  const router = useRouter()
+
+  // const width = window.innerWidth
+
+  useEffect(() => {
+    const FilteredCat = categories.slice(
+      categoryCurrentPage * cardsPerPage,
+      (categoryCurrentPage + 1) * cardsPerPage
+    )
+    const FilteredAuction = Products.slice(
+      auctionCurrentPage * cardsPerPage,
+      (auctionCurrentPage + 1) * cardsPerPage
+    )
+
+    setFilteredCatData(FilteredCat)
+    setFilteredAuctionData(FilteredAuction)
+  }, [auctionCurrentPage, cardsPerPage, categoryCurrentPage])
+
+  const handlePageChange = (pageNumber: number) => {
+    setCategoryCurrentPage(pageNumber)
+  }
+  const handleAuctionChange = (pageNumber: number) => {
+    setAuctionCurrentPage(pageNumber)
+  }
 
   return (
     <>
       <Suspense>
-        <Header />
+        <header className='fixed z-30 w-full'>
+          <Header />
+        </header>
 
-        <main className=''>
+        <main className='w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]'>
           {/* hero section */}
           <section>
             <div className=''>
@@ -47,20 +70,13 @@ const Page = () => {
           <section className='container my-[3rem] flex flex-col gap-4'>
             <div className='flex items-center justify-between'>
               <SubHeading title='Today' />
-              <div className='flex items-center gap-2'>
-                <FaArrowLeft
-                  className={`text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black ${isFirstPage ? 'pointer-events-none opacity-50' : ''}`}
-                  onClick={() =>
-                    setCurrentPage(prevPage => Math.max(0, prevPage - 1))
+              <div className='flex items-center '>
+                <CircularPagination
+                  pageCount={totalPages}
+                  onPageChange={(pageNumber: number) =>
+                    handleAuctionChange(pageNumber)
                   }
-                />
-                <FaArrowRight
-                  className={`cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black ${isLastPage ? 'pointer-events-none opacity-50' : ''}`}
-                  onClick={() =>
-                    setCurrentPage(prevPage =>
-                      Math.min(prevPage + 1, totalPages - 1)
-                    )
-                  }
+                  className='flex items-center'
                 />
               </div>
             </div>
@@ -69,11 +85,7 @@ const Page = () => {
               <Heading title='Auction Sales' />
             </div>
             <div className='flex justify-center'>
-              <AuctionCard
-                cardInfo={Products}
-                currentPage={currentPage}
-                cardsNum={cardsPerPage}
-              />
+              <AuctionCard cardInfo={filteredAuctionData} />
             </div>
           </section>
 
@@ -92,22 +104,13 @@ const Page = () => {
           <section className='container my-28 flex flex-col  gap-4'>
             <div className='flex items-center justify-between'>
               <SubHeading title='Categories' />
-              <div className='flex items-center gap-2'>
-                <FaArrowLeft
-                  className={`text- cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl text-black ${categoryFirstPage ? 'pointer-events-none opacity-50' : ''}`}
-                  onClick={() => {
-                    setCategoryCurrentPage(prevPage =>
-                      Math.max(0, prevPage - 1)
-                    )
-                  }}
-                />
-                <FaArrowRight
-                  className={`cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl text-black ${categoryLastPage ? 'pointer-events-none opacity-50' : ''}`}
-                  onClick={() => {
-                    setCategoryCurrentPage(prevPage =>
-                      Math.min(prevPage + 1, totalPages - 1)
-                    )
-                  }}
+              <div className='relative flex items-center'>
+                <CircularPagination
+                  pageCount={catCount}
+                  onPageChange={(pageNumber: number) =>
+                    handlePageChange(pageNumber)
+                  }
+                  className='flex items-center'
                 />
               </div>
             </div>
@@ -115,17 +118,15 @@ const Page = () => {
             <div className=''>
               <Heading title='Shop by Categories' />
             </div>
+
             <div className='flex flex-col justify-center'>
-              <CategoryFeatureCard
-                cardInfo={categories}
-                currentPage={categoryCurrentPage}
-              />
-              <div className='flex justify-center pt-4'>
+              <CategoryFeatureCard cardInfo={filteredCatData} />
+              <div className='flex justify-center pt-8'>
                 <DefaultButton
-                  text='view all Categories'
+                  text='View all Categories'
                   type='button'
                   handleClick={() => {}}
-                  className='rounded-lg bg-[#FCDFD4] p-2'
+                  className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
             </div>
@@ -139,14 +140,14 @@ const Page = () => {
             <div>
               <Heading title='Featured Products' />
             </div>
-            <div>
+            <div className='flex flex-col items-center  '>
               <ProductCard cardInfo={displayedProducts} />
               <div className='flex justify-center pt-4'>
                 <DefaultButton
-                  text='view all Features'
+                  text='View all Features'
                   type='button'
-                  handleClick={() => {}}
-                  className='rounded-lg bg-[#FCDFD4] p-2'
+                  handleClick={() => router.push('/auction')}
+                  className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
             </div>
@@ -160,14 +161,14 @@ const Page = () => {
             <div>
               <Heading title='Shop from Top Deals Collection' />
             </div>
-            <div>
+            <div className='flex flex-col items-center'>
               <ProductCard cardInfo={displayedProducts} />
               <div className='flex justify-center pt-4'>
                 <DefaultButton
-                  text='view all Deals'
+                  text='View all Deals'
                   type='button'
-                  handleClick={() => {}}
-                  className='rounded-lg bg-[#FCDFD4] p-2'
+                  handleClick={() => router.push('/auction')}
+                  className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
             </div>
@@ -189,14 +190,14 @@ const Page = () => {
             <div>
               <Heading title='This Week Top Product' />
             </div>
-            <div>
+            <div className='flex flex-col items-center'>
               <ProductCard cardInfo={displayedProducts} />
               <div className='flex justify-center pt-4'>
                 <DefaultButton
-                  text='view all Products'
+                  text='View all Products'
                   type='button'
-                  handleClick={() => {}}
-                  className='rounded-lg bg-[#FCDFD4] p-2'
+                  handleClick={() => router.push('/Categories')}
+                  className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
             </div>

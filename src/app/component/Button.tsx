@@ -1,4 +1,5 @@
 import Image from "next/image"
+import {ReactNode} from "react"
 type ButtonProps = {
     text: string,
     handleClick?: () => void;
@@ -11,7 +12,7 @@ type ButtonProps = {
 export const DefaultButton = ({ text, type, handleClick, className }: ButtonProps) => {
     return (
         <>
-            <button className={className} type={type} onClick={handleClick}>
+            <button className={`${className}`} type={type} onClick={handleClick}>
                 {text}
             </button>
 
@@ -21,7 +22,7 @@ export const DefaultButton = ({ text, type, handleClick, className }: ButtonProp
 export const PrimaryButton = ({ text, handleClick }: ButtonProps) => {
     return (
         <>
-            <button className="bg-[#FCDFD4]" onClick={handleClick}>
+            <button className={`bg-[#FCDFD4]`} onClick={handleClick}>
                 {text}
             </button>
         </>
@@ -48,4 +49,21 @@ export const IconButton = ({ text, handleClick, icon, className }: ButtonProps) 
 
         </>
     )
+}
+
+type customProps = {
+    children:ReactNode,
+    className:string
+    type?:"button"|"submit"|"reset"
+    handleClick?:()=>void
+}
+
+export const CustomizeButton = ({ children, className, handleClick, type }: customProps) => {
+  return (
+    <>
+      <button className={className} onClick={handleClick} type={type}>
+        {children}
+      </button>
+    </>
+  )
 }

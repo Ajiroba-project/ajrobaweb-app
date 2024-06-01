@@ -1,13 +1,30 @@
 import React from 'react'
 import { Formtitle } from './Formtitle'
-import { AirtimePurchase, userNavStore } from '@/store/store'
+import { AirtimePurchase, userNavStore, useAuthStore } from '@/store/store'
 import { DefaultButton } from '../../component/Button'
 import { WalletPin } from './WalletPin'
+import { useRouter } from 'next/navigation'
 export const AirtimePayment = () => {
-  const AirtimeDetails = AirtimePurchase(state => state.AirtimeDetails)
-  const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
-  const walletModal = userNavStore(state => state.walletModal)
-  const setWalletModal = userNavStore(state => state.setWalletModal)
+
+  const { AirtimeDetails, setAirtimeStepper, walletModal, setWalletModal } =
+    AirtimePurchase(state => ({
+      AirtimeDetails: state.AirtimeDetails,
+      setAirtimeStepper: state.setAirtimeStepper,
+      walletModal: state.walletModal,
+      setWalletModal: state.setWalletModal
+    }))
+
+    const { isLoggedIn } = useAuthStore(state => ({
+      isLoggedIn: state.isLoggedIn
+    }))
+
+  const Reroute =()=>{
+    const router = useRouter()
+    router.push('/signin')
+
+   return null
+}
+
 
   return (
     <div className='my-5 mt-[4rem] flex  flex-col gap-4 rounded'>
@@ -44,7 +61,7 @@ export const AirtimePayment = () => {
               type='button'
               text='Pay with Wallet'
               className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-              handleClick={setWalletModal}
+              handleClick={isLoggedIn ? setWalletModal:Reroute}
             />
             <DefaultButton
               type='button'

@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactPaginate from 'react-paginate'
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
 
 type PaginationProps = {
   pageCount: number
@@ -61,6 +62,38 @@ export const CustomPagination = ({
         nextLinkClassName='border rounded-md px-5 py-3 text-black'
         previousClassName='  text-[#D2D2D2] text-sm '
         previousLinkClassName='border px-5 py-3 rounded-md text-black'
+      />
+    </div>
+  )
+}
+
+export const CircularPagination = ({
+  pageCount,
+  onPageChange,
+  className,
+}: PaginationProps) => {
+  return (
+    <div className={`my-4`}>
+      <ReactPaginate
+        breakLabel='...'
+        nextLabel={
+          <FaArrowRight className='cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl ' />
+        }
+        previousLabel={
+          <FaArrowLeft className='cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl' />
+        }
+        onPageChange={selectedItem => onPageChange(selectedItem.selected)}
+        pageRangeDisplayed={4}
+        pageCount={pageCount}
+        renderOnZeroPageCount={null}
+        className={className}
+        pageLinkClassName='hidden'
+        activeClassName='hidden'
+        activeLinkClassName='hidden'
+        nextClassName=' p-3 rounded-md text-[#D2D2D2] text-sm '
+        nextLinkClassName=' text-black'
+        previousClassName='  text-[#D2D2D2] text-sm'
+        previousLinkClassName=' text-black'
       />
     </div>
   )
