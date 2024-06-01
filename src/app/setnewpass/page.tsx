@@ -15,6 +15,7 @@ import { HiArrowLongLeft } from "react-icons/hi2";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 function Page() {
     type dataProps = {
@@ -173,6 +174,7 @@ function Page() {
                                     register={register}
                                     errors={errors.password}
                                 />
+                                <small>Minimum of 6 characters</small>
                                 <div className="text-xs text-red-700">
                                     {errors?.password?.message}
                                 </div>
@@ -188,7 +190,10 @@ function Page() {
                                     placeholder="*********"
                                     register={register}
                                     errors={errors.c_password}
+                                    HiEyeSlash={<FaRegEyeSlash />}
+                                    HiEye={<FaRegEye />}
                                 />
+                                <small>Minimum of 6 characters</small>
                                 <div className="text-xs text-red-700">
                                     {errors?.c_password?.message}
                                 </div>
@@ -197,8 +202,9 @@ function Page() {
                         <div className="flex justify-center items-center mt-4">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Reset Password"
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                                // text="Reset Password"
+                                text={status === 'pending' ? 'loading...' : 'Reset Password'}
                                 handleClick={() => console.log("")}
                             />
                         </div>

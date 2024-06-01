@@ -39,7 +39,7 @@ export const CableDetails = () => {
   const netpackage = ['jinja', 'family', 'business']
 
   const sumbitForm = (data: CableProps) => {
-    console.log('data=>', data)
+    // console.log('data=>', data)
     setCableDetails(data)
     setCableStepper(1)
   }
@@ -90,7 +90,7 @@ export const CableDetails = () => {
             <DefaultButton
               text='Proceed'
               type='submit'
-              handleClick={() => {}}
+              handleClick={() => { }}
               className='my-10 w-full bg-[#FCDFD4] p-3'
             />
           </div>

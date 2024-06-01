@@ -1,11 +1,12 @@
 "use client"
 import React, { useState, useEffect } from 'react'
+
 import {raffle} from "@/app/static-data"
+
 import { useRouter } from 'next/navigation'
 import { HeadingText } from '../../component/Heading'
 import { DefaultButton } from '../../component/Button'
 import Image from "next/image"
-
 
 const Page = ({params}:any) => {
     const router = useRouter()
@@ -31,6 +32,7 @@ const Page = ({params}:any) => {
     }, [params.id])
 
     
+
   return (
     <section className='z-auto'>
       <div className='w-full bg-[#F6F6F6] pt-[13vh]'>
@@ -70,6 +72,7 @@ const Page = ({params}:any) => {
           text={`${!playState ? 'Stop Streaming' : 'Auction'}`}
           className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all '
           type='button'
+
           handleClick={ () => playState ? HandleTimer : router.push(`/raffle/${params.id}/winners`)}
         />
       </section>

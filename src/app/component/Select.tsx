@@ -3,19 +3,21 @@ interface SelectProps {
     type?: string;
     name: string;
     placeholder?: string;
-    register: any;
+    // register: any;
     errors: any;
     options: { value: string; label: string }[];
 }
 
 
-const Select: React.FC<SelectProps> = ({ label, name, options, register, errors }) => {
+const Select: React.FC<SelectProps> = ({ label, name, options, errors }) => {
     return (
         <div className="flex flex-col">
             <label className="text-sm" htmlFor={name}>
                 {label}
             </label>
-            <select {...register(name, { required: true })} name={name} className=" px-8 h-12 focus:text-black  border rounded">
+
+
+            <select name={name} className=" px-8 h-12 focus:text-black  border rounded">
                 <option value="" className="text-wdc-textbody">
                     Select a {label}
                 </option>
@@ -25,6 +27,8 @@ const Select: React.FC<SelectProps> = ({ label, name, options, register, errors 
                     </option>
                 ))}
             </select>
+
+
             <div className="text-xs text-red-700">{errors?.[name]?.message}</div>
         </div>
     );

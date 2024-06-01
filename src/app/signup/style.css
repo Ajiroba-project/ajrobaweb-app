@@ -1,0 +1,5 @@
+/* In your CSS file (e.g., styles.css) */
+.select-item-hover:hover {
+    background-color: #FCDFD4;
+    /* Change this to your desired hover color */
+}

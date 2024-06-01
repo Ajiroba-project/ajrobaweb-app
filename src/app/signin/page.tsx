@@ -13,13 +13,16 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
+
 import {useAuthStore} from "@/store/store"
+
 import "react-toastify/dist/ReactToastify.css";
 
 function Page() {
     type dataProps = {
 
-        email: string;
+        // email: string;
+        email_or_phone?: string;
 
         password: string;
 
@@ -27,16 +30,29 @@ function Page() {
 
     const router = useRouter()
 
+    const emailOrPhoneNumberSchema = yup
+        .string()
+        .matches(
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$|^(\+\d{1,3}[- ]?)?\d{10}$/, // Regular expression for a string containing either a valid email or a valid phone number
+            "Valid email or phone number is required"
+        );
+
+
+
     const schema = yup.object().shape({
 
 
-        email: yup
-            .string()
-            .matches(
-                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
-                "Valid email is required",
-            )
-            .required("Email is required"),
+        // email: yup
+        //     .string()
+        //     .matches(
+        //         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
+        //         "Valid email is required",
+        //     )
+        //     .required("Email is required"),
+
+        email_or_phone: emailOrPhoneNumberSchema.required(
+            "Email or phone number is required"
+        ),
 
 
         password: yup
@@ -47,11 +63,13 @@ function Page() {
     });
 
     const { setUser, isLoggedIn, setAuthCookie } = useAuthStore(state => ({
+
       setUser: state.setUser,
       isLoggedIn: state.isLoggedIn,
       setAuthCookie: state.setAuthCookie
     }))
     
+
 
     const {
         reset,
@@ -70,7 +88,7 @@ function Page() {
 
     const handleSuccess = (data: any) => {
 
-        console.log(data, 'datatta')
+        // console.log(data, 'datatta')
 
 
         if (data.status === 200) {
@@ -88,7 +106,7 @@ function Page() {
             })
             setAuthCookie(data?.data?.token, 0)
             setUser(data?.data)
-          
+
             reset();
 
         } else if (data.status === 403 || data.status === 404) {
@@ -144,6 +162,8 @@ function Page() {
 
 
     const sumbitForm = async (data: dataProps) => {
+        // console.log(data, 'datatat')
+
         mutate({
             url: "/api/signin",
             payload: data
@@ -172,15 +192,15 @@ function Page() {
 
                             <div className="flex flex-col">
                                 <Input
-                                    label="Email"
+                                    label="Email Address/Phone Number*"
                                     type="text"
-                                    name="email"
-                                    placeholder="Email Address/Phone Number*"
+                                    name="email_or_phone"
+                                    placeholder="Enter your Email or Phone number"
                                     register={register}
-                                    errors={errors.email}
+                                    errors={errors?.email_or_phone}
                                 />
                                 <div className="text-xs text-red-700">
-                                    {errors?.email?.message}
+                                    {errors?.email_or_phone?.message}
                                 </div>
                             </div>
 
@@ -209,7 +229,7 @@ function Page() {
                         <div className="flex justify-center items-center mt-4">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
                                 text={status === 'pending' ? 'loading...' : "Sign in"}
                                 handleClick={() => console.log("")}
                             />
