@@ -9,7 +9,7 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AuctionMarquee } from './Auction-Marquee'
 import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
-import { useAuthStore,userNavStore } from '@/store/store'
+import { useAuthStore, userNavStore } from '@/store/store'
 import Image from 'next/image'
 import Brand from '../asset/logo.svg'
 import Link from 'next/link'
@@ -23,9 +23,9 @@ export const Header = () => {
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn
   }))
-    const { setHeaderNav, headerNav } = useAuthStore(state => ({
+    const { setHeaderNav, headerNav } = userNavStore(state => ({
       setHeaderNav: state.setHeaderNav,
-      headerNav:state.headerNav
+      headerNav: state.headerNav
     }))
 
   const hamburgerfunc = () => {
@@ -109,10 +109,6 @@ export const Header = () => {
                           setActiveMenu(activeMenu === index ? null : index)
                           setHeaderNav(val.name)
                         }}
-                        // onMouseEnter={() => 
-                        //   setActiveMenu(index)
-                        // }
-                        // onMouseLeave={() => setActiveMenu(null)}
                       >
                         {val.submenu ? (
                           <div className='relative'>

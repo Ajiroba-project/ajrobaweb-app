@@ -60,7 +60,7 @@ const Page = ({params}:any) => {
             className={`${!playState ? 'absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-2xl bg-[#00000099] align-middle text-white' : ''}`}
             onClick={() => setPlayState(!playState)}
           >
-            {!playState && (<p className='text-2xl font-semibold'>
+            {playState && (<p className='text-2xl font-semibold'>
               The <br /> End
             </p>)}
           </div>
