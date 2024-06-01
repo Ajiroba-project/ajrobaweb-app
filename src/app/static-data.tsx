@@ -517,7 +517,9 @@ export const Products = [
     rating: '',
     category: 'FoodStuff',
     subCategory: 'Food',
-    tag: ["open"]
+
+    tag: ['open']
+
   },
   {
     name: 'Orange',
@@ -529,7 +531,9 @@ export const Products = [
     rating: '',
     category: 'FoodStuff',
     subCategory: 'Fruits',
-    tag: ["close"]
+
+    tag: ['close']
+
   },
   {
     name: 'Smart Watch',
@@ -541,7 +545,9 @@ export const Products = [
     time: '',
     category: 'Fashion And Beauty',
     subCategory: 'Smart',
-    tag: ["open"]
+
+    tag: ['open']
+
   },
   {
     name: 'Head Phone',
@@ -553,7 +559,9 @@ export const Products = [
     rating: '',
     category: 'Phones',
     subCategory: 'Smart',
-    tag: ["close", "redeem items", "winning advise"]
+
+    tag: ['close', 'redeem items', 'winning advise']
+
   },
   {
     name: 'Washing Machine',
@@ -565,7 +573,9 @@ export const Products = [
     time: '',
     category: 'Electronic',
     subCategory: 'Smart',
-    tag: ["close", "redeem items", "winning advise"]
+
+    tag: ['close', 'redeem items', 'winning advise']
+
   },
   {
     name: 'Iphone XR',
@@ -577,7 +587,9 @@ export const Products = [
     rating: '',
     category: 'Phones',
     subCategory: 'Smart',
-    tag: ["close", "redeem items", "winning advise"]
+
+    tag: ['close', 'redeem items', 'winning advise']
+
   },
   {
     name: 'beads',
@@ -589,7 +601,9 @@ export const Products = [
     time: '',
     category: 'Fashion And Beauty',
     subCategory: 'Accessories',
-    tag: ["delivered", "close"]
+
+    tag: ['delivered', 'close']
+
   },
   {
     name: 'Bead',
@@ -601,7 +615,9 @@ export const Products = [
     rating: '',
     category: 'Phones',
     subCategory: 'Smart',
-    tag: ["close", "redeem items", "winning advise"]
+
+    tag: ['close', 'redeem items', 'winning advise']
+
   },
   {
     name: 'human hair',
@@ -612,7 +628,9 @@ export const Products = [
     rating: '',
     time: '',
     category: 'Fashion',
-    tag: ["open"]
+
+    tag: ['open']
+
   },
   {
     name: 'Oloyin Beans',
@@ -775,10 +793,12 @@ export const transactions = [
     time: '3:15',
     status: ['pending'],
     type: 'purchase',
-    brand: "MTN"
+
+    brand: 'MTN'
   },
   {
-    logo: "",
+    logo: '',
+
     brand: 'IKEDC',
     title: 'You just Bought 3000 unit',
     amount: '1000',
@@ -787,7 +807,9 @@ export const transactions = [
     type: 'purchase'
   },
   {
-    logo: "",
+
+    logo: '',
+
     brand: 'MTN',
     title: 'You just Bought ₦200 MTN Airtime',
     amount: '200',
@@ -796,7 +818,9 @@ export const transactions = [
     type: 'purchase'
   },
   {
-    logo: "",
+
+    logo: '',
+
     brand: 'GTB',
     title: 'You just Received ₦ 20,0000',
     amount: '20,000',
@@ -815,9 +839,11 @@ export const raffle = [
     title: 'rice',
     host: 'ajiroba',
     date: '4 Aug 2024',
-    price: "300"
+
+    price:"300"
   },
-  {
+   {
+
     name: 'live raffle draw',
     video: raf,
     description:
@@ -825,9 +851,11 @@ export const raffle = [
     title: 'rice',
     host: 'ajiroba-2',
     date: '4 Aug 2024',
-    price: "300"
+
+    price:"300"
   },
-  {
+   {
+
     name: 'live raffle draw',
     video: raf,
     description:
@@ -835,12 +863,15 @@ export const raffle = [
     title: 'rice',
     host: 'ajiroba-3',
     date: '4 Aug 2024',
-    price: "300"
+
+    price:"300"
+
   }
 ]
 
 export const raffleWinner = [
   {
+
     sn: 0,
     product: "50kg Bag of Rice",
     winner: "09023233443",
@@ -859,7 +890,6 @@ export const raffleWinner = [
     ticket: "500",
   }
 ]
-
 
 
 export const state_and_LGA = [
@@ -1822,7 +1852,6 @@ export const state_and_LGA = [
     ]
   }
 ]
-
 
 
 

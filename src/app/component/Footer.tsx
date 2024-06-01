@@ -15,7 +15,6 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "900
 export const Footer = () => {
   const date = new Date().getFullYear()
 
-
   return (
     <footer className={`${lato.className} bg-[#111111]`}>
       <section className='p-12 text-white '>

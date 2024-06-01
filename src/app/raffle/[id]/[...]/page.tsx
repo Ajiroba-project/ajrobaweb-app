@@ -5,7 +5,9 @@ import { DefaultButton } from '@/app/component/Button'
 import { useRouter } from 'next/navigation'
 import { HeadingText } from '@/app/component/Heading'
 
-const Page = () => {
+
+ const Page = () => {
+
   const router = useRouter()
   const thead = ['SN', 'Product', `Winner's Number`, 'Ticket Price']
   return (
@@ -48,7 +50,9 @@ const Page = () => {
                   </td>
                   <td className='w-1 text-center'>
                     <p className='custom-shape mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  py-4 text-xl font-semibold '>
-                      {val.product}
+
+                       {val.product}
+
                     </p>
                   </td>
 
@@ -74,11 +78,13 @@ const Page = () => {
 
       <div className="flex flex-col justify-center mb-8">
         <DefaultButton
-          handleClick={() => router.push('/')}
-          text='Back to Auction'
-          type='button'
-          className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all '
-        />
+
+        handleClick={()=>router.push('/')}
+        text='Back to Auction'
+        type='button'
+        className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all '
+      />
+
       </div>
     </div>
   )
