@@ -9,7 +9,7 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AuctionMarquee } from './Auction-Marquee'
 import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
-import { useAuthStore } from '@/store/store'
+import { useAuthStore,userNavStore } from '@/store/store'
 import Image from 'next/image'
 import Brand from '../asset/logo.svg'
 import Link from 'next/link'
@@ -17,16 +17,21 @@ import Link from 'next/link'
 export const Header = () => {
   const pathname = usePathname()
   const isRootPath = pathname === '/'
-  const [active, setActive] = useState<number>(0)
+  // const [active, setActive] = useState<number>(0)
   const [isOpen, setIsOpen] = useState<boolean | null>(null)
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn
   }))
+    const { setHeaderNav, headerNav } = useAuthStore(state => ({
+      setHeaderNav: state.setHeaderNav,
+      headerNav:state.headerNav
+    }))
 
   const hamburgerfunc = () => {
     setIsOpen(!isOpen)
   }
+  
 
   const router = useRouter()
   return (
@@ -94,7 +99,7 @@ export const Header = () => {
                       <li
                         key={index}
                         className={`cursor-pointer px-4 ${
-                          activeMenu === index
+                          val.name === headerNav
                             ? 'text-[#F25E26]'
                             : 'text-[#A09F9F]'
                         } hover:text-[#F25E26]
@@ -102,6 +107,7 @@ export const Header = () => {
                     `}
                         onClick={() => {
                           setActiveMenu(activeMenu === index ? null : index)
+                          setHeaderNav(val.name)
                         }}
                         // onMouseEnter={() => 
                         //   setActiveMenu(index)

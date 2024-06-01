@@ -46,7 +46,11 @@ function Page() {
 
     });
 
-    const {setUser, isLoggedIn, setAuthCookie} = useAuthStore(state =>({setUser:state.setUser, isLoggedIn:state.isLoggedIn}))
+    const { setUser, isLoggedIn, setAuthCookie } = useAuthStore(state => ({
+      setUser: state.setUser,
+      isLoggedIn: state.isLoggedIn,
+      setAuthCookie: state.setAuthCookie
+    }))
     
 
     const {
