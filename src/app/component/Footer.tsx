@@ -7,7 +7,6 @@ import {
   FaYoutube,
   FaFacebookF,
   FaLinkedinIn,
-  FaSquareInstagram
 } from 'react-icons/fa6'
 import { FaInstagram } from 'react-icons/fa'
 const lato = Lato({ subsets: ["latin"], weight: ["400", "900"], });
@@ -30,13 +29,13 @@ export const Footer = () => {
             </p>
             <div className='header-socials flex gap-3'>
               <Link href='/'>
-                <FaFacebookF className='rounded-full bg-white p-2 text-sm text-black md:text-xl lg:text-4xl hover:bg-[#F25E26]' />
+                <FaFacebookF className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
               <Link href='/'>
-                <FaYoutube className='rounded-full bg-white p-2 text-sm text-black md:text-xl lg:text-4xl hover:bg-[#F25E26]' />
+                <FaYoutube className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
               <Link href='/'>
-                <FaLinkedinIn className='rounded-lg bg-white p-2 text-sm text-black md:text-xl lg:text-4xl hover:bg-[#F25E26]' />
+                <FaLinkedinIn className='rounded-lg bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
               <Link href='/'>
                 <FaInstagram className='rounded-xl text-4xl text-white hover:text-[#F25E26]' />
@@ -44,13 +43,13 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div>
+          <div className='flex flex-col justify-start'>
             <p className='text-lg'>Quick Links</p>
-            <ul className='py-2'>
+            <ul className='py-2 '>
               {quickLinks.map((val, index) => (
                 <li
                   key={index}
-                  className='cursor-pointer py-2 text-sm hover:text-[#F25E26]'
+                  className='cursor-pointer py-2  hover:text-[#F25E26]'
                 >
                   <Link
                     href={val.links}
@@ -62,14 +61,11 @@ export const Footer = () => {
               ))}
             </ul>
           </div>
-          <div>
+          <div className='flex flex-col justify-start'>
             <p className='text-lg '>Our Company</p>
             <ul className='py-2'>
               {ourCompany.map((val, index) => (
-                <li
-                  key={index}
-                  className='cursor-pointer py-2 text-base '
-                >
+                <li key={index} className='cursor-pointer py-2 text-base '>
                   <Link
                     href={val.links}
                     className={`text-base font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className} `}

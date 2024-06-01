@@ -12,7 +12,7 @@ export const Banner = () => {
     <div className={`${poppins.className}flex items-center justify-center`}>
       <div className='container flex flex-col items-center justify-between pt-[2rem] md:flex-row lg:flex-row'>
         <div className='flex flex-col items-center justify-center gap-4 py-6 text-white md:items-start md:justify-start md:py-0 lg:w-1/3 lg:items-start lg:justify-start lg:py-0 w-'>
-          <h3 className='text-center text-xl lg:text-4xl md:text-left lg:text-left font-semibold min-w-96'>
+          <h3 className='text-center text-4xl md:text-left lg:text-left font-semibold min-w-96'>
             Ajiroba... Your passport to premium Bids!
           </h3>
           <p className='text-center md:text-left lg:text-left font-normal text-2xl'>

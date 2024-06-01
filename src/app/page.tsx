@@ -58,7 +58,7 @@ const Page = () => {
           <Header />
         </header>
 
-        <main className='w-full lg:pt-[20vh] md:pt-[20vh] pt-[13vh]'>
+        <main className='w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]'>
           {/* hero section */}
           <section>
             <div className=''>
@@ -144,7 +144,7 @@ const Page = () => {
               <ProductCard cardInfo={displayedProducts} />
               <div className='flex justify-center pt-4'>
                 <DefaultButton
-                  text='view all Features'
+                  text='View all Features'
                   type='button'
                   handleClick={() => router.push('/auction')}
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'

@@ -22,7 +22,7 @@ export const useAuthStore = create((set, get) => ({
 }))
 
 export const userNavStore = create(set => ({
-  headerNav: 'home',
+  headerNav: 'Home',
   userNav: '',
   isNavbarOpen: false,
   sidebar: false,
