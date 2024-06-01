@@ -1,0 +1,43 @@
+/* Target the popup container */
+
+.select {
+    appearance: none;
+    background-color: aqua !important;
+    color: blue !important;
+}
+
+
+.select option {
+    /* Styles for all options */
+    background-color: blueviolet !important;
+    color: brown !important;
+}
+
+.select option:hover {
+    /* Styles for options on hover */
+    background-color: rgb(27, 231, 85) !important;
+    color: brown !important;
+}
+
+.select option:active {
+    /* Styles for the selected option */
+}
+
+select[name="state"]+.dropdown-container {
+    background-color: aqua !important;
+    color: blue !important;
+}
+
+/* Target the popup options */
+select[name="state"]+.dropdown-container .option {
+    /* Your styles here */
+    background-color: aqua !important;
+    color: blue !important;
+}
+
+/* Target the selected option */
+select[name="state"]+.dropdown-container .option:selected {
+    /* Your styles here */
+    background-color: aqua !important;
+    color: blue !important;
+}
