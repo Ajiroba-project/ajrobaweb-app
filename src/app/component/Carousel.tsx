@@ -4,6 +4,7 @@ import carousel from '../asset/image/carousel.png'
 import {
   Navigation,
   Pagination,
+  Scrollbar,
   A11y,
   EffectFade,
   Autoplay
