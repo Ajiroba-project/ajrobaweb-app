@@ -45,7 +45,7 @@ export const ElectricityDetails = () => {
   const plan = ['prepaid', 'postpaid']
 
   const sumbitForm = (data: ElectricityProps) => {
-    console.log('data=>', data)
+    // console.log('data=>', data)
     setElectricityDetails(data)
     setElectricityStepper(1)
   }
@@ -106,7 +106,7 @@ export const ElectricityDetails = () => {
             <DefaultButton
               text='Proceed'
               type='submit'
-              handleClick={() => {}}
+              handleClick={() => { }}
               className='my-10 w-full bg-[#FCDFD4] p-3'
             />
           </div>

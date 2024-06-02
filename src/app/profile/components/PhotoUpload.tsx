@@ -1,14 +1,14 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { DefaultButton } from '@/app/component/Button'
 import { CustomModal } from '@/app/component/Modal'
 import { userProfile } from '@/store/store'
 import { IoClose } from 'react-icons/io5'
-import { useDropzone } from "React-dropzone";
+import { useDropzone } from 'react-dropzone'
 
 interface FileProps {
-  name:string
-  type:string
-  size:number
+  name: string
+  type: string
+  size: number
 }
 
 export const PhotoUpload = () => {
@@ -16,21 +16,20 @@ export const PhotoUpload = () => {
     setProfile: state.setProfile,
     profile: state.profile
   }))
-  const [files, setFiles]=useState<FileProps[]>([])
+  const [files, setFiles] = useState<FileProps[]>([])
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop:(acceptedFiles)=>{
+    onDrop: (acceptedFiles) => {
       setFiles(
-        acceptedFiles.map((files)=>({
-          name:files.name,
-          type:files.type,
-          size:files.size
+        acceptedFiles.map((files) => ({
+          name: files.name,
+          type: files.type,
+          size: files.size
 
         }))
       )
     }
   })
-
 
   return (
     <CustomModal isOpen={profile}>

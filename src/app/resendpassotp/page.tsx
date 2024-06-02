@@ -121,6 +121,8 @@ function Page() {
 
     const sumbitForm = async (data: dataProps) => {
         reset();
+
+        // console.log(data, 'datatata')
         mutate({
             url: "/api/resendpassotp",
             payload: data
@@ -169,11 +171,18 @@ function Page() {
                             </div>
                         </div>
                         <div className="flex justify-center items-center mt-4">
-                            <DefaultButton
+                            {/* <DefaultButton
                                 type="submit"
                                 className=" w-full bg-[#FCDFD4] h-10 text-sm"
                                 text="Proceed"
                                 handleClick={() => console.log("")}
+                            /> */}
+                            <DefaultButton
+                                type="submit"
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                                // text="Proceed"
+                                text={status === 'pending' ? 'loading...' : "Proceed"}
+                            // handleClick={() => console.log("")}
                             />
                         </div>
 

@@ -21,9 +21,9 @@ const Page = () => {
       <main className='container '>
         <Profile />
       </main>
-      
-        { profile && <PhotoUpload />}
-    
+
+      {profile && <PhotoUpload />}
+
     </section>
   )
 }

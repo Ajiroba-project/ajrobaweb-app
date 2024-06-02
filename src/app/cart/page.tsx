@@ -1,7 +1,6 @@
 "use client";
 import { usePathname, useRouter, } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Breadcrumb } from "../component/Breadcrumb";
 import { Header } from "../component/Header";
 import { Title } from "../component/Title";
 import Image from "next/image";

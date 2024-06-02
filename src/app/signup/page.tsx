@@ -4,15 +4,23 @@ import Brand from "../asset/logo.svg";
 import Image from "next/image";
 import AuthHero from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Input from "../component/Input";
-import Select from "../component/Select";
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './style.css'
+
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 function Page() {
 
@@ -27,13 +35,14 @@ function Page() {
         lga: string;
         password: string;
         residential: string;
-        gender: string;
+        gender?: boolean;
+        agree_terms?: boolean;
     };
-    const router = useRouter()
+    const router = useRouter();
 
     const schema = yup.object().shape({
-        first_name: yup.string().required("Full Name is required"),
-        last_name: yup.string().required("Full Name is required"),
+        first_name: yup.string().required("Firstname is required"),
+        last_name: yup.string().required("Surname is required"),
         email: yup
             .string()
             .matches(
@@ -41,17 +50,19 @@ function Page() {
                 "Valid email is required",
             )
             .required("Email is required"),
-        phone: yup.string().required("Mobile number should be a string"),
-        // referral: yup.string().required("referral should be a string"),
-        address: yup.string().required("address should be a string"),
-        state: yup.string().required("state should be a string"),
-        lga: yup.string().required("lga should be a string"),
+        phone: yup.string().required("Mobile number is required"),
+        address: yup.string().required("address is required"),
+        state: yup.string().required("State is required"),
+        lga: yup.string().required("LGA is required"),
         password: yup
             .string()
             .required("Password is required")
             .min(6, "Can't be lesser than 6 digits"),
-        residential: yup.string().required("residential should be a string"),
-        gender: yup.string().required("Gender should be a string"),
+        residential: yup.string().required("residential is required"),
+        // gender: yup.boolean().oneOf([true], "Gender is required"),
+        gender: yup.boolean().required("Gender is required"),
+        // agree_terms: yup.boolean().required("This is required"),
+        agree_terms: yup.boolean().oneOf([true], "You must agree to the terms and conditions")
     });
 
     const {
@@ -61,17 +72,13 @@ function Page() {
         handleSubmit,
         formState: { errors },
         trigger,
-        watch,
-        setValue,
     } = useForm({
         mode: "all",
         resolver: yupResolver(schema),
     });
 
-
     const handleSuccess = (data: any) => {
         if (data.status === 201) {
-
             toast.success(`${data?.data?.message}`, {
                 position: "top-right",
                 autoClose: 5000,
@@ -82,10 +89,8 @@ function Page() {
                 progress: undefined,
                 theme: "light",
                 onClose: () => router.push('/otpverification')
-
-            })
+            });
             reset();
-
         } else if (data.status === 400 || data.status === 409) {
             toast.error(`${data?.data?.message}`, {
                 position: "top-right",
@@ -96,7 +101,6 @@ function Page() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-
             });
             reset();
         } else {
@@ -109,14 +113,12 @@ function Page() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-
             });
             reset();
         }
     };
 
     const handleError = (error: any) => {
-
         toast.error(`${'An Error Occured'}`, {
             position: "top-right",
             autoClose: 5000,
@@ -126,7 +128,6 @@ function Page() {
             draggable: true,
             progress: undefined,
             theme: "light",
-
         });
         reset();
     };
@@ -137,15 +138,13 @@ function Page() {
         handleError,
     );
 
-
     const sumbitForm = (data: dataProps) => {
-        // console.log(data, 'datatat')
+        // console.log(data, 'datatat');
         mutate({
             url: "/api/auth",
             payload: data
         });
     };
-
 
     return (
         <>
@@ -173,6 +172,7 @@ function Page() {
                                     placeholder="Enter firstname"
                                     register={register}
                                     errors={errors.first_name}
+                                    className=""
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.first_name?.message}
@@ -184,7 +184,7 @@ function Page() {
                                     label="Last Name*"
                                     type="text"
                                     name="last_name"
-                                    placeholder="Enter lastname"
+                                    placeholder="Enter surname"
                                     register={register}
                                     errors={errors.first_name}
                                 />
@@ -195,10 +195,10 @@ function Page() {
 
                             <div className="flex flex-col">
                                 <Input
-                                    label="Email*"
+                                    label="Email Address*"
                                     type="text"
                                     name="email"
-                                    placeholder="Enter a valid email"
+                                    placeholder="Enter email"
                                     register={register}
                                     errors={errors.email}
                                 />
@@ -226,7 +226,7 @@ function Page() {
                                     label=" Password*"
                                     type="text"
                                     name="password"
-                                    placeholder="****"
+                                    placeholder="***********"
                                     register={register}
                                     errors={errors.password}
                                 />
@@ -242,12 +242,8 @@ function Page() {
                                     name="referral"
                                     placeholder="Referal code"
                                     register={register}
-                                // errors={errors.referral}
                                 />
-                                <div className="text-xs text-red-700">
-
-
-                                </div>
+                                <div className="text-xs text-red-700"></div>
                             </div>
 
                             <div className="flex flex-col">
@@ -265,26 +261,75 @@ function Page() {
                             </div>
 
                             <div className="flex flex-col">
-                                <Select
-                                    label="State"
+                                <label className="text-sm" htmlFor="state">
+                                    State*
+                                </label>
+                                <Controller
                                     name="state"
-                                    options={[
-                                        { value: "lagos", label: "Lagos" },
-                                        { value: "abuja", label: "Abuja" },
-                                    ]}
-                                    register={register}
-                                    errors={errors}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(value) => field.onChange(value)}
+                                        >
+                                            <SelectTrigger className="px-8 h-12">
+                                                <SelectValue placeholder="Select a State" />
+                                            </SelectTrigger>
+                                            <SelectContent style={{
+                                                background: 'white',
+                                                color: '#2A2A2A',
+
+                                            }} className="text-wdc-textbody  hover:bg-[#FCDFD4]">
+                                                {[
+                                                    { value: "lagos", label: "Lagos" },
+                                                    { value: "abuja", label: "Abuja" },
+                                                    { value: "kano", label: "Kano" },
+                                                ].map((option) => (
+                                                    <SelectItem className=" select-item-hover hover:bg-[#FCDFD4]" key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 />
+                                <div className="text-xs text-red-700">
+                                    {errors?.state?.message}
+                                </div>
                             </div>
 
                             <div className="flex flex-col">
-                                <Select
-                                    label="(LGA)"
+                                <label className="text-sm" htmlFor="lga">
+                                    Local Government Area (LGA)*
+                                </label>
+                                <Controller
                                     name="lga"
-                                    options={[{ value: "ikeja", label: "Ikeja" }]}
-                                    register={register}
-                                    errors={errors}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(value) => field.onChange(value)}
+                                        >
+                                            <SelectTrigger className="px-8 h-12">
+                                                <SelectValue placeholder="Select an LGA" />
+                                            </SelectTrigger>
+                                            <SelectContent className="text-wdc-textbody">
+                                                {[
+                                                    { value: "kosofe", label: "Kosofe" },
+                                                    { value: "ajah", label: "Ajah" },
+
+                                                ].map((option) => (
+                                                    <SelectItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 />
+                                <div className="text-xs text-red-700">
+                                    {errors?.lga?.message}
+                                </div>
                             </div>
 
                             <div className="flex flex-col">
@@ -294,8 +339,8 @@ function Page() {
                                     name="residential"
                                     placeholder="residential Number"
                                     register={register}
-                                // errors={errors.referral}
                                 />
+                                <small className="text-sm text-[#6E6E6E] mt-1">(such as LASRRA etc)</small>
                                 <div className="text-xs text-red-700">
                                     {errors?.residential?.message}
                                 </div>
@@ -344,7 +389,7 @@ function Page() {
                         <div className="flex justify-center items-center mt-4">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
                                 text={status === 'pending' ? 'loading...' : "Create Account"}
                                 handleClick={() => console.log("clcikeddd")}
                             />
@@ -354,6 +399,7 @@ function Page() {
                             <input
                                 type="checkbox"
                                 id="agreement"
+                                {...register("agree_terms")}
                                 value="true"
                                 className="mr-2 text-wdc-inactivebutton"
                             />
@@ -361,6 +407,9 @@ function Page() {
                                 I agree with the{" "}
                                 <small className="text-[#F25E26]"> Terms and Conditions</small>
                             </span>
+                        </div>
+                        <div className="text-xs text-red-700 text-center">
+                            {errors?.agree_terms?.message}
                         </div>
 
                         <div className="flex justify-center items-center mt-4">

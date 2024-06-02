@@ -13,26 +13,38 @@ import { FaRegEyeSlash } from 'react-icons/fa'
 import { FaRegEye } from 'react-icons/fa6'
 import { useMutateData } from '@/hooks/useMutateData'
 import { ToastContainer, toast } from 'react-toastify'
+
 import { useAuthStore } from '@/store/store'
+
 import 'react-toastify/dist/ReactToastify.css'
 
 function Page() {
   type dataProps = {
-    email_or_phone: string
+    // email: string;
+    email_or_phone?: string
 
     password: string
   }
 
   const router = useRouter()
 
+  const emailOrPhoneNumberSchema = yup.string().matches(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$|^(\+\d{1,3}[- ]?)?\d{10}$/, // Regular expression for a string containing either a valid email or a valid phone number
+    'Valid email or phone number is required'
+  )
+
   const schema = yup.object().shape({
-    email_or_phone: yup
-      .string()
-      .matches(
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
-        'Valid email is required'
-      )
-      .required('Email is required'),
+    // email: yup
+    //     .string()
+    //     .matches(
+    //         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
+    //         "Valid email is required",
+    //     )
+    //     .required("Email is required"),
+
+    email_or_phone: emailOrPhoneNumberSchema.required(
+      'Email or phone number is required'
+    ),
 
     password: yup
       .string()
@@ -61,6 +73,7 @@ function Page() {
   })
 
   const handleSuccess = (data: any) => {
+    // console.log(data, 'datatta')
 
     if (data.status === 200) {
       toast.success(`${data?.data?.message}`, {
@@ -74,10 +87,10 @@ function Page() {
         theme: 'light',
         onClose: () => router.push('/')
       })
-      setAuthCookie(data?.data?.token, 0);
-      setUser(data?.data);
-      reset()
+      setAuthCookie(data?.data?.token, 0)
+      setUser(data?.data)
 
+      reset()
     } else if (data.status === 403 || data.status === 404) {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
@@ -106,7 +119,6 @@ function Page() {
   }
 
   const handleError = (error: any) => {
-    console.log(error)
     toast.error(`${'An Error Occured'}`, {
       position: 'top-right',
       autoClose: 5000,
@@ -127,6 +139,8 @@ function Page() {
   )
 
   const sumbitForm = async (data: dataProps) => {
+    // console.log(data, 'datatat')
+
     mutate({
       url: '/api/signin',
       payload: data
@@ -150,12 +164,12 @@ function Page() {
             <div className='mt-12 grid grid-cols-1 gap-8 px-3 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1'>
               <div className='flex flex-col'>
                 <Input
-                  label='Email'
+                  label='Email Address/Phone Number*'
                   type='text'
                   name='email_or_phone'
-                  placeholder='Email Address/Phone Number*'
+                  placeholder='Enter your Email or Phone number'
                   register={register}
-                  errors={errors.email_or_phone}
+                  errors={errors?.email_or_phone}
                 />
                 <div className='text-xs text-red-700'>
                   {errors?.email_or_phone?.message}
@@ -164,7 +178,7 @@ function Page() {
 
               <div className='flex flex-col'>
                 <Input
-                  label='Password'
+                  label=' Password'
                   type='password'
                   name='password'
                   placeholder='****'
@@ -181,7 +195,7 @@ function Page() {
             <div className='mt-4 flex items-center justify-center'>
               <DefaultButton
                 type='submit'
-                className=' h-10 w-full bg-[#FCDFD4] text-sm'
+                className=' h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white'
                 text={status === 'pending' ? 'loading...' : 'Sign in'}
                 handleClick={() => console.log('')}
               />

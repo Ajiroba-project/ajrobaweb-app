@@ -31,8 +31,8 @@ const Input: React.FC<InputProps> = ({
 
     return (
         <div className="flex flex-col">
-            {label && (<label htmlFor={name} className="text-sm">
-                {label}*
+            {label && (<label htmlFor={name} className="text-sm font-Inter ">
+                {label}
             </label>)}
             <div className="relative">
                 <input
@@ -40,8 +40,8 @@ const Input: React.FC<InputProps> = ({
                     type={showPassword ? "text" : type}
                     name={name}
                     placeholder={placeholder}
-                    className={`px-8 h-12 focus:text-black border rounded w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] ${className || ""}`}
-                    {...register(name, { required: true })} // Spread validation errors
+                    className={`px-8 h-12 focus:text-black border placeholder:text-sm rounded w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] ${className || ""}`}
+                    {...register(name, { required: true })}
                 />
 
 

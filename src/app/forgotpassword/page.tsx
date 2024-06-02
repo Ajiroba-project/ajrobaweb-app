@@ -170,7 +170,7 @@ function Page() {
                         <div className="flex justify-center items-center mt-12">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
+                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
                                 text={status === 'pending' ? 'loading...' : 'Verify'}
                                 handleClick={() => handleVerify()}
                             />

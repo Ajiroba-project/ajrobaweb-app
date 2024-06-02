@@ -1,3 +1,4 @@
+'use client'
 import walletImg from '../asset/image/wallet.png'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
@@ -34,21 +35,21 @@ export const HIW = () => {
           </div>
 
           <div className=' my-5 flex flex-col gap-3'>
-            <div className='lg:w-[50%] cursoe-pointer' onClick={()=>setIndicator(0)}>
+            <div className='lg:w-[50%] cursoe-pointer' onClick={() => setIndicator(0)}>
               <Title text={'Ticket'} />
               <p>
                 Credit your wallet to buy your ticket. your ticket allows you to
                 bid for any product on auction.
               </p>
             </div>
-            <div className='lg:w-[50%] cursor-pointer' onClick={()=>setIndicator(1)}>
+            <div className='lg:w-[50%] cursor-pointer' onClick={() => setIndicator(1)}>
               <Title text={'Raffle Draw'} />
               <p>
                 After allotted time frame, our live raffle draw begins where you
                 can win the product you have put in for.
               </p>
             </div>
-            <div className='lg:w-[50%] cursor-pointer' onClick={()=>setIndicator(2)}>
+            <div className='lg:w-[50%] cursor-pointer' onClick={() => setIndicator(2)}>
               <Title text={'Win'} />
               <p>
                 During the live raffle draw, the winner gets announced and the
