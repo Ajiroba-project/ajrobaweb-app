@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import Cookies from 'js-cookie'
 
 export const useAuthStore = create((set, get) => ({
-  isLoggedIn: false || !!Cookies.get('token'), // Check if token cookie exists on initialization
+  isLoggedIn: !!Cookies.get('token'), // Check if token cookie exists on initialization
   setLoggedIn: isLoggedIn => set({ isLoggedIn }),
 
   user: null,

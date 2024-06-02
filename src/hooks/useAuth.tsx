@@ -7,11 +7,10 @@ const useAuth = (router: any) => {
   useEffect(() => {
     if (!isLoggedIn) {
       // If the token cookie is not present, redirect to the sign-in page
-
       router.push('/signin')
-    } else {
-      // If the token cookie is present, redirect to the dashboard
-      router.push('/dashboard')
+      
+    }else{
+      router.push('/profile')
     }
   }, [isLoggedIn, router])
 

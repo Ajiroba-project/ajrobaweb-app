@@ -7,6 +7,7 @@ import { DefaultButton } from '../../component/Button'
 import Image from "next/image"
 
 
+
 const Page = ({params}:any) => {
     const router = useRouter()
     const [data, setData] = useState<any>(
