@@ -6,9 +6,11 @@ import { raffle } from '@/app/static-data'
 import {Pagination} from "@/app/component/Pagination"
 import Image from 'next/image'
 import raf from '../asset/image/raf.png'
+import useAuthMiddleware from '@/hooks/useAuth'
 
 const Page = () => {
   const router = useRouter()
+  useAuthMiddleware(router)
 
   return (
     <>

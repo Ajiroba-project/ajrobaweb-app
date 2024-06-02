@@ -10,6 +10,7 @@ import { AuctionMarquee } from './Auction-Marquee'
 import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
 import { useAuthStore, userNavStore } from '@/store/store'
+import { useMutateData } from '@/hooks/useMutateData'
 import Image from 'next/image'
 import Brand from '../asset/logo.svg'
 import Link from 'next/link'
@@ -20,23 +21,42 @@ export const Header = () => {
   // const [active, setActive] = useState<number>(0)
   const [isOpen, setIsOpen] = useState<boolean | null>(null)
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, clearAuthCookies } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    clearAuthCookies:state.clearAuthCookies
   }))
-
-
-          
-    const { setHeaderNav, headerNav } = userNavStore(state => ({
-      setHeaderNav: state.setHeaderNav,
-      headerNav: state.headerNav
-    }))
-
+  const { setHeaderNav, headerNav } = userNavStore(state => ({
+    setHeaderNav: state.setHeaderNav,
+    headerNav: state.headerNav
+  }))
 
   const hamburgerfunc = () => {
     setIsOpen(!isOpen)
   }
-  
 
+    const handleSuccess = () => {
+    clearAuthCookies();
+    router.push("/signin");
+  };
+  const handleError = () => {
+    console.log("Somthing went wrong...");
+    clearAuthCookies();
+    router.push("/signin");
+  };
+
+  const {mutate } = useMutateData(
+    'signout',
+    handleSuccess,
+    handleError
+  )
+
+  const SignoutFunc=()=>{
+    mutate({
+      url: '/api/signout',
+      payload: {}
+    })
+
+  }
 
   const router = useRouter()
   return (
@@ -103,28 +123,22 @@ export const Header = () => {
                     {headerMenu.map((val, index) => (
                       <li
                         key={index}
-
                         className={`cursor-pointer px-4 ${
                           val.name === headerNav
                             ? 'text-[#F25E26]'
                             : 'text-[#A09F9F]'
                         } hover:text-[#F25E26]
-
                     ${!isOpen ? 'py-2 lg:py-1' : ''}
                     `}
                         onClick={() => {
                           setActiveMenu(activeMenu === index ? null : index)
                           setHeaderNav(val.name)
                         }}
-                      // onMouseEnter={() =>
-                      //   setActiveMenu(index)
-                      // }
-                      // onMouseLeave={() => setActiveMenu(null)}
                       >
                         {val.submenu ? (
                           <div className='relative'>
                             <span className='flex items-center gap-2'>
-                              {val.name}{' '}
+                              {val.name}
                               {activeMenu === index ? (
                                 <IoIosArrowUp />
                               ) : (
@@ -133,19 +147,20 @@ export const Header = () => {
                             </span>
                             {activeMenu === index && (
                               <ul className='absolute left-0 z-10 mt-2 h-fit w-max rounded-md bg-white pb-2 shadow-md'>
-                                
                                 {val.submenu.map((subItem, subIndex) => (
-                              
-
                                   <li
                                     key={subIndex}
-                                    className={` ${subItem.name === 'Profile' || subItem.name === 'Wallet' || subItem.name === 'Community' || (subItem.name === 'Referral Code' && !isLoggedIn) ? 'hidden' : 'block'} p-2 px-4 text-sm  text-[#A09F9F] hover:bg-gray-100 hover:text-[#F25E26] `}
+                                    className={` ${(subItem.name === 'Profile' && !isLoggedIn) || (subItem.name === 'Wallet' && !isLoggedIn) || (subItem.name === 'Community' && !isLoggedIn) || (subItem.name === 'Referral Code' && !isLoggedIn) || (subItem.name === 'Sign Out' && !isLoggedIn) ? 'hidden' : 'block'} ${(subItem.name === 'Sign Up' && isLoggedIn) || (subItem.name === 'Sign In' && isLoggedIn) ? 'hidden' : ''} p-2 px-4 text-sm  text-[#A09F9F] hover:bg-gray-100 hover:text-[#F25E26] `}
                                   >
-                                    <Link href={subItem.path}>
+                                    <div
+                                      onClick={() =>
+                                        subItem.name === 'Sign Out'
+                                          ? SignoutFunc()
+                                          : router.push(`${subItem.path}`)
+                                      }
+                                    >
                                       <span> {subItem.name} </span>
-                                    </Link>
-                                    {/* {subItem.name} */}
-                                    {/* Link to the submenu item */}
+                                    </div>
                                   </li>
                                 ))}
                               </ul>

@@ -54,10 +54,11 @@ export const headerMenu = [
     submenu: [
       { name: 'Sign Up', path: '/signup' },
       { name: 'Sign In', path: '/signin' },
+      { name: 'Sign Out', path: '#' },
       { name: 'Profile', path: '/profile' },
-      { name: 'Wallet', path: '#' },
-      { name: 'Referral Code', path: '#' },
-      { name: 'Community', path: '#' }
+      { name: 'Wallet', path: '/profile' },
+      { name: 'Referral Code', path: '/profile' },
+      { name: 'Community', path: '/profile' }
     ]
   },
   {

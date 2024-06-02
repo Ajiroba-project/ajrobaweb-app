@@ -16,7 +16,7 @@ export const Hero = () => {
       <section className='flex flex-col '>
         <div className=''>
           <div className='flex flex-col md:grid-cols-3 lg:grid lg:grid-cols-3'>
-            <div className='flex flex-col items-center bg-[#F6F6F6] md:hidden lg:hidden '>
+            <div className='flex flex-col items-center bg-[#F6F6F6] lg:hidden '>
               <div className='container relative py-4'>
                 <div
                   className='z-40 flex items-center gap-4'

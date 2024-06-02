@@ -3,11 +3,16 @@ import React from 'react'
 import { Header } from './component/Header'
 import { Tables } from './component/Tables'
 import { DefaultButton } from '../component/Button'
+import {useRouter} from "next/navigation"
 import Image from 'next/image'
 import applestore from '../asset/image/apple.png'
 import androidstore from '../asset/image/android.png'
+import useAuthMiddleware from '@/hooks/useAuth'
 
 const Page = () => {
+    const router = useRouter()
+    useAuthMiddleware(router)
+    
   return (
     <section>
       <div className='bg-gray-100 py-8'>

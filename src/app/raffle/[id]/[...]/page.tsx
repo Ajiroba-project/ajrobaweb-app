@@ -4,11 +4,13 @@ import { raffleWinner } from '@/app/static-data'
 import { DefaultButton } from '@/app/component/Button'
 import { useRouter } from 'next/navigation'
 import { HeadingText } from '@/app/component/Heading'
+import useAuthMiddleware from '@/hooks/useAuth'
 
 
  const Page = () => {
 
   const router = useRouter()
+  // useAuthMiddleware(router)
   const thead = ['SN', 'Product', `Winner's Number`, 'Ticket Price']
   return (
     <div className='flex flex-col justify-center items-center'>
