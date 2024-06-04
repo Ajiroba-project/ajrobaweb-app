@@ -3,3 +3,11 @@
     background-color: #FCDFD4;
     /* Change this to your desired hover color */
 }
+
+
+/* App.css */
+.select-item:hover {
+    background-color: #FCDFD4 !important;
+
+    color: #333 !important;
+}

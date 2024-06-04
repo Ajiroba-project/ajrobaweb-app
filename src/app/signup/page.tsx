@@ -14,16 +14,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './style.css'
 
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+// import {
+//     Select,
+//     SelectContent,
+//     SelectItem,
+//     SelectTrigger,
+//     SelectValue,
+// } from "@/components/ui/select";
+
+import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 
 import { state_and_LGA } from '../../app/static-data'
 import { useState } from "react";
+
 
 function Page() {
 
@@ -280,43 +283,33 @@ function Page() {
                                 <Controller
                                     name="state"
                                     control={control}
-
-
-
                                     render={({ field }) => (
+                                        <div>
+                                            <Select
+                                                label=" "
+                                                variant="bordered"
+                                                placeholder=""
+                                                className="max-w-xs "
+                                                style={{
+                                                    paddingLeft: '2rem',
+                                                    paddingRight: '2rem',
+                                                    paddingBottom: '1rem'
+                                                }}
+                                                onChange={(event) => {
+                                                    const value = event.target.value;
+                                                    field.onChange(value);
+                                                    handleStateChange(value);
+                                                }}
+                                            >
+                                                {state_and_LGA.map((state) => (
+                                                    <SelectItem style={{
 
-
-                                        <Select
-                                            value={field.value}
-                                            onValueChange={(value) => {
-                                                field.onChange(value);
-                                                handleStateChange(value);
-                                            }}
-
-                                        >
-
-
-                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900 w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px]  ">
-                                                <SelectValue placeholder="Select a State" className="border " />
-                                            </SelectTrigger>
-                                            <SelectContent style={{
-                                                background: 'white',
-                                                color: '#2A2A2A',
-
-
-                                            }} className="text-wdc-textbody  hover:bg-[#FCDFD4] ">
-                                                {state_and_LGA.map((option) => (
-                                                    <SelectItem className=" select-item-hover hover:bg-[#FCDFD4] " key={option.state} value={option.state}>
-                                                        {option.state}
+                                                    }} className="  select-item " key={state.state}>
+                                                        {state.state}
                                                     </SelectItem>
                                                 ))}
-                                            </SelectContent>
-                                        </Select>
-
-
-
-
-
+                                            </Select>
+                                        </div>
 
                                     )}
                                 />
@@ -333,29 +326,33 @@ function Page() {
                                     name="lga"
                                     control={control}
                                     render={({ field }) => (
-                                        <Select
-                                            value={field.value}
-                                            onValueChange={(value) => field.onChange(value)}
-                                            disabled={!selectedState}
-
-                                        >
-                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900 w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px]  ">
-                                                <SelectValue placeholder="Select an LGA" />
-                                            </SelectTrigger>
-                                            <SelectContent style={{
-                                                background: 'white',
-                                                color: '#2A2A2A',
-                                                // border: '1px solid #E9E9E9',
-
-
-                                            }} className="text-wdc-textbody    ">
-                                                {lgas.map((option) => (
-                                                    <SelectItem key={option} value={option}>
-                                                        {option}
+                                        <div>
+                                            <Select
+                                                label=" "
+                                                variant="bordered"
+                                                placeholder=""
+                                                className="max-w-xs "
+                                                style={{
+                                                    paddingLeft: '2rem',
+                                                    paddingRight: '2rem',
+                                                    paddingBottom: '1rem'
+                                                }}
+                                                disabled={!selectedState}
+                                                /*  value={field.value} */
+                                                onChange={(event) => {
+                                                    const value = event.target.value;
+                                                    field.onChange(value);
+                                                    // handleStateChange(value);
+                                                }}
+                                            >
+                                                {lgas.map((lga) => (
+                                                    <SelectItem key={lga} value={lga} className=" select-item">
+                                                        {lga}
                                                     </SelectItem>
                                                 ))}
-                                            </SelectContent>
-                                        </Select>
+                                            </Select>
+
+                                        </div>
                                     )}
                                 />
                                 <div className="text-xs text-red-700">
