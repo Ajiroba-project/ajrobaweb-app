@@ -22,6 +22,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+import { state_and_LGA } from '../../app/static-data'
+import { useState } from "react";
+
 function Page() {
 
     type dataProps = {
@@ -34,7 +37,7 @@ function Page() {
         state: string;
         lga: string;
         password: string;
-        residential: string;
+        residential?: string;
         gender?: boolean;
         agree_terms?: boolean;
     };
@@ -58,7 +61,7 @@ function Page() {
             .string()
             .required("Password is required")
             .min(6, "Can't be lesser than 6 digits"),
-        residential: yup.string().required("residential is required"),
+        /*  residential: yup.string().required("residential is required"), */
         // gender: yup.boolean().oneOf([true], "Gender is required"),
         gender: yup.boolean().required("Gender is required"),
         // agree_terms: yup.boolean().required("This is required"),
@@ -144,6 +147,16 @@ function Page() {
             url: "/api/auth",
             payload: data
         });
+    };
+
+
+    const [selectedState, setSelectedState] = useState("");
+    const [lgas, setLgas] = useState<string[]>([]);
+
+    const handleStateChange = (value: string) => {
+        setSelectedState(value);
+        const selectedState = state_and_LGA.find(state => state.state === value);
+        setLgas(selectedState ? selectedState.lgas : []);
     };
 
     return (
@@ -267,30 +280,46 @@ function Page() {
                                 <Controller
                                     name="state"
                                     control={control}
+
+
+
                                     render={({ field }) => (
+
+
                                         <Select
                                             value={field.value}
-                                            onValueChange={(value) => field.onChange(value)}
+                                            onValueChange={(value) => {
+                                                field.onChange(value);
+                                                handleStateChange(value);
+                                            }}
+
+
+
                                         >
-                                            <SelectTrigger className="px-8 h-12">
-                                                <SelectValue placeholder="Select a State" />
+
+
+                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900  ">
+                                                <SelectValue placeholder="Select a State" className="border " />
                                             </SelectTrigger>
                                             <SelectContent style={{
                                                 background: 'white',
                                                 color: '#2A2A2A',
 
-                                            }} className="text-wdc-textbody  hover:bg-[#FCDFD4]">
-                                                {[
-                                                    { value: "lagos", label: "Lagos" },
-                                                    { value: "abuja", label: "Abuja" },
-                                                    { value: "kano", label: "Kano" },
-                                                ].map((option) => (
-                                                    <SelectItem className=" select-item-hover hover:bg-[#FCDFD4]" key={option.value} value={option.value}>
-                                                        {option.label}
+
+                                            }} className="text-wdc-textbody  hover:bg-[#FCDFD4] ">
+                                                {state_and_LGA.map((option) => (
+                                                    <SelectItem className=" select-item-hover hover:bg-[#FCDFD4] " key={option.state} value={option.state}>
+                                                        {option.state}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
+
+
+
+
+
+
                                     )}
                                 />
                                 <div className="text-xs text-red-700">
@@ -309,18 +338,22 @@ function Page() {
                                         <Select
                                             value={field.value}
                                             onValueChange={(value) => field.onChange(value)}
+                                            disabled={!selectedState}
+
                                         >
-                                            <SelectTrigger className="px-8 h-12">
+                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900  ">
                                                 <SelectValue placeholder="Select an LGA" />
                                             </SelectTrigger>
-                                            <SelectContent className="text-wdc-textbody">
-                                                {[
-                                                    { value: "kosofe", label: "Kosofe" },
-                                                    { value: "ajah", label: "Ajah" },
+                                            <SelectContent style={{
+                                                background: 'white',
+                                                color: '#2A2A2A',
+                                                // border: '1px solid #E9E9E9',
 
-                                                ].map((option) => (
-                                                    <SelectItem key={option.value} value={option.value}>
-                                                        {option.label}
+
+                                            }} className="text-wdc-textbody    ">
+                                                {lgas.map((option) => (
+                                                    <SelectItem key={option} value={option}>
+                                                        {option}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -341,9 +374,9 @@ function Page() {
                                     register={register}
                                 />
                                 <small className="text-sm text-[#6E6E6E] mt-1">(such as LASRRA etc)</small>
-                                <div className="text-xs text-red-700">
+                                {/*   <div className="text-xs text-red-700">
                                     {errors?.residential?.message}
-                                </div>
+                                </div> */}
                             </div>
 
                             <div className="flex gap-4">

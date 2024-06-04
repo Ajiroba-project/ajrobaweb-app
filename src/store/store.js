@@ -36,6 +36,10 @@ export const userNavStore = create(set => ({
   setWalletModal: () => set(state => ({ walletModal: !state.walletModal })),
   seHeaderNav: text => set({ headerNav: text })
 }))
+
+
+
+
 export const userProfile = create(set => ({
   activeMenu: 'my profile',
   profileUpload: '',
