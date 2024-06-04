@@ -34,13 +34,7 @@ function Page() {
   )
 
   const schema = yup.object().shape({
-    // email: yup
-    //     .string()
-    //     .matches(
-    //         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
-    //         "Valid email is required",
-    //     )
-    //     .required("Email is required"),
+
 
     email_or_phone: emailOrPhoneNumberSchema.required(
       'Email or phone number is required'
