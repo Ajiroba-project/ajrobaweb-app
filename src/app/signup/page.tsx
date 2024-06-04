@@ -293,12 +293,10 @@ function Page() {
                                                 handleStateChange(value);
                                             }}
 
-
-
                                         >
 
 
-                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900  ">
+                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900 w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px]  ">
                                                 <SelectValue placeholder="Select a State" className="border " />
                                             </SelectTrigger>
                                             <SelectContent style={{
@@ -341,7 +339,7 @@ function Page() {
                                             disabled={!selectedState}
 
                                         >
-                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900  ">
+                                            <SelectTrigger className="px-8 h-12 dis border border-gray-300 rounded focus:text-black placeholder:text-gray-900 w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px]  ">
                                                 <SelectValue placeholder="Select an LGA" />
                                             </SelectTrigger>
                                             <SelectContent style={{
