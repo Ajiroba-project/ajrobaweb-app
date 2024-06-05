@@ -67,7 +67,8 @@ function Page() {
   })
 
   const handleSuccess = (data: any) => {
-    // console.log(data, 'datatta')
+    console.log(data, 'datatta----1')
+    console.log(data.data.status)
 
     if (data.status === 200) {
       toast.success(`${data?.data?.message}`, {
@@ -97,8 +98,23 @@ function Page() {
         theme: 'light'
       })
       reset()
-    } else {
-      toast.error(`${'An Error Occured'}`, {
+    } else if (data.status === 401 || data.data.status === 'failed') {
+      toast.error(`${'Incorrect login details'}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      })
+      reset()
+    }
+
+
+    else {
+      toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -113,6 +129,7 @@ function Page() {
   }
 
   const handleError = (error: any) => {
+
     toast.error(`${'An Error Occured'}`, {
       position: 'top-right',
       autoClose: 5000,
@@ -140,6 +157,9 @@ function Page() {
       payload: data
     })
   }
+
+  // console.log(data, 'datat')
+  // console.log(error, 'error')
 
   return (
     <>
