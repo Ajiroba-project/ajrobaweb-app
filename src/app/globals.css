@@ -42,18 +42,22 @@
 
 }
 
+.select-item:hover {
+  background-color: #FCDFD4 !important;
 
-
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
+  color: #333 !important;
 }
+
+
+/* @layer base { */
+/* * { */
+/* @apply border-border; */
+/* } */
+/*  */
+/* body { */
+/* @apply bg-background text-foreground; */
+/* } */
+/* } */
 
 
 .brand1 {

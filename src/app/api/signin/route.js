@@ -78,7 +78,9 @@ export async function POST(request) {
 
     const responseData = { data, status };
 
-    // console.log(responseData, 'resddddd')
+    /*  console.log(data, 'ressssss')
+ 
+         / console.log(responseData, 'resddddd') */
 
     return NextResponse.json(responseData);
 }
