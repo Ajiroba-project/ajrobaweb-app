@@ -35,7 +35,7 @@ export const AirtimeDetails = () => {
 
 
   const sumbitForm = (data: AirtimeProps) => {
-    console.log('data=>', data)
+    // console.log('data=>', data)
     setAirtimeDetails(data)
     setAirtimeStepper(1)
   }
@@ -59,7 +59,7 @@ export const AirtimeDetails = () => {
             label='Network Provider'
             showlabel={false}
           />
-          
+
           <InputField
             name='phone'
             register={register}
@@ -73,7 +73,7 @@ export const AirtimeDetails = () => {
             errors={errors}
             type='text'
             placeholder='Amount'
-            
+
           />
           <p className='text-end text-[#f25e26] underline cursor-pointer'>Beneficiaries</p>
 
@@ -81,7 +81,7 @@ export const AirtimeDetails = () => {
             <DefaultButton
               text='Proceed'
               type='submit'
-              handleClick={() => {}}
+              handleClick={() => { }}
               className='my-10 w-full bg-[#FCDFD4] p-3'
             />
           </div>

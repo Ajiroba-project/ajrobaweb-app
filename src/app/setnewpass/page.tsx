@@ -12,19 +12,26 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { HiArrowLongLeft } from "react-icons/hi2";
-import { useMutateData } from "@/hooks/useMutateData";
+import { useMutateData } from "@/hooks/usePutMutateData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { userOTPStore } from '@/store/store'
 
 function Page() {
     type dataProps = {
 
         password: string
         c_password: string
+        otp?: string
     };
 
     const router = useRouter();
+
+    const { user_otp } = userOTPStore(state => ({
+        user_otp: state.user_otp
+    }));
+
     const schema = yup.object().shape({
         password: yup
             .string()
@@ -53,8 +60,10 @@ function Page() {
 
     const handleSuccess = (data: any) => {
 
+        // console.log(data, 'data')
 
-        if (data.status === 201) {
+
+        if (data.data.status === 201 || data.data.status === 'success') {
 
             toast.success(`${data?.data?.message}`, {
                 position: "top-right",
@@ -70,7 +79,7 @@ function Page() {
             })
             reset();
 
-        } else if (data.status === 400 || data.status === 409) {
+        } else if (data.data.status === 400 || data.data.status === 409) {
             toast.error(`${data?.data?.message}`, {
                 position: "top-right",
                 autoClose: 5000,
@@ -101,6 +110,8 @@ function Page() {
 
     const handleError = (error: any) => {
 
+        // console.log(error, 'error')
+
         toast.error(`${'An Error Occured'}`, {
             position: "top-right",
             autoClose: 5000,
@@ -127,13 +138,17 @@ function Page() {
 
 
         const Payload = {
-            password: data.password
+            password: data.password,
+            otp: user_otp
         }
 
         mutate({
             url: "/api/newpass",
-            payload: data
+            payload: Payload,
+            // otp: user_otp
         });
+
+        // console.log(user_otp, '1111')
 
 
     };

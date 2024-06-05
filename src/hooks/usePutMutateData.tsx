@@ -8,7 +8,7 @@ interface RequestPayload {
 
 const postData = async (request: RequestPayload): Promise<any> => {
     const response = await fetch(request.url, {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(request.payload)
     });
     return await response.json();

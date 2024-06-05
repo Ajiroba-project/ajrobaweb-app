@@ -10,11 +10,18 @@ import { HiArrowLongLeft } from "react-icons/hi2";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { userOTPStore } from '@/store/store'
 
 function Page() {
     const router = useRouter();
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef<HTMLInputElement[]>([]);
+
+    const { user_otp, set_user_Otp } = userOTPStore(state => ({
+        user_otp: '',
+        set_user_Otp: state.set_user_Otp
+    }))
+
 
     const handleInputChange = (
         index: number,
@@ -23,6 +30,9 @@ function Page() {
         const newOtp = [...otp];
         newOtp[index] = event.target.value.slice(0, 1);
         setOtp(newOtp);
+        set_user_Otp(newOtp.join(''));
+
+        // Automatically focus the next input field
         if (index < 5 && newOtp[index].length === 1) {
             inputRefs.current[index + 1].focus();
         }
@@ -117,9 +127,16 @@ function Page() {
             otp: otp?.join("")
         }
 
+        /*     router.push('/setnewpass') */
+        // console.log(Payload, 'payload')
+
+        // console.log(user_otp, 'user-otp')
+        // set_user_Otp(Payload)
+
+        // console.log(user_otp, 'user-otp')
 
         mutate({
-            url: "/api/verifyaccount",
+            url: "/api/verifyresetpasswordotp",
             payload: Payload
         });
 
