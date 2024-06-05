@@ -14,6 +14,8 @@ export async function POST(request) {
             body: JSON.stringify(body),
         });
 
+        // https://ajiroba.onrender.com/v1/auth/verify_reset_password_code/
+
         // Parse response body as JSON
         const data = await res.json();
         const status = res.status;

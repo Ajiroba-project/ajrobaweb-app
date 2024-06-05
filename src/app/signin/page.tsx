@@ -67,8 +67,8 @@ function Page() {
   })
 
   const handleSuccess = (data: any) => {
-    console.log(data, 'datatta----1')
-    console.log(data.data.status)
+    // console.log(data, 'datatta----1')
+    // console.log(data.data.status)
 
     if (data.status === 200) {
       toast.success(`${data?.data?.message}`, {

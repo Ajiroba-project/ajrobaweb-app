@@ -38,6 +38,13 @@ export const userNavStore = create(set => ({
 }))
 
 
+export const userOTPStore = create(set => ({
+  user_otp: '',
+  /* set_user_Otp: text => set({ otp: text }) */
+  set_user_Otp: (otp) => set({ user_otp: otp }),
+}))
+
+
 
 
 export const userProfile = create(set => ({

@@ -23,18 +23,22 @@ export const Header = () => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
   const { isLoggedIn, clearAuthCookies } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
-    clearAuthCookies:state.clearAuthCookies
+    clearAuthCookies: state.clearAuthCookies
   }))
+
+
   const { setHeaderNav, headerNav } = userNavStore(state => ({
     setHeaderNav: state.setHeaderNav,
     headerNav: state.headerNav
   }))
 
+
+
   const hamburgerfunc = () => {
     setIsOpen(!isOpen)
   }
 
-    const handleSuccess = () => {
+  const handleSuccess = () => {
     clearAuthCookies();
     router.push("/signin");
   };
@@ -44,13 +48,13 @@ export const Header = () => {
     router.push("/signin");
   };
 
-  const {mutate } = useMutateData(
+  const { mutate } = useMutateData(
     'signout',
     handleSuccess,
     handleError
   )
 
-  const SignoutFunc=()=>{
+  const SignoutFunc = () => {
     mutate({
       url: '/api/signout',
       payload: {}
@@ -123,11 +127,10 @@ export const Header = () => {
                     {headerMenu.map((val, index) => (
                       <li
                         key={index}
-                        className={`cursor-pointer px-4 ${
-                          val.name === headerNav
-                            ? 'text-[#F25E26]'
-                            : 'text-[#A09F9F]'
-                        } hover:text-[#F25E26]
+                        className={`cursor-pointer px-4 ${val.name === headerNav
+                          ? 'text-[#F25E26]'
+                          : 'text-[#A09F9F]'
+                          } hover:text-[#F25E26]
                     ${!isOpen ? 'py-2 lg:py-1' : ''}
                     `}
                         onClick={() => {

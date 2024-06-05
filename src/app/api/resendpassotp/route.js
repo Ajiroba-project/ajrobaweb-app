@@ -5,7 +5,7 @@ export async function POST(request) {
         const body = await request.json();
         const cacheBuster = `cache=${Date.now()}`;
 
-        const res = await fetch(`${process.env.BASE_URL}/auth/resend_forgot_password_code/?${cacheBuster}`, {
+        const res = await fetch(`${process.env.BASE_URL}/auth/resend_forgot_password/?${cacheBuster}`, {
             method: 'POST',
             maxBodyLength: Infinity,
             headers: {
