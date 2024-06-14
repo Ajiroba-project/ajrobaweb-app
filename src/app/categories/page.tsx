@@ -3,8 +3,13 @@ import { CategoryCard } from '../component/Card'
 import { categories } from '../static-data'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
+import { useQueryData } from '@/hooks/useQueryData'
 
-const page = () => {
+
+const CatPage = () => {
+
+
+
   return (
     <>
       <header className='fixed w-full'>
@@ -21,4 +26,4 @@ const page = () => {
   )
 }
 
-export default page
+export default CatPage

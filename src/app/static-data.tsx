@@ -74,6 +74,7 @@ export const headerMenu = [
   }
 ]
 
+
 export const categories = [
   {
     name: 'Foodstuff',
@@ -841,9 +842,9 @@ export const raffle = [
     host: 'ajiroba',
     date: '4 Aug 2024',
 
-    price:"300"
+    price: "300"
   },
-   {
+  {
 
     name: 'live raffle draw',
     video: raf,
@@ -853,9 +854,9 @@ export const raffle = [
     host: 'ajiroba-2',
     date: '4 Aug 2024',
 
-    price:"300"
+    price: "300"
   },
-   {
+  {
 
     name: 'live raffle draw',
     video: raf,
@@ -865,7 +866,7 @@ export const raffle = [
     host: 'ajiroba-3',
     date: '4 Aug 2024',
 
-    price:"300"
+    price: "300"
 
   }
 ]

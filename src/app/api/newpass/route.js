@@ -15,7 +15,7 @@ export async function PUT(request) {
 
         const cacheBuster = `cache=${Date.now()}`;
 
-        const res = await fetch(`${process.env.BASE_URL}/auth/reset_password/${otp}/?${cacheBuster}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset_password/${otp}/?${cacheBuster}`, {
             method: 'PUT',
             maxBodyLength: Infinity,
             headers: {
@@ -28,7 +28,7 @@ export async function PUT(request) {
         const data = await res.json();
 
         // console.log(data, 'data')
-        // console.log(`${process.env.BASE_URL}/auth/reset_password/${otp}/?${cacheBuster}`, 'url')
+        // console.log(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset_password/${otp}/?${cacheBuster}`, 'url')
 
         // Get response status
         const status = res.status;

@@ -6,7 +6,7 @@ export async function POST(request) {
     const cacheBuster = `cache=${Date.now()}`;
 
     const res = await fetch(
-      `${process.env.BASE_URL}/auth/signout/?${cacheBuster}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/signout/?${cacheBuster}`,
       {
         method: "POST",
         maxBodyLength: Infinity,
