@@ -3,7 +3,7 @@ import { DefaultButton } from './component/Button'
 import { Hero } from './component/Hero'
 import { Heading } from './component/Heading'
 import { SubHeading } from './component/SubHeading'
-import { AuctionCard, CategoryFeatureCard, ProductCard } from './component/Card'
+import { AuctionCard, CategoryFeatureCard, ProductCard, TopDealsCard, TopWeakCard } from './component/Card'
 import { HIW } from './component/How-it-works'
 import { Banner } from './component/Banner'
 import { Community } from './component/Community'
@@ -15,11 +15,52 @@ import './globals.css'
 import { Suspense } from 'react'
 import { CircularPagination } from './component/Pagination'
 import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/store/store'
+import { useQueryData } from '@/hooks/useQueryData'
+
+
+type AuctionData = {
+  id: string;
+  name: string;
+  ticket_price: string;
+  reviews: number;
+  starts_in: string;
+  images: Array<{ auction: string; image: string }>;
+};
+
+type QueryResult = {
+  data?: AuctionData[];
+  isLoading: boolean;
+};
+
+
+interface CardInfoItem {
+  id?: number;
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  name?: string;
+  // image: any;
+  ticket_price?: any
+  reviews?: number
+  starts_in?: string | undefined
+  images?: any
+
+  image?: Array<{ image: string }>;
+
+  // add other fields as necessary
+}
+
+interface AuctionResponse {
+  data: CardInfoItem[];
+  // add other fields as necessary
+}
+
 
 const Page = () => {
   const [categoryCurrentPage, setCategoryCurrentPage] = useState<number>(0)
   const [auctionCurrentPage, setAuctionCurrentPage] = useState<number>(0)
-  const [displayedProducts] = useState<any | []>(Products.slice(0, 12))
+  // const [displayedProducts] = useState<any | []>(Products.slice(0, 12))
   const [cardsPerPage] = useState<number>(4)
   const [filteredCatData, setFilteredCatData] = useState<any>([])
   const [filteredAuctionData, setFilteredAuctionData] = useState<any>([])
@@ -27,26 +68,45 @@ const Page = () => {
   const totalPages = Math.ceil(Products.length / cardsPerPage)
   const catCount = Math.ceil(categories.length / cardsPerPage)
   const router = useRouter()
+  const { isLoggedIn, clearAuthCookies, user } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    clearAuthCookies: state.clearAuthCookies,
+    user: state.user
+  }))
 
-  // const width = window.innerWidth
+  // Fetching data using custom hook
+  const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`, "get auctiondetails", true);
+  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, "get categoriesdetails", true);
+  const { data: featuredproductInfo, isLoading: featuredproducLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`, "get featureddetails", true);
+  const { data: topdeals, isLoading: topdealsLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_deals_products/`, "get topdeals", true);
+  const { data: topweak, isLoading: topweakLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_week_products/`, "get topweak", true);
+
 
   useEffect(() => {
-    const FilteredCat = categories.slice(
-      categoryCurrentPage * cardsPerPage,
-      (categoryCurrentPage + 1) * cardsPerPage
-    )
-    const FilteredAuction = Products.slice(
-      auctionCurrentPage * cardsPerPage,
-      (auctionCurrentPage + 1) * cardsPerPage
-    )
+    if (categoriesInfo?.data) {
+      const filteredCat = categoriesInfo.data.slice(
+        categoryCurrentPage * cardsPerPage,
+        (categoryCurrentPage + 1) * cardsPerPage
+      )
+      setFilteredCatData(filteredCat)
+    }
+  }, [categoriesInfo, categoryCurrentPage, cardsPerPage])
 
-    setFilteredCatData(FilteredCat)
-    setFilteredAuctionData(FilteredAuction)
-  }, [auctionCurrentPage, cardsPerPage, categoryCurrentPage])
+  // Update filteredAuctionData when auctionInfo or auctionCurrentPage changes
+  useEffect(() => {
+    if (auctionInfo?.data) {
+      const filteredAuction = auctionInfo.data.slice(
+        auctionCurrentPage * cardsPerPage,
+        (auctionCurrentPage + 1) * cardsPerPage
+      )
+      setFilteredAuctionData(filteredAuction)
+    }
+  }, [auctionInfo, auctionCurrentPage, cardsPerPage])
 
   const handlePageChange = (pageNumber: number) => {
     setCategoryCurrentPage(pageNumber)
   }
+
   const handleAuctionChange = (pageNumber: number) => {
     setAuctionCurrentPage(pageNumber)
   }
@@ -54,7 +114,9 @@ const Page = () => {
   return (
     <>
       <Suspense>
-        <header className='fixed z-30 w-full'>
+        <header style={{
+          zIndex: 1000
+        }} className='fixed z-50 w-full'>
           <Header />
         </header>
 
@@ -85,7 +147,7 @@ const Page = () => {
               <Heading title='Auction Sales' />
             </div>
             <div className='flex justify-center'>
-              <AuctionCard cardInfo={filteredAuctionData} />
+              <AuctionCard cardInfo={filteredAuctionData} currentPage={0} cardsNum={0} />
             </div>
           </section>
 
@@ -125,9 +187,7 @@ const Page = () => {
                 <DefaultButton
                   text='View all Categories'
                   type='button'
-
-                  handleClick={() => {}}
-
+                  handleClick={() => { }}
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
@@ -143,7 +203,7 @@ const Page = () => {
               <Heading title='Featured Products' />
             </div>
             <div className='flex flex-col items-center  '>
-              <ProductCard cardInfo={displayedProducts} />
+              <ProductCard cardInfo={featuredproductInfo?.data} />
               <div className='flex justify-center pt-4'>
                 <DefaultButton
                   text='View all Features'
@@ -164,7 +224,7 @@ const Page = () => {
               <Heading title='Shop from Top Deals Collection' />
             </div>
             <div className='flex flex-col items-center'>
-              <ProductCard cardInfo={displayedProducts} />
+              <TopDealsCard cardInfo={topdeals?.data} />
               <div className='flex justify-center pt-4'>
                 <DefaultButton
                   text='View all Deals'
@@ -193,14 +253,13 @@ const Page = () => {
               <Heading title='This Week Top Product' />
             </div>
             <div className='flex flex-col items-center'>
-              <ProductCard cardInfo={displayedProducts} />
+              <TopWeakCard cardInfo={(topweak?.data)?.slice(0, 8)} />
+              {/*  featuredproductInfo?.data)?.slice(0, 5) */}
               <div className='flex justify-center pt-4'>
                 <DefaultButton
                   text='View all Products'
                   type='button'
-
                   handleClick={() => router.push('/categories')}
-
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
@@ -219,3 +278,4 @@ const Page = () => {
 }
 
 export default Page
+

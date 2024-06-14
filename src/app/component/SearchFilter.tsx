@@ -339,7 +339,7 @@ export const SearchFilter = () => {
       }
 
       {isOpen && (
-        <div className='  z-30 h-full w-full'>
+        <div className='  z-50 h-full w-full'>
           <CatMobileSideMenu />
         </div>
       )}

@@ -7,7 +7,7 @@ export async function POST(request) {
 
         // https://ajiroba.onrender.com/v1/auth/verify_reset_password_code/
 
-        const res = await fetch(`${process.env.BASE_URL}/auth/verify_reset_password_code/?${cacheBuster}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify_reset_password_code/?${cacheBuster}`, {
             method: 'POST',
             maxBodyLength: Infinity,
             headers: {

@@ -33,7 +33,7 @@ export const Hero = () => {
                 </div>
 
                 {active && (
-                  <div className='top-2.8 absolute left-0  z-30 h-full w-full'>
+                  <div className='top-2.8 absolute left-0  z-50 h-full w-full'>
                     <MobileSideMenu />
                   </div>
                 )}
