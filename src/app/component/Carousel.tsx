@@ -49,7 +49,7 @@ export const CarouselSwiper = () => {
         {' '}
         <Image src={carousel} alt='carousel' />
       </SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide>
+      <SwiperSlide>     <Image src={carousel} alt='carousel' /></SwiperSlide>
     </Swiper>
   )
 }
