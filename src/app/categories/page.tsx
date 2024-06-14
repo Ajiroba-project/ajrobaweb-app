@@ -18,7 +18,7 @@ const CatPage = () => {
       <main className='pt-[20vh]'>
         <Title title='Categories' />
         <div className='container justify-center items-center flex flex-col mb-5'>
-          <CategoryCard cardInfo={categories} currentPage={0} />
+          <CategoryCard />
         </div>
       </main>
       <Footer />
