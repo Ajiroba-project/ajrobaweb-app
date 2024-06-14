@@ -4,19 +4,22 @@ import Brand from '../asset/logo.svg'
 import Image from 'next/image'
 import AuthHero from '../component/AuthHero'
 import { DefaultButton } from '../component/Button'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import Input from '../component/Input'
+// import Input from '../component/Input'
 import { useRouter } from 'next/navigation'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { FaRegEye } from 'react-icons/fa6'
 import { useMutateData } from '@/hooks/useMutateData'
 import { ToastContainer, toast } from 'react-toastify'
+import { Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 import { useAuthStore } from '@/store/store'
 
 import 'react-toastify/dist/ReactToastify.css'
+import { useState } from 'react'
 
 function Page() {
   type dataProps = {
@@ -149,6 +152,8 @@ function Page() {
     handleError
   )
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const sumbitForm = async (data: dataProps) => {
     // console.log(data, 'datatat')
 
@@ -175,15 +180,38 @@ function Page() {
 
         <div className=' mb-20 flex justify-center '>
           <form onSubmit={handleSubmit(sumbitForm)}>
-            <div className='mt-12 grid grid-cols-1 gap-8 px-3 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1'>
+            <div className='mt-12 grid grid-cols-1 gap-8  md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1'>
               <div className='flex flex-col'>
-                <Input
-                  label='Email Address/Phone Number*'
-                  type='text'
+
+                <label className="text-sm" htmlFor="email_or_phone">
+                  Email Address/Phone Number*
+                </label>
+
+                <Controller
                   name='email_or_phone'
-                  placeholder='Enter your Email or Phone number'
-                  register={register}
-                  errors={errors?.email_or_phone}
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <Input
+                        {...field}
+                        variant="bordered"
+                        // label="First Name*"
+                        type="text"
+                        // name="first_name"
+                        radius="none"
+                        size="md"
+                        placeholder='Enter your Email or Phone number'
+
+                        // register={register}
+                        /*   errors={errors.first_name} */
+                        className=" "
+
+
+                      />
+
+                    </div>
+
+                  )}
                 />
                 <div className='text-xs text-red-700'>
                   {errors?.email_or_phone?.message}
@@ -191,15 +219,34 @@ function Page() {
               </div>
 
               <div className='flex flex-col'>
-                <Input
-                  label=' Password'
-                  type='password'
-                  name='password'
-                  placeholder='****'
-                  register={register}
-                  errors={errors.password}
-                  HiEyeSlash={<FaRegEyeSlash />}
-                  HiEye={<FaRegEye />}
+
+                <label className="text-sm" htmlFor="password">
+                  Password*
+                </label>
+
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        variant="bordered"
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        radius="none"
+                        size="md"
+                        placeholder="***********"
+                        className=""
+                      />
+                      <div
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                      </div>
+                    </div>
+                  )}
                 />
                 <div className='text-xs text-red-700'>
                   {errors?.password?.message}
@@ -207,6 +254,8 @@ function Page() {
               </div>
             </div>
             <div className='mt-4 flex items-center justify-center'>
+
+
               <DefaultButton
                 type='submit'
                 className=' h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white'
@@ -214,6 +263,7 @@ function Page() {
                 handleClick={() => console.log('')}
               />
             </div>
+
 
             <div className='mt-4 flex flex-wrap items-center justify-between gap-2'>
               <div>

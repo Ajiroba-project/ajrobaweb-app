@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal } from 'antd'
 
 interface ModalComponentProps {
     content: React.ReactNode;
