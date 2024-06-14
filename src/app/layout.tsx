@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Poppins, Inter } from 'next/font/google'
 import './globals.css'
 import RQProviders from '@/utils/provider'
+import { Providers } from './providers'
 // import { useExcludeHeader } from '@/hooks/useExcludeHeader'
 // import { Header } from './component/Header'
 // import { Footer } from './component/Footer'
@@ -33,11 +34,21 @@ export default function RootLayout({
 
   return (
     <html lang='en'>
+
+
       <RQProviders>
+
         {/* header */}
-        <body className={`${poppins.className} ${inter.className}`}>{children}</body>
+
+        <body className={`${poppins.className} ${inter.className}`}>
+          <Providers>
+            {children}
+          </Providers>
+        </body>
+
       </RQProviders>
       {/* footer */}
+
 
     </html>
   );

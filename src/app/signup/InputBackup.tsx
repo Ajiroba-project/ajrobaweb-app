@@ -69,9 +69,7 @@ function Page() {
         // gender: yup.boolean().oneOf([true], "Gender is required"),
         gender: yup.boolean().required("Gender is required"),
         // agree_terms: yup.boolean().required("This is required"),
-        agree_terms: yup.boolean().oneOf([true], "You must agree to the terms and conditions"),
-        referral: yup.string(),
-        residential: yup.string(),
+        agree_terms: yup.boolean().oneOf([true], "You must agree to the terms and conditions")
     });
 
     const {
@@ -193,9 +191,6 @@ function Page() {
                                     // errors={errors.first_name}
                                     className=""
                                 /> */}
-                                <label className="text-sm" htmlFor="First Name*">
-                                    First Name*
-                                </label>
 
                                 <Controller
                                     name="first_name"
@@ -203,66 +198,44 @@ function Page() {
                                     render={({ field }) => (
                                         <div>
                                             <Input
-                                                {...field}
                                                 variant="bordered"
                                                 // label="First Name*"
                                                 type="text"
-                                                // name="first_name"
+                                                name="first_name"
                                                 radius="none"
                                                 size="md"
                                                 placeholder="Enter firstname"
-
                                                 // register={register}
-                                                /*   errors={errors.first_name} */
-                                                className=" "
+                                                // errors={errors.first_name}
+                                                className=" px-4"
 
+                                                style={{
+                                                    paddingLeft: '2rem',
+                                                    paddingRight: '2rem',
 
+                                                    // border: '1px solid #D9D9D9',
+                                                    // borderRadius: '0.25rem',
+
+                                                }}
                                             />
 
                                         </div>
 
                                     )}
                                 />
-                                <div className="text-xs  text-red-700">
+                                <div className="text-xs text-red-700">
                                     {errors?.first_name?.message}
                                 </div>
                             </div>
 
                             <div className="flex flex-col">
-                                {/*  <Input
+                                <Input
                                     label="Last Name*"
                                     type="text"
                                     name="last_name"
                                     placeholder="Enter surname"
                                 // register={register}
                                 // errors={errors.first_name}
-                                /> */}
-                                <label className="text-sm" htmlFor="last_name">
-                                    Last Name*
-                                </label>
-                                <Controller
-                                    name="last_name"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input   {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="text"
-                                                name="last_name"
-                                                radius="none"
-                                                size="md"
-                                                placeholder="Enter surname"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-
-
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.last_name?.message}
@@ -270,40 +243,13 @@ function Page() {
                             </div>
 
                             <div className="flex flex-col">
-                                {/*  <Input
+                                <Input
                                     label="Email Address*"
                                     type="text"
                                     name="email"
                                     placeholder="Enter email"
                                 // register={register}
                                 // errors={errors.email}
-                                /> */}
-                                <label className="text-sm" htmlFor="email">
-                                    Email Address*
-                                </label>
-                                <Controller
-                                    name="email"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input   {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="text"
-                                                /*  name="first_name" */
-                                                radius="none"
-                                                size="md"
-                                                placeholder="Enter email"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-
-
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.email?.message}
@@ -311,40 +257,13 @@ function Page() {
                             </div>
 
                             <div className="flex flex-col">
-                                {/*   <Input
+                                <Input
                                     label="Phone Number*"
                                     type="text"
                                     name="phone"
                                     placeholder="Enter phone number"
                                 // register={register}
                                 // errors={errors.phone}
-                                /> */}
-                                <label className="text-sm" htmlFor="phone">
-                                    Phone Number*
-                                </label>
-                                <Controller
-                                    name="phone"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="text"
-                                                name="phone"
-                                                radius="none"
-                                                size="md"
-                                                placeholder="Enter phone number"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-
-
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.phone?.message}
@@ -352,40 +271,13 @@ function Page() {
                             </div>
 
                             <div className="flex flex-col">
-                                {/*  <Input
+                                <Input
                                     label=" Password*"
                                     type="text"
                                     name="password"
                                     placeholder="***********"
                                 // register={register}
                                 // errors={errors.password}
-                                /> */}
-                                <label className="text-sm" htmlFor="password">
-                                    Password*
-                                </label>
-                                <Controller
-                                    name="password"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="password"
-                                                name="password"
-                                                radius="none"
-                                                size="md"
-                                                placeholder="***********"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-
-
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.password?.message}
@@ -393,76 +285,24 @@ function Page() {
                             </div>
 
                             <div className="flex flex-col">
-                                {/*  <Input
+                                <Input
                                     label=" Referal code (Optional)"
                                     type="text"
                                     name="referral"
                                     placeholder="Referal code"
                                 // register={register}
-                                /> */}
-                                <label className="text-sm" htmlFor="referral">
-                                    Referal code (Optional)
-                                </label>
-                                <Controller
-                                    name='referral'
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="text"
-                                                name="referral"
-                                                radius="none"
-                                                size="md"
-                                                placeholder="Referal code"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-
-
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <div className="text-xs text-red-700"></div>
                             </div>
 
                             <div className="flex flex-col">
-                                {/*   <Input
+                                <Input
                                     label="Address"
                                     type="text"
                                     name="address"
                                     placeholder="Enter your Address"
                                 // register={register}
                                 // errors={errors.address}
-                                /> */}
-                                <label className="text-sm" htmlFor="address">
-                                    Address*
-                                </label>
-                                <Controller
-                                    name="address"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="text"
-                                                name="address"
-                                                radius="none"
-                                                size="md"
-                                                placeholder="Enter your Address"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <div className="text-xs text-red-700">
                                     {errors?.address?.message}
@@ -570,37 +410,12 @@ function Page() {
                             </div>
 
                             <div className="flex flex-col">
-                                {/* <Input
+                                <Input
                                     label="  Residential Number (Optional)"
                                     type="text"
                                     name="residential"
                                     placeholder="residential Number"
                                 // register={register}
-                                /> */}
-                                <label className="text-sm" htmlFor="residential">
-                                    Residential Number (Optional)
-                                </label>
-                                <Controller
-                                    name="residential"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div>
-                                            <Input {...field}
-                                                variant="bordered"
-                                                // label="First Name*"
-                                                type="text"
-                                                name="residential"
-                                                radius="none"
-                                                size="md"
-                                                placeholder="residential Number"
-                                                // register={register}
-                                                // errors={errors.first_name}
-                                                className=" "
-                                            />
-
-                                        </div>
-
-                                    )}
                                 />
                                 <small className="text-sm text-[#6E6E6E] mt-1">(such as LASRRA etc)</small>
                                 {/*   <div className="text-xs text-red-700">
@@ -651,14 +466,23 @@ function Page() {
 
                         <div className="lg:flex 2xl:flex xl:flex md:grid items-center justify-center" >
                             <div className="grid grid-cols-1  mt-4">
-                                <DefaultButton
+                                {/*  <DefaultButton
+                                type="submit"
+                                className="w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                                text={status === 'pending' ? 'loading...' : "Create Account"}
+                                handleClick={() => console.log("clcikeddd")}
+                            /> */}
+
+                                {/*  <Input type="submit" name="Create Account" /> */}
+                                <input
                                     type="submit"
-                                    className="w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
-                                    text={status === 'pending' ? 'loading...' : "Create Account"}
-                                    handleClick={() => console.log("clcikeddd")}
+                                    /*   id="female" */
+                                    /*   {...register("gender", { required: true })}
+                                      value="false" */
+                                    name="Create Account"
+                                    className={`px-8 h-12 focus:text-black border placeholder:text-sm rounded w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px]  bg-[#FCDFD4]  text-sm hover:bg-[#E84526] hover:text-white `}
+
                                 />
-
-
                             </div>
                         </div>
 
@@ -696,4 +520,3 @@ function Page() {
 }
 
 export default Page;
-

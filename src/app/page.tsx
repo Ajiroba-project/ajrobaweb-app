@@ -115,7 +115,7 @@ const Page = () => {
     <>
       <Suspense>
         <header style={{
-          zIndex: 1000
+          /*    zIndex: 1000 */
         }} className='fixed z-50 w-full'>
           <Header />
         </header>
