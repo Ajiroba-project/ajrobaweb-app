@@ -154,7 +154,8 @@ export const CategoryCard = ({ cardInfo }: cardDetails) => {
                                 <div className='flex flex-col items-center'>
                                     <p className='text-[#A09F9F]'>{value.description}</p>
                                     <Link
-                                        href={value.path}
+                                        /* href={value.path} */
+                                        href={`/categories/${value.name}`}
                                         className='my-4 w-full bg-[#FCDFD4] p-2 text-center text-[#111111]'
                                     >
                                         Explore
