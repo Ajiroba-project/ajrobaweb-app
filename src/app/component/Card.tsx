@@ -72,7 +72,6 @@ export const ProductCard = ({ cardInfo }: any) => {
     isLoggedIn: state.isLoggedIn
   }))
 
-  console.log(cardInfo, 'cardinfo')
 
   const handleCartNotification = (value: any) => {
     setCardAddCartState(value.name)
@@ -465,7 +464,6 @@ export const CategoryCard = () => {
 export const AuctionCard = ({ cardInfo }: cardDetails) => {
 
 
-  console.log(cardInfo, 'cardInfo----auctioncard')
 
   const { isLoggedIn, clearAuthCookies, user } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
