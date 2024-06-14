@@ -64,7 +64,123 @@ interface AuctionResponse {
   // add other fields as necessary
 }
 
-export const ProductCard = ({ cardInfo }: cardDetails) => {
+export const ProductCard = ({ cardInfo }: any) => {
+  const [hoverState, setHoverState] = useState<string>('')
+  const [cardCartState, setCardCartState] = useState<boolean>(false)
+  const [cardAddCartState, setCardAddCartState] = useState<any>()
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn
+  }))
+
+  console.log(cardInfo, 'cardinfo')
+
+  const handleCartNotification = (value: any) => {
+    setCardAddCartState(value.name)
+
+    setCardCartState(!cardCartState)
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false)
+    }, 5000)
+
+    return () => clearTimeout(timeoutID)
+  }
+
+
+  return (
+    <>
+      {cardInfo && <div
+        className={`${poppins.className} lg:full my-4 grid h-fit w-72 cursor-pointer  grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4`}
+      >
+        {cardInfo?.map((value: any, index: number) => (
+          <div
+            className=' relative w-full rounded bg-[#F6F6F6] shadow-md'
+            key={index}
+            onMouseEnter={() => setHoverState(value.name)}
+            onMouseLeave={() => setHoverState('')}
+          >
+            {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
+            <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
+              <div className='z-auto flex items-center justify-center'>
+                {/*  <Image
+                  src={value.image}
+                  alt='product'
+                  className='w-fit bg-contain '
+                /> */}
+                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                  height={100} />
+              </div>
+              {/* cart */}
+              {hoverState === value.name ? (
+                <>
+                  <IoCartOutline
+                    className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
+                    onClick={() => handleCartNotification(value)}
+                  />
+                  {isLoggedIn && (
+                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
+                  )}
+                </>
+              ) : (
+                ''
+              )}
+              {/* alertMessage */}
+              <>
+                {cardCartState && (
+                  <div
+                    className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
+                  >
+                    <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
+                      <p>{value.name}</p>
+                      <p>Has been added to cart</p>
+                    </div>
+                  </div>
+                )}
+              </>
+
+              <hr />
+              <div className='z-10 h-fit bg-[#F6F6F6] py-3 shadow-inner'>
+                <div className='flex flex-col gap-2 px-2'>
+                  <div className='flex  w-full items-center justify-between gap-3 capitalize'>
+                    {/* product name */}
+                    <div className=''>
+                      <p className='w-max text-pretty text-base font-normal'>
+                        {value.name}
+                      </p>
+                    </div>
+                  </div>
+                  <div className='flex justify-between '>
+                    {/* price */}
+                    <div className='justify-start'>
+                      <p className='w-max text-xl font-medium'>
+                        &#8358;{(value?.price).toLocaleString()}
+                        <span className=' '></span>
+                      </p>
+                    </div>
+                    {/* stars */}
+                    <p className='flex justify-end text-left'>
+                      {Array.from({ length: value?.reviews }, (_, index) => (
+                        <span key={index}>
+                          <FaStar className="text-[#F25E26]" />
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                  <p className='text-sm font-normal text-gray-500 line-through '>
+                    &#8358;{(value?.discount).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>}
+    </>
+  )
+}
+
+
+
+export const TopDealsCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
@@ -178,121 +294,7 @@ export const ProductCard = ({ cardInfo }: cardDetails) => {
 
 
 
-export const TopDealsCard = ({ cardInfo }: cardDetails) => {
-  const [hoverState, setHoverState] = useState<string>('')
-  const [cardCartState, setCardCartState] = useState<boolean>(false)
-  const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
-  }))
-
-  const handleCartNotification = (value: any) => {
-    setCardAddCartState(value.name)
-
-    setCardCartState(!cardCartState)
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false)
-    }, 5000)
-
-    return () => clearTimeout(timeoutID)
-  }
-
-
-  return (
-    <>
-      <div
-        className={`${poppins.className} lg:full my-4 grid h-fit w-72 cursor-pointer  grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4`}
-      >
-        {cardInfo?.map((value: any, index: number) => (
-          <div
-            className=' relative w-full rounded bg-[#F6F6F6] shadow-md'
-            key={index}
-            onMouseEnter={() => setHoverState(value.name)}
-            onMouseLeave={() => setHoverState('')}
-          >
-            {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
-            <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
-              <div className='z-auto flex items-center justify-center'>
-                {/*  <Image
-                  src={value.image}
-                  alt='product'
-                  className='w-fit bg-contain '
-                /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
-                  height={100} />
-              </div>
-              {/* cart */}
-              {hoverState === value.name ? (
-                <>
-                  <IoCartOutline
-                    className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-                    onClick={() => handleCartNotification(value)}
-                  />
-                  {isLoggedIn && (
-                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
-                  )}
-                </>
-              ) : (
-                ''
-              )}
-              {/* alertMessage */}
-              <>
-                {cardCartState && (
-                  <div
-                    className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
-                  >
-                    <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
-                      <p>{value.name}</p>
-                      <p>Has been added to cart</p>
-                    </div>
-                  </div>
-                )}
-              </>
-
-              <hr />
-              <div className='z-10 h-fit bg-[#F6F6F6] py-3 shadow-inner'>
-                <div className='flex flex-col gap-2 px-2'>
-                  <div className='flex  w-full items-center justify-between gap-3 capitalize'>
-                    {/* product name */}
-                    <div className=''>
-                      <p className='w-max text-pretty text-base font-normal'>
-                        {value.name}
-                      </p>
-                    </div>
-                  </div>
-                  <div className='flex justify-between '>
-                    {/* price */}
-                    <div className='justify-start'>
-                      <p className='w-max text-xl font-medium'>
-                        &#8358;{(value?.price).toLocaleString()}
-                        <span className=' '></span>
-                      </p>
-                    </div>
-                    {/* stars */}
-                    <p className='flex justify-end text-left'>
-                      {Array.from({ length: value?.reviews }, (_, index) => (
-                        <span key={index}>
-                          <FaStar className="text-[#F25E26]" />
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                  <p className='text-sm font-normal text-gray-500 line-through '>
-                    &#8358;{(value?.discount).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
-  )
-}
-
-
-
-export const TopWeakCard = ({ cardInfo }: cardDetails) => {
+export const TopWeakCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
