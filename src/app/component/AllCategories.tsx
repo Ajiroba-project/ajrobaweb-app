@@ -18,7 +18,7 @@ export const AllCategories = () => {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
 
-    const handlesubcat = (subCategory: string, val?: { name: string }) => {
+    const handlesubcat = (subCategory: string, val?: { name: string, category: string }) => {
         setActive(null);
 
         const params = new URLSearchParams(searchParams);
