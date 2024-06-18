@@ -6,6 +6,7 @@ import { AllCategories, MobileSideMenu } from "./AllCategories";
 import { CatMobileSideMenu } from "./SideMenu";
 import { FaStar } from "react-icons/fa6";
 import { it } from "node:test";
+import { useQueryData } from "@/hooks/useQueryData";
 
 
 interface SelectedItem {
@@ -283,6 +284,10 @@ export const SearchFilter = () => {
     .filter((path) => path !== "")
     .map((path) => decodeURIComponent(path));
 
+  const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+
+
+  console.log(catInfo?.data)
 
   const categories = [
     {
@@ -299,11 +304,18 @@ export const SearchFilter = () => {
     },
   ];
 
-  const currentCategory = categories.find(
+  // const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+
+
+  // catInfo?.data?
+
+  const currentCategory = catInfo?.data?.find(
     (category) =>
-      category.name.toLowerCase() ===
+      category.category.toLowerCase() ===
       decodedPaths[decodedPaths.length - 1].toLowerCase(),
   );
+
+  console.log(currentCategory, 'current category')
 
 
   const handlesubcat = (subCategory: string) => {
@@ -346,23 +358,23 @@ export const SearchFilter = () => {
 
       <div className="pl-3">
         {currentCategory && (
-          <div key={currentCategory.name}>
+          <div key={currentCategory.category}>
             <p
-              onClick={() => setSelectedCategory(currentCategory.name)}
-              className={`${selectedCategory === currentCategory.name ? "font-bold" : ""}`}
+              onClick={() => setSelectedCategory(currentCategory.category)}
+              className={`${selectedCategory === currentCategory.category ? "font-bold" : ""}`}
             >
-              {currentCategory.name}
+              {currentCategory.category}
             </p>
 
             <ul>
-              {currentCategory.subCategories.map((subCategory) => (
+              {currentCategory?.subcategories?.map((subCategory) => (
                 <li
-                  key={subCategory}
-                  className={`${sub === subCategory ? "text-[#F25E26]" : ""}`}
+                  key={subCategory?.subcategory}
+                  className={`${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""}`}
 
-                  onClick={() => handlesubcat(subCategory)}
+                  onClick={() => handlesubcat(subCategory?.subcategory)}
                 >
-                  {subCategory}
+                  {subCategory?.subcategory}
                 </li>
               ))}
             </ul>
