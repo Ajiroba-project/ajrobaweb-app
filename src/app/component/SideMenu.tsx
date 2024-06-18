@@ -17,6 +17,21 @@ const inter = Inter({ subsets: ['latin'], weight: ['500', '700', '900'] })
 
 type MenuState = number | null
 
+interface Subcategory {
+  subcategory: string;
+  name?: string;
+  category?: string;
+}
+
+interface Category {
+  category: string;
+  subcategories: Subcategory[];
+}
+
+interface CategoryResponse {
+  data: Category[];
+}
+
 export const SideMenu = () => {
   const [active, setActive] = useState<MenuState>(null)
   const [subcategory, SetSubcategory] = useState<string | null>(null)
@@ -26,11 +41,11 @@ export const SideMenu = () => {
   const searchParams = useSearchParams()
   const { replace } = useRouter()
 
-  const handlesubcat = (subCategory: string, val?: { name: string, category: string }) => {
+  const handlesubcat = (subCategory?: string, val?: { name?: string, category?: string }) => {
 
-    console.log(subCategory, 'subCategory', val, 'val')
+    // console.log(subCategory, 'subCategory', val, 'val')
 
-    console.log(val.category)
+    // console.log(val && val.category)
 
     setActive(null)
 
@@ -41,11 +56,11 @@ export const SideMenu = () => {
       params.delete('sub')
     }
 
-    replace(`/categories/${val.category}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?${params.toString()}`)
   }
 
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
   // GET https://ajiroba.onrender.com/v1/commerce/categories_and_subcategories/
 
@@ -93,7 +108,7 @@ export const SideMenu = () => {
                       </p>
 
                       <span
-                        className={`${active === 1 ? 'absolute -right-2.5 -top-0.5 h-full w-0.5 rounded border-2 border-gray-200' : 'hidden'}${subcategory.name === 'Accessories' ? ' border-hidden' : ''}`}
+                        className={`${active === 1 ? 'absolute -right-2.5 -top-0.5 h-full w-0.5 rounded border-2 border-gray-200' : 'hidden'}${subcategory && subcategory.name === 'Accessories' ? ' border-hidden' : ''}`}
                       ></span>
 
                       {/*   {'subcategory' in subcategory && (
@@ -128,12 +143,12 @@ export const SideMenu = () => {
 export const MobileSideMenu = () => {
   const [active, setActive] = useState<MenuState>(null)
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
   const searchParams = useSearchParams()
   const { replace } = useRouter()
 
-  const handlesubcat = (subCategory: string, val?: { name: string }) => {
+  const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
     setActive(null)
 
     const params = new URLSearchParams(searchParams)
@@ -143,7 +158,7 @@ export const MobileSideMenu = () => {
       params.delete('sub')
     }
 
-    replace(`/categories/${val.category}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?${params.toString()}`)
   }
 
 
@@ -235,13 +250,13 @@ export const CatMobileSideMenu = () => {
 
   const router = useRouter()
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
   // const handleSubClick = (subCategoryName: string) => {
   //     setActive(null);
   // };
 
-  const handlesubcat = (subCategory: string, val?: { name: string }) => {
+  const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
     setActive(null)
 
     const params = new URLSearchParams(searchParams)
@@ -250,7 +265,7 @@ export const CatMobileSideMenu = () => {
     } else {
       params.delete('sub')
     }
-    replace(`/categories/${val.category}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?${params.toString()}`)
   }
 
   return (

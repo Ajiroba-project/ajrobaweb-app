@@ -284,10 +284,10 @@ export const SearchFilter = () => {
     .filter((path) => path !== "")
     .map((path) => decodeURIComponent(path));
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<any>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
 
-  console.log(catInfo?.data)
+  /* console.log(catInfo?.data) */
 
   const categories = [
     {
@@ -310,12 +310,12 @@ export const SearchFilter = () => {
   // catInfo?.data?
 
   const currentCategory = catInfo?.data?.find(
-    (category) =>
+    (category: any) =>
       category.category.toLowerCase() ===
       decodedPaths[decodedPaths.length - 1].toLowerCase(),
   );
 
-  console.log(currentCategory, 'current category')
+  // console.log(currentCategory, 'current category')
 
 
   const handlesubcat = (subCategory: string) => {
@@ -367,7 +367,7 @@ export const SearchFilter = () => {
             </p>
 
             <ul>
-              {currentCategory?.subcategories?.map((subCategory) => (
+              {currentCategory?.subcategories?.map((subCategory: any) => (
                 <li
                   key={subCategory?.subcategory}
                   className={`${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""}`}

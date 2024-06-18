@@ -8,8 +8,34 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"] });
 const inter = Inter({ subsets: ["latin"], weight: ["500", "900"] });
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQueryData } from "@/hooks/useQueryData";
+import { useQuery } from '@tanstack/react-query';
 
 type MenuState = number | null;
+
+
+interface Subcategory {
+    subcategory: string;
+    category?: string;
+    ame?: string;
+}
+
+interface Category {
+    category: string;
+    subcategories: Subcategory[];
+}
+
+interface CategoryResponse {
+    data: Category[];
+}
+
+const fetchCategoriesAndSubcategories = async (): Promise<CategoryResponse> => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`);
+    if (!res.ok) {
+        throw new Error("Network response was not ok");
+    }
+    return res.json();
+};
+
 
 export const AllCategories = () => {
     const [active, setActive] = useState<MenuState>(null);
@@ -18,7 +44,7 @@ export const AllCategories = () => {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
 
-    const handlesubcat = (subCategory: string, val?: { name: string }) => {
+    const handlesubcat = (subCategory: string, val?: { name?: string, category: string }) => {
         setActive(null);
 
         const params = new URLSearchParams(searchParams);
@@ -33,7 +59,13 @@ export const AllCategories = () => {
 
     const router = useRouter()
 
-    const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+
+    /*  const { data: catInfo, isLoading: catnLoading } = useQuery<CategoryResponse>(
+         "get categories_and_subcategories",
+         fetchCategoriesAndSubcategories,
+
+     ); */
 
     return (
         <>
@@ -71,21 +103,7 @@ export const AllCategories = () => {
                                         >
                                             {subcategory.subcategory}
 
-                                            {/*  {"subcategory" in subcategory && (
-                                                <ul className="z-50 ">
-                                                    {subcategory.subcategory?.map((subSubcategory) => (
-                                                        <div
-                                                            onClick={() =>
-                                                                handlesubcat(subSubcategory.name, val)
-                                                            }
-                                                            key={subSubcategory.name}
-                                                            className="hover:bg-[#FCDFD4] py-2"
-                                                        >
-                                                            {subSubcategory.name}
-                                                        </div>
-                                                    ))}
-                                                </ul>
-                                            )} */}
+
                                         </div>
                                     ))}
                                 </div>
@@ -101,7 +119,7 @@ export const AllCategories = () => {
 export const MobileSideMenu = () => {
     const [active, setActive] = useState<MenuState>(null);
 
-    const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
     return (
         <>
