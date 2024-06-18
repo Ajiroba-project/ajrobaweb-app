@@ -145,6 +145,11 @@ export const MobileSideMenu = () => {
 
     replace(`/categories/${val.category}?${params.toString()}`)
   }
+
+
+  const router = useRouter()
+
+
   return (
     <>
       <section className='bg-[#F6F6F6] p-6'>
@@ -159,7 +164,7 @@ export const MobileSideMenu = () => {
                   }}
                 >
                   <span className='flex items-center gap-2 '>
-                    <p className={``}>{val.category}</p>{' '}
+                    <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
@@ -228,6 +233,8 @@ export const CatMobileSideMenu = () => {
   const { replace } = useRouter()
   const sub = searchParams.get('sub')
 
+  const router = useRouter()
+
   const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
   // const handleSubClick = (subCategoryName: string) => {
@@ -260,7 +267,7 @@ export const CatMobileSideMenu = () => {
                   }}
                 >
                   <span className='flex items-center gap-2 '>
-                    <p className={``}>{val.category}</p>{' '}
+                    <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
