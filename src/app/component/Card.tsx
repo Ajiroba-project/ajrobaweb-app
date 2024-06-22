@@ -411,6 +411,8 @@ export const CategoryCard = () => {
 
   const categorydata = categoriesInfo?.data
 
+  // console.log(categorydata)
+
   return (
     <>
 
@@ -442,7 +444,7 @@ export const CategoryCard = () => {
                 <div className='flex flex-col '>
                   <p className='text-[#A09F9F]'>{value.description}</p>
                   <Link
-                    href={`/categories/${value.name}`}
+                    href={`/categories/${value.name}?cat_id=${value.id}`}
                     className='my-4 w-full bg-[#FCDFD4] p-2 text-center text-[#111111]'
                   >
                     Explore

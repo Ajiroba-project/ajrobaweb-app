@@ -199,7 +199,7 @@ export const PriceFilter = () => {
   const handleminandmax = (min: string, max: string) => {
     setMinvalue('')
     setMaxvalue('')
-    console.log(min, max)
+    /*   console.log(min, max) */
     const params = new URLSearchParams(searchParams);
     if (min && max) {
       params.set('min_max', min + '&' + max);
@@ -287,7 +287,7 @@ export const SearchFilter = () => {
   const { data: catInfo, isLoading: catnLoading } = useQueryData<any>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
 
-  /* console.log(catInfo?.data) */
+  // console.log(catInfo?.data)
 
   const categories = [
     {
@@ -318,13 +318,16 @@ export const SearchFilter = () => {
   // console.log(currentCategory, 'current category')
 
 
-  const handlesubcat = (subCategory: string) => {
+  const handlesubcat = (subCategory: string, id: string) => {
+    // console.log(subCategory, 'subcategory')
 
     const params = new URLSearchParams(searchParams);
     if (subCategory) {
       params.set('sub', subCategory);
+      params.set('subid', id);
     } else {
       params.delete('sub');
+      params.delete('subid');
     }
     replace(`${pathname}?${params.toString()}`);
 
@@ -367,12 +370,13 @@ export const SearchFilter = () => {
             </p>
 
             <ul>
+              {/*     {console.log(currentCategory, 'currentcateg')} */}
               {currentCategory?.subcategories?.map((subCategory: any) => (
                 <li
                   key={subCategory?.subcategory}
                   className={`${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""}`}
 
-                  onClick={() => handlesubcat(subCategory?.subcategory)}
+                  onClick={() => handlesubcat(subCategory?.subcategory, subCategory?.id)}
                 >
                   {subCategory?.subcategory}
                 </li>

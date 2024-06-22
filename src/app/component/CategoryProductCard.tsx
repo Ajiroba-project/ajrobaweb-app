@@ -12,6 +12,19 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 interface cardDetails {
     cardInfo: any[]
     currentPage?: number
+    id?: number;
+    title?: string;
+    description?: string;
+    imageUrl?: string;
+    name?: string;
+    image?: string;
+    price?: string;
+    /*   images?: string; */
+    images?: { id: string; product: string; image: string }[];
+    discount?: string;
+    reviews?: string;
+    message?: string;
+
 }
 
 export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
@@ -19,7 +32,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
     const star = [1, 2, 3, 4, 5]
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12; // adjust this value to change the number of items per page
+    const itemsPerPage = 8; // adjust this value to change the number of items per page
     const totalPages = Math.ceil(cardInfo.length / itemsPerPage);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -45,7 +58,16 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                     <div onClick={() => router.push(`/categories/productdetails/${value.name}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
-                                <Image src={value.image} alt='product' className='w-fit' />
+                                {/* <Image src={value.image} alt='product' className='w-fit' /> */}
+                                <Image
+                                    src={`https://ajiroba.onrender.com/media/${value?.image}`}
+                                    alt="product"
+                                    /*   layout="fill" */
+                                    className=""
+                                    width={100}
+                                    height={100}
+                                    objectFit="cover"
+                                />
                             </div>
                         </div>
                         <hr />
@@ -68,9 +90,15 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
 
                                     {/* stars */}
                                     <p className='flex justify-end text-left'>
-                                        {star.map((val, index) => (
+                                        {/*  {star.map((val, index) => (
                                             <span key={index}>
                                                 <FaStar className='text-[#F25E26]' />
+                                            </span>
+                                        ))} */}
+
+                                        {Array.from({ length: value?.reviews }, (_, index) => (
+                                            <span key={index}>
+                                                <FaStar className="text-[#F25E26]" />
                                             </span>
                                         ))}
                                     </p>
