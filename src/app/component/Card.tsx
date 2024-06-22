@@ -407,7 +407,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
 
 export const CategoryCard = () => {
 
-  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, "get categoriesdetails", true);
+  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, ["get categoriesdetails"], true);
 
   const categorydata = categoriesInfo?.data
 

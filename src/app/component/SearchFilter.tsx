@@ -284,7 +284,7 @@ export const SearchFilter = () => {
     .filter((path) => path !== "")
     .map((path) => decodeURIComponent(path));
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData<any>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<any>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
 
   // console.log(catInfo?.data)

@@ -256,9 +256,23 @@ const Page = () => {
         }
     }, [paths]);
 
-    const { data: filtercat, isLoading: filtercatLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_category/${cat_id}/`, "filter_by_cat_id", true);
+    /*    const { data: filtercat, isLoading: filtercatLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_category/${cat_id}/`, "filter_by_cat_id", true);
+   
+       const { data: filter_by_sub_cat, isLoading: filter_by_sub_cattLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_subcategory/${subid}/`, "filter_by_sub_cat_id", true);
+       */
 
-    const { data: filter_by_sub_cat, isLoading: filter_by_sub_cattLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_subcategory/${subid}/`, "filter_by_sub_cat_id", true);
+    const { data: filtercat, isLoading: filtercatLoading } = useQueryData<AuctionResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_category/${cat_id}/`,
+        ["filter_by_cat_id", cat_id],
+        !!cat_id
+    );
+
+    const { data: filter_by_sub_cat, isLoading: filter_by_sub_cattLoading } = useQueryData<AuctionResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_subcategory/${subid}/`,
+        ["filter_by_sub_cat_id", subid],
+        !!subid
+    );
+
     console.log(filter_by_sub_cat, 'filtereddd data')
 
 
@@ -277,23 +291,6 @@ const Page = () => {
 
     // console.log(ProductsNew)
 
-
-    // const filteredProducts = ProductsNew?.filter((product) => {
-    //     const lowerCaseParams = paths
-    //         .map((param) => param && param.toLowerCase())
-    //         .filter(Boolean);
-    //     console.log(lowerCaseParams, 'lowercaseparams')
-
-    //     const lowerCaseCategory = product.category.toLowerCase();
-
-    //     console.log(lowerCaseCategory)
-    //     const lowerCaseSubCategory = product?.subCategory?.toLowerCase();
-
-    //     return (
-    //         lowerCaseParams.includes(lowerCaseCategory) ||
-    //         (lowerCaseSubCategory && lowerCaseParams.includes(lowerCaseSubCategory))
-    //     );
-    // }) || [];
 
     const filteredProducts = ProductsNew?.filter((product) => {
         const lowerCaseParams = paths

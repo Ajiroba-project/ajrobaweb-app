@@ -59,7 +59,7 @@ export const AllCategories = () => {
 
     const router = useRouter()
 
-    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
     /*  const { data: catInfo, isLoading: catnLoading } = useQuery<CategoryResponse>(
          "get categories_and_subcategories",
@@ -119,7 +119,7 @@ export const AllCategories = () => {
 export const MobileSideMenu = () => {
     const [active, setActive] = useState<MenuState>(null);
 
-    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
     return (
         <>
