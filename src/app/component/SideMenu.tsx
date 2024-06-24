@@ -259,13 +259,15 @@ export const CatMobileSideMenu = () => {
   const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
     setActive(null)
 
-    const params = new URLSearchParams(searchParams)
+    console.log(val, 'valll')
+
+    /* const params = new URLSearchParams(searchParams)
     if (subCategory) {
       params.set('sub', subCategory)
     } else {
       params.delete('sub')
     }
-    replace(`/categories/${val && val.category}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?${params.toString()}`) */
   }
 
   return (

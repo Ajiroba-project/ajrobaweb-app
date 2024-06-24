@@ -29,7 +29,7 @@ interface cardDetails {
 
 export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
 
-    const star = [1, 2, 3, 4, 5]
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; // adjust this value to change the number of items per page
@@ -58,11 +58,10 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                     <div onClick={() => router.push(`/categories/productdetails/${value.name}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
-                                {/* <Image src={value.image} alt='product' className='w-fit' /> */}
+
                                 <Image
                                     src={`https://ajiroba.onrender.com/media/${value?.image}`}
                                     alt="product"
-                                    /*   layout="fill" */
                                     className=""
                                     width={100}
                                     height={100}
@@ -75,8 +74,8 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                             <div className='flex flex-col gap-2 px-2'>
                                 <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                                     {/* product name */}
-                                    <div className=' text-sm font-semibold'>
-                                        <p className='w-max text-pretty'>{value.name}</p>
+                                    <div className=' text-sm '>
+                                        <p className=' text-pretty'>{value.name}</p>
                                     </div>
                                 </div>
                                 <div className='flex justify-between'>

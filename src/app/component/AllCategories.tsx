@@ -20,6 +20,7 @@ interface Subcategory {
 }
 
 interface Category {
+    [x: string]: any;
     category: string;
     subcategories: Subcategory[];
 }
@@ -46,6 +47,8 @@ export const AllCategories = () => {
 
     const handlesubcat = (subCategory: string, val?: { name?: string, category: string }) => {
         setActive(null);
+
+        console.log(val, 'val')
 
         const params = new URLSearchParams(searchParams);
         if (subCategory) {
@@ -83,7 +86,8 @@ export const AllCategories = () => {
                                     <span className="flex gap-2 items-center ">
                                         <p onClick={() => {
                                             return (
-                                                SetSubcategory(val.category), router.push(`/categories/${val.category}`)
+
+                                                SetSubcategory(val.category), router.push(`/categories/${val.category}?cat_id=${val.id}`)
                                             )
                                         }} >{val.category}</p>{" "}
                                         {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
@@ -157,23 +161,6 @@ export const MobileSideMenu = () => {
                                                 </Link>
 
 
-                                                {/*  {"subcategory" in subcategory && (
-                                                    <ul className="z-50 ">
-                                                        {subcategory.subcategory?.map((subSubcategory) => (
-                                                            <div
-                                                                key={subSubcategory.name}
-                                                                className="hover:bg-[#FCDFD4] py-2"
-                                                            >
-                                                                <Link
-                                                                    href={subSubcategory.path || ""}
-                                                                    className="py-2"
-                                                                >
-                                                                    {subSubcategory.name}
-                                                                </Link>
-                                                            </div>
-                                                        ))}
-                                                    </ul>
-                                                )} */}
                                             </div>
                                         ))}
                                     </div>

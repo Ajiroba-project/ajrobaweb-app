@@ -289,20 +289,6 @@ export const SearchFilter = () => {
 
   // console.log(catInfo?.data)
 
-  const categories = [
-    {
-      name: "Foodstuff",
-      subCategories: ["Fruits", "Vegetable", "Tubers", "Cereal", "Legumes", "Diary", "Meat", "Beans"],
-    },
-    {
-      name: "Fashion And Beauty",
-      subCategories: ["Men's Fashion", "Women Fashion", "Accessories"],
-    },
-    {
-      name: "Fashion",
-      subCategories: ["Bags", "Belts"],
-    },
-  ];
 
   // const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
 
@@ -317,9 +303,12 @@ export const SearchFilter = () => {
 
   // console.log(currentCategory, 'current category')
 
+  // href = {`/categories/${value.name}?cat_id=${value.id}`
+
+
 
   const handlesubcat = (subCategory: string, id: string) => {
-    // console.log(subCategory, 'subcategory')
+    console.log(subCategory, 'subcategory', id, 'idddd')
 
     const params = new URLSearchParams(searchParams);
     if (subCategory) {
@@ -348,6 +337,7 @@ export const SearchFilter = () => {
         <div className='hidden bg-[#FFFFFF] lg:block  '>
           <div className="" >
             <AllCategories />
+            {/* <p>all categories</p> */}
           </div>
 
         </div>
@@ -356,6 +346,7 @@ export const SearchFilter = () => {
       {isOpen && (
         <div className='  z-50 h-full w-full'>
           <CatMobileSideMenu />
+          {/*     <h1>all cat under</h1> */}
         </div>
       )}
 
