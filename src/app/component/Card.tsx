@@ -148,7 +148,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
                     <div className=''>
-                      <p className=' text-pretty text-base font-normal'>
+                      <p className=' text-pretty text-sm font-normal'>
                         {value.name}
                       </p>
                     </div>
@@ -249,7 +249,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                     className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
                   >
                     <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
-                      <p>{value.name}</p>
+                      <p className=' text-pretty text-sm font-normal'  >{value.name}</p>
                       <p>Has been added to cart</p>
                     </div>
                   </div>
@@ -376,7 +376,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
                     <div className=''>
-                      <p className='text-pretty text-base font-normal'>
+                      <p className='text-pretty text-sm font-normal'>
                         {value.name}
                       </p>
                     </div>

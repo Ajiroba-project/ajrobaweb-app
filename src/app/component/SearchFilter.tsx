@@ -222,13 +222,13 @@ export const PriceFilter = () => {
           value="<2000"
           id="under2000"
           className="mr-3"
-          onChange={() => handlePriceSelection('<2000')}
+          onChange={() => handlePriceSelection('<5000')}
         />
-        <label htmlFor="under2000">under 2000</label>
+        <label htmlFor="under5000">under 5000</label>
 
       </div>
 
-      <div>
+      {/*   <div>
         <input
           type="radio"
           name="price1"
@@ -239,7 +239,7 @@ export const PriceFilter = () => {
 
         />
         <label htmlFor="2000-5000">₦2000 - ₦5000</label>
-      </div>
+      </div> */}
 
       <div>
         <input
