@@ -71,8 +71,8 @@ const Page = () => {
         .map((path) => decodeURIComponent(path));
 
     const paths = useMemo(
-        () => [...decodedPaths, sub, query, min_max, selectedBrands, subid],
-        [decodedPaths, sub, query, min_max, selectedBrands, subid],
+        () => [...decodedPaths, sub, query, min_max, selectedBrands, subid, price_query],
+        [decodedPaths, sub, query, min_max, selectedBrands, subid, price_query],
     );
 
     const verifiedpaths = useMemo(
