@@ -33,11 +33,20 @@ const fetchData = async<T>(url: string): Promise<T> => {
     return response.json();
 }
 
-    export const useQueryData = <T>(url: string, title: string, isEnabled: boolean): UseQueryResult<T> => {
+ /*    export const useQueryData = <T>(url: string, title: string, isEnabled: boolean): UseQueryResult<T> => {
     return useQuery<T>({
             queryKey: [title],
         queryFn: () => fetchData<T>(url),
                 enabled: isEnabled
+    });
+} */
+
+
+    export const useQueryData = <T>(url: string, queryKey: (string | number | any)[], isEnabled: boolean): UseQueryResult<T> => {
+    return useQuery<T>({
+        queryKey,
+        queryFn: () => fetchData<T>(url),
+        enabled: isEnabled
     });
 }
 

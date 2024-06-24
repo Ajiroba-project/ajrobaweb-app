@@ -56,10 +56,16 @@ interface CardInfoItem {
   imageUrl: string;
   name?: string;
   image?: any;
+  price?: string;
+  images?: { id: string; product: string; image: string }[];
+  discount?: string;
+  reviews?: string;
+  message?: string;
 
 }
 
 interface AuctionResponse {
+  message?: any;
   data: CardInfoItem[];
   // add other fields as necessary
 }
@@ -142,7 +148,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
                     <div className=''>
-                      <p className='w-max text-pretty text-base font-normal'>
+                      <p className=' text-pretty text-sm font-normal'>
                         {value.name}
                       </p>
                     </div>
@@ -150,7 +156,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                   <div className='flex justify-between '>
                     {/* price */}
                     <div className='justify-start'>
-                      <p className='w-max text-xl font-medium'>
+                      <p className=' text-xl font-medium'>
                         &#8358;{(value?.price).toLocaleString()}
                         <span className=' '></span>
                       </p>
@@ -243,7 +249,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                     className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
                   >
                     <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
-                      <p>{value.name}</p>
+                      <p className=' text-pretty text-sm font-normal'  >{value.name}</p>
                       <p>Has been added to cart</p>
                     </div>
                   </div>
@@ -256,7 +262,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
                     <div className=''>
-                      <p className='w-max text-pretty text-base font-normal'>
+                      <p className='text-pretty text-base font-normal'>
                         {value.name}
                       </p>
                     </div>
@@ -264,7 +270,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                   <div className='flex justify-between '>
                     {/* price */}
                     <div className='justify-start'>
-                      <p className='w-max text-xl font-medium'>
+                      <p className='text-xl font-medium'>
                         &#8358;{(value?.price).toLocaleString()}
                         <span className=' '></span>
                       </p>
@@ -370,7 +376,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
                     <div className=''>
-                      <p className='w-max text-pretty text-base font-normal'>
+                      <p className='text-pretty text-sm font-normal'>
                         {value.name}
                       </p>
                     </div>
@@ -378,7 +384,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                   <div className='flex justify-between '>
                     {/* price */}
                     <div className='justify-start'>
-                      <p className='w-max text-xl font-medium'>
+                      <p className=' text-xl font-medium'>
                         &#8358;{(value?.price).toLocaleString()}
                         <span className=' '></span>
                       </p>
@@ -407,9 +413,13 @@ export const TopWeakCard = ({ cardInfo }: any) => {
 
 export const CategoryCard = () => {
 
-  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, "get categoriesdetails", true);
+  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, ["get categoriesdetails"], true);
 
   const categorydata = categoriesInfo?.data
+
+  // console.log(categorydata)
+
+
 
   return (
     <>
@@ -424,13 +434,19 @@ export const CategoryCard = () => {
           >
             <div className='rounded-t-2xl bg-[#F6F6F6]'>
               <div className='relative w-full md:h-80 lg:h-64 h-48 '>
-                <Image
-                  src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
-                  alt="product"
-                  layout="fill"
-                  className="fixed-size-image"
-                  objectFit="cover"
-                />
+                {/* {value?.image[0]?.image && console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`, 'value?.image')} */}
+                {value?.image[0]?.image &&
+                  <Image
+                    src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+                    alt="product"
+                    layout="fill"
+                    className="fixed-size-image"
+                    objectFit="cover"
+                  // onError={handleImageError}
+
+                  />
+
+                }
               </div>
             </div>
 
@@ -442,7 +458,7 @@ export const CategoryCard = () => {
                 <div className='flex flex-col '>
                   <p className='text-[#A09F9F]'>{value.description}</p>
                   <Link
-                    href={`/categories/${value.name}`}
+                    href={`/categories/${value.name}?cat_id=${value.id}`}
                     className='my-4 w-full bg-[#FCDFD4] p-2 text-center text-[#111111]'
                   >
                     Explore
@@ -559,11 +575,11 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
                 <div className='flex  w-full items-center justify-between flex-wrap gap-3 capitalize'>
 
                   <div className=' text-sm font-normal'>
-                    <p className='w-max text-pretty text-sm'>{value?.name}</p>
+                    <p className=' text-pretty text-sm'>{value?.name}</p>
                   </div>
 
                   <div className=''>
-                    <p className='w-max text-xs font-normal '>
+                    <p className=' text-xs font-normal '>
                       ticket price: &nbsp;
                       <span className=' text-pretty text-base font-medium text-[#F25E26]'>
 
@@ -654,6 +670,11 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
             className='cursor-pointer gap-2 gap-y-3 rounded hover:scale-110'
             key={index}
           >
+
+            {/*  {
+              console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`)
+            } */}
+
             <div className='relative flex items-center justify-center h-[300px] w-[300px]'>
               {/* Background image with overlay */}
               <div className='absolute inset-0 z-10 bg-black bg-opacity-65 '></div>
@@ -777,11 +798,11 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
                 <div className='flex  w-full items-center justify-between flex-wrap gap-3 capitalize'>
 
                   <div className=' text-sm font-normal'>
-                    <p className='w-max text-pretty text-sm'>{value?.name}</p>
+                    <p className=' text-pretty text-sm'>{value?.name}</p>
                   </div>
 
                   <div className=''>
-                    <p className='w-max text-xs font-normal '>
+                    <p className=' text-xs font-normal '>
                       ticket price: &nbsp;
                       <span className=' text-pretty text-base font-medium text-[#F25E26]'>
 

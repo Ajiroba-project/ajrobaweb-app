@@ -75,12 +75,14 @@ const Page = () => {
   }))
 
   // Fetching data using custom hook
-  const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`, "get auctiondetails", true);
-  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, "get categoriesdetails", true);
-  const { data: featuredproductInfo, isLoading: featuredproducLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`, "get featureddetails", true);
-  const { data: topdeals, isLoading: topdealsLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_deals_products/`, "get topdeals", true);
-  const { data: topweak, isLoading: topweakLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_week_products/`, "get topweak", true);
+  const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`, ["get auctiondetails"], true);
+  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, ["get categoriesdetails"], true);
+  const { data: featuredproductInfo, isLoading: featuredproducLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`, ["get featureddetails"], true);
+  const { data: topdeals, isLoading: topdealsLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_deals_products/`, ["get topdeals"], true);
+  const { data: topweak, isLoading: topweakLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_week_products/`, ["get topweak"], true);
 
+
+  console.log(categoriesInfo?.data, 'categoriesInfo.data')
 
   useEffect(() => {
     if (categoriesInfo?.data) {

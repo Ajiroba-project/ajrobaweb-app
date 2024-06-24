@@ -36,7 +36,7 @@ const Page = () => {
 
   const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`,
-    'get auctiondetails',
+    ['get auctiondetails'],
     true
   );
 

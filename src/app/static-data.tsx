@@ -501,7 +501,38 @@ export const marqueeInfo = [
   'your preferred goods in our raffle draw.'
 ]
 
+
+export const demoProducts = [
+
+  {
+    discount: "500.00",
+    id: "ea116232-39d8-457d-8d04-5b00bc2783ec",
+    images: ['/images/product1.png', '/images/product2.png', '/images/product3.png', '/images/product4.png'],
+    name: "Fruit Sixteen",
+    price: "1200.00",
+    reviews: 0
+  },
+  {
+    discount: "600.00",
+    id: "ea116232-39d8-457d-8d04-5b00bc2783ec",
+    images: ['/images/product1.png', '/images/product2.png', '/images/product3.png', '/images/product4.png'],
+    name: "Fruit Sixteen",
+    price: "200.00",
+    reviews: 2
+  },
+  {
+    discount: "500.00",
+    id: "ea116232-39d8-457d-8d04-5b00bc2783ec",
+    images: ['/images/product1.png', '/images/product2.png', '/images/product3.png', '/images/product4.png'],
+    name: "Fruit Sixteen",
+    price: "1600.00",
+    reviews: 8
+  },
+
+]
+
 export const Products = [
+
   {
     name: 'human hair',
     image: product1,

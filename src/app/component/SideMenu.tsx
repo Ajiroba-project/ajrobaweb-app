@@ -60,7 +60,7 @@ export const SideMenu = () => {
   }
 
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
   // GET https://ajiroba.onrender.com/v1/commerce/categories_and_subcategories/
 
@@ -143,7 +143,7 @@ export const SideMenu = () => {
 export const MobileSideMenu = () => {
   const [active, setActive] = useState<MenuState>(null)
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
   const searchParams = useSearchParams()
   const { replace } = useRouter()
@@ -250,7 +250,7 @@ export const CatMobileSideMenu = () => {
 
   const router = useRouter()
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
+  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
   // const handleSubClick = (subCategoryName: string) => {
   //     setActive(null);
@@ -259,13 +259,15 @@ export const CatMobileSideMenu = () => {
   const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
     setActive(null)
 
-    const params = new URLSearchParams(searchParams)
+    console.log(val, 'valll')
+
+    /* const params = new URLSearchParams(searchParams)
     if (subCategory) {
       params.set('sub', subCategory)
     } else {
       params.delete('sub')
     }
-    replace(`/categories/${val && val.category}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?${params.toString()}`) */
   }
 
   return (
