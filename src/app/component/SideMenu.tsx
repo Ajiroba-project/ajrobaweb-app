@@ -18,6 +18,7 @@ const inter = Inter({ subsets: ['latin'], weight: ['500', '700', '900'] })
 type MenuState = number | null
 
 interface Subcategory {
+  id: string
   subcategory: string;
   name?: string;
   category?: string;
@@ -40,23 +41,36 @@ export const SideMenu = () => {
 
   const searchParams = useSearchParams()
   const { replace } = useRouter()
+  const pathname = usePathname();
 
-  const handlesubcat = (subCategory?: string, val?: { name?: string, category?: string }) => {
+  /*  const handlesubcat = (subCategory?: string, val?: { name?: string, category?: string }) => { */
+  const handlesubcat = (subCategory: string, id: string) => {
 
     // console.log(subCategory, 'subCategory', val, 'val')
 
     // console.log(val && val.category)
 
     setActive(null)
-
     const params = new URLSearchParams(searchParams)
-    if (subCategory) {
-      params.set('sub', subCategory)
-    } else {
-      params.delete('sub')
-    }
 
-    replace(`/categories/${val && val.category}?${params.toString()}`)
+    /*  const params = new URLSearchParams(searchParams)
+     if (subCategory) {
+       params.set('sub', subCategory)
+     } else {
+       params.delete('sub')
+     } */
+
+    if (subCategory) {
+      params.set('sub', subCategory);
+      params.set('subid', id);
+    } else {
+      params.delete('sub');
+      params.delete('subid');
+    }
+    replace(`${pathname}?${params.toString()}`);
+
+
+    // replace(`/categories/${val && val.category}?${params.toString()}`)
   }
 
 
@@ -97,7 +111,7 @@ export const SideMenu = () => {
                 >
                   {val.subcategories?.map(subcategory => (
                     <div
-                      onClick={() => handlesubcat(subcategory.subcategory, val)}
+                      onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
                       key={subcategory.subcategory}
                       className={` ${active === 1 ? 'py-2 hover:bg-[#FCDFD4] ' : 'hover:bg-[#FCDFD4]'} relative z-20   cursor-pointer px-2`}
                     >
@@ -147,18 +161,29 @@ export const MobileSideMenu = () => {
 
   const searchParams = useSearchParams()
   const { replace } = useRouter()
+  const pathname = usePathname();
 
-  const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
+  /* const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => { */
+  const handlesubcat = (subCategory: string, id: string) => {
     setActive(null)
 
-    const params = new URLSearchParams(searchParams)
-    if (subCategory) {
-      params.set('sub', subCategory)
-    } else {
-      params.delete('sub')
-    }
+    /*  const params = new URLSearchParams(searchParams)
+     if (subCategory) {
+       params.set('sub', subCategory)
+     } else {
+       params.delete('sub')
+     }
 
-    replace(`/categories/${val && val.category}?${params.toString()}`)
+     replace(`/categories/${val && val.category}?${params.toString()}`) */
+    const params = new URLSearchParams(searchParams);
+    if (subCategory) {
+      params.set('sub', subCategory);
+      params.set('subid', id);
+    } else {
+      params.delete('sub');
+      params.delete('subid');
+    }
+    replace(`${pathname}?${params.toString()}`);
   }
 
 
@@ -250,16 +275,18 @@ export const CatMobileSideMenu = () => {
 
   const router = useRouter()
 
+
   const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
   // const handleSubClick = (subCategoryName: string) => {
   //     setActive(null);
   // };
 
-  const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
+  // const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
+  const handlesubcat = (subCategory: string, id: string) => {
     setActive(null)
 
-    console.log(val, 'valll')
+    console.log(id, 'id valll')
 
     /* const params = new URLSearchParams(searchParams)
     if (subCategory) {
@@ -268,6 +295,17 @@ export const CatMobileSideMenu = () => {
       params.delete('sub')
     }
     replace(`/categories/${val && val.category}?${params.toString()}`) */
+
+    const params = new URLSearchParams(searchParams)
+
+    if (subCategory) {
+      params.set('sub', subCategory);
+      params.set('subid', id);
+    } else {
+      params.delete('sub');
+      params.delete('subid');
+    }
+    replace(`${pathname}?${params.toString()}`);
   }
 
   return (
@@ -300,7 +338,7 @@ export const CatMobileSideMenu = () => {
                       >
                         <p
                           className={`${active === 1 ? 'font-bold' : ''} `}
-                          onClick={() => handlesubcat(subcategory.subcategory, val)}
+                          onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
                         >
                           {subcategory.subcategory}
                         </p>

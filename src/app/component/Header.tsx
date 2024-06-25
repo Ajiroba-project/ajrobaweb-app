@@ -1,7 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useCallback, SetStateAction } from 'react'
 import { socialIcon, headerMenu, marqueeInfo } from '../static-data'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { IoCartOutline } from 'react-icons/io5'
 import { BiBell } from 'react-icons/bi'
 import { CiSearch } from 'react-icons/ci'
@@ -14,9 +14,13 @@ import { useMutateData } from '@/hooks/useMutateData'
 import Image from 'next/image'
 import Brand from '../asset/logo.svg'
 import Link from 'next/link'
+import debounce from 'lodash.debounce'
 
-export const Header = () => {
+export const Header = ({ onSearch }: any) => {
+
   const pathname = usePathname()
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
   const isRootPath = pathname === '/'
   // const [active, setActive] = useState<number>(0)
   const [isOpen, setIsOpen] = useState<boolean | null>(null)
@@ -25,6 +29,10 @@ export const Header = () => {
     isLoggedIn: state.isLoggedIn,
     clearAuthCookies: state.clearAuthCookies
   }))
+
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+
 
 
   const { setHeaderNav, headerNav } = userNavStore(state => ({
@@ -63,6 +71,45 @@ export const Header = () => {
   }
 
   const router = useRouter()
+
+
+  const handleSearch = useCallback(
+    debounce((query: any) => {
+      if (query) {
+        // Call your filter_by_name function here with the query
+        console.log(`Searching for: ${query}`)
+        // Example: filter_by_name(query)
+      }
+    }, 500), [] // 500ms debounce
+  )
+
+  const onSearchChange = (e: { target: { value: any } }) => {
+    const query = e.target.value
+    setSearchQuery(query)
+    handleSearch(query)
+  }
+
+  const [searchInput, setSearchInput] = useState('');
+
+  const handleSearchChange = (e: { target: { value: SetStateAction<string> } }) => {
+    setSearchInput(e.target.value);
+
+
+  };
+
+  const handleSearchSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    onSearch(searchInput);
+
+    const params = new URLSearchParams(searchParams);
+    if (searchInput) {
+      params.set('search', searchInput);
+    } else {
+      params.delete('search', searchInput);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <>
       <header className={` mb-9 `}>
@@ -183,8 +230,25 @@ export const Header = () => {
                       </li>
                     ))}
                     <div className='relative mx-4 flex lg:mx-0'>
-                      <input type='text' className=' bg-[#F5F5F5] p-2 ' />
-                      <CiSearch className='absolute  right-3 top-2 cursor-pointer bg-[#F5F5F5] text-xl outline-[#F25E26]' />
+                      {/*  <input
+                        type='text'
+                        className=' bg-[#F5F5F5] p-2 '
+                        value={searchQuery}
+                        onChange={onSearchChange}
+                      /> */}
+                      <form className='relative mx-4 flex lg:mx-0' onSubmit={handleSearchSubmit}>
+                        <input
+                          type="text"
+                          className=' bg-[#F5F5F5] p-2 '
+                          value={searchInput}
+                          onChange={handleSearchChange}
+                          placeholder="Search products..."
+                        />
+                        <button type="submit">
+                          <CiSearch className='absolute  right-3 top-2 cursor-pointer bg-[#F5F5F5] text-xl outline-[#F25E26]' />
+                        </button>
+                      </form>
+                      {/*  <CiSearch className='absolute  right-3 top-2 cursor-pointer bg-[#F5F5F5] text-xl outline-[#F25E26]' /> */}
                     </div>
                   </ul>
                 </div>

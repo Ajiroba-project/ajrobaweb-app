@@ -14,6 +14,7 @@ type MenuState = number | null;
 
 
 interface Subcategory {
+    id: string;
     subcategory: string;
     category?: string;
     ame?: string;
@@ -43,21 +44,33 @@ export const AllCategories = () => {
     const [subcategory, SetSubcategory] = useState<string | null>(null);
 
     const searchParams = useSearchParams();
+    const pathname = usePathname();
     const { replace } = useRouter();
 
-    const handlesubcat = (subCategory: string, val?: { name?: string, category: string }) => {
+    // const handlesubcat = (subCategory: string, val?: { name?: string, category: string, id: string }) => {
+    const handlesubcat = (subCategory: string, id: string) => {
         setActive(null);
 
-        console.log(val, 'val')
-
+        console.log(id, 'val')
         const params = new URLSearchParams(searchParams);
-        if (subCategory) {
-            params.set("sub", subCategory);
-        } else {
-            params.delete("sub");
-        }
 
-        replace(`/categories/${val?.category}?${params.toString()}`);
+        /*     const params = new URLSearchParams(searchParams);
+            if (subCategory) {
+                params.set("sub", subCategory);
+            } else {
+                params.delete("sub");
+            }
+
+            replace(`/categories/${val?.category}?${params.toString()}`); */
+        if (subCategory) {
+            params.set('sub', subCategory);
+            params.set('subid', id);
+        } else {
+            params.delete('sub');
+            params.delete('subid');
+        }
+        replace(`${pathname}?${params.toString()}`);
+
     };
 
     const router = useRouter()
@@ -101,7 +114,8 @@ export const AllCategories = () => {
                                 >
                                     {val.subcategories?.map((subcategory) => (
                                         <div
-                                            onClick={() => handlesubcat(subcategory.subcategory, val)}
+                                            // onClick={() => handlesubcat(subcategory.subcategory, val)}
+                                            onClick={() => handlesubcat(subcategory?.subcategory, subcategory.id)}
                                             key={subcategory.subcategory}
                                             className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
                                         >
