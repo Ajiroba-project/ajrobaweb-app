@@ -117,6 +117,9 @@ export const RatingFilter = () => {
   const items = [
     { id: 5, name: generateStars(5), rating: 5, tag: 'five_star' },
     { id: 4, name: generateStars(4), rating: 4, tag: 'four_star' },
+    { id: 3, name: generateStars(3), rating: 3, tag: 'three_star' },
+    { id: 2, name: generateStars(2), rating: 2, tag: 'two_star' },
+    { id: 1, name: generateStars(1), rating: 1, tag: 'one_star' },
   ];
 
 
@@ -134,11 +137,14 @@ export const RatingFilter = () => {
     setSelectedRatings(newSelectedRatings);
 
     const selectedRatingIds = newSelectedRatings.join(',');
+    // console.log(selectedRatingIds)
     const params = new URLSearchParams(searchParams);
     if (selectedRatingIds) {
-      params.set('selectedRatings', selectedRatingIds);
+      const lastItem = newSelectedRatings[newSelectedRatings.length - 1];
+      params.set('selectedRatings', lastItem.toString());
     } else {
-      params.delete('selectedRatings', selectedRatingIds);
+      const lastItem = newSelectedRatings[newSelectedRatings.length - 1];
+      params.delete('selectedRatings', lastItem.toString());
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -188,9 +194,9 @@ export const PriceFilter = () => {
 
     const params = new URLSearchParams(searchParams);
     if (price) {
-      params.set('query', price);
+      params.set('greaterthan', price);
     } else {
-      params.delete('query');
+      params.delete('greaterthan');
     }
     replace(`${pathname}?${params.toString()}`);
   }
@@ -202,9 +208,12 @@ export const PriceFilter = () => {
     /*   console.log(min, max) */
     const params = new URLSearchParams(searchParams);
     if (min && max) {
-      params.set('min_max', min + '&' + max);
+      // params.set('min_max', min + '&' + max);
+      params.set('min', min);
+      params.set('max', max);
     } else {
-      params.delete('min_max');
+      params.delete('min');
+      params.delete('max');
     }
     replace(`${pathname}?${params.toString()}`);
   }
@@ -228,18 +237,7 @@ export const PriceFilter = () => {
 
       </div>
 
-      {/*   <div>
-        <input
-          type="radio"
-          name="price1"
-          value="2000-5000"
-          id="2000-5000"
-          className="mr-3"
-          onChange={() => handlePriceSelection('2000-5000')}
 
-        />
-        <label htmlFor="2000-5000">₦2000 - ₦5000</label>
-      </div> */}
 
       <div>
         <input
@@ -248,6 +246,7 @@ export const PriceFilter = () => {
           value="₦5000-Above"
           id="₦5000-Above"
           className="mr-3"
+          onChange={() => handlePriceSelection('>5000')}
         />
         <label htmlFor="₦5000-Above">₦5000 - Above</label>
       </div>
@@ -346,7 +345,7 @@ export const SearchFilter = () => {
       {isOpen && (
         <div className='  z-50 h-full w-full'>
           <CatMobileSideMenu />
-          {/*     <h1>all cat under</h1> */}
+
         </div>
       )}
 
