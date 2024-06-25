@@ -25,6 +25,7 @@ interface Subcategory {
 }
 
 interface Category {
+  [x: string]: any
   category: string;
   subcategories: Subcategory[];
 }
@@ -44,7 +45,7 @@ export const SideMenu = () => {
   const pathname = usePathname();
 
   /*  const handlesubcat = (subCategory?: string, val?: { name?: string, category?: string }) => { */
-  const handlesubcat = (subCategory: string, id: string) => {
+  const handlesubcat = (subCategory: string, id: string, val?: any) => {
 
     // console.log(subCategory, 'subCategory', val, 'val')
 
@@ -67,10 +68,10 @@ export const SideMenu = () => {
       params.delete('sub');
       params.delete('subid');
     }
-    replace(`${pathname}?${params.toString()}`);
+    // replace(`${pathname}?${params.toString()}`);
+    // /categories/${ val.category }?cat_id = ${ val.id }
 
-
-    // replace(`/categories/${val && val.category}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?cat_id=${val.id}?${params.toString()}`)
   }
 
 
@@ -99,7 +100,7 @@ export const SideMenu = () => {
                 >
                   <span className='flex items-center gap-2'>
                     {/* menuName + cadet */}
-                    <p className='text-xl font-normal capitalize' onClick={() => router.push(`/categories/${val.category}`)}  >{val.category}</p>{' '}
+                    <p className='text-xl font-normal capitalize' onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)}  >{val.category}</p>{' '}
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
@@ -111,7 +112,7 @@ export const SideMenu = () => {
                 >
                   {val.subcategories?.map(subcategory => (
                     <div
-                      onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
+                      onClick={() => handlesubcat(subcategory.subcategory, subcategory.id, val)}
                       key={subcategory.subcategory}
                       className={` ${active === 1 ? 'py-2 hover:bg-[#FCDFD4] ' : 'hover:bg-[#FCDFD4]'} relative z-20   cursor-pointer px-2`}
                     >

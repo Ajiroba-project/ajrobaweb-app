@@ -345,7 +345,7 @@ export const SearchFilter = () => {
       {isOpen && (
         <div className='  z-50 h-full w-full'>
           <CatMobileSideMenu />
-          {/*     <h1>all cat under</h1> */}
+
         </div>
       )}
 
