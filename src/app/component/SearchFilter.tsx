@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import { AllCategories, MobileSideMenu } from "./AllCategories";
 import { CatMobileSideMenu } from "./SideMenu";
@@ -65,30 +65,34 @@ export const BrandFilter = () => {
 
   return (
     <div>
-      <p className="mb-2 text-[#2A2A2A]" >Brand</p>
-      <input
-        type="search"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Search"
-        className=" w-auto p-2 mb-2"
-      />
-      <ul>
-        {items
-          .filter(item => {
-            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
-          })
-          .map(item => (
-            <li key={item.id}>
-              <input
-                type="checkbox"
-                checked={selectedItems.includes(item.id)}
-                onChange={() => handleCheckboxChange(item)}
-              />
-              <span className="ml-2">{item.name}</span>
-            </li>
-          ))}
-      </ul>
+      <Suspense fallback={<div>Loading...</div>}>
+
+
+        <p className="mb-2 text-[#2A2A2A]" >Brand</p>
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Search"
+          className=" w-auto p-2 mb-2"
+        />
+        <ul>
+          {items
+            .filter(item => {
+              return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+            })
+            .map(item => (
+              <li key={item.id}>
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(item.id)}
+                  onChange={() => handleCheckboxChange(item)}
+                />
+                <span className="ml-2">{item.name}</span>
+              </li>
+            ))}
+        </ul>
+      </Suspense>
     </div>
   );
 };
@@ -152,24 +156,28 @@ export const RatingFilter = () => {
 
   return (
     <div>
-      <p className="p-2 mb-2 text-[#2A2A2A] mt-4">Rating</p>
-      <ul>
+      <Suspense fallback={<div>Loading...</div>}>
 
-        {items.map(item => (
-          <li key={item.id} className="flex mb-4">
-            <input
-              type="radio"
-              name="rating"
-              id={item.tag}
-              value={item.tag}
-              checked={selectedRatings.includes(item.id)}
-              onChange={() => handleCheckboxChange(item)}
-            />
-            <span className="ml-2 flex">{item.name}</span>
-          </li>
-        ))}
 
-      </ul>
+        <p className="p-2 mb-2 text-[#2A2A2A] mt-4">Rating</p>
+        <ul>
+
+          {items.map(item => (
+            <li key={item.id} className="flex mb-4">
+              <input
+                type="radio"
+                name="rating"
+                id={item.tag}
+                value={item.tag}
+                checked={selectedRatings.includes(item.id)}
+                onChange={() => handleCheckboxChange(item)}
+              />
+              <span className="ml-2 flex">{item.name}</span>
+            </li>
+          ))}
+
+        </ul>
+      </Suspense>
     </div>
   );
 };
@@ -219,54 +227,58 @@ export const PriceFilter = () => {
   }
 
   return (
-    <div className="py-6 ">
-      <p>Price</p>
+    <Suspense fallback={<div>Loading...</div>}>
 
-      <div>
+      <div className="py-6 ">
+        <p>Price</p>
 
-
-        <input
-          type="radio"
-          name="price1"
-          value="<2000"
-          id="under2000"
-          className="mr-3"
-          onChange={() => handlePriceSelection('<5000')}
-        />
-        <label htmlFor="under5000">under 5000</label>
-
-      </div>
+        <div>
 
 
+          <input
+            type="radio"
+            name="price1"
+            value="<2000"
+            id="under2000"
+            className="mr-3"
+            onChange={() => handlePriceSelection('<5000')}
+          />
+          <label htmlFor="under5000">under 5000</label>
 
-      <div>
-        <input
-          type="radio"
-          name="price1"
-          value="₦5000-Above"
-          id="₦5000-Above"
-          className="mr-3"
-          onChange={() => handlePriceSelection('>5000')}
-        />
-        <label htmlFor="₦5000-Above">₦5000 - Above</label>
-      </div>
+        </div>
 
 
-      <div className="gap-2">
-        <p className="py-5">Custom Price Range</p>
-        <div >
-          <form onSubmit={(e) => e.preventDefault()} className="flex gap-3 flex-wrap">
-            <input value={minvalue} onChange={(e) => setMinvalue(e.target.value)} type="text" name="minvalue" placeholder="min" className="w-14 p-2" />
-            <input value={maxvalue} type="text" name="maxvalue" placeholder="max" className="w-14 p-2" onChange={(e) => setMaxvalue(e.target.value)} />
-            <input onClick={() => handleminandmax(minvalue, maxvalue)}
-              type="button"
-              value="Apply"
-              className=" rounded border-2 border-[#F25E26] text-[#F25E26] p-3"
-            />
-          </form>
+
+        <div>
+          <input
+            type="radio"
+            name="price1"
+            value="₦5000-Above"
+            id="₦5000-Above"
+            className="mr-3"
+            onChange={() => handlePriceSelection('>5000')}
+          />
+          <label htmlFor="₦5000-Above">₦5000 - Above</label>
+        </div>
+
+
+        <div className="gap-2">
+          <p className="py-5">Custom Price Range</p>
+          <div >
+            <form onSubmit={(e) => e.preventDefault()} className="flex gap-3 flex-wrap">
+              <input value={minvalue} onChange={(e) => setMinvalue(e.target.value)} type="text" name="minvalue" placeholder="min" className="w-14 p-2" />
+              <input value={maxvalue} type="text" name="maxvalue" placeholder="max" className="w-14 p-2" onChange={(e) => setMaxvalue(e.target.value)} />
+              <input onClick={() => handleminandmax(minvalue, maxvalue)}
+                type="button"
+                value="Apply"
+                className=" rounded border-2 border-[#F25E26] text-[#F25E26] p-3"
+              />
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+
+    </Suspense>
   );
 };
 
@@ -323,6 +335,7 @@ export const SearchFilter = () => {
 
 
   return (
+
     <div className="mb-8">
 
       <div className="flex cursor-pointer items-center gap-3 p-3">
@@ -384,6 +397,7 @@ export const SearchFilter = () => {
 
 
     </div>
+
   );
 };
 

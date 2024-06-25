@@ -1,5 +1,5 @@
 'use client'
-import { useState, Fragment } from 'react'
+import { useState, Fragment, Suspense } from 'react'
 import { categories } from '../static-data'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FiMenu } from 'react-icons/fi'
@@ -82,50 +82,53 @@ export const SideMenu = () => {
 
   return (
     <>
-      <section className='pl-[4rem] '>
-        <ul className='relative py-6'>
-          {catInfo?.data?.map((val, index) => (
-            <Fragment key={index}>
-              <div className='relative'>
-                {/* main menu */}
-                <li
-                  className={`${poppins.className} ${active === index ? 'text-[#F25E26]' : ''}  flex  cursor-pointer items-center gap-2 py-2 hover:text-[#F25E26] ${val.category === 'fashion' ? 'hidden' : 'block'} relative`}
-                  onClick={() => {
-                    setActive(active === index ? null : index)
-                  }}
-                  //   onMouseOver={() => setActive(active === index ? null : index)}
-                  onMouseEnter={() => setActive(index)}
-                // onMouseLeave={()=>setActive(null)}
-                >
-                  <span className='flex items-center gap-2'>
-                    {/* menuName + cadet */}
-                    <p className='text-xl font-normal capitalize' onClick={() => router.push(`/categories/${val.category}`)}  >{val.category}</p>{' '}
-                    {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                  </span>
-                </li>
-              </div>
+      <Suspense fallback={<div>Loading...</div>}>
 
-              {active === index && (
-                <div
-                  className={`${inter.className} z-20 bg-white ${active === 1 ? 'left-[10rem] -mt-[30px]  w-48 gap-2 px-3' : 'left-[8rem] -mt-[30px] w-48 rounded-md'} absolute rounded text-sm shadow-md transition delay-300 duration-300 ease-in-out`}
-                >
-                  {val.subcategories?.map(subcategory => (
-                    <div
-                      onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
-                      key={subcategory.subcategory}
-                      className={` ${active === 1 ? 'py-2 hover:bg-[#FCDFD4] ' : 'hover:bg-[#FCDFD4]'} relative z-20   cursor-pointer px-2`}
-                    >
-                      <p
-                        className={` ${active === 1 ? 'w-max text-base font-bold ' : ' p-2 text-base font-medium '}`}
+
+        <section className='pl-[4rem] '>
+          <ul className='relative py-6'>
+            {catInfo?.data?.map((val, index) => (
+              <Fragment key={index}>
+                <div className='relative'>
+                  {/* main menu */}
+                  <li
+                    className={`${poppins.className} ${active === index ? 'text-[#F25E26]' : ''}  flex  cursor-pointer items-center gap-2 py-2 hover:text-[#F25E26] ${val.category === 'fashion' ? 'hidden' : 'block'} relative`}
+                    onClick={() => {
+                      setActive(active === index ? null : index)
+                    }}
+                    //   onMouseOver={() => setActive(active === index ? null : index)}
+                    onMouseEnter={() => setActive(index)}
+                  // onMouseLeave={()=>setActive(null)}
+                  >
+                    <span className='flex items-center gap-2'>
+                      {/* menuName + cadet */}
+                      <p className='text-xl font-normal capitalize' onClick={() => router.push(`/categories/${val.category}`)}  >{val.category}</p>{' '}
+                      {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                    </span>
+                  </li>
+                </div>
+
+                {active === index && (
+                  <div
+                    className={`${inter.className} z-20 bg-white ${active === 1 ? 'left-[10rem] -mt-[30px]  w-48 gap-2 px-3' : 'left-[8rem] -mt-[30px] w-48 rounded-md'} absolute rounded text-sm shadow-md transition delay-300 duration-300 ease-in-out`}
+                  >
+                    {val.subcategories?.map(subcategory => (
+                      <div
+                        onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
+                        key={subcategory.subcategory}
+                        className={` ${active === 1 ? 'py-2 hover:bg-[#FCDFD4] ' : 'hover:bg-[#FCDFD4]'} relative z-20   cursor-pointer px-2`}
                       >
-                        {subcategory.subcategory}
-                      </p>
+                        <p
+                          className={` ${active === 1 ? 'w-max text-base font-bold ' : ' p-2 text-base font-medium '}`}
+                        >
+                          {subcategory.subcategory}
+                        </p>
 
-                      <span
-                        className={`${active === 1 ? 'absolute -right-2.5 -top-0.5 h-full w-0.5 rounded border-2 border-gray-200' : 'hidden'}${subcategory && subcategory.name === 'Accessories' ? ' border-hidden' : ''}`}
-                      ></span>
+                        <span
+                          className={`${active === 1 ? 'absolute -right-2.5 -top-0.5 h-full w-0.5 rounded border-2 border-gray-200' : 'hidden'}${subcategory && subcategory.name === 'Accessories' ? ' border-hidden' : ''}`}
+                        ></span>
 
-                      {/*   {'subcategory' in subcategory && (
+                        {/*   {'subcategory' in subcategory && (
                         <ul className='z-50 '>
                           {subcategory.subcategories?.map(subSubcategory => (
                             <div
@@ -142,14 +145,15 @@ export const SideMenu = () => {
                           ))}
                         </ul>
                       )} */}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Fragment>
-          ))}
-        </ul>
-      </section>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Fragment>
+            ))}
+          </ul>
+        </section>
+      </Suspense>
     </>
   )
 }
@@ -192,32 +196,35 @@ export const MobileSideMenu = () => {
 
   return (
     <>
-      <section className='bg-[#F6F6F6] p-6'>
-        <ul className='relative '>
-          {catInfo?.data?.map((val, index) => (
-            <Fragment key={index}>
-              <div className='relative bg-[#F6F6F6] p-2'>
-                <li
-                  className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 py-2 hover:text-[#F25E26] `}
-                  onClick={() => {
-                    setActive(active === index ? null : index)
-                  }}
-                >
-                  <span className='flex items-center gap-2 '>
-                    <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
-                    {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                  </span>
-                </li>
+      <Suspense fallback={<div>Loading...</div>}>
 
-                {active === index && (
-                  <div
-                    className={`${inter.className} z-20 px-4  ${active === 1 ? ' -top-0 gap-2 ' : ''} rounded text-sm `}
+
+        <section className='bg-[#F6F6F6] p-6'>
+          <ul className='relative '>
+            {catInfo?.data?.map((val, index) => (
+              <Fragment key={index}>
+                <div className='relative bg-[#F6F6F6] p-2'>
+                  <li
+                    className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 py-2 hover:text-[#F25E26] `}
+                    onClick={() => {
+                      setActive(active === index ? null : index)
+                    }}
                   >
-                    {val.subcategories?.map((subcategory) => (
-                      <div key={subcategory.subcategory} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
-                        <Link href={"#"} className={`${active === 1 ? "font-bold" : ""} `}>{subcategory.subcategory}</Link>
+                    <span className='flex items-center gap-2 '>
+                      <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
+                      {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                    </span>
+                  </li>
 
-                        {/*  {('subcategory' in subcategory) && (
+                  {active === index && (
+                    <div
+                      className={`${inter.className} z-20 px-4  ${active === 1 ? ' -top-0 gap-2 ' : ''} rounded text-sm `}
+                    >
+                      {val.subcategories?.map((subcategory) => (
+                        <div key={subcategory.subcategory} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
+                          <Link href={"#"} className={`${active === 1 ? "font-bold" : ""} `}>{subcategory.subcategory}</Link>
+
+                          {/*  {('subcategory' in subcategory) && (
                                                         <ul className="z-50 ">
                                                             {subcategory.subcategory?.map((subSubcategory) => (
                                                                 <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
@@ -226,10 +233,10 @@ export const MobileSideMenu = () => {
                                                             ))}
                                                         </ul>
                                                     )} */}
-                      </div>
-                    ))}
+                        </div>
+                      ))}
 
-                    {/*  {val.subcategories?.map(subcategory => (
+                      {/*  {val.subcategories?.map(subcategory => (
                       <div
                         onClick={() => handlesubcat(subcategory.subcategory, val)}
                         key={subcategory.subcategory}
@@ -254,13 +261,14 @@ export const MobileSideMenu = () => {
                         )}
                       </div>
                     ))} */}
-                  </div>
-                )}
-              </div>
-            </Fragment>
-          ))}
-        </ul>
-      </section>
+                    </div>
+                  )}
+                </div>
+              </Fragment>
+            ))}
+          </ul>
+        </section>
+      </Suspense>
     </>
   )
 }
@@ -310,40 +318,43 @@ export const CatMobileSideMenu = () => {
 
   return (
     <>
-      <section className='bg-[#F6F6F6] px-6 py-2'>
-        <ul className='relative '>
-          {catInfo?.data.map((val, index) => (
-            <Fragment key={index}>
-              <div className='relative bg-[#F6F6F6] '>
-                <li
-                  className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 py-2 hover:text-[#F25E26] `}
-                  onClick={() => {
-                    setActive(active === index ? null : index)
-                  }}
-                >
-                  <span className='flex items-center gap-2 '>
-                    <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
-                    {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                  </span>
-                </li>
+      <Suspense fallback={<div>Loading...</div>}>
 
-                {active === index && (
-                  <div
-                    className={`${inter.className} z-20 px-4  ${active === 1 ? ' -top-0 gap-2 ' : ''} rounded text-sm `}
+
+        <section className='bg-[#F6F6F6] px-6 py-2'>
+          <ul className='relative '>
+            {catInfo?.data.map((val, index) => (
+              <Fragment key={index}>
+                <div className='relative bg-[#F6F6F6] '>
+                  <li
+                    className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 py-2 hover:text-[#F25E26] `}
+                    onClick={() => {
+                      setActive(active === index ? null : index)
+                    }}
                   >
-                    {val.subcategories?.map(subcategory => (
-                      <div
-                        key={subcategory.subcategory}
-                        className={` ${active === 1 ? '' : 'hover:bg-[#FCDFD4]'} z-20 my-4 cursor-pointer p-2`}
-                      >
-                        <p
-                          className={`${active === 1 ? 'font-bold' : ''} `}
-                          onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
-                        >
-                          {subcategory.subcategory}
-                        </p>
+                    <span className='flex items-center gap-2 '>
+                      <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
+                      {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                    </span>
+                  </li>
 
-                        {/*    {'subcategory' in subcategory && (
+                  {active === index && (
+                    <div
+                      className={`${inter.className} z-20 px-4  ${active === 1 ? ' -top-0 gap-2 ' : ''} rounded text-sm `}
+                    >
+                      {val.subcategories?.map(subcategory => (
+                        <div
+                          key={subcategory.subcategory}
+                          className={` ${active === 1 ? '' : 'hover:bg-[#FCDFD4]'} z-20 my-4 cursor-pointer p-2`}
+                        >
+                          <p
+                            className={`${active === 1 ? 'font-bold' : ''} `}
+                            onClick={() => handlesubcat(subcategory.subcategory, subcategory.id)}
+                          >
+                            {subcategory.subcategory}
+                          </p>
+
+                          {/*    {'subcategory' in subcategory && (
                           <ul className='z-50 '>
                             {subcategory.subcategory?.map(subSubcategory => (
                               <div
@@ -358,15 +369,16 @@ export const CatMobileSideMenu = () => {
                             ))}
                           </ul>
                         )} */}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Fragment>
-          ))}
-        </ul>
-      </section>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Fragment>
+            ))}
+          </ul>
+        </section>
+      </Suspense>
     </>
   )
 }

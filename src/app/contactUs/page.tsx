@@ -5,7 +5,7 @@ import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
 import { ChatBox } from '../component/ChatBox'
 import { DefaultBreadCrumb } from '../component/Breadcrumb'
-import { usePathName } from '@/hooks/usePathname'
+import { usePathNamemain } from '@/hooks/usePathname'
 import Image from 'next/image'
 import call from '../asset/image/call.png'
 import message from '../asset/image/message.png'
@@ -30,7 +30,7 @@ type dataProps = {
 const Page = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const router = useRouter()
-  const decodedPaths = usePathName()
+  const decodedPaths = usePathNamemain()
 
   const schema = yup.object().shape({
     name: yup.string().required('Name is required'),
@@ -223,13 +223,13 @@ const Page = () => {
                 text={`${status === 'pending' ? 'Sending...' : 'Send Message'}`}
                 type='submit'
                 className='rounded-md bg-[#FCDFD4] p-4 px-8'
-                handleClick={() => {}}
+                handleClick={() => { }}
               />
             </div>
           </form>
         </div>
         <div className='fixed bottom-20'>
-          <ChatBox isOpen={isOpen}  />
+          <ChatBox isOpen={isOpen} />
         </div>
       </main>
       <Footer />

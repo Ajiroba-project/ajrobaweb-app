@@ -6,19 +6,19 @@ import { Footer } from "../component/Footer";
 import { ChatBox } from "../component/ChatBox";
 import { DefaultBreadCrumb } from "../component/Breadcrumb";
 import { HeadingText } from "../component/Heading"
-import { usePathName } from '@/hooks/usePathname'
+
 import { FaCheck } from 'react-icons/fa'
 
 import mission from "../asset/image/mission.png"
 import vision from "../asset/image/vision.png"
 import Image from "next/image"
+import { usePathNamemain } from '@/hooks/usePathname';
 
 
-const Page = () => {
+const AboutUs = () => {
 
-  const decodedPaths = usePathName()
+  const decodedPaths = usePathNamemain()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-
 
 
 
@@ -126,4 +126,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default AboutUs
