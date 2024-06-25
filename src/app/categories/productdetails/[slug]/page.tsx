@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, SetStateAction, Suspense } from "react";
+import { useState, useEffect, useMemo, SetStateAction } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
 import { Header } from "@/app/component/Header";
@@ -395,132 +395,129 @@ const Page = ({ params }: any) => {
 
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <main>
-                <ToastContainer />
-                <Header />
-                <Breadcrumb paths={verifiedpaths} text={undefined} />
+        <main>
+            <ToastContainer />
+            <Header />
+            <Breadcrumb paths={verifiedpaths} text={undefined} />
 
-                <div onClick={() => router.back()} >
-                    <div className=" cursor-pointer container  flex justify-start" ><p className="text-[#E84526] text-base">Back</p></div>
-                </div>
+            <div onClick={() => router.back()} >
+                <div className=" cursor-pointer container  flex justify-start" ><p className="text-[#E84526] text-base">Back</p></div>
+            </div>
 
 
-                <Title title="Product Details" />
+            <Title title="Product Details" />
 
-                <div className="product-image-gallery  container py-8 grid 2xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 xl:grid-col-3 grid-cols-1 ">
+            <div className="product-image-gallery  container py-8 grid 2xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 xl:grid-col-3 grid-cols-1 ">
 
-                    <div className=" ">
-                        <div className="flex 2xl:flex-col xl:flex-col lg:flex-col md:flex-col flex-row 2xl:justify-start xl:justify-start
+                <div className=" ">
+                    <div className="flex 2xl:flex-col xl:flex-col lg:flex-col md:flex-col flex-row 2xl:justify-start xl:justify-start
 
                     md:justify-start lg:justify-start justify-center gap-4" >
 
-                            {images.slice(0, 4).map((image, index) => (
-                                <div key={index} className="thumbnail-image ">
-                                    <Image
-                                        className=" w-32 h-32 object-cover" // Ensure uniform size for thumbnails
-                                        src={image}
-                                        alt="Product Thumbnail"
-                                        onClick={() => handleImageClick(index)}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className=" mt-8">
-                        <div className="thumbnail-images w-auto     ">
-
-                            <div className="main-image">
-
+                        {images.slice(0, 4).map((image, index) => (
+                            <div key={index} className="thumbnail-image ">
                                 <Image
-                                    src={images[selectedImage]}
-                                    alt="Product Image"
-                                    layout="responsive"
-                                    className=" object-cover"
+                                    className=" w-32 h-32 object-cover" // Ensure uniform size for thumbnails
+                                    src={image}
+                                    alt="Product Thumbnail"
+                                    onClick={() => handleImageClick(index)}
                                 />
                             </div>
-                        </div>
-
-
-                    </div>
-
-                    <div className=" mt-4 container justify-center flex xl:block md:block lg:block 2xl:block" >
-                        <div className="" >
-                            <h1 className="text-[#111111] text-xl " >Mama Gold Rice</h1>
-                            <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
-                                {star.map((val, index) => (
-                                    <span key={index}>
-
-                                        <span key={index}>
-                                            <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
-                                        </span>
-                                    </span>
-                                ))}
-                                (300) Reviews
-                            </p>
-                            <h1 className="text-[#111111] text-2xl mt-2 font-bold">N {totalPrice.toLocaleString()}</h1>
-                            <h1 className="text-[#111111] text-lg mt-2 line-through ">N 76,500</h1>
-
-                            <hr className="mt-4" />
-                            <p className="text-[#b4a3a3] text-base mt-4 " >Quantity</p>
-
-                            <div className="flex items-center mt-2">
-                                <button
-                                    onClick={handleDecrement}
-                                    className="px-2 py-1 bg-gray-200 text-gray-700 rounded-l"
-                                >
-                                    -
-                                </button>
-                                <input
-                                    type="text"
-                                    value={quantity}
-                                    readOnly
-                                    className="w-12 text-center border-t border-b border-gray-300"
-                                />
-                                <button
-                                    onClick={handleIncrement}
-                                    className="px-2 py-1 bg-[#E36414] text-white rounded-r"
-                                >
-                                    +
-                                </button>
-                            </div>
-
-                            <p className="text-[#b4a3a3] text-base mt-4 " >Weight</p>
-
-                            <h1 className="text-[#111111] text-base mt-2 font-bold">50 kg</h1>
-
-                            <hr className="mt-4" />
-
-                            <p className="text-[#b4a3a3] text-base mt-4 " >Delivery Estimation</p>
-
-                            <h1 className="text-[#111111] text-base mt-2 font-bold">Nov. 12 - Nov. 22</h1>
-
-
-                            <button
-                                onClick={notify} className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
-
-                            >
-                                Add to Cart
-                            </button>
-
-                        </div>
-
-
+                        ))}
                     </div>
                 </div>
 
-                <ProductReview />
+                <div className=" mt-8">
+                    <div className="thumbnail-images w-auto     ">
 
-                <CustomerReview />
+                        <div className="main-image">
 
-                <RelatedProduct />
+                            <Image
+                                src={images[selectedImage]}
+                                alt="Product Image"
+                                layout="responsive"
+                                className=" object-cover"
+                            />
+                        </div>
+                    </div>
 
 
-                <Footer />
-            </main>
-        </Suspense>
+                </div>
 
+                <div className=" mt-4 container justify-center flex xl:block md:block lg:block 2xl:block" >
+                    <div className="" >
+                        <h1 className="text-[#111111] text-xl " >Mama Gold Rice</h1>
+                        <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
+                            {star.map((val, index) => (
+                                <span key={index}>
+
+                                    <span key={index}>
+                                        <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
+                                    </span>
+                                </span>
+                            ))}
+                            (300) Reviews
+                        </p>
+                        <h1 className="text-[#111111] text-2xl mt-2 font-bold">N {totalPrice.toLocaleString()}</h1>
+                        <h1 className="text-[#111111] text-lg mt-2 line-through ">N 76,500</h1>
+
+                        <hr className="mt-4" />
+                        <p className="text-[#b4a3a3] text-base mt-4 " >Quantity</p>
+
+                        <div className="flex items-center mt-2">
+                            <button
+                                onClick={handleDecrement}
+                                className="px-2 py-1 bg-gray-200 text-gray-700 rounded-l"
+                            >
+                                -
+                            </button>
+                            <input
+                                type="text"
+                                value={quantity}
+                                readOnly
+                                className="w-12 text-center border-t border-b border-gray-300"
+                            />
+                            <button
+                                onClick={handleIncrement}
+                                className="px-2 py-1 bg-[#E36414] text-white rounded-r"
+                            >
+                                +
+                            </button>
+                        </div>
+
+                        <p className="text-[#b4a3a3] text-base mt-4 " >Weight</p>
+
+                        <h1 className="text-[#111111] text-base mt-2 font-bold">50 kg</h1>
+
+                        <hr className="mt-4" />
+
+                        <p className="text-[#b4a3a3] text-base mt-4 " >Delivery Estimation</p>
+
+                        <h1 className="text-[#111111] text-base mt-2 font-bold">Nov. 12 - Nov. 22</h1>
+
+
+                        <button
+                            onClick={notify} className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
+
+                        >
+                            Add to Cart
+                        </button>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+            <ProductReview />
+
+            <CustomerReview />
+
+            <RelatedProduct />
+
+
+            <Footer />
+        </main>
     );
 };
 export default Page;

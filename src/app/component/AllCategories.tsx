@@ -1,5 +1,5 @@
 "use client";
-import { useState, Fragment, Suspense } from "react";
+import { useState, Fragment } from "react";
 import { categories } from "../static-data";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Link from "next/link";
@@ -85,55 +85,51 @@ export const AllCategories = () => {
 
     return (
         <>
+            <section className="px-2 ">
+                <ul className="relative pt-6 bottom-4 z-10">
+                    {catInfo?.data?.map((val, index) => (
+                        <Fragment key={index}>
+                            <div className="relative ">
+                                <li
+                                    className={`${poppins.className} ${active === index ? "text-[#F25E26]" : ""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `}
+                                    onClick={() => {
+                                        setActive(active === index ? null : index);
+                                    }}
+                                >
+                                    <span className="flex gap-2 items-center ">
+                                        <p onClick={() => {
+                                            return (
+
+                                                SetSubcategory(val.category), router.push(`/categories/${val.category}?cat_id=${val.id}`)
+                                            )
+                                        }} >{val.category}</p>{" "}
+                                        {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                                    </span>
+                                </li>
+                            </div>
+
+                            {active === index && (
+                                <div
+                                    className={`${inter.className} z-20 bg-white ${active === 1 ? " gap-3 w-[60%]  -top-0 -right-12" : "w-[60%] -top-4 -right-12"} shadow-md rounded text-sm absolute`}
+                                >
+                                    {val.subcategories?.map((subcategory) => (
+                                        <div
+                                            // onClick={() => handlesubcat(subcategory.subcategory, val)}
+                                            onClick={() => handlesubcat(subcategory?.subcategory, subcategory.id)}
+                                            key={subcategory.subcategory}
+                                            className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
+                                        >
+                                            {subcategory.subcategory}
 
 
-            <Suspense fallback={<div>Loading...</div>}>
-                <section className="px-2 ">
-                    <ul className="relative pt-6 bottom-4 z-10">
-                        {catInfo?.data?.map((val, index) => (
-                            <Fragment key={index}>
-                                <div className="relative ">
-                                    <li
-                                        className={`${poppins.className} ${active === index ? "text-[#F25E26]" : ""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `}
-                                        onClick={() => {
-                                            setActive(active === index ? null : index);
-                                        }}
-                                    >
-                                        <span className="flex gap-2 items-center ">
-                                            <p onClick={() => {
-                                                return (
-
-                                                    SetSubcategory(val.category), router.push(`/categories/${val.category}?cat_id=${val.id}`)
-                                                )
-                                            }} >{val.category}</p>{" "}
-                                            {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                                        </span>
-                                    </li>
+                                        </div>
+                                    ))}
                                 </div>
-
-                                {active === index && (
-                                    <div
-                                        className={`${inter.className} z-20 bg-white ${active === 1 ? " gap-3 w-[60%]  -top-0 -right-12" : "w-[60%] -top-4 -right-12"} shadow-md rounded text-sm absolute`}
-                                    >
-                                        {val.subcategories?.map((subcategory) => (
-                                            <div
-                                                // onClick={() => handlesubcat(subcategory.subcategory, val)}
-                                                onClick={() => handlesubcat(subcategory?.subcategory, subcategory.id)}
-                                                key={subcategory.subcategory}
-                                                className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
-                                            >
-                                                {subcategory.subcategory}
-
-
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </Fragment>
-                        ))}
-                    </ul>
-                </section>
-            </Suspense>
+                            )}
+                        </Fragment>
+                    ))}
+                </ul>
+            </section>
         </>
     );
 };

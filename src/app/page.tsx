@@ -82,11 +82,11 @@ const Page = () => {
   const { data: topweak, isLoading: topweakLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_week_products/`, ["get topweak"], true);
 
 
-  // console.log(categoriesInfo?.data, 'categoriesInfo.data')
+  console.log(categoriesInfo?.data, 'categoriesInfo.data')
 
   useEffect(() => {
     if (categoriesInfo?.data) {
-      const filteredCat = categoriesInfo?.data.slice(
+      const filteredCat = categoriesInfo.data.slice(
         categoryCurrentPage * cardsPerPage,
         (categoryCurrentPage + 1) * cardsPerPage
       )

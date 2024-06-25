@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
@@ -41,11 +41,7 @@ interface AuctionResponse {
 
 }
 
-
-
-
-
-function Page() {
+const Page = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
@@ -299,7 +295,6 @@ function Page() {
         filtercat, cat_id, filter_by_price_under, sub, price_query, min, max, filter_by_price_range, filter_by_ratings, rating]);
 
     return (
-
         <main>
             <Header onSearch={setSearchQuery} />
 
@@ -354,8 +349,6 @@ function Page() {
             </div>
             <Footer />
         </main>
-
-
     );
 };
 
