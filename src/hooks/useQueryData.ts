@@ -25,13 +25,24 @@
 
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
+// const fetchData = async<T>(url: string): Promise<T> => {
+//     const response = await fetch(url);
+//     if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//     }
+//     return response.json();
+// }
+
 const fetchData = async<T>(url: string): Promise<T> => {
     const response = await fetch(url);
     if (!response.ok) {
-        throw new Error('Network response was not ok');
+        // Log error response for debugging
+        console.error('Network response was not ok:', response.status, response.statusText);
+        throw new Error(`Network response was not ok: ${response.statusText}`);
     }
     return response.json();
 }
+
 
  /*    export const useQueryData = <T>(url: string, title: string, isEnabled: boolean): UseQueryResult<T> => {
     return useQuery<T>({
@@ -42,7 +53,16 @@ const fetchData = async<T>(url: string): Promise<T> => {
 } */
 
 
-    export const useQueryData = <T>(url: string, queryKey: (string | number | any)[], isEnabled: boolean): UseQueryResult<T> => {
+//     export const useQueryData = <T>(url: string, queryKey: (string | number | any)[], isEnabled: boolean): UseQueryResult<T> => {
+//     return useQuery<T>({
+//         queryKey,
+//         queryFn: () => fetchData<T>(url),
+//         enabled: isEnabled
+//     });
+// }
+
+
+export const useQueryData = <T>(url: string, queryKey: (string | number | any)[], isEnabled: boolean): UseQueryResult<T> => {
     return useQuery<T>({
         queryKey,
         queryFn: () => fetchData<T>(url),

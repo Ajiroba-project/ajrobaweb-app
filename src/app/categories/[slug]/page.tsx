@@ -51,6 +51,8 @@ const Page = () => {
     const selectedBrands = searchParams.get("selectedBrands");
     const min_max = searchParams.get("min_max");
     const cat_id = searchParams.get("cat_id");
+    const feat_id = searchParams.get("feat_id");
+    const top_id = searchParams.get("top_id")
     const subid = searchParams.get("subid");
     const price_query = searchParams.get("query");
     const price_greater = searchParams.get("greaterthan");
@@ -131,6 +133,8 @@ const Page = () => {
         true
     );
 
+    const { data: featuredproductInfo, isLoading: featuredproducLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`, ["get featureddetails"], true);
+    const { data: topdeals, isLoading: topdealsLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_deals_products/`, ["get topdeals"], true);
 
     const { data: filter_by_name, isLoading: filter_by_nameLoading, isFetching: filter_by_namefetching } = useQueryData<AuctionResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_name/?category=${cat_id}&name=${searchval}`,
@@ -145,6 +149,7 @@ const Page = () => {
         name: product.name,
         image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
         description: '',
+        id: product.id,
         price: product.price,
         previousPrice: product.discount,
         rating: product.reviews,
@@ -162,6 +167,7 @@ const Page = () => {
                 name: product.name,
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
+                id: product.id,
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
@@ -171,6 +177,38 @@ const Page = () => {
                 tag: ['open']
             })) || [];
         }
+
+        if (feat_id) {
+            return featuredproductInfo?.data?.map(product => ({
+                name: product.name,
+                image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
+                description: '',
+                id: product.id,
+                price: product.price,
+                previousPrice: product.discount,
+                rating: product.reviews,
+                time: '',
+                category: filtercat?.message,
+                subCategory: filter_by_sub_cat?.message,
+                tag: ['open']
+            })) || [];
+        }
+        if (top_id) {
+            return topdeals?.data?.map(product => ({
+                name: product.name,
+                image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
+                description: '',
+                price: product.price,
+                id: product.id,
+                previousPrice: product.discount,
+                rating: product.reviews,
+                time: '',
+                category: filtercat?.message,
+                subCategory: filter_by_sub_cat?.message,
+                tag: ['open']
+            })) || [];
+        }
+
         if (sub) {
             return filter_by_sub_cat?.data?.map(product => ({
                 name: product.name,
@@ -179,6 +217,7 @@ const Page = () => {
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
+                id: product.id,
                 time: '',
                 category: filtercat?.message,
                 subCategory: filter_by_sub_cat?.message,
@@ -194,6 +233,7 @@ const Page = () => {
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
+                id: product.id,
                 time: '',
                 category: filtercat?.message,
                 subCategory: filter_by_sub_cat?.message,
@@ -207,6 +247,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -221,6 +262,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -236,6 +278,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -251,6 +294,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -265,6 +309,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -292,7 +337,8 @@ const Page = () => {
             }) || [];
         }
     }, [subid, filter_by_sub_cat, price_greater, filter_from_price_above, ProductsNew, paths, filter_by_name, searchval,
-        filtercat, cat_id, filter_by_price_under, sub, price_query, min, max, filter_by_price_range, filter_by_ratings, rating]);
+        filtercat, cat_id, filter_by_price_under, sub, price_query, min, max,
+        filter_by_price_range, filter_by_ratings, rating, feat_id, topdeals, featuredproductInfo, top_id]);
 
     return (
         <main>

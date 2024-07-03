@@ -82,7 +82,7 @@ const Page = () => {
   const { data: topweak, isLoading: topweakLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_week_products/`, ["get topweak"], true);
 
 
-  console.log(categoriesInfo?.data, 'categoriesInfo.data')
+  // console.log(categoriesInfo?.data, 'categoriesInfo.data')
 
   useEffect(() => {
     if (categoriesInfo?.data) {
@@ -189,7 +189,7 @@ const Page = () => {
                 <DefaultButton
                   text='View all Categories'
                   type='button'
-                  handleClick={() => { }}
+                  handleClick={() => router.push('/categories')}
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
@@ -206,11 +206,13 @@ const Page = () => {
             </div>
             <div className='flex flex-col items-center  '>
               <ProductCard cardInfo={featuredproductInfo?.data} />
+              {/* {console.log(featuredproductInfo?.data, 'fffffeatyreddd')} */}
               <div className='flex justify-center pt-4'>
                 <DefaultButton
-                  text='View all Features'
+                  text='View all Deals'
                   type='button'
-                  handleClick={() => router.push('/auction')}
+                  // replace(`/categories/${val && val.category}?cat_id=${val.id}?${params.toString()}`)
+                  handleClick={() => router.push(`/categories/${'featured products'}?feat_id=${featuredproductInfo?.data[0]?.id}`)}
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
@@ -231,7 +233,8 @@ const Page = () => {
                 <DefaultButton
                   text='View all Deals'
                   type='button'
-                  handleClick={() => router.push('/auction')}
+                  handleClick={() => router.push(`/categories/${'top deals'}?top_id=${topdeals?.data[0]?.id}`)}
+
                   className='h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all'
                 />
               </div>
