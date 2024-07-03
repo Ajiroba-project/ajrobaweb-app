@@ -18,9 +18,14 @@ import { RelatedProducts } from "@/app/component/RelatedProducts";
 import { Products, RelatedData } from "@/app/static-data";
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useQueryData } from "@/hooks/useQueryData";
 
 
 const ProductReview = () => {
+
+
+
+
     return (
         <div className="container py-4 mb-12 " >
 
@@ -280,20 +285,6 @@ const CustomerReview = () => {
 
 const RelatedProduct = () => {
 
-
-    // const filteredProducts = Products.filter((product) => {
-    //     const lowerCaseParams = paths
-    //         .map((param) => param && param.toLowerCase())
-    //         .filter(Boolean);
-    //     const lowerCaseCategory = product.category.toLowerCase();
-    //     const lowerCaseSubCategory = product.subCategory.toLowerCase();
-
-    //     return (
-    //         lowerCaseParams.includes(lowerCaseCategory) ||
-    //         lowerCaseParams.includes(lowerCaseSubCategory)
-    //     );
-    // });
-
     return (
 
         <div className="container py-4 mb-12 " >
@@ -310,6 +301,32 @@ const RelatedProduct = () => {
 }
 
 
+
+
+interface CardInfoItem {
+    weight: string;
+    id: number;
+    title: string;
+    description?: string;
+    imageUrl: string;
+    name?: string;
+    image?: string;
+    price?: string;
+    images?: { id: string; product: string; image: string }[];
+    discount?: string;
+    reviews?: string;
+    message?: string;
+    category: string
+
+}
+
+interface AuctionResponse {
+    message: any;
+    data: CardInfoItem;
+
+}
+
+
 const Page = ({ params }: any) => {
 
 
@@ -320,6 +337,9 @@ const Page = ({ params }: any) => {
     const query = searchParams.get("query");
     const selectedBrands = searchParams.get("selectedBrands");
     const min_max = searchParams.get("min_max");
+
+
+
 
     const router = useRouter()
 
@@ -357,19 +377,6 @@ const Page = ({ params }: any) => {
         setSelectedImage(index);
     };
 
-    const basePrice = 64500;
-    const [quantity, setQuantity] = useState(1);
-    const totalPrice = basePrice * quantity;
-
-    const handleIncrement = () => {
-        setQuantity(quantity + 1);
-    };
-
-    const handleDecrement = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
-    };
 
 
     const notify = () => {
@@ -392,6 +399,61 @@ const Page = ({ params }: any) => {
 
 
 
+    const product_id = params.slug
+
+    console.log(product_id, 'product_iddddd')
+
+    /*  https://ajiroba.onrender.com/v1/commerce/view_product/<product_id>/ */
+
+    const { data: productdata, isLoading: productdataLoading, isFetching: productdatafetching, error, status } = useQueryData<AuctionResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/view_product/${product_id}/`,
+        ["product_details", product_id],
+        true
+    );
+
+    console.log(productdata, 'productdata', error, status);
+
+    if (error) {
+        console.error('Error fetching product data:', error);
+        // <p>Product Details Not Available</p>
+        // return
+    }
+
+
+    console.log(productdata, 'productdatatatta', error, status)
+
+    const nigerianCurrencyFormat = new Intl.NumberFormat('en-NG', {
+        style: 'currency',
+        currency: 'NGN',
+    });
+
+
+    console.log(productdata, 'productdata')
+
+
+    // Ensure that productdata and productdata.data exist and the price is a number
+    const productPrice = productdata?.data?.price ? Number(productdata.data.price) : 0;
+    const productDiscount = productdata?.data?.discount ? Number(productdata.data.discount) : 0;
+
+    // Format the price
+    const formattedPrice = nigerianCurrencyFormat.format(productPrice);
+    const formattedDiscount = nigerianCurrencyFormat.format(productDiscount);
+
+
+
+    const basePrice = productdata?.data?.discount ? Number(productdata.data.discount) : 0;
+    const [quantity, setQuantity] = useState(1);
+    const totalPrice = basePrice * quantity;
+
+    const handleIncrement = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const handleDecrement = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
 
 
     return (
@@ -407,113 +469,131 @@ const Page = ({ params }: any) => {
 
             <Title title="Product Details" />
 
-            <div className="product-image-gallery  container py-8 grid 2xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 xl:grid-col-3 grid-cols-1 ">
+            {
+                productdata ? <>
+                    <div className="product-image-gallery  container py-8 grid 2xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 xl:grid-col-3 grid-cols-1 ">
 
-                <div className=" ">
-                    <div className="flex 2xl:flex-col xl:flex-col lg:flex-col md:flex-col flex-row 2xl:justify-start xl:justify-start
+                        <div className=" ">
+                            <div className="flex 2xl:flex-col xl:flex-col lg:flex-col md:flex-col flex-row 2xl:justify-start xl:justify-start
 
                     md:justify-start lg:justify-start justify-center gap-4" >
 
-                        {images.slice(0, 4).map((image, index) => (
-                            <div key={index} className="thumbnail-image ">
-                                <Image
-                                    className=" w-32 h-32 object-cover" // Ensure uniform size for thumbnails
-                                    src={image}
-                                    alt="Product Thumbnail"
-                                    onClick={() => handleImageClick(index)}
-                                />
+                                {productdata?.data?.images?.map((image, index) => (
+                                    <div key={index} className="thumbnail-image ">
+                                        <Image
+                                            className=" w-32 h-32 object-cover" // Ensure uniform size for thumbnails
+                                            src={`https://ajiroba.onrender.com/media/${image.image}`}
+                                            alt="Product Thumbnail"
+                                            onClick={() => handleImageClick(index)}
+                                            width={100}
+                                            height={100}
+                                            objectFit="cover"
+                                        />
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className=" mt-8">
-                    <div className="thumbnail-images w-auto     ">
-
-                        <div className="main-image">
-
-                            <Image
-                                src={images[selectedImage]}
-                                alt="Product Image"
-                                layout="responsive"
-                                className=" object-cover"
-                            />
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <div className=" mt-4 container justify-center flex xl:block md:block lg:block 2xl:block" >
-                    <div className="" >
-                        <h1 className="text-[#111111] text-xl " >Mama Gold Rice</h1>
-                        <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
-                            {star.map((val, index) => (
-                                <span key={index}>
-
-                                    <span key={index}>
-                                        <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
-                                    </span>
-                                </span>
-                            ))}
-                            (300) Reviews
-                        </p>
-                        <h1 className="text-[#111111] text-2xl mt-2 font-bold">N {totalPrice.toLocaleString()}</h1>
-                        <h1 className="text-[#111111] text-lg mt-2 line-through ">N 76,500</h1>
-
-                        <hr className="mt-4" />
-                        <p className="text-[#b4a3a3] text-base mt-4 " >Quantity</p>
-
-                        <div className="flex items-center mt-2">
-                            <button
-                                onClick={handleDecrement}
-                                className="px-2 py-1 bg-gray-200 text-gray-700 rounded-l"
-                            >
-                                -
-                            </button>
-                            <input
-                                type="text"
-                                value={quantity}
-                                readOnly
-                                className="w-12 text-center border-t border-b border-gray-300"
-                            />
-                            <button
-                                onClick={handleIncrement}
-                                className="px-2 py-1 bg-[#E36414] text-white rounded-r"
-                            >
-                                +
-                            </button>
                         </div>
 
-                        <p className="text-[#b4a3a3] text-base mt-4 " >Weight</p>
+                        <div className=" mt-8">
+                            <div className="thumbnail-images w-auto     ">
 
-                        <h1 className="text-[#111111] text-base mt-2 font-bold">50 kg</h1>
+                                <div className="main-image">
 
-                        <hr className="mt-4" />
+                                    <Image
+                                        src={productdata?.data?.images?.[0]?.image ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}` : ''}
+                                        alt="Product Image"
+                                        width={300}
+                                        height={300}
+                                        objectFit="cover"
+                                        className="object-cover"
+                                    />
+                                </div>
+                            </div>
 
-                        <p className="text-[#b4a3a3] text-base mt-4 " >Delivery Estimation</p>
 
-                        <h1 className="text-[#111111] text-base mt-2 font-bold">Nov. 12 - Nov. 22</h1>
+                        </div>
+
+                        {
+                            productdata &&
+
+                            <div className=" mt-4 container justify-center flex xl:block md:block lg:block 2xl:block" >
+                                <div className="" >
+                                    <h1 className="text-[#111111] text-xl " >{productdata?.data?.description}</h1>
+                                    <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
+                                        {star.map((val, index) => (
+                                            <span key={index}>
+
+                                                <span key={index}>
+                                                    <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
+                                                </span>
+                                            </span>
+                                        ))}
+                                        (300) Reviews
+                                    </p>
+                                    <h1 className="text-[#111111] text-2xl mt-2 font-bold">&#x20A6; {totalPrice.toLocaleString()}</h1>
+                                    <h1 className="text-[#111111] text-lg mt-2 line-through ">{formattedPrice}</h1>
+
+                                    <hr className="mt-4" />
+                                    <p className="text-[#b4a3a3] text-base mt-4 " >Quantity</p>
+
+                                    <div className="flex items-center mt-2">
+                                        <button
+                                            onClick={handleDecrement}
+                                            className="px-2 py-1 bg-gray-200 text-gray-700 rounded-l"
+                                        >
+                                            -
+                                        </button>
+                                        <input
+                                            type="text"
+                                            value={quantity}
+                                            readOnly
+                                            className="w-12 text-center border-t border-b border-gray-300"
+                                        />
+                                        <button
+                                            onClick={handleIncrement}
+                                            className="px-2 py-1 bg-[#E36414] text-white rounded-r"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+
+                                    <p className="text-[#b4a3a3] text-base mt-4 " >Weight</p>
+
+                                    <h1 className="text-[#111111] text-base mt-2 font-bold">{productdata?.data?.weight || 'NA'}</h1>
+
+                                    <hr className="mt-4" />
+
+                                    <p className="text-[#b4a3a3] text-base mt-4 " >Delivery Estimation</p>
+
+                                    <h1 className="text-[#111111] text-base mt-2 font-bold">{'NA'}</h1>
 
 
-                        <button
-                            onClick={notify} className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
+                                    <button
+                                        onClick={notify} className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-bold rounded"
 
-                        >
-                            Add to Cart
-                        </button>
+                                    >
+                                        Add to Cart
+                                    </button>
 
+                                </div>
+
+
+                            </div>
+                        }
                     </div>
 
+                </> :
 
-                </div>
-            </div>
+                    <p className="flex justify-center items-center py-12 text-red-600" >Product Not Available</p>
+            }
 
-            <ProductReview />
+
+
+            {/*    <ProductReview />
 
             <CustomerReview />
 
-            <RelatedProduct />
+            <RelatedProduct /> */}
 
 
             <Footer />

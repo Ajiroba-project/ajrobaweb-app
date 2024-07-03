@@ -49,6 +49,8 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
         setCurrentPage(totalPages);
     };
 
+
+
     return (
         <>
             <div

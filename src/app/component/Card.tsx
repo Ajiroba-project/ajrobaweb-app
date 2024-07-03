@@ -17,6 +17,7 @@ import mother from '@/app/asset/image/mother.png'
 import phone from '@/app/asset/image/phone.png'
 import fashions from '@/app/asset/image/fashions.png'
 import foodstuff from '@/app/asset/image/foodstuff.png'
+import { useRouter } from 'next/navigation'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
@@ -42,6 +43,7 @@ interface cardDetails {
     reviews: number
     starts_in: string | undefined
     images: any
+    id: string
 
   }>;
   currentPage: number
@@ -90,6 +92,8 @@ export const ProductCard = ({ cardInfo }: any) => {
     return () => clearTimeout(timeoutID)
   }
 
+  const router = useRouter()
+
 
   return (
     <>
@@ -104,7 +108,7 @@ export const ProductCard = ({ cardInfo }: any) => {
             onMouseLeave={() => setHoverState('')}
           >
             {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
-            <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
+            <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
               <div className='z-auto flex items-center justify-center'>
                 {/*  <Image
                   src={value.image}
@@ -193,6 +197,10 @@ export const TopDealsCard = ({ cardInfo }: any) => {
     isLoggedIn: state.isLoggedIn
   }))
 
+
+  const router = useRouter()
+
+
   const handleCartNotification = (value: any) => {
     setCardAddCartState(value.name)
 
@@ -216,6 +224,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
             key={index}
             onMouseEnter={() => setHoverState(value.name)}
             onMouseLeave={() => setHoverState('')}
+            onClick={() => router.push(`/categories/productdetails/${value.id}`)}
           >
             {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
             <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
@@ -318,6 +327,8 @@ export const TopWeakCard = ({ cardInfo }: any) => {
     return () => clearTimeout(timeoutID)
   }
 
+  const router = useRouter()
+
 
   return (
     <>
@@ -330,6 +341,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
             key={index}
             onMouseEnter={() => setHoverState(value.name)}
             onMouseLeave={() => setHoverState('')}
+            onClick={() => router.push(`/categories/productdetails/${value.id}`)}
           >
             {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
             <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
@@ -480,6 +492,9 @@ export const CategoryCard = () => {
 export const AuctionCard = ({ cardInfo }: cardDetails) => {
 
 
+  console.log(cardInfo, 'cardInfooooo')
+
+
 
   const { isLoggedIn, clearAuthCookies, user } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -540,7 +555,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
   };
 
 
-
+  const router = useRouter()
 
   return (
     <>
@@ -550,7 +565,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
         {cardInfo?.map((value, index) => (
           <div
             className=' w-full rounded bg-[#F6F6F6] shadow-md hover:-translate-y-2.5 hover:scale-105 hover:shadow-xl'
-            key={index}
+            key={index} onClick={() => router.push(`/categories/productdetails/${value.id}`)}
           >
 
             <div className='relative'>
