@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, SetStateAction } from "react";
+import { useState, useEffect, useMemo, SetStateAction, Key } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
 import { Header } from "@/app/component/Header";
@@ -79,7 +79,9 @@ const ProductReview = () => {
     )
 }
 
-const CustomerReview = () => {
+const CustomerReview = ({ data }: any) => {
+
+    // console.log(data, 'dataaaaa')
 
     const star = [1, 2, 3, 4, 5]
     const rating = 5;
@@ -96,35 +98,47 @@ const CustomerReview = () => {
                 <div className=" w-1/2">
 
                     <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
-                        {star.map((val, index) => (
-                            <span key={index}>
 
-                                <span key={index}>
-                                    <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
-                                </span>
+                        {Array.from({ length: data?.data?.product_reviews?.average_ratings }, (_, index) => (
+                            <span key={index}>
+                                <FaStar className="text-[#F25E26]" />
                             </span>
                         ))}
-                        (300) Reviews
+                        ({data?.data?.product_reviews?.total_reviews}) Reviews
                     </p>
 
 
-                    <div className="flex gap-4 items-center py-2">
-                        <div><span>5 stars</span></div>
 
-                        <div className="flex-1">
-                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                <div className="bg-[#E84526] h-2.5 rounded-full" style={{ width: '65%' }}></div>
+
+
+                    {data?.data?.rating_counts?.map((item: { stars: string, customers: number }, index: Key | null | undefined) => {
+                        return (
+
+
+                            <div key={index}>
+                                <div key={index} className="flex gap-4 items-center py-2">
+                                    <div><span>{item.stars} stars</span></div>
+
+                                    <div className="flex-1">
+                                        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                            <div className="bg-[#E84526] h-2.5 rounded-full" style={{ width: `${item.customers}%` }}></div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div>
+                                        <small>{item.customers}</small>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
+                        )
+                    })
 
+                    }
 
-                        <div>
-                            <small>200</small>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-4 items-center py-2">
+                    {/*   <div className="flex gap-4 items-center py-2">
                         <div><span>4 stars</span></div>
 
                         <div className="flex-1">
@@ -154,7 +168,7 @@ const CustomerReview = () => {
                         <div>
                             <small>26</small>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="mt-4" >
                         <p>Filter By:</p>
@@ -204,7 +218,50 @@ const CustomerReview = () => {
 
                 <div className="w-1/2" >
 
-                    <div className="flex gap-2" >
+
+                    {
+                        data?.data?.reviews.map((item: any, key: Key | null | undefined) => {
+                            return (
+                                <div key={key} className="flex gap-2" >
+                                    <div className="" >
+
+
+                                        <Image src={`https://ajiroba.onrender.com${item?.user?.profile_image}`} height={40} width={40} alt="Profile Image" className="rounded-full object-cover   " style={{ borderRadius: '50%' }} />
+
+
+
+                                    </div>
+
+                                    <div className="mb-8 flex-1 " >
+                                        <p>{`${item.user.first_name}  ${item.user.last_name} `}</p>
+                                        <p className='flex mt-4 items-center text-[#111111] text-sm gap-1'>
+                                            {/*  {star.map((val, index) => (
+                                                <span key={index}>
+
+                                                    <span key={index}>
+                                                        <FaStar className={index < rating ? 'text-[#F25E26]' : 'text-gray-300'} />
+                                                    </span>
+                                                </span>
+                                            ))} */}
+                                            {Array.from({ length: item?.rating }, (_, index) => (
+                                                <span key={index}>
+                                                    <FaStar className="text-[#F25E26]" />
+                                                </span>
+                                            ))}
+                                            {item?.date_created}
+                                        </p>
+                                        <p>
+                                            {item.comment}
+                                        </p>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+
+
+
+                    {/*   <div className="flex gap-2" >
                         <div>
 
                             <Image src={profile_head} alt="Profile Image" className="rounded-full object-cover   " style={{ borderRadius: '50%' }} />
@@ -262,7 +319,7 @@ const CustomerReview = () => {
                                 Lectus urna egestas molestie netus amet facilisi fringilla nullam nisl. Interdum .
                             </p>
                         </div>
-                    </div>
+                    </div> */}
 
 
 
@@ -283,7 +340,7 @@ const CustomerReview = () => {
 }
 
 
-const RelatedProduct = () => {
+const RelatedProduct = ({ data }: any) => {
 
     return (
 
@@ -294,7 +351,7 @@ const RelatedProduct = () => {
 
 
             <div>
-                <RelatedProducts cardInfo={RelatedData} />
+                <RelatedProducts cardInfo={data} />
             </div>
         </div>
     )
@@ -316,7 +373,9 @@ interface CardInfoItem {
     discount?: string;
     reviews?: string;
     message?: string;
-    category: string
+    category: string;
+    delivery_estimation: string;
+    related_products: []
 
 }
 
@@ -401,7 +460,7 @@ const Page = ({ params }: any) => {
 
     const product_id = params.slug
 
-    console.log(product_id, 'product_iddddd')
+    /*  console.log(product_id, 'product_iddddd') */
 
     /*  https://ajiroba.onrender.com/v1/commerce/view_product/<product_id>/ */
 
@@ -411,7 +470,7 @@ const Page = ({ params }: any) => {
         true
     );
 
-    console.log(productdata, 'productdata', error, status);
+    /*  console.log(productdata, 'productdata', error, status); */
 
     if (error) {
         console.error('Error fetching product data:', error);
@@ -420,7 +479,7 @@ const Page = ({ params }: any) => {
     }
 
 
-    console.log(productdata, 'productdatatatta', error, status)
+    // console.log(productdata, 'productdatatatta', error, status)
 
     const nigerianCurrencyFormat = new Intl.NumberFormat('en-NG', {
         style: 'currency',
@@ -428,7 +487,7 @@ const Page = ({ params }: any) => {
     });
 
 
-    console.log(productdata, 'productdata')
+    // console.log(productdata, 'productdata')
 
 
     // Ensure that productdata and productdata.data exist and the price is a number
@@ -565,7 +624,7 @@ const Page = ({ params }: any) => {
 
                                     <p className="text-[#b4a3a3] text-base mt-4 " >Delivery Estimation</p>
 
-                                    <h1 className="text-[#111111] text-base mt-2 font-bold">{'NA'}</h1>
+                                    <h1 className="text-[#111111] text-base mt-2 font-bold">{productdata?.data?.delivery_estimation || 'NA'}</h1>
 
 
                                     <button
@@ -589,11 +648,75 @@ const Page = ({ params }: any) => {
 
 
 
-            {/*    <ProductReview />
+            {/* <ProductReview /> */}
 
-            <CustomerReview />
+            {productdata?.data?.reviews &&
 
-            <RelatedProduct /> */}
+
+                <div className="container py-4 mb-12 " >
+
+                    <div>
+                        <h1 className="text-[#1B1B1A] font-bold text-lg text-center 2xl:text-start xl:text-start lg:text-start md:text-start " >Product Review</h1>
+                    </div>
+
+
+                    <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center gap-12 mt-8">
+
+                        <div className=" w-1/2">
+                            <h1 className="text-[#363636]">
+                                {/* Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste
+                            and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result.
+                            Trusted for superior quality,
+                            perfect for both traditional and modern dishes. Elevate your dining experience with Mama Gold Rice. */}
+                                {productdata?.data?.description}
+                            </h1>
+
+                            {/* <ul className="py-8 list-disc px-8 text-[#363636]">
+                            <li>100% safe and trusted</li>
+                            <li>Product weight: 50kg</li>
+                            <li>Origin: Himalayan Foothills</li>
+                            <li>Known for its long, slender grains and distinct aroma, our Basmati rice is perfect for biryanis and pilafs.</li>
+                            <li>Aged to perfection for enhanced flavor and fluffiness.</li>
+                            <li>plain and clean with no dirt</li>
+                        </ul> */}
+
+                            {/*  <h1 className="text-[#363636]">Note that we show the EU sizes for Stanley/Stella products.
+                            The sizes Elevate your culinary experience with our exquisite range of premium
+                            rice varieties, sourced from the finest fields around the world. we understand the
+                            importance of quality ingredients in creating memorable meals. Our curated collection of rice
+                            is sure to meet the expectations of discerning chefs and home cooks alike.</h1> */}
+
+                        </div>
+
+                        <div className="" >
+
+                            {/* <Image src={image4} alt="product_image" layout="responsive"
+                            className=" object-cover" />
+ */}
+                            <Image
+                                src={productdata?.data?.images?.[0]?.image ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}` : ''}
+                                alt="Product Image"
+                                width={200}
+                                height={200}
+                                objectFit="cover"
+                                className="object-cover"
+                            />
+
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>}
+
+            {productdata?.data?.reviews && <CustomerReview data={productdata} />}
+            {/* {console.log(productdata, 'productdatatatta')} */}
+
+            {
+                productdata?.data?.related_products &&
+                <RelatedProduct data={productdata?.data?.related_products} />}
 
 
             <Footer />

@@ -29,7 +29,7 @@ interface cardDetails {
 
 export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
 
-
+    console.log(cardInfo, 'cardiiiiii')
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; // adjust this value to change the number of items per page
@@ -57,7 +57,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                 className={`${poppins.className} my-4 grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 mb-8 mt-4`}
             >
                 {paginatedCardInfo?.map((value, index) => (
-                    <div onClick={() => router.push(`/categories/productdetails/${value.name}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
+                    <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
 

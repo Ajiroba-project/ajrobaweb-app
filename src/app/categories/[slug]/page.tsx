@@ -149,6 +149,7 @@ const Page = () => {
         name: product.name,
         image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
         description: '',
+        id: product.id,
         price: product.price,
         previousPrice: product.discount,
         rating: product.reviews,
@@ -166,6 +167,7 @@ const Page = () => {
                 name: product.name,
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
+                id: product.id,
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
@@ -181,6 +183,7 @@ const Page = () => {
                 name: product.name,
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
+                id: product.id,
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
@@ -196,6 +199,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -213,6 +217,7 @@ const Page = () => {
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
+                id: product.id,
                 time: '',
                 category: filtercat?.message,
                 subCategory: filter_by_sub_cat?.message,
@@ -228,6 +233,7 @@ const Page = () => {
                 price: product.price,
                 previousPrice: product.discount,
                 rating: product.reviews,
+                id: product.id,
                 time: '',
                 category: filtercat?.message,
                 subCategory: filter_by_sub_cat?.message,
@@ -241,6 +247,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -255,6 +262,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -270,6 +278,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -285,6 +294,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
@@ -299,6 +309,7 @@ const Page = () => {
                 image: (product.images && product.images.length > 0) ? product.images[0].image : '',  // Taking the first image as the main image
                 description: '',
                 price: product.price,
+                id: product.id,
                 previousPrice: product.discount,
                 rating: product.reviews,
                 time: '',
