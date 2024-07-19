@@ -121,7 +121,6 @@ const Page = ({ params }: any) => {
         true,
     );
 
-    console.log(productdata, "productdata", error, status);
 
     if (error) {
         console.error("Error fetching product data:", error);

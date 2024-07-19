@@ -16,7 +16,6 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
 export const RelatedProductsDetails = ({ cardInfo }) => {
 
-     console.log(cardInfo, 'cardinfo')
 
     const star = [1, 2, 3, 4, 5]
 
