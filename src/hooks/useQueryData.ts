@@ -70,3 +70,4 @@ export const useQueryData = <T>(url: string, queryKey: (string | number | any)[]
     });
 }
 
+

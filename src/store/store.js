@@ -15,6 +15,7 @@ export const useAuthStore = create((set, get) => ({
     })
     set({ isLoggedIn: true }) // Update isLoggedIn state
   },
+
   clearAuthCookies: () => {
     Cookies.remove('token')
     set({ isLoggedIn: false, user: null }) // Update isLoggedIn and user state

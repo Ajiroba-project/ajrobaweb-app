@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next'
-import { Poppins, Inter } from 'next/font/google'
+import { Poppins, Inter, Nunito_Sans } from 'next/font/google'
 import './globals.css'
 import RQProviders from '@/utils/provider'
 import { Providers } from './providers'
@@ -12,6 +12,13 @@ const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900']
 })
+
+const nunito = Nunito_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '900'],
+   display: "swap",
+})
+
 
 
 const inter = Inter({
@@ -40,7 +47,7 @@ export default function RootLayout({
 
         {/* header */}
 
-        <body className={`${poppins.className} ${inter.className}`}>
+        <body className={`${poppins.className} ${nunito.className} ${inter.className}`}>
           <Providers>
             {children}
           </Providers>

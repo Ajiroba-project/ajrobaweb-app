@@ -9,6 +9,7 @@ import { LuMenuSquare } from 'react-icons/lu'
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false)
+
   const { activeMenu, setactiveMenu, setProfile, setEditProfile, editProfile } =
     userProfile(state => ({
       activeMenu: state.activeMenu,
