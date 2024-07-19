@@ -1,19 +1,22 @@
-.main-image {
-    width: 100%;
-    /* Make the div take up the full width */
-    height: auto;
-    /* Automatically adjust the height based on the width */
-    display: flex;
-    /* Center the image horizontally and vertically */
-    justify-content: center;
-    align-items: center;
+/* .main-image { */
+/* width: 100%; */
+/* height: auto; */
+/* display: flex; */
+/* justify-content: center; */
+/* align-items: center; */
+/* } */
+/*  */
+/* .main-image img { */
+/* max-width: 100%; */
+/* height: auto; */
+/* object-fit: cover; */
+/* } */
+
+
+img {
+    /*    max-width: none !important; */
 }
 
-.main-image img {
-    max-width: 100%;
-    /* Make the image take up the full width */
-    height: auto;
-    /* Automatically adjust the height based on the width */
-    object-fit: cover;
-    /* Scale the image down to fit the div */
+.images-map {
+    max-width: none !important;
 }

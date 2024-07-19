@@ -91,7 +91,7 @@
 
  import { nextui } from '@nextui-org/theme'
 // const {nextui} = require("@nextui-org/react");
-import { Poppins } from 'next/font/google'
+import { Nunito, Poppins } from 'next/font/google'
 import type { Config } from 'tailwindcss'
 import tailwindcssAnimate from 'tailwindcss-animate'
 
@@ -133,7 +133,8 @@ const config = {
       },
       fontFamily: {
         Poppins: ['Poppins', 'sans-serif'],
-        Inter: ['Inter', 'sans-serif']
+        Inter: ['Inter', 'sans-serif'],
+        Nunito: ['Nunito Sans', 'sans-serif']
       }
     }
   },

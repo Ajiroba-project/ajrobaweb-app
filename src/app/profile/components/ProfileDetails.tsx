@@ -1,16 +1,44 @@
 import React from 'react'
-import { userProfile,useAuthStore } from '@/store/store'
-import {ProfileForm} from "./ProfileForm"
+import { userProfile, useAuthStore } from '@/store/store'
+import { ProfileForm } from "./ProfileForm"
+import { useQueryData } from '@/hooks/useQueryData'
+
+
+
+interface CardInfoItem {
+  id?: number;
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  name?: string;
+  image?: any;
+  price?: string;
+  images?: { id: string; product: string; image: string }[];
+  discount?: string;
+  reviews?: string;
+  message?: string;
+
+}
+
+interface AuctionResponse {
+  message?: any;
+  data: CardInfoItem[];
+  // add other fields as necessary
+}
 
 export const ProfileDetails = () => {
   const { userDetails, editProfile } = userProfile(state => ({
     userDetails: state.userDetails,
     editProfile: state.editProfile
   }))
-  const {isLoggedIn, user} = useAuthStore(state=>({
+  const { isLoggedIn, user } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
     user: state.user
   }))
+
+
+  const { data: userInfo, isLoading: userLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, ["get categoriesdetails"], true);
+
 
   return (
     <section className='md:full  mb-6 w-full lg:w-[50dvw] '>

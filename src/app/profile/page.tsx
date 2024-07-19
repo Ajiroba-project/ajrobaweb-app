@@ -2,16 +2,20 @@
 import React from 'react'
 import { Header } from '../component/Header'
 import { Profile } from './components/Profile'
-import {PhotoUpload} from "./components/PhotoUpload"
-import {userProfile} from "@/store/store"
+import { PhotoUpload } from "./components/PhotoUpload"
+import { userProfile } from "@/store/store"
 import { useRouter } from 'next/navigation'
-import useAuthMiddleware from '@/hooks/useAuth'
+// import useAuthMiddleware from '@/hooks/useAuth'
+import AuthMiddleware from '@/hooks/useAuth'
 
 const Page = () => {
   const router = useRouter()
-  useAuthMiddleware(router)
-  const profile = userProfile(state=>state.profile)
-  
+
+  /*  useAuthMiddleware(router) */
+  AuthMiddleware(router)
+
+  const profile = userProfile(state => state.profile)
+
   return (
     <section>
       <header className="z-50">
