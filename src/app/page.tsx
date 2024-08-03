@@ -74,6 +74,9 @@ const Page = () => {
     user: state.user
   }))
 
+
+  console.log(isLoggedIn, 'isLoggedIn---app--pag')
+
   // Fetching data using custom hook
   const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`, ["get auctiondetails"], true);
   const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, ["get categoriesdetails"], true);

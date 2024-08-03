@@ -4,20 +4,46 @@ import Image from 'next/image'
 import photo from '../../asset/image/photo.png'
 import { ProfileContent } from './ProfileContent'
 import { IoIosCamera } from 'react-icons/io'
-import { userProfile } from '@/store/store'
+import { userProfile, useAuthStore } from '@/store/store'
 import { LuMenuSquare } from 'react-icons/lu'
+import { useGetDatanew } from '@/hooks/useGetData'
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false)
 
-  const { activeMenu, setactiveMenu, setProfile, setEditProfile, editProfile } =
+  const { activeMenu, setactiveMenu, setProfile, setEditProfile, editProfile,  userDetails } =
+
     userProfile(state => ({
       activeMenu: state.activeMenu,
       setactiveMenu: state.setactiveMenu,
       setProfile: state.setProfile,
       setEditProfile: state.setEditProfile,
-      editProfile: state.editProfile
-    }))
+      editProfile: state.editProfile,
+          userDetails: state.userDetails,
+    })
+
+  )
+
+ /*    const { userDetails, editProfile } = userProfile(state => ({
+    userDetails: state.userDetails,
+    editProfile: state.editProfile
+  }))
+ */
+
+
+
+  const { isLoggedIn, user, token } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token
+  }))
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+    const userToken = token;
+
+   const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, "get_user_details", userToken);
+
+  const userData = isLoggedIn ? userInfo?.data : userDetails;
 
   const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community']
   return (
@@ -32,8 +58,8 @@ export const Profile = () => {
         className={`  ${sideNav ? 'fixed right-0 top-0 h-full w-fit flex-col bg-white  px-4 pt-[4rem] lg:h-fit lg:w-[20dvw] lg:pt-0 ' : 'hidden lg:relative lg:flex lg:h-fit'} z-40   lg:flex lg:h-fit  lg:w-[20dvw] lg:bg-transparent lg:pt-0 lg:relative `}
       >
         <div className='flex flex-col justify-center lg:w-full'>
-          <p className='w-max'>Hello, Alex </p>
-          <h3 className='my-5 w-full text-xl font-semibold lg:text-3xl'>
+          <p className='w-max'>Hello, {userData?.first_name || userData?.firstname} </p>
+          <h3 className='my-5 w-full text-xl font-semibold lg:text-2xl font-Poppins text-[#111111]'>
             {activeMenu === 'my profile'
               ? 'Profile Details'
               : activeMenu === 'auction win'

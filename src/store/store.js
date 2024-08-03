@@ -1,26 +1,74 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
 
-export const useAuthStore = create((set, get) => ({
+
+// Retrieve user from cookie/local storage
+const storedUser = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : null;
+
+// export const useAuthStore = create((set, get) => ({
+//   isLoggedIn: !!Cookies.get('token'), // Check if token cookie exists on initialization
+//   user: storedUser,
+//   setLoggedIn: isLoggedIn => set({ isLoggedIn }),
+
+//   user: null,
+//   setUser: user => {
+//     set({ user });
+//     // Persist user in a cookie or local storage
+//     Cookies.set('user', JSON.stringify(user), { sameSite: 'strict' });
+//   },
+
+//   setAuthCookie: (token, expirationDate, user) => {
+//     Cookies.set('token', token, {
+//       expires: expirationDate,
+//       sameSite: 'strict' // Additional security measure
+//     });
+//     set({ isLoggedIn: true, user }); // Update isLoggedIn and user state
+//     // Persist user in a cookie or local storage
+//     Cookies.set('user', JSON.stringify(user), { sameSite: 'strict' });
+//   },
+
+
+//   clearAuthCookies: () => {
+//     Cookies.remove('token');
+//     Cookies.remove('user'); // Clear user cookie/local storage
+//     set({ isLoggedIn: false, user: null }); // Update isLoggedIn and user state
+//   }
+// }))
+
+
+export const useAuthStore = create((set) => ({
   isLoggedIn: !!Cookies.get('token'), // Check if token cookie exists on initialization
-  setLoggedIn: isLoggedIn => set({ isLoggedIn }),
+  user: JSON.parse(Cookies.get('user') || null),
+  token: Cookies.get('token') || null,
 
-  user: null,
-  setUser: user => set({ user }),
+  setLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
 
-  setAuthCookie: (token, expirationDate) => {
+  setUser: (user) => {
+    Cookies.set('user', JSON.stringify(user), { sameSite: 'strict' });
+    set({ user });
+  },
+
+  setAuthCookie: (token, user, expirationDate) => {
     Cookies.set('token', token, {
       expires: expirationDate,
       sameSite: 'strict' // Additional security measure
-    })
-    set({ isLoggedIn: true }) // Update isLoggedIn state
+    });
+    Cookies.set('user', JSON.stringify(user), {
+      expires: expirationDate,
+      sameSite: 'strict' // Additional security measure
+    });
+    set({ isLoggedIn: true, user }); // Update isLoggedIn and user state
   },
 
   clearAuthCookies: () => {
-    Cookies.remove('token')
-    set({ isLoggedIn: false, user: null }) // Update isLoggedIn and user state
+    Cookies.remove('token');
+    Cookies.remove('user');
+    set({ isLoggedIn: false, user: null }); // Update isLoggedIn and user state
   }
-}))
+}));
+
+
+
 
 export const userNavStore = create(set => ({
   headerNav: 'Home',
@@ -56,14 +104,14 @@ export const userProfile = create(set => ({
   editPassword: false,
   successModal: false,
   userDetails: {
-    firstname: 'alex',
-    lastname: 'ajiroba',
-    email: 'ajiroba@demo.com',
-    phone: '+234-340-340-34',
-    address: '123,alabukun street, off afterfive',
-    state: 'lagos state',
-    lga: 'somolu',
-    residency: '11222333444',
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    address: '',
+    state: '',
+    lga: '',
+    residency: '',
     balance: ''
   },
   setEditProfile: () => set(state => ({ editProfile: !state.editProfile })),

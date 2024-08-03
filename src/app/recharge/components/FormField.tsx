@@ -65,7 +65,8 @@ export const InputField = ({
           name={name}
           type={toggle ? 'text' : type}
           placeholder={placeholder}
-          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : 'xlw-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+            placeholder-gray-500
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
           {...register(name, { required: true })}
           disabled={isdisabled}
         />
