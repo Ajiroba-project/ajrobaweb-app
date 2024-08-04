@@ -1,6 +1,6 @@
 import React from 'react'
 import { CiMenuKebab } from 'react-icons/ci'
-import Dropdown from './DropDown'
+import Dropdown from './Dropdown'
 
 type transacProps = {
   transac: any[]
