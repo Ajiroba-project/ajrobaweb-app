@@ -492,7 +492,7 @@ export const CategoryCard = () => {
 export const AuctionCard = ({ cardInfo }: cardDetails) => {
 
 
-  console.log(cardInfo, 'cardInfooooo')
+  // console.log(cardInfo, 'cardInfooooo')
 
 
 

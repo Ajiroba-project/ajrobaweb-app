@@ -1,8 +1,6 @@
 "use client";
 import React from 'react';
-import { InputField, SelectField } from '@/app/recharge/components/FormField';
-// import { ProfileSchema } from './YupValidation';
-// import { useForm, SubmitHandler } from 'react-hook-form';
+import { InputField} from '@/app/recharge/components/FormField';
 import { useState } from "react";
 import { Modal } from '../../component/Modal';
 import { DefaultButton } from '@/app/component/Button';
@@ -11,23 +9,25 @@ import { ChangePassword } from "./ChangePassword";
 import verify from '../../asset/verify.svg';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-// import { state_and_LGA } from '../../app/static-data'
 import { state_and_LGA } from '../../../app/static-data'
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import { useForm, Controller } from "react-hook-form";
+import { useMutateData } from "@/hooks/useMutateNewData";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/store'
 
 type ProfileFormValues = {
   first_name: string;
   last_name: string;
   email: string;
   Phone: string;
-  // gender: 'male' | 'female';
   gender?: boolean;
-  // pass?: string;
+  pass?: string;
   address: string;
   state: string;
   lga: string;
-  residential?: string; // Residential Agency Number (optional)
+  residential?: string;
 }
 
 export const ProfileForm: React.FC = () => {
@@ -47,8 +47,8 @@ export const ProfileForm: React.FC = () => {
     setEditPassword: state.setEditPassword,
   }));
 
-  const stateOptions = ['Lagos', 'Ogun'];
-  const lgaOptions = ['Oshodi', 'Ikeja', 'Ijumota'];
+
+  const router = useRouter();
 
   const ProfileSchema = yup.object().shape({
     first_name: yup.string().required('First Name is required'),
@@ -74,21 +74,6 @@ export const ProfileForm: React.FC = () => {
   });
 
 
-  // useForm<ProfileFormValues>({
-  //   mode: 'all',
-  //   resolver: yupResolver(ProfileSchema),
-  // });
-
-  // const submitForm: SubmitHandler<ProfileFormValues> = (data) => {
-  //   console.log(data, 'submitted data');
-  //   console.log(errors, 'form errors');
-  //   setSuccessModal(true);
-  //   setEditProfile(false);
-  //   setUserDetails(data);
-  //   reset();
-  // };
-
-
   const [selectedState, setSelectedState] = useState("");
   const [lgas, setLgas] = useState<string[]>([]);
 
@@ -99,16 +84,110 @@ export const ProfileForm: React.FC = () => {
   };
 
 
-  const submitForm = (data: ProfileFormValues) => {
-    console.log(data, 'datatat');
-    /*  mutate({
-         url: "/api/auth",
-         payload: data
-     }); */
+  const handleSuccess = (data: any) => {
+    console.log(data, 'datttataaa', error)
+
+    if (data.status === 201 || data.status === 200) {
+      toast.success(`${data?.data?.message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => router.push('/profile')
+      });
+      reset();
+    } else if (data.status === 400 || data.status === 409) {
+      toast.error(`${data?.data?.message || 'user with this email already exists.' || "user with this phone already exists."} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || 'Authentication error'} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+
+
+    else {
+      toast.error(`${'An Error Occured' || 'Error'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
   };
+
+  const handleError = (error: any) => {
+    console.log(data, 'datttataaa', error)
+    console.log(error, 'errrr')
+    toast.error(`${'An Error Occured'}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+
+  const { isLoggedIn, user, token } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token
+  }))
+
+
+  const userToken = token;
+
+
+  const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+    "editprofile",
+    handleSuccess,
+    handleError,
+  );
+
+  const submitForm = (data: ProfileFormValues) => {
+    const { pass, ...restData } = data;
+    mutate({
+      url: "/api/editprofile",
+      payload: { payload: restData, token: userToken },
+      token: userToken
+    });
+  };
+
 
   return (
     <div className='flex flex-col'>
+      <ToastContainer closeOnClick />
       <form onSubmit={handleSubmit(submitForm)} className='flex flex-col'>
         <div className='flex flex-col gap-4 lg:flex-row lg:gap-10'>
           <InputField
@@ -230,11 +309,11 @@ export const ProfileForm: React.FC = () => {
                 {<label className='py-2 text-sm'>{'State*'} </label>}
                 <select
                   {...register('state', { required: true })}
-                                onChange={(event) => {
-                                                    const value = event.target.value;
-                                                    field.onChange(value);
-                                                    handleStateChange(value);
-                                                }}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    field.onChange(value);
+                    handleStateChange(value);
+                  }}
                   className={`xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
                 >
                   <option value='' className='text-wdc-textbody'>
@@ -243,7 +322,7 @@ export const ProfileForm: React.FC = () => {
 
                   {state_and_LGA.map((state) => (
 
-                    <option  key={state.state} className='text-wdc-textbody' value={state.state}>
+                    <option key={state.state} className='text-wdc-textbody' value={state.state}>
                       {state.state}
                     </option>
                   ))}
@@ -255,31 +334,12 @@ export const ProfileForm: React.FC = () => {
                 </div>
               </div>
 
-              /*     <SelectField
-label='State*'
-name='state'
-register={register}
-errors={errors}
-options={state_and_LGA}
-showlabel
-/>
-*/
-
             )}
           />
         </div>
         <div className='flex flex-col gap-4 pt-2 lg:flex-row lg:gap-10'>
-         {/*  <SelectField
-            label='Local Government Area(LGA)*'
-            name='lga'
-            register={register}
-            errors={errors}
-            options={lgaOptions}
-            showlabel
-          />
- */}
 
-     <Controller
+          <Controller
             name="lga"
             control={control}
             render={({ field }) => (
@@ -288,11 +348,11 @@ showlabel
                 {<label className='py-2 text-sm'>{'Local Government Area(LGA)*'} </label>}
                 <select
                   {...register('lga', { required: true })}
-                                onChange={(event) => {
-                                                    const value = event.target.value;
-                                                    field.onChange(value);
-                                                    // handleStateChange(value);
-                                                }}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    field.onChange(value);
+                    // handleStateChange(value);
+                  }}
                   className={`xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
                 >
                   <option value='' className='text-wdc-textbody'>
@@ -301,7 +361,7 @@ showlabel
 
                   {lgas.map((lga) => (
 
-                    <option  key={lga} value={lga} className='text-wdc-textbody' >
+                    <option key={lga} value={lga} className='text-wdc-textbody' >
                       {lga}
                     </option>
                   ))}
@@ -334,7 +394,7 @@ showlabel
         </div>
         <div className='mt-8 flex w-full justify-center'>
           <DefaultButton
-            text='Update Profile'
+            text={status === 'pending' ? 'loading...' : "Update Profile"}
             type='submit'
             className='w-[80%] rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white'
           />
