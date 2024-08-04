@@ -1,14 +1,17 @@
-'use Client'
+'use client'
 import React, { useState } from 'react'
 import { InputField } from '../../recharge/components/FormField'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ChangePass } from './YupValidation'
-// import { useMutateData } from '@/hooks/useMutateData'
 import { useForm } from 'react-hook-form'
 import { DefaultButton } from '@/app/component/Button'
-import { userProfile } from '@/store/store'
+import { useAuthStore, userProfile } from '@/store/store'
 import { Modal } from '@/app/component/Modal'
 import verify from '../../asset/verify.svg'
+import { useMutateData } from '@/hooks/useMutateNewData'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from 'next/navigation';
 
 export const ChangePassword = () => {
   const [success, setSuccess] = useState(false)
@@ -21,12 +24,13 @@ export const ChangePassword = () => {
     })
   )
 
+    const router = useRouter();
+
   const {
     reset,
     register,
     handleSubmit,
-    formState: { errors },
-    setValue
+    formState: { errors }
   } = useForm({
     mode: 'all',
     resolver: yupResolver(ChangePass)
@@ -37,16 +41,137 @@ export const ChangePassword = () => {
     setSuccess(false)
     reset()
   }
+
+
+
+
+  const handleSuccess = (data: any) => {
+    // console.log(data, 'datttataaa', error)
+
+    if (data.status === 201 || data.status === 200) {
+     setSuccess(true)
+    /*   toast.success(`${data?.data?.message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => router.push('/profile')
+      }); */
+      reset();
+    } else if (data.status === 400 || data.status === 409) {
+      toast.error(`${data?.data?.message || 'Password doesnt match' } `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || 'Authentication error'} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+    else if (data.status === 500) {
+      toast.error(`${data?.data?.message || 'old_password'} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+    else {
+      toast.error(`${'An Error Occured' || 'Error'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleError = (error: any) => {
+    console.log(data, 'datttataaa', error)
+    console.log(error, 'errrr')
+    toast.error(`${'An Error Occured'}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+
+  const { isLoggedIn, user, token } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token
+  }))
+
+
+  const userToken = token;
+
+
+  const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+    "changeprofilepass",
+    handleSuccess,
+    handleError,
+  );
+
+
+
   const submitForm = async (data: any) => {
-    setEditPassword()
-    setSuccessModal()
-    setSuccess(false)
-    reset()
+    // Simulate a successful form submission
+
+    // Add your form submission logic here
+    // console.log(data, 'datatat')
+    const payload = {
+      old_password: data?.oldpass,
+      new_password: data?.newpass
+    }
+
+     mutate({
+      url: "/api/changeprofilepass",
+      payload: { payload: payload, token: userToken },
+      token: userToken
+    });
   }
+
   return (
-    <section className='fixed z-50 flex h-screen w-screen items-center justify-center bg-[#000000d1] '>
+    <section className='fixed z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50 '>
+      <ToastContainer closeOnClick />
       {!success ? (
-        <div className='flex h-auto flex-col items-center justify-center gap-6 rounded-md bg-white p-8  '>
+        <div className='mb-8 flex h-auto flex-col items-center justify-center gap-6 rounded-md bg-white p-8'>
           <form onSubmit={handleSubmit(submitForm)} className='flex flex-col'>
             <div>
               <InputField
@@ -90,8 +215,9 @@ export const ChangePassword = () => {
                 handleClick={Closefunc}
               />
               <DefaultButton
-                text='Save'
-                className=' rounded-md bg-[#F25E26] p-2 px-4 text-white'
+                /* text='Save' */
+                     text={status === 'pending' ? 'loading...' : "Save"}
+                className='rounded-md bg-[#F25E26] p-2 px-4 text-white'
                 type='submit'
               />
             </div>
@@ -105,9 +231,10 @@ export const ChangePassword = () => {
           buttontype='button'
           buttonclass='w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white'
           buttontext='Proceed to Profile'
-          handleEvent={submitForm}
+          handleEvent={Closefunc}
         />
       )}
     </section>
   )
 }
+

@@ -865,6 +865,42 @@ export const transactions = [
     time: '3:15',
     status: ['completed'],
     type: 'received'
+  },
+
+    {
+
+    logo: '',
+
+    brand: 'GTB',
+    title: 'You just Received ₦ 20,0000',
+    amount: '20,000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'received'
+  },
+    {
+
+    logo: '',
+
+    brand: 'GTB',
+    title: 'You just Received ₦ 20,0000',
+    amount: '20,000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'received'
+  }
+
+  ,
+    {
+
+    logo: '',
+
+    brand: 'GTB',
+    title: 'You just Received ₦ 20,0000',
+    amount: '20,000',
+    time: '3:15',
+    status: ['completed'],
+    type: 'received'
   }
 ]
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
 import { useGetDatanew } from '@/hooks/useGetData'
+// import { cookies } from 'next/headers'
 
 
 // Retrieve user from cookie/local storage
@@ -35,7 +36,8 @@ const storedUser = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : null;
 //     set({ isLoggedIn: false, user: null }); // Update isLoggedIn and user state
 //   }
 // }))
-
+// const cookieStore = cookies()
+// const theme = cookieStore.get('theme')
 
 export const useAuthStore = create((set) => ({
   isLoggedIn: !!Cookies.get('token'), // Check if token cookie exists on initialization
@@ -49,15 +51,23 @@ export const useAuthStore = create((set) => ({
     set({ user });
   },
 
+
+
   setAuthCookie: (token, user, expirationDate) => {
+
+    // cookies().set('token_new', token)
     Cookies.set('token', token, {
       expires: expirationDate,
       sameSite: 'strict' // Additional security measure
     });
+
+
     Cookies.set('user', JSON.stringify(user), {
       expires: expirationDate,
       sameSite: 'strict' // Additional security measure
     });
+
+
     set({ isLoggedIn: true, user }); // Update isLoggedIn and user state
   },
 

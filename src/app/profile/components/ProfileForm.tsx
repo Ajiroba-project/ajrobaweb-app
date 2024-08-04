@@ -88,6 +88,7 @@ export const ProfileForm: React.FC = () => {
     console.log(data, 'datttataaa', error)
 
     if (data.status === 201 || data.status === 200) {
+      setSuccessModal(!successModal)
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 5000,
