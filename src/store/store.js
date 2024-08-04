@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
+import { useGetDatanew } from '@/hooks/useGetData'
 
 
 // Retrieve user from cookie/local storage
@@ -87,6 +88,20 @@ export const userNavStore = create(set => ({
 }))
 
 
+
+// export const profilePhoto = create(set => ({
+//   profileurl: '',
+
+//   setProfileurl: url => set({ profileurl: url }),
+
+// }))
+
+export const profilePhoto = create((set) => ({
+  profileurl: '',
+  setProfileurl: (url) => set({ profileurl: url }),
+}));
+
+
 export const userOTPStore = create(set => ({
   user_otp: '',
   /* set_user_Otp: text => set({ otp: text }) */
@@ -94,9 +109,8 @@ export const userOTPStore = create(set => ({
 }))
 
 
-
-
 export const userProfile = create(set => ({
+
   activeMenu: 'my profile',
   profileUpload: '',
   profile: false,
@@ -112,7 +126,8 @@ export const userProfile = create(set => ({
     state: '',
     lga: '',
     residency: '',
-    balance: ''
+    balance: '',
+    profile_image_url: ''
   },
   setEditProfile: () => set(state => ({ editProfile: !state.editProfile })),
   setProfile: () => set(state => ({ profile: !state.profile })),

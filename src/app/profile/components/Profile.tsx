@@ -1,17 +1,17 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import photo from '../../asset/image/photo.png'
 import { ProfileContent } from './ProfileContent'
 import { IoIosCamera } from 'react-icons/io'
-import { userProfile, useAuthStore } from '@/store/store'
+import { userProfile, useAuthStore, profilePhoto } from '@/store/store'
 import { LuMenuSquare } from 'react-icons/lu'
 import { useGetDatanew } from '@/hooks/useGetData'
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false)
 
-  const { activeMenu, setactiveMenu, setProfile, setEditProfile, editProfile,  userDetails } =
+  const { activeMenu, setactiveMenu,  setProfile, setEditProfile, editProfile, userDetails } =
 
     userProfile(state => ({
       activeMenu: state.activeMenu,
@@ -19,17 +19,16 @@ export const Profile = () => {
       setProfile: state.setProfile,
       setEditProfile: state.setEditProfile,
       editProfile: state.editProfile,
-          userDetails: state.userDetails,
+      userDetails: state.userDetails,
+      setprofileUpload: state.setprofileUpload
     })
 
-  )
+    )
 
- /*    const { userDetails, editProfile } = userProfile(state => ({
-    userDetails: state.userDetails,
-    editProfile: state.editProfile
-  }))
- */
-
+  const { profileurl, setProfileurl } = profilePhoto((state) => ({
+  profileurl: state.profileurl,
+  setProfileurl: state.setProfileurl,
+}));
 
 
   const { isLoggedIn, user, token } = useAuthStore(state => ({
@@ -39,11 +38,18 @@ export const Profile = () => {
   }))
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
-    const userToken = token;
+  const userToken = token;
 
-   const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, "get_user_details", userToken);
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, "get_user_details", userToken);
+
+  useEffect(() => {
+    if (isLoggedIn && userInfo?.profile_image_url) {
+      setProfileurl(userInfo.profile_image_url);
+    }
+  }, [isLoggedIn, userInfo, setProfileurl]);
 
   const userData = isLoggedIn ? userInfo?.data : userDetails;
+  const userphoto = profileurl || userDetails?.profile_image_url || photo;
 
   const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community']
   return (
@@ -73,11 +79,14 @@ export const Profile = () => {
           <div className='flex flex-col lg:border lg:border-gray-500 rounded-md px-2'>
             <div className='relative justify-center flex items-center mt-2 '>
               <Image
-                src={photo}
+                src={userphoto}
+                width={50}
+                height={50}
                 alt={'profile'}
-                className='relative h-auto  w-2/3 bg-cover '
+                className=' w-24 h-24 rounded-full object-cover' // Ensure the image covers the container and is rounded
                 draggable={false}
               />
+
               <span
                 className='absolute bottom-[0.3rem] lg:bottom-[0.3rem] right-[3.3rem] lg:right-[3.3rem] cursor-pointer rounded-full bg-[#FCDFD4] p-1'
                 onClick={setProfile}
