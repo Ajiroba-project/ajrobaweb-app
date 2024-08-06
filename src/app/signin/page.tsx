@@ -85,7 +85,7 @@ function Page() {
         theme: 'light',
         onClose: () => router.push('/')
       })
-      console.log(data, 'datat')
+      // console.log(data, 'datat')
       setAuthCookie(data?.data?.token, 0)
       setUser(data?.data)
 

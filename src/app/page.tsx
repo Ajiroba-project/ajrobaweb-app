@@ -75,7 +75,7 @@ const Page = () => {
   }))
 
 
-  console.log(isLoggedIn, 'isLoggedIn---app--pag')
+  // console.log(isLoggedIn, 'isLoggedIn---app--pag')
 
   // Fetching data using custom hook
   const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`, ["get auctiondetails"], true);
@@ -115,6 +115,8 @@ const Page = () => {
   const handleAuctionChange = (pageNumber: number) => {
     setAuctionCurrentPage(pageNumber)
   }
+
+    // onPageChange={handlePageChange}
 
   return (
     <>
