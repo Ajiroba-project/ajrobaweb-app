@@ -3,7 +3,7 @@ import React from "react";
 import { Header } from "../component/Header";
 import { Profile } from "../../app/profile/components/Profile";
 
-import { userProfile } from "@/store/store";
+import { useAuthStore, userProfile } from "@/store/store";
 import { useRouter } from "next/navigation";
 // import useAuthMiddleware from '@/hooks/useAuth'
 import { useAuthOrders } from "@/hooks/useAuthOrders";
@@ -14,6 +14,8 @@ import Image from "next/image";
 import { MdOutlineFileDownload } from "react-icons/md";
 import ricesample from "@/app/asset/image/rice_sample.jpg";
 import payment_method from "@/app/asset/image/payment_method.svg";
+import { useGetOrderData, useGetProductData } from "@/hooks/useGetData";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
@@ -21,7 +23,24 @@ const Page = () => {
   /*  useAuthMiddleware(router) */
   useAuthOrders(router);
 
+      const searchParams = useSearchParams();
+
+        const order_id = searchParams.get("orderId");
+
   const profile = userProfile((state) => state.profile);
+
+
+    const { isLoggedIn, user, token } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token
+  }));
+
+  const userToken = token;
+
+  const { data: productinfo, isLoading: productLoading, error: producterror } = useGetProductData('/api/productdetailsbyid', "get_product_details", userToken, order_id);
+
+  console.log(productinfo, "productinfo")
 
   return (
     <section className="bg-[#F6F6F6]">
