@@ -93,7 +93,7 @@ export const useGetDatanew = (url: string, title: string, userToken: string): Us
 // Define the fetch function with type annotations
 const fetchOrderData = async (url: string, userToken: string, title?: string): Promise<ResponseData> => {
 
-  console.log(title, url, userToken)
+ /*  console.log(title, url, userToken) */
   const response = await Axios.get<ResponseData>(url, {
         headers: {
             Authorization: `Token ${userToken}`
@@ -117,28 +117,29 @@ export const useGetOrderData = (url: string, title: string, userToken: string): 
 
 
 // Define the fetch function with type annotations
-const fetchProductData = async (url: string, userToken: string, order_id: string, title?: string, ): Promise<ResponseData> => {
-
-  console.log(title, url, userToken)
+const fetchProductData = async (url: string, userToken: string, order_id: string, title?: string): Promise<ResponseData> => {
+  // console.log(url, userToken, order_id, title);
   const response = await Axios.get<ResponseData>(url, {
-        headers: {
-            Authorization: `Token ${userToken}`,
-            order_id: order_id
-        }
-    });
-    return response.data;
-}
+    headers: {
+      Authorization: `Token ${userToken}`,
+      order_id: order_id
+    }
+  });
+  return response.data;
+};
 
 
 
 // Define the hook with type annotations
-export const useGetProductData = (url: string, title: string, userToken: string, order_id: string): UseQueryResult<ApiResponse> => {
+export const useGetProductData = (url: string, userToken: string, order_id: string, title: string): UseQueryResult<ApiResponse> => {
+  // console.log(url, userToken, order_id, title);
   return useQuery({
     queryKey: [title, url],
-    queryFn: () => fetchProductData(url, userToken, title, order_id),
+    queryFn: () => fetchProductData(url, userToken, order_id, title), // Correct parameter order
     refetchOnWindowFocus: false,
   });
-}
+};
+
 
 
 

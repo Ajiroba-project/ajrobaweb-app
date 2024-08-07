@@ -35,7 +35,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onOptionClick, value, transaction }
   const handleOptionClick = (option: string) => {
     switch (option) {
       case 'Purchase order':
-        console.log('Purchase order selected', option, 'optionnn', transaction);
+        // console.log('Purchase order selected', option, 'optionnn', transaction);
         // Add your logic for handling Purchase order here
       router.push(`/purchaseorder?orderId=${transaction.order_id}`);
         break;

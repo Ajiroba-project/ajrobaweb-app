@@ -6,7 +6,11 @@ export async function GET(request) {
 
         const token_ = request.headers.get('authorization')?.replace('Token ', '');
         const id = request.headers.get('order_id');
+        /*     console.log(request.headers, 'id')
 
+            console.log(token_, 'token_')
+            console.log(id, 'id')
+     */
         if (!token_) {
             return NextResponse.json({ error: 'Token is required' }, { status: 400 });
         }
@@ -32,7 +36,7 @@ export async function GET(request) {
         const data = await res.json();
         const status = res.status;
 
-        console.log(data, 'data')
+        // console.log(data, 'data')
 
         // Return JSON response with data and status
         return NextResponse.json({ data, status });
