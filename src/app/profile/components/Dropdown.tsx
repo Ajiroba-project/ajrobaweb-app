@@ -42,6 +42,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onOptionClick, value, transaction }
       case 'Transaction Receipt':
         console.log('Transaction Receipt selected');
         // Add your logic for handling Transaction Receipt here
+             router.push(`/transreceipt?transId=${transaction?.reference}`);
         break;
       case 'Review':
         console.log('Review selected');

@@ -5,22 +5,22 @@ export async function GET(request) {
         // Extract the token from the query parameters or headers
 
         const token_ = request.headers.get('authorization')?.replace('Token ', '');
+        const id = request.headers.get('order_id');
+        /*     console.log(request.headers, 'id')
 
-        // console.log(token_, 'token_')
-
-        /*    const body = await request.json();
-           console.log(body, 'bodyyyyy')
-           const url = new URL(request.url);
-           const token = url.searchParams.get('token'); */
-
-        /* console.log(token, 'token') */
-
+            console.log(token_, 'token_')
+            console.log(id, 'id')
+     */
         if (!token_) {
             return NextResponse.json({ error: 'Token is required' }, { status: 400 });
         }
 
+        // https://ajiroba.onrender.com/v1/user/view_purchase_order/<order_id>/
+
+        // https://ajiroba.onrender.com/v1/user/transaction_receipt/<refrence_id>/
+
         const cacheBuster = `cache=${Date.now()}`;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/orders/?${cacheBuster}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/transaction_receipt/${id}?${cacheBuster}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

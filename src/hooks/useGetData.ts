@@ -35,7 +35,8 @@ interface UserData {
   lga: string;
   residential: string;
   my_wallet: { balance: string; point: string }[];
-  profile_image_url?: any
+  profile_image_url?: any;
+  amount?: any;
 }
 
 
