@@ -3,12 +3,35 @@ import React from 'react'
 import { userNavStore } from '@/store/store'
 // import { userNavStore } from '@/store/store'
 
-export const Tables = ({Data}) => {
+
+interface TransactionData {
+  beneficiary: string;
+  sender: string;
+  transactionType: string;
+  transactionDate: string;
+  transactionStatus: string;
+  description: string;
+  transactionReference: string;
+  channel: string;
+  date_created: string;
+  status: string;
+  reference: string
+}
+
+interface DataProps {
+  Data: {
+    data: TransactionData[];
+  };
+}
+
+export const Tables: React.FC<DataProps> = ({ Data }) => {
   const userNav =userNavStore( state =>state.userNav)
 
   console.log(Data)
 
-  console.log(userNav)
+//   console.log(userNav)
+
+console.log(Data?.data[1]?.sender)
 
   return (
     <div style={{
@@ -24,228 +47,54 @@ export const Tables = ({Data}) => {
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
               Beneficiary
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.beneficiary}</span> */}
+                <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[0]?.beneficiary}</span>
               </td>
              <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
               Sender
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.payment}</span> */}
+             <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[1]?.sender}</span>
               </td>
               <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                   Transaction Type
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.payment}</span> */}
+   <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[0]?.channel}</span>
               </td>
               <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                  Transaction Date
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.payment}</span> */}
+  <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[0]?.date_created}</span>
               </td>
               <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                 Transaction Status
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.payment}</span> */}
+ <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[0]?.status}</span>
               </td>
               <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                 Description
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.payment}</span> */}
+ <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[0]?.description}</span>
               </td>
-               <td className='flex items-center justify-between py-2'>
+             {/*   <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                 Description
                 </span>
-                {/* <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data.payment}</span> */}
-              </td>
+
+              </td> */}
               <td className='flex items-center justify-between py-2'>
                 <span className='brand1  font-semibold capitalize'>
                 Transaction Reference
                 </span>
+                 <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data?.data[0]?.reference}</span>
                 {/* <span className='font-semibold'>{Data.transaction}</span> */}
               </td>
 
             </tr>
-         /*  ) : userNav === 'Airtime' ? (
-            <tr className='flex flex-col divide-y divide-gray-300'>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  Recharge Method
-                </span>
-                <span className='font-semibold'>{Data.payment}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  customer Name
-                </span>
-                <span className='font-semibold'>{Data.customerName}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  address
-                </span>
-                <span className='font-semibold'>{Data.address}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  phone Number
-                </span>
-                <span className='font-semibold'>{Data.phone}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  network provider
-                </span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>amount</span>
-                <span className='font-semibold'>₦ {Data.amount}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  transaction
-                </span>
-                <span className='font-semibold'>{Data.transaction}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  date of transaction
-                </span>
-                <span className='font-semibold'>{Data.date}</span>
-              </td>
-            </tr>
-          ) : userNav === 'Electricity' ? (
-            <tr className='flex flex-col divide-y divide-gray-300'>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  payment method
-                </span>
-                <span className='font-semibold'>{Data.payment}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  customer Name
-                </span>
-                <span className='font-semibold'>{Data.customerName}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  address
-                </span>
-                <span className='font-semibold'>{Data.address}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  phone number
-                </span>
-                <span className='font-semibold'>{Data.phone}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>disco</span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  meter number
-                </span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>unit</span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>token amount</span>
-                <span className='font-semibold'>₦ {Data.amount}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>tax amount</span>
-                <span className='font-semibold'>₦ {Data.amount}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>total payable</span>
-                <span className='font-semibold'>₦ {Data.amount}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  transaction ID
-                </span>
-                <span className='font-semibold'>{Data.transaction}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  date of transaction
-                </span>
-                <span className='font-semibold'>{Data.date}</span>
-              </td>
-            </tr>
-          ) : userNav === 'Cable Subscription' ? (
-            <tr className='flex flex-col divide-y divide-gray-300'>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  payment method
-                </span>
-                <span className='font-semibold'>{Data.payment}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  customer name
-                </span>
-                <span className='font-semibold'>{Data.customerName}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  address
-                </span>
-                <span className='font-semibold'>{Data.address}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  phone number
-                </span>
-                <span className='font-semibold'>{Data.phone}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  Operator
-                </span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>amount</span>
-                <span className='font-semibold'>₦ {Data.amount}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  package
-                </span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  IUC number
-                </span>
-                <span className='font-semibold'>{Data.network}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  transaction ID
-                </span>
-                <span className='font-semibold'>{Data.transaction}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
-                  date of transaction
-                </span>
-                <span className='font-semibold'>{Data.date}</span>
-              </td>
-            </tr>
-          ) : null */
+
 
           }
         </tbody>

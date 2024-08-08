@@ -119,7 +119,7 @@ export const useGetOrderData = (url: string, title: string, userToken: string): 
 
 // Define the fetch function with type annotations
 const fetchProductData = async (url: string, userToken: string, order_id: string, title?: string): Promise<ResponseData> => {
-  // console.log(url, userToken, order_id, title);
+   console.log(url, userToken, order_id, title);
   const response = await Axios.get<ResponseData>(url, {
     headers: {
       Authorization: `Token ${userToken}`,
@@ -133,7 +133,7 @@ const fetchProductData = async (url: string, userToken: string, order_id: string
 
 // Define the hook with type annotations
 export const useGetProductData = (url: string, userToken: string, order_id: string, title: string): UseQueryResult<ApiResponse> => {
-  // console.log(url, userToken, order_id, title);
+   console.log(url, userToken, order_id, title);
   return useQuery({
     queryKey: [title, url],
     queryFn: () => fetchProductData(url, userToken, order_id, title), // Correct parameter order

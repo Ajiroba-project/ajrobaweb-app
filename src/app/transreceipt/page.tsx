@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Header } from './component/Header'
 import { Tables } from './component/Tables'
 import { DefaultButton } from '../component/Button'
@@ -13,66 +13,82 @@ import { useAuthOrders } from '@/hooks/useAuthOrders'
 import { useSearchParams } from "next/navigation";
 import { useAuthStore } from '@/store/store'
 import { useGetProductData } from '@/hooks/useGetData'
+import { error } from 'console'
+
+
 
 const Page = () => {
   const router = useRouter();
   useAuthOrders(router);
 
-   const searchParams = useSearchParams();
-  const order_id = searchParams.get("transId");
+  const searchParams = useSearchParams();
+  const order_id = searchParams.get("transId") || "";  // Get the order ID from the URL params
 
-//   console.log("order_id", order_id);
-
-
- /*  const profile = userProfile((state) => state.profile); */
   const { isLoggedIn, user, token } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     user: state.user,
     token: state.token,
-  }));
-  const userToken = token;
 
+  }));
+
+  const userToken = token;
 
   const {
     data: productinfo,
     isLoading: productLoading,
     error: producterror,
+    refetch
   } = useGetProductData(
     "/api/productreceiptbyid",
     userToken,
     order_id,
-    "get_product_receipt"
+    "get_product_details"
   );
 
-  console.log("productinfo", productinfo?.data);
+
+  useEffect(() => {
+
+    console.log("order_id", order_id);
+
+    refetch()
+  }, [order_id]);
+
+  console.log("productinfo", productinfo);
+  console.log(producterror, 'product_error')
+
+
+  if (productLoading) {
+    return <div className='text-center' >Loading...</div>;
+  }
 
   return (
-    <section  >
-      <div className='bg-gray-100 py-8' >
-       <div style={{
-        margin: '0 auto',
-        width: '90%'
-       }} >
-         <Header />
-       </div>
+    <section>
+
+
+
+      <div className='bg-gray-100 py-8'>
+        <div style={{ margin: '0 auto', width: '90%' }}>
+          <Header />
+        </div>
       </div>
       <div className='flex flex-col items-center py-8'>
         <p className='brand3 text-[#A09F9F] font-Poppins text-[12px]'>Transaction Amount</p>
-        <p className='text-2xl font-semibold font-Poppins'>₦{productinfo?.data?.amount}</p>
+        <p className='text-2xl font-semibold font-Poppins'>₦{productinfo?.data?.data[0]?.amount}</p>
       </div>
-      <section className=''>
+      <section>
         <div>
-          <Tables Data={productinfo?.data}  />
+          {productinfo?.data ? (
+            <Tables Data={productinfo.data} />
+          ) : producterror  ? (
+            <p className='text-center' >Error fetching data: {producterror?.message}</p>
+          ) :
+          (
+            <p>Loading or no data available</p>
+          )}
         </div>
       </section>
-      <div className="container" style={{
-        margin: '0 auto',
-        width: '90%',
-       }}>
-        <h3 className='text-left font-medium text-sm text-[#353131] mt-12 font-Poppins'>Download our mobile app on:</h3>
-      </div>
 
-      <section className='container my-8 flex  flex-col items-center gap-8 '>
+          <section className='container my-8 flex  flex-col items-center gap-8 '>
 
         <div className='flex justify-center gap-3'>
           <div>
@@ -106,8 +122,12 @@ const Page = () => {
           className='my-6 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] p-4 px-10 hover:bg-[#F25E26] hover:text-white'
         />
       </section>
+      {/* Other components */}
     </section>
-  )
-}
+  );
+};
+
+
+
 
 export default Page

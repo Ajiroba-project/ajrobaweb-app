@@ -39,7 +39,7 @@ const Page = () => {
     "get_product_details"
   );
 
- /*  console.log(productinfo?.data?.data, "productinfo") */
+   console.log(productinfo?.data?.data, "productinfo")
 
   return (
     <section className="bg-[#F6F6F6] min-h-screen">
