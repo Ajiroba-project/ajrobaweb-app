@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Header } from './component/Header'
 import { Tables } from './component/Tables'
 import { DefaultButton } from '../component/Button'
@@ -14,6 +14,8 @@ import { useSearchParams } from "next/navigation";
 import { useAuthStore } from '@/store/store'
 import { useGetProductData } from '@/hooks/useGetData'
 import { error } from 'console'
+import { ModalProfile } from '../profile/components/ModalProfile'
+import verify from '@/app/asset/verify.svg'
 
 
 
@@ -45,6 +47,16 @@ const Page = () => {
     "get_product_details"
   );
 
+
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleReviewClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   useEffect(() => {
 
@@ -123,6 +135,16 @@ const Page = () => {
         />
       </section>
       {/* Other components */}
+{/*
+        <ModalProfile icon={verify}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title="Review Your Purchase"
+        buttontext="Close"
+        handleEvent={handleCloseModal}
+      >
+        <p>This is where the review content goes.</p>
+      </ModalProfile> */}
     </section>
   );
 };

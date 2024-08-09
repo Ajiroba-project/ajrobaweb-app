@@ -90,6 +90,56 @@ export const InputField = ({
   )
 }
 
+export const InputFieldRounded = ({
+  label,
+  type,
+  placeholder,
+  name,
+  register,
+  errors,
+  classname,
+  value,
+  isdisabled
+}: inputProps) => {
+  const [toggle, setToggle] = useState(false)
+
+  const handleTogglePasswordVisibility = () => {
+    setToggle(!toggle)
+  }
+
+  return (
+    <>
+      <div className='relative flex flex-col'>
+        {label && <label className='py-2 text-sm'>{label}</label>}
+        <input
+          name={name}
+          type={toggle ? 'text' : type}
+          placeholder={placeholder}
+            placeholder-gray-500
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded-lg border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          {...register(name, { required: true })}
+          disabled={isdisabled}
+        />
+
+        {type === 'password' || type === 'Password' ? (
+          <span
+            onClick={handleTogglePasswordVisibility}
+            className={`absolute right-3 top-[3.3rem] cursor-pointer  text-xl transition duration-200 ${
+              toggle ? 'text-blue-500' : 'text-gray-400'
+            }`}
+          >
+            {toggle ? <FaRegEye /> : <FaRegEyeSlash />}
+          </span>
+        ) : null}
+
+        <div className='pt-1 text-xs text-rose-500'>
+          {errors?.[name]?.message}
+        </div>
+      </div>
+    </>
+  )
+}
+
 export const SelectField = ({
   showlabel,
   label,
