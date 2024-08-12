@@ -40,9 +40,12 @@ type transacProps = {
 export const AllOrder = ({ transac }: transacProps) => {
 
   const [success, setSuccess] = useState(false);
+    const [successdelete, setSuccessdelete] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewerror, Setreviewerror] = useState('')
+    const [reviewerrordelete, Setreviewerrordelete] = useState('')
   const [isModalOpen, setModalOpen] = useState(false);
+    const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
    const [isSussessModal, setisSucceessModal] = useState(false);
 
 
@@ -53,22 +56,35 @@ export const AllOrder = ({ transac }: transacProps) => {
   };
 
 
+   const handleCloseModaldelete = () => {
+    setisdeleteModalOpen(false);
+  };
+
+
   const ChangePass = yup.object().shape({
     review: yup.string().required("Review is required"),
 
   });
 
   const [selectedTransaction, setSelectedTransaction] = useState<Order | null>(null);
+  const [selectedTransactiondelete, setSelectedTransactiondelete] = useState<Order | null>(null);
+
 
   const handleOptionClick = (option: string, transaction: Order) => {
 
-    console.log(`${option} clicked for transaction:`, transaction);
-   console.log(transaction, 'transactionnnnn')
+  //   console.log(`${option} clicked for transaction:`, transaction);
+  //  console.log(transaction, 'transactionnnnn')
 
    if (option === "Review") {
      setSelectedTransaction(transaction);
     setModalOpen(true);
    }
+
+ if (option === "Delete") {
+    setSelectedTransactiondelete(transaction);
+    // console.log(transaction, "Transaction to delete"); // Check if this logs correctly
+    setisdeleteModalOpen(true);
+  }
 
   };
 
@@ -88,6 +104,15 @@ const Closefunc = () => {
   setSelectedRating(0);
   reset();
   Setreviewerror('')
+};
+
+
+const Closefuncdelete = () => {
+  setisdeleteModalOpen(false);
+  setSuccessdelete(false);
+  // setSelectedRating(0);
+  reset();
+  Setreviewerrordelete('')
 };
 
 
@@ -154,7 +179,8 @@ const Closefunc = () => {
       });
       reset();
     } else {
-      toast.error(`${"An Error Occured" || "Error"}`, {
+       toast.error(`${data?.data?.message || "An Error Occured"} `, {
+   /*    toast.error(`${"An Error Occured" || "Error"}`, { */
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -191,7 +217,7 @@ const Closefunc = () => {
   );
 
 
-  const submitForm = async (data: any, event: any) => {
+const submitForm = async (data: any, event: any) => {
   event.preventDefault();
 
   if (selectedRating <= 0) {
@@ -228,6 +254,41 @@ const Closefunc = () => {
   });
 };
 
+
+const {
+  reset: resetDeleteForm,
+  register: registerDeleteForm,
+  handleSubmit: handleSubmitDelete,
+  formState: { errors: deleteErrors },
+} = useForm({
+  mode: "all",
+  // resolver: yupResolver(/* your delete form schema */),
+});
+
+
+const submitFormdelete = async (data: any, event: any) => {
+  event.preventDefault();
+
+  console.log(errors)
+  console.log(data, 'datata')
+
+//  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
+
+ if (!selectedTransactiondelete) {
+    console.error("No transaction selected for deletion");
+    return;  // Exit the function if selectedTransactiondelete is null
+  }
+
+  const payload = {
+    order_Id: selectedTransactiondelete.order_id,
+  };
+
+    mutate({
+    url: "/api/deleteorder",
+    payload: { payload: payload, token: userToken },
+    token: userToken
+  });
+};
 
   return transac?.map((val, index) => (
     <>
@@ -347,6 +408,45 @@ const Closefunc = () => {
         />
 
         }
+
+
+
+     {
+
+        isdeleteModalOpen &&
+
+      <ModalProfile
+        icon={""}
+        isOpen={isdeleteModalOpen}
+        onClose={handleCloseModaldelete}
+        title=""
+        handleEvent={handleCloseModaldelete}
+      >
+        <form onSubmit={handleSubmitDelete(submitFormdelete)} className="flex flex-col">
+
+          <p className="flex justify-center text-left py-8">Are you sure you want to delete this product?</p>
+
+          <div className="mt-5 flex gap-4 justify-center">
+
+
+            <DefaultButton
+              text="No"
+              className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+              type="button"
+              handleClick={Closefuncdelete}
+            />
+            <DefaultButton
+              text={status === "pending" ? "loading..." : "Yes"}
+              className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+              type="submit"
+            />
+
+
+          </div>
+        </form>
+      </ModalProfile>
+
+      }
     </>
   ));
 };

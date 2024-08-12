@@ -260,6 +260,7 @@ export const Profile = () => {
         </div>
       </section>
 
+    {/*   <section className="span-2 flex w-full flex-col lg:items-center"> */}
       <section className="span-2 flex w-full flex-col lg:items-center">
         <div className="z-auto  flex justify-end items-end w-full">
           {activeMenu === 'my profile' ? (
