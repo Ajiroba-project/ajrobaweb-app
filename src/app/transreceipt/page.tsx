@@ -65,8 +65,8 @@ const Page = () => {
     refetch()
   }, [order_id]);
 
-  console.log("productinfo", productinfo);
-  console.log(producterror, 'product_error')
+//    console.log("productinfo", productinfo);
+//    console.log(producterror, 'product_error')
 
 
   if (productLoading) {

@@ -19,6 +19,7 @@ import { useAuthStore } from '@/store/store'
 import { useQueryData } from '@/hooks/useQueryData'
 
 
+
 type AuctionData = {
   id: string;
   name: string;
@@ -121,6 +122,7 @@ const Page = () => {
   return (
     <>
       <Suspense>
+
         <header style={{
           /*    zIndex: 1000 */
         }} className='fixed z-50 w-full'>
@@ -128,6 +130,7 @@ const Page = () => {
         </header>
 
         <main className='w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]'>
+
           {/* hero section */}
           <section>
             <div className=''>
@@ -139,7 +142,7 @@ const Page = () => {
           <section className='container my-[3rem] flex flex-col gap-4'>
             <div className='flex items-center justify-between'>
               <SubHeading title='Today' />
-              <div className='flex items-center '>
+             {/*  <div className='flex items-center '>
                 <CircularPagination
                   pageCount={totalPages}
                   onPageChange={(pageNumber: number) =>
@@ -147,7 +150,15 @@ const Page = () => {
                   }
                   className='flex items-center'
                 />
-              </div>
+              </div> */}
+              <div className='flex items-center'>
+  <CircularPagination
+    pageCount={totalPages}
+    onPageChange={({ selected }) => handleAuctionChange(selected)}
+    className='flex items-center'
+  />
+</div>
+
             </div>
 
             <div>
@@ -174,13 +185,18 @@ const Page = () => {
             <div className='flex items-center justify-between'>
               <SubHeading title='Categories' />
               <div className='relative flex items-center'>
-                <CircularPagination
+                {/* <CircularPagination
                   pageCount={catCount}
                   onPageChange={(pageNumber: number) =>
                     handlePageChange(pageNumber)
                   }
                   className='flex items-center'
-                />
+                /> */}
+                <CircularPagination
+    pageCount={totalPages}
+    onPageChange={({ selected }) => handleAuctionChange(selected)}
+    className='flex items-center'
+  />
               </div>
             </div>
 

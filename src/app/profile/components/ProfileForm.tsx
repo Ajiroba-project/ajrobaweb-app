@@ -188,7 +188,7 @@ export const ProfileForm: React.FC = () => {
 
   return (
     <div className='flex flex-col'>
-      <ToastContainer closeOnClick />
+    {/*   <ToastContainer closeOnClick /> */}
       <form onSubmit={handleSubmit(submitForm)} className='flex flex-col'>
         <div className='flex flex-col gap-4 lg:flex-row lg:gap-10'>
           <InputField

@@ -4,6 +4,8 @@ import { Poppins, Inter, Nunito_Sans } from 'next/font/google'
 import './globals.css'
 import RQProviders from '@/utils/provider'
 import { Providers } from './providers'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { useExcludeHeader } from '@/hooks/useExcludeHeader'
 // import { Header } from './component/Header'
 // import { Footer } from './component/Footer'
@@ -50,6 +52,7 @@ export default function RootLayout({
         {/* header */}
 
         <body className={`${poppins.className} ${nunito.className} ${inter.className}`}>
+                 <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}
           </Providers>

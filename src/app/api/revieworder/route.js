@@ -41,16 +41,18 @@ export async function PUT(request) {
         /*  POST https://ajiroba.onrender.com/v1/user/create_order_review/<order_id>/ */
 
 
-        const payload = {
-            review: data?.review,
-            rating: selectedRating,
-            order_Id: selectedTransaction.order_id, // Safe to use because of the above check
-        };
+        /*   const payload = {
+              review: data?.review,
+              rating: selectedRating,
+              order_Id: selectedTransaction.order_id, // Safe to use because of the above check
+          }; */
 
         const paylod_data = {
-            review: body.payload?.review,
+            comment: body.payload?.review,
             rating: body.payload?.selectedRating,
         }
+
+        // console.log(paylod_data, 'payloadddd_datatat')
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/create_order_review/${body?.payload?.order_Id}/?${cacheBuster}`, {
             method: "POST",
@@ -65,6 +67,8 @@ export async function PUT(request) {
         // Parse response body as JSON
         const data = await res.json();
         const status = res.status;
+
+        // console.log(data, status)
 
         // Return JSON response with data and status
         return NextResponse.json({ data, status });
