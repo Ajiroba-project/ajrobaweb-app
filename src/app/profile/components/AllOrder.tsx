@@ -128,7 +128,7 @@ const Closefuncdelete = () => {
     Setreviewerror('')
     reset()
 
-    if (data.status === 201 || data.status === 200) {
+    if (data.status === 201 || data.status === 200 || data.status === 204) {
       setSuccess(true);
          toast.success(`${data?.data?.message}`, {
         position: "top-right",
@@ -144,6 +144,18 @@ const Closefuncdelete = () => {
       reset();
     } else if (data.status === 400 || data.status === 409) {
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 404 ) {
+      toast.error(`${data?.data?.message || "Order not found"} `, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

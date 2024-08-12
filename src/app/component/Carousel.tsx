@@ -1,6 +1,11 @@
 'use client'
 import Image from 'next/image'
 import carousel from '../asset/image/carousel.png'
+import buyticket from '../asset/image/buy_ticket.svg'
+import auction_one from '../asset/image/auction_one.svg'
+import auction_and_win from '../asset/image/enter_and_win.png'
+import rafledraw from '../asset/image/raffle_draw.svg'
+import recharge_and_win from '../asset/image/recharge_and_win.svg'
 import {
   Navigation,
   Pagination,
@@ -38,18 +43,19 @@ export const CarouselSwiper = () => {
       }}
     >
       <SwiperSlide>
-        <Image src={carousel} alt='carousel' />
+        <Image src={auction_one} alt='carousel' />
       </SwiperSlide>
 
       <SwiperSlide>
         {' '}
-        <Image src={carousel} alt='carousel' />
+        <Image src={buyticket} alt='carousel' />
       </SwiperSlide>
       <SwiperSlide>
         {' '}
-        <Image src={carousel} alt='carousel' />
+        <Image src={auction_and_win} alt='carousel' />
       </SwiperSlide>
-      <SwiperSlide>     <Image src={carousel} alt='carousel' /></SwiperSlide>
+      <SwiperSlide>     <Image src={rafledraw} alt='carousel' /></SwiperSlide>
+       <SwiperSlide>     <Image src={recharge_and_win} alt='carousel' /></SwiperSlide>
     </Swiper>
   )
 }

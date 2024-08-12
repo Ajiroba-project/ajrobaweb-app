@@ -1,9 +1,6 @@
 'use client'
-import { useState, Fragment } from 'react'
-import { categories } from '../static-data'
+import { useState, useEffect, Fragment, useRef } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
-import { FiMenu } from 'react-icons/fi'
-import { IoClose } from 'react-icons/io5'
 import Link from 'next/link'
 import { Poppins, Inter } from 'next/font/google'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
@@ -37,29 +34,16 @@ interface CategoryResponse {
 export const SideMenu = () => {
   const [active, setActive] = useState<MenuState>(null)
   const [subcategory, SetSubcategory] = useState<string | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter()
-
   const searchParams = useSearchParams()
   const { replace } = useRouter()
   const pathname = usePathname();
 
-  /*  const handlesubcat = (subCategory?: string, val?: { name?: string, category?: string }) => { */
   const handlesubcat = (subCategory: string, id: string, val?: any) => {
-
-    // console.log(subCategory, 'subCategory', val, 'val')
-
-    // console.log(val && val.category)
-
     setActive(null)
     const params = new URLSearchParams(searchParams)
-
-    /*  const params = new URLSearchParams(searchParams)
-     if (subCategory) {
-       params.set('sub', subCategory)
-     } else {
-       params.delete('sub')
-     } */
 
     if (subCategory) {
       params.set('sub', subCategory);
@@ -68,39 +52,40 @@ export const SideMenu = () => {
       params.delete('sub');
       params.delete('subid');
     }
-    // replace(`${pathname}?${params.toString()}`);
-    // /categories/${ val.category }?cat_id = ${ val.id }
-
     replace(`/categories/${val && val.category}?cat_id=${val.id}?${params.toString()}`)
   }
 
-
   const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
-  // GET https://ajiroba.onrender.com/v1/commerce/categories_and_subcategories/
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setActive(null);
+    }
+  };
 
-  // console.log(catInfo?.data, 'cat_datatat')
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
-      <section className='pl-[4rem] '>
+      <section className='pl-[4rem]' ref={menuRef}>
         <ul className='relative py-6'>
           {catInfo?.data?.map((val, index) => (
             <Fragment key={index}>
               <div className='relative'>
-                {/* main menu */}
                 <li
-                  className={`${poppins.className} ${active === index ? 'text-[#F25E26]' : ''}  flex  cursor-pointer items-center gap-2 py-2 hover:text-[#F25E26] ${val.category === 'fashion' ? 'hidden' : 'block'} relative`}
+                  className={`${poppins.className} ${active === index ? 'text-[#2A2A2A] font-Poppins' : 'text-[#2A2A2A]'}  flex  cursor-pointer items-center gap-2 py-2 hover:text-[#F25E26] font-Poppins ${val.category === 'fashion' ? 'hidden' : 'block'} relative`}
                   onClick={() => {
                     setActive(active === index ? null : index)
                   }}
-                  //   onMouseOver={() => setActive(active === index ? null : index)}
                   onMouseEnter={() => setActive(index)}
-                // onMouseLeave={()=>setActive(null)}
                 >
                   <span className='flex items-center gap-2'>
-                    {/* menuName + cadet */}
-                    <p className='text-xl font-normal capitalize' onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)}  >{val.category}</p>{' '}
+                    <p className='text-[20px] font-normal capitalize font-Poppins' onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
@@ -108,41 +93,22 @@ export const SideMenu = () => {
 
               {active === index && (
                 <div
-                  className={`${inter.className} z-20 bg-white ${active === 1 ? 'left-[10rem] -mt-[30px]  w-48 gap-2 px-3' : 'left-[8rem] -mt-[30px] w-48 rounded-md'} absolute rounded text-sm shadow-md transition delay-300 duration-300 ease-in-out`}
+                  className={`${inter.className} z-20 bg-white ${ 'left-[10rem] -mt-[30px] w-48 rounded-md'} absolute rounded text-sm shadow-md transition delay-300 duration-300 ease-in-out`}
                 >
                   {val.subcategories?.map(subcategory => (
                     <div
                       onClick={() => handlesubcat(subcategory.subcategory, subcategory.id, val)}
                       key={subcategory.subcategory}
-                      className={` ${active === 1 ? 'py-2 hover:bg-[#FCDFD4] ' : 'hover:bg-[#FCDFD4]'} relative z-20   cursor-pointer px-2`}
+                      className=' hover:bg-[#FCDFD4] relative z-20 cursor-pointer font-Inter'
+
                     >
-                      <p
-                        className={` ${active === 1 ? 'w-max text-base font-bold ' : ' p-2 text-base font-medium '}`}
+                       <p
+                        className={` ${ 'w-max p-2 text-[16px] font-Inter font-medium'}`}
                       >
                         {subcategory.subcategory}
                       </p>
 
-                      <span
-                        className={`${active === 1 ? 'absolute -right-2.5 -top-0.5 h-full w-0.5 rounded border-2 border-gray-200' : 'hidden'}${subcategory && subcategory.name === 'Accessories' ? ' border-hidden' : ''}`}
-                      ></span>
 
-                      {/*   {'subcategory' in subcategory && (
-                        <ul className='z-50 '>
-                          {subcategory.subcategories?.map(subSubcategory => (
-                            <div
-                              onClick={() =>
-                                handlesubcat(subSubcategory.subcategory, val)
-                              }
-                              key={subSubcategory.subcategory}
-                              className='p-2 hover:bg-[#FCDFD4]'
-                            >
-                              <p className='text-base font-medium'>
-                                {subSubcategory.subcategory}{' '}
-                              </p>
-                            </div>
-                          ))}
-                        </ul>
-                      )} */}
                     </div>
                   ))}
                 </div>
@@ -157,6 +123,7 @@ export const SideMenu = () => {
 
 export const MobileSideMenu = () => {
   const [active, setActive] = useState<MenuState>(null)
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
@@ -164,18 +131,9 @@ export const MobileSideMenu = () => {
   const { replace } = useRouter()
   const pathname = usePathname();
 
-  /* const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => { */
   const handlesubcat = (subCategory: string, id: string) => {
     setActive(null)
 
-    /*  const params = new URLSearchParams(searchParams)
-     if (subCategory) {
-       params.set('sub', subCategory)
-     } else {
-       params.delete('sub')
-     }
-
-     replace(`/categories/${val && val.category}?${params.toString()}`) */
     const params = new URLSearchParams(searchParams);
     if (subCategory) {
       params.set('sub', subCategory);
@@ -187,13 +145,24 @@ export const MobileSideMenu = () => {
     replace(`${pathname}?${params.toString()}`);
   }
 
-
   const router = useRouter()
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setActive(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
-      <section className='bg-[#F6F6F6] p-6'>
+      <section className='bg-[#F6F6F6] p-6' ref={menuRef}>
         <ul className='relative '>
           {catInfo?.data?.map((val, index) => (
             <Fragment key={index}>
@@ -218,43 +187,9 @@ export const MobileSideMenu = () => {
                       <div key={subcategory.subcategory} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
                         <Link href={"#"} className={`${active === 1 ? "font-bold" : ""} `}>{subcategory.subcategory}</Link>
 
-                        {/*  {('subcategory' in subcategory) && (
-                                                        <ul className="z-50 ">
-                                                            {subcategory.subcategory?.map((subSubcategory) => (
-                                                                <div key={subSubcategory.name} className="hover:bg-[#FCDFD4] py-2">
-                                                                    <Link href={subSubcategory.path || ''} className="py-2">{subSubcategory.name}</Link>
-                                                                </div>
-                                                            ))}
-                                                        </ul>
-                                                    )} */}
                       </div>
                     ))}
 
-                    {/*  {val.subcategories?.map(subcategory => (
-                      <div
-                        onClick={() => handlesubcat(subcategory.subcategory, val)}
-                        key={subcategory.subcategory}
-                        className={` ${active === 1 ? '' : 'hover:bg-[#FCDFD4]'} z-20 my-4 cursor-pointer p-2`}
-                      >
-                        {subcategory.subcategory}
-
-                          {'subcategory' in subcategory && (
-                          <ul className='z-50 '>
-                            {subcategory.subcategory?.map(subSubcategory => (
-                              <div
-                                onClick={() =>
-                                  handlesubcat(subSubcategory.name, val)
-                                }
-                                key={subSubcategory.name}
-                                className='py-2 hover:bg-[#FCDFD4]'
-                              >
-                                {subSubcategory.name}
-                              </div>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    ))} */}
                   </div>
                 )}
               </div>
@@ -268,6 +203,7 @@ export const MobileSideMenu = () => {
 
 export const CatMobileSideMenu = () => {
   const [active, setActive] = useState<MenuState>(null)
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -276,26 +212,10 @@ export const CatMobileSideMenu = () => {
 
   const router = useRouter()
 
-
   const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
-  // const handleSubClick = (subCategoryName: string) => {
-  //     setActive(null);
-  // };
-
-  // const handlesubcat = (subCategory: string, val?: { name?: string, category?: string }) => {
   const handlesubcat = (subCategory: string, id: string) => {
     setActive(null)
-
-    console.log(id, 'id valll')
-
-    /* const params = new URLSearchParams(searchParams)
-    if (subCategory) {
-      params.set('sub', subCategory)
-    } else {
-      params.delete('sub')
-    }
-    replace(`/categories/${val && val.category}?${params.toString()}`) */
 
     const params = new URLSearchParams(searchParams)
 
@@ -309,9 +229,22 @@ export const CatMobileSideMenu = () => {
     replace(`${pathname}?${params.toString()}`);
   }
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setActive(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <section className='bg-[#F6F6F6] px-6 py-2'>
+      <section className='bg-[#F6F6F6] px-6 py-2' ref={menuRef}>
         <ul className='relative '>
           {catInfo?.data.map((val, index) => (
             <Fragment key={index}>
@@ -343,22 +276,6 @@ export const CatMobileSideMenu = () => {
                         >
                           {subcategory.subcategory}
                         </p>
-
-                        {/*    {'subcategory' in subcategory && (
-                          <ul className='z-50 '>
-                            {subcategory.subcategory?.map(subSubcategory => (
-                              <div
-                                onClick={() =>
-                                  handlesubcat(subSubcategory.name, val)
-                                }
-                                key={subSubcategory.name}
-                                className='py-2 hover:bg-[#FCDFD4]'
-                              >
-                                {subSubcategory.name}
-                              </div>
-                            ))}
-                          </ul>
-                        )} */}
                       </div>
                     ))}
                   </div>
