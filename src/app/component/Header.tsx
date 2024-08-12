@@ -14,6 +14,7 @@ import Brand from '../asset/logo.svg';
 import { CiSearch } from 'react-icons/ci';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryData } from '@/hooks/useQueryData';
+import { AuctionMarquee } from './Auction-Marquee';
 
 
 // function Search() {
@@ -89,7 +90,9 @@ interface CategoryResponse {
 function Search() {
   const [searchInput, setSearchInput] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState<string[]>([]);
+  // const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [searchResults, setSearchResults] = useState<{ id: string; name: string }[]>([]);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
@@ -114,30 +117,22 @@ function Search() {
     true
   );
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setSearchInput(input);
-    setIsDropdownOpen(true);
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const input = e.target.value;
+  setSearchInput(input);
+  setIsDropdownOpen(true);
 
-    if (input) {
-      const lowerCaseInput = input.toLowerCase();
-      const results: string[] = [];
+  if (input) {
+    const lowerCaseInput = input.toLowerCase();
+    const results: { id: string; name: string }[] = [];
 
-      catInfo?.data?.forEach((category) => {
-        const categoryMatch = category.category.toLowerCase().includes(lowerCaseInput);
-        if (categoryMatch) {
-          results.push(category.category);
-        }
+    catInfo?.data?.forEach((category) => {
+      const categoryMatch = category.category.toLowerCase().includes(lowerCaseInput);
+      if (categoryMatch) {
+        results.push({ id: category.id, name: category.category });
+      }
 
-       /*  category.subcategories.forEach((subcategory) => {
-          if (typeof subcategory === 'string' && subcategory?.toLowerCase().includes(lowerCaseInput)) {
-            results.push(subcategory);
-          } else {
-            console.warn('Unexpected subcategory data type:', subcategory);
-          }
-        }); */
-
-        category.subcategories.forEach((subcategory) => {
+      category.subcategories.forEach((subcategory) => {
   if (typeof subcategory === 'string') {
     const lowerCaseSubcategory = (subcategory as string).toLowerCase();
     if (lowerCaseSubcategory.includes(lowerCaseInput)) {
@@ -147,14 +142,14 @@ function Search() {
     console.warn('Unexpected subcategory data type:', subcategory);
   }
 });
+    });
 
-      });
+    setSearchResults(results);
+  } else {
+    setSearchResults([]);
+  }
+};
 
-      setSearchResults(results);
-    } else {
-      setSearchResults([]);
-    }
-  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,7 +173,7 @@ function Search() {
           className='bg-[#F5F5F5] p-2'
           value={searchInput}
           onChange={handleSearchChange}
-          placeholder="Search products..."
+         /*  placeholder="Search products..." */
           onClick={toggleDropdown}
         />
         <button type="button" onClick={toggleDropdown}>
@@ -187,30 +182,34 @@ function Search() {
       </form>
 
       {isDropdownOpen && (
-        <div className='absolute left-0 right-0 z-10 mt-2 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto'>
-          <form onSubmit={handleSearchSubmit} className="p-3">
+        <div className=' xl:w-[407px] lg:w-[407px] 2xl:w-[407px] md:w-full w-full absolute left-0 right-0 z-10 mt-2 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto'>
+          <form  onSubmit={handleSearchSubmit} className="p-1 relative bg-[#F5F5F5]">
             <input
               type="text"
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full text-sm p-2 border border-gray-300 bg-#F5F5F5 px-4 rounded-lg"
               value={searchInput}
               onChange={handleSearchChange}
               placeholder="Search products..."
             />
+          <button type="button" onClick={toggleDropdown}>
+          <CiSearch className='absolute right-4 top-4 cursor-pointer bg-[#F5F5F5] text-xl outline-[#F25E26]' />
+        </button>
           </form>
 
-          {searchResults.length > 0 ? (
-            <div>
-              {searchResults.map((result, index) => (
-                <Link key={index} href={`/${result}`}>
-                  <div className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'>
-                    {result}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="p-4 text-sm text-gray-500">No results found</div>
-          )}
+         {searchResults.length > 0 ? (
+  <div>
+    {searchResults.map((result, index) => (
+      <Link key={index} href={`/categories/${result.name}?cat_id=${result.id}`}>
+        <div className='block px-4 py-2 text-sm text-[#504D4D] font-Poppins font-normal hover:bg-gray-100'>
+          {result.name}
+        </div>
+      </Link>
+    ))}
+  </div>
+) : (
+  <div className="p-4 text-sm text-gray-500">No results found</div>
+)}
+
         </div>
       )}
     </div>
@@ -284,15 +283,19 @@ export const Header = () => {
     <>
       <header className='mb-9'>
         <div className='bg-[#2A2A2A] p-3 text-sm text-white'>
-          <div className='flex items-center justify-between gap-3 px-7'>
-            <div className='w-full'>
-              {/* Your marquee component */}
-            </div>
-            <div className='header-socials mr-3 hidden gap-3 lg:flex'>
-              {/* Your social icons */}
+            <div className='flex items-center justify-between gap-3 px-7'>
+              <div className='w-full'>
+                <AuctionMarquee info={marqueeInfo} />
+              </div>
+              <div className='header-socials mr-3 hidden gap-3 lg:flex '>
+                {socialIcon.map((val, index) => (
+                  <div key={index} className='w-3.5 lg:w-4'>
+                    <Image src={val.icon} alt={'socials'} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
         <div className='relative bg-white p-2 shadow-md'>
           <div
             className={`${isOpen ? 'bg-opacity-4 fixed left-0 top-0 z-50 h-screen w-screen bg-[#000000d1] bg-opacity-[0.9] bg-clip-padding backdrop-blur-sm backdrop-filter' : 'h-auto w-auto bg-transparent '}`}

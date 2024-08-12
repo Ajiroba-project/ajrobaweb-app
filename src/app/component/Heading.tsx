@@ -6,7 +6,7 @@ export const Heading = ({ title }: titleProp) => {
     return (
         <>
             <div className="">
-                <p className="text-[#F25E26] text-xl lg:text-2xl font-bold">{title}</p>
+                <p className="text-[#E84526] text-xl lg:text-2xl font-semibold font-Poppins">{title}</p>
             </div>
         </>
     )
@@ -16,8 +16,8 @@ export const Heading = ({ title }: titleProp) => {
 export const HeadingText =({title}:titleProp)=>{
     return (
         <>
-        <h1 className="font-bold text-2xl">{title}</h1>
-        
+        <h1 className="font-semibold text-2xl font-Poppins">{title}</h1>
+
         </>
     )
 }

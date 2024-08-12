@@ -123,12 +123,12 @@ const Page = () => {
   return (
     <>
       <Suspense>
-        <header className="fixed z-50 w-full">
+         <header className="fixed z-50 w-full">
           <Header />
         </header>
 
         <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]">
-          <section>
+           <section>
             <div className="">
               <Hero />
             </div>
@@ -169,7 +169,7 @@ const Page = () => {
             </p>
           </section>
 
-          {/* {/* Categories  */}
+
           <section className="container my-28 flex flex-col  gap-4">
             <div className="flex items-center justify-between">
               <SubHeading title="Categories" />
@@ -187,7 +187,7 @@ const Page = () => {
             </div>
 
             <div className="flex flex-col justify-center">
-              <CategoryFeatureCard cardInfo={filteredCatData} />
+               <CategoryFeatureCard cardInfo={filteredCatData} />
               <div className="flex justify-center pt-8">
                 <DefaultButton
                   text="View all Categories"
