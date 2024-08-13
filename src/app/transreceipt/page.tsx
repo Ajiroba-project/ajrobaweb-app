@@ -193,7 +193,7 @@ const WrappedPage = () => {
 
   useEffect(() => {
     refetch();
-  }, [order_id]);
+  }, [order_id, refetch]);
 
   if (productLoading) {
     return <div className='text-center'>Loading...</div>;
