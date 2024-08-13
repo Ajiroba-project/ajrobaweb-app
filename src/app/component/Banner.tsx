@@ -27,13 +27,13 @@ export const Banner = () => {
           <h3 className='text-center text-[36px] md:text-left lg:text-left font-semibold min-w-96 font-Poppins'>
             Ajiroba... Your passport to premium Bids!
           </h3>
-          <p className='text-center md:text-left lg:text-left font-normal text-[25px] font-Poppins'>
+          <p className='text-center md:text-left lg:text-left font-normal text-[18px] font-Poppins'>
             Pack your excitement and Bid your way to exclusive treasures.
           </p>
           <div className='pb-4'>
             <DefaultButton
-              text='join now'
-              className='w-fit rounded-lg bg-[#FCDFD4] p-2 px-5 text-black '
+              text='Start Bid'
+              className='w-fit font-Poppins font-normal rounded-lg bg-[#FCDFD4] p-2 px-8 text-black '
               handleClick={() => router.push("/auction")}
               type={'button'}
             />
