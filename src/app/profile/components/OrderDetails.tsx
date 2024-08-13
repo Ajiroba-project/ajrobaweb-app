@@ -401,7 +401,7 @@ export const OrderDetails = () => {
       const pending = orderinfo?.data?.data?.pending_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[2]));
       setPendingFilter(pending);
     }
-  }, [orderinfo]);
+  }, [orderinfo, orderSwitch]);
 
   const handlePageChange = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected);
