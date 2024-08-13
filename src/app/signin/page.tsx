@@ -85,6 +85,7 @@ function Page() {
         theme: 'light',
         onClose: () => router.push('/')
       })
+      // console.log(data, 'datat')
       setAuthCookie(data?.data?.token, 0)
       setUser(data?.data)
 
@@ -169,7 +170,7 @@ function Page() {
   return (
     <>
       <div className='px-4 '>
-        <ToastContainer closeOnClick />
+     {/*    <ToastContainer closeOnClick /> */}
         <nav className='Brand-logo  flex justify-center p-6 px-7 md:block lg:block lg:px-14   xl:block 2xl:block '>
           <Link href={'/'}>
             <Image src={Brand} alt='brand-logo' />

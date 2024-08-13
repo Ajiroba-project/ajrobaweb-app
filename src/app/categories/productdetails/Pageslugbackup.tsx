@@ -302,7 +302,7 @@ const Page = ({ params }: any) => {
 
     return (
         <main>
-            <ToastContainer />
+        {/*     <ToastContainer /> */}
             <Header />
             <Breadcrumb paths={verifiedpaths} text={undefined} />
 

@@ -492,7 +492,7 @@ export const CategoryCard = () => {
 export const AuctionCard = ({ cardInfo }: cardDetails) => {
 
 
-  console.log(cardInfo, 'cardInfooooo')
+  // console.log(cardInfo, 'cardInfooooo')
 
 
 
@@ -543,7 +543,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
       <div className='mb-3'>
         <p className='text-xs capitalize '>
           <span className='font-medium'>{daysLeft}</span> days{' '}
-          <span className='font-medium'>{hoursLeft}</span> hr{' '}
+          <span className='font-medium font-bold'>{hoursLeft}</span> hr{' '}
           <span className='font-medium'>{minutesLeft}</span> min{' '}
           <span className='font-medium'>left</span>
         </p>

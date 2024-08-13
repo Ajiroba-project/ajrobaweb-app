@@ -91,7 +91,8 @@ const Page = () => {
           <AuctionCardMain cardInfo={filteredData} currentPage={0} cardsNum={0} />
           <Pagination
             pageCount={pageCount}
-            onPageChange={(pageNumber: number) => handlePageChange(pageNumber)}
+           /*  onPageChange={(pageNumber: number) => handlePageChange(pageNumber)} */
+               onPageChange={({ selected }) => handlePageChange(selected)}
             className='my-6 flex items-center justify-center gap-4 '
           />
         </section>

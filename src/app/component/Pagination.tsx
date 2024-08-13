@@ -2,11 +2,18 @@ import React from 'react'
 import ReactPaginate from 'react-paginate'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
 
-type PaginationProps = {
-  pageCount: number
-  onPageChange: any
-  className?: string
-  pageRangeDisplayed?: number
+// type PaginationProps = {
+//   pageCount: number
+//   onPageChange: any
+//   className?: string
+//   pageRangeDisplayed?: number
+// }
+
+interface PaginationProps {
+  pageCount: number;
+  onPageChange: (selectedItem: { selected: number }) => void;
+  className?: string;
+  pageRangeDisplayed?: number;
 }
 
 export const Pagination = ({
@@ -21,7 +28,8 @@ export const Pagination = ({
         breakLabel='...'
         nextLabel='>'
         previousLabel='<'
-        onPageChange={selectedItem => onPageChange(selectedItem.selected)}
+            onPageChange={onPageChange}
+        // onPageChange={selectedItem => onPageChange(selectedItem.selected)}
         pageRangeDisplayed={pageRangeDisplayed ? pageRangeDisplayed : 4}
         pageCount={pageCount}
         renderOnZeroPageCount={null}
@@ -38,11 +46,41 @@ export const Pagination = ({
   )
 }
 
+// export const CustomPagination = ({
+//   pageCount,
+//   onPageChange,
+//   className,
+//   pageRangeDisplayed
+// }: PaginationProps) => {
+//   return (
+//     <div className={`my-4`}>
+//       <ReactPaginate
+//         breakLabel='...'
+//         nextLabel='>'
+//         previousLabel='<'
+//         onPageChange={selectedItem => onPageChange(selectedItem.selected)}
+//         pageRangeDisplayed={pageRangeDisplayed ? pageRangeDisplayed : 4}
+//         pageCount={pageCount}
+//         renderOnZeroPageCount={null}
+//         className={className}
+//         pageLinkClassName='px-5 py-3 rounded-md text-sm text-[#D2D2D2]'
+//         activeClassName=' font-semibold'
+//         activeLinkClassName='border-[#f25e26] border-2 text-black'
+//         nextClassName='px-5 py-3 rounded-md text-[#D2D2D2] text-sm'
+//         nextLinkClassName='border rounded-md px-5 py-3 text-black'
+//         previousClassName='  text-[#D2D2D2] text-sm '
+//         previousLinkClassName='border px-5 py-3 rounded-md text-black'
+//       />
+//     </div>
+//   )
+// }
+
+
 export const CustomPagination = ({
   pageCount,
   onPageChange,
   className,
-  pageRangeDisplayed
+  pageRangeDisplayed,
 }: PaginationProps) => {
   return (
     <div className={`my-4`}>
@@ -50,22 +88,22 @@ export const CustomPagination = ({
         breakLabel='...'
         nextLabel='>'
         previousLabel='<'
-        onPageChange={selectedItem => onPageChange(selectedItem.selected)}
+        onPageChange={onPageChange}
         pageRangeDisplayed={pageRangeDisplayed ? pageRangeDisplayed : 4}
         pageCount={pageCount}
         renderOnZeroPageCount={null}
         className={className}
         pageLinkClassName='px-5 py-3 rounded-md text-sm text-[#D2D2D2]'
-        activeClassName=' font-semibold'
+        activeClassName='font-semibold'
         activeLinkClassName='border-[#f25e26] border-2 text-black'
         nextClassName='px-5 py-3 rounded-md text-[#D2D2D2] text-sm'
         nextLinkClassName='border rounded-md px-5 py-3 text-black'
-        previousClassName='  text-[#D2D2D2] text-sm '
+        previousClassName='text-[#D2D2D2] text-sm'
         previousLinkClassName='border px-5 py-3 rounded-md text-black'
       />
     </div>
-  )
-}
+  );
+};
 
 export const CircularPagination = ({
   pageCount,
@@ -82,7 +120,8 @@ export const CircularPagination = ({
         previousLabel={
           <FaArrowLeft className='cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl' />
         }
-        onPageChange={selectedItem => onPageChange(selectedItem.selected)}
+        // onPageChange={selectedItem => onPageChange(selectedItem.selected)}
+            onPageChange={onPageChange}
         pageRangeDisplayed={4}
         pageCount={pageCount}
         renderOnZeroPageCount={null}

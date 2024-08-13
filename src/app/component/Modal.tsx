@@ -32,7 +32,7 @@ export const Modal = ({
   handleEvent2,
 }: ModalProps) => {
   return (
-    <section className="z-50 fixed w-screen h-screen bg-[#000000d1] flex justify-center items-center ">
+    <section className="z-50 fixed w-screen h-screen  flex justify-center items-center ">
       <div className="text-center p-8 flex flex-col bg-white rounded-md gap-6 justify-center items-center w-[20em] xs:w-[15em] lg:w-[30em] md:w-[25em] h-auto">
        {icon && <div className="py-2">
           <Image src={icon} width={60} height={60} alt="icon" />
@@ -83,7 +83,7 @@ type CustomModal = {
 
 
 export const CustomModal =({children, isOpen}:CustomModal)=>{
- 
+
 return (
   <>
     {isOpen && (

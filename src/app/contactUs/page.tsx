@@ -131,7 +131,6 @@ const Page = () => {
   return (
     <Fragment>
       <Header />
-      <ToastContainer closeOnClick />
       <main className='container mt-[3rem] '>
         <DefaultBreadCrumb paths={decodedPaths} />
         <div className='flex flex-col items-center justify-center'>

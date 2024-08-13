@@ -42,6 +42,12 @@
 /*  */
 /* } */
 
+
+.clrbg {
+  background-color: #f25e26 !important;
+  background: #f25e26 !important;
+}
+
 .select-item:hover {
   background-color: #FCDFD4 !important;
 
