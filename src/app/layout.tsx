@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next'
 import { Poppins, Inter, Nunito_Sans } from 'next/font/google'
 import './globals.css'
@@ -10,58 +9,43 @@ import "react-toastify/dist/ReactToastify.css";
 // import { Header } from './component/Header'
 // import { Footer } from './component/Footer'
 
+
+// Other imports and code remain the same...
+
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900'],
+  display: "swap", // Optional: Ensure consistency across all fonts
+});
 
-})
-
-const nunito = Nunito_Sans({
+const nunitoSans = Nunito_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900'],
-   display: "swap",
-})
-
-
+  display: "swap",
+});
 
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900'],
-   display: "swap",
-})
-
-export const metadata: Metadata = {
-  title: "Ajiroba ",
-  description: "Your foremost consumer auction platform",
-};
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
-
   return (
     <html lang='en'>
-
-
       <RQProviders>
-
-        {/* header */}
-
-        <body className={`${poppins.className} ${nunito.className} ${inter.className}`}>
-                 <ToastContainer closeOnClick limit={1} />
+        <body className={`${poppins.className} ${nunitoSans.className} ${inter.className}`}>
+          <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}
           </Providers>
         </body>
-
       </RQProviders>
-      {/* footer */}
-
-
     </html>
   );
 }
+

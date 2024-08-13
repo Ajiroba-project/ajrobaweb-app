@@ -78,11 +78,11 @@ export const HIW = () => {
   const indicatorColors = ['bg-[#E84526]', 'bg-amber-400', 'bg-emerald-400'];
 
   const Title = ({ text }: title) => (
-    <h3 className='py-2 text-xl font-bold text-[#F25E26]'>{text}</h3>
+    <h3 className='py-2 text-lg font-Poppins font-semibold text-[#F25E26]'>{text}</h3>
   )
 
   // Array of images to be displayed
-  const images = [walletImg, raffle_image, winner_badge, ];
+  const images = [walletImg, raffle_image, winner_badge,];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -101,25 +101,13 @@ export const HIW = () => {
         <div className='flex gap-2.5 relative mb-3'>
           {/* indicator */}
           <div className='relative h-auto w-3 rounded-full border bg-[#D2C1C1]'>
-            {[0, 1, 2].map((val, index) => (
+            {[0, 1, 2]?.map((val, index) => (
               <div
-  key={index}
-  className={`${
-    indicator === val ? indicatorColors[val] : 'bg-transparent'
-  } h-[35%] w-2.5 rounded-full relative`}
-></div>
-             /*  <div
                 key={index}
-                className={`${
-                  indicator === val
-                    ? 'bg-[#E84526]'
-                    : indicator === val
-                    ? 'bg-amber-400'
-                    : indicator === val
-                    ? 'bg-emerald-400'
-                    : 'bg-transparent'
-                } h-[35%] w-2.5 rounded-full relative`}
-              ></div> */
+                className={`${indicator === val ? indicatorColors[val] : 'bg-transparent'
+                  } h-[35%] w-2.0 rounded-full relative`}
+              ></div>
+
             ))}
           </div>
 
@@ -129,7 +117,7 @@ export const HIW = () => {
               onClick={() => setIndicator(0)}
             >
               <Title text={'Ticket'} />
-              <p>
+              <p className='font-Poppins text-[#353131] text-base font-normal' >
                 Credit your wallet to buy your ticket. Your ticket allows you to
                 bid for any product on auction.
               </p>
@@ -139,7 +127,7 @@ export const HIW = () => {
               onClick={() => setIndicator(1)}
             >
               <Title text={'Raffle Draw'} />
-              <p>
+            <p className='font-Poppins text-[#353131] text-base font-normal' >
                 After the allotted time frame, our live raffle draw begins where
                 you can win the product you have put in for.
               </p>
@@ -149,7 +137,7 @@ export const HIW = () => {
               onClick={() => setIndicator(2)}
             >
               <Title text={'Win'} />
-              <p>
+             <p className='font-Poppins text-[#353131] text-base font-normal' >
                 During the live raffle draw, the winner gets announced and the
                 item will be delivered to your doorstep.
               </p>

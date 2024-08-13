@@ -6,7 +6,9 @@ import { SubHeading } from "./component/SubHeading";
 import {
   AuctionCard,
   CategoryFeatureCard,
+  CatFeatCard,
   ProductCard,
+  ProductCardMain,
   TopDealsCard,
   TopWeakCard,
 } from "./component/Card";
@@ -167,12 +169,13 @@ const Page = () => {
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4">
+          <section className="container flex flex-col  gap-4">
             <div>
               <SubHeading title="How it works" />
             </div>
             <HIW />
-            <p className="cursor-pointer text-xl font-semibold text-[#F25E26] underline lg:ml-5">
+
+            <p className="font-Poppins  cursor-pointer text-lg font-semibold text-[#F25E26] underline lg:ml-5">
               Read more
             </p>
           </section>
@@ -195,7 +198,10 @@ const Page = () => {
             </div>
 
             <div className="flex flex-col justify-center">
-               <CategoryFeatureCard cardInfo={filteredCatData} />
+             {/*   <CategoryFeatureCard cardInfo={filteredCatData} /> */}
+             <CatFeatCard cardInfo={filteredCatData} />
+
+              {/* <CatFeatCard cardInfo={[]} /> */}
               <div className="flex justify-center pt-8">
                 <DefaultButton
                   text="View all Categories"
@@ -215,7 +221,8 @@ const Page = () => {
               <Heading title="Featured Products" />
             </div>
             <div className="flex flex-col items-center  ">
-              <ProductCard cardInfo={featuredproductInfo?.data} />
+         {/*      <ProductCard cardInfo={featuredproductInfo?.data} /> */}
+              <ProductCardMain cardInfo={featuredproductInfo?.data}  />
               <div className="flex justify-center pt-4">
                 <DefaultButton
                   text="View all Deals"

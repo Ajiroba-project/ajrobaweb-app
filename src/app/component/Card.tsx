@@ -18,6 +18,12 @@ import phone from '@/app/asset/image/phone.png'
 import fashions from '@/app/asset/image/fashions.png'
 import foodstuff from '@/app/asset/image/foodstuff.png'
 import { useRouter } from 'next/navigation'
+import foodstufficon from '@/app/asset/image/foodstufficon.svg'
+import phonessvg from '@/app/asset/image/phonessvg.svg'
+import fashionandbeauty from '@/app/asset/image/fashion_and_beauty.svg'
+import motherandchild from '@/app/asset/image/mother_and_child.svg'
+import { motion } from 'framer-motion'
+
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
@@ -632,88 +638,12 @@ type CardDetails = {
   cardInfo: Array<{
     name: string;
     image: Array<{ image: string }>;
+    category?: any;
+    id?: any
   }>;
-};
+}
 
-export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
-  // Function to determine which SVG path to use based on value.name
-  const getSVGForName = (name: string) => {
-    switch (name) {
-      case 'Phones':
-        return (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='currentColor'
-            className='h-20 w-20 text-white'
-          >
-            <path d='M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 22.454C6.073 22.454 1.546 17.927 1.546 12S6.073 1.546 12 1.546 22.454 6.073 22.454 12 17.927 22.454 12 22.454z' />
-            <path d='M16.093 11.268h-3.361V7.907a.732.732 0 1 0-1.464 0v3.361H7.907a.732.732 0 1 0 0 1.464h3.361v3.361a.732.732 0 1 0 1.464 0v-3.361h3.361a.732.732 0 1 0 0-1.464z' />
-          </svg>
-        );
-      case 'Mother And Child':
-        return (
-          <Image src={mother} alt='royalty' width={100} height={100} color='white' />
-
-        )
-
-      case 'Royalty':
-        return (
-
-          <Image src={royalty} alt='royalty' width={100} height={100} color='white' />
-
-
-        );
-      default:
-        return <svg
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 24 24'
-          fill='currentColor'
-          className='h-20 w-20 text-white'
-        >
-          <path d='M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 22.454C6.073 22.454 1.546 17.927 1.546 12S6.073 1.546 12 1.546 22.454 6.073 22.454 12 17.927 22.454 12 22.454z' />
-          <path d='M16.093 11.268h-3.361V7.907a.732.732 0 1 0-1.464 0v3.361H7.907a.732.732 0 1 0 0 1.464h3.361v3.361a.732.732 0 1 0 1.464 0v-3.361h3.361a.732.732 0 1 0 0-1.464z' />
-        </svg> // Handle cases where there's no specific SVG for the name
-    }
-  };
-
-  return (
-    <>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
-        {cardInfo?.map((value, index) => (
-          <div
-            className='cursor-pointer gap-2 gap-y-3 rounded hover:scale-110'
-            key={index}
-          >
-
-            {/*  {
-              console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`)
-            } */}
-
-            <div className='relative flex items-center justify-center h-[300px] w-[300px]'>
-              {/* Background image with overlay */}
-              <div className='absolute inset-0 z-10 bg-black bg-opacity-65 '></div>
-              <div
-                className='absolute inset-0 bg-cover bg-center'
-                style={{
-                  backgroundImage: `url(https://ajiroba.onrender.com/media/${value?.image[0]?.image})`,
-                }}
-              ></div>
-
-              {/* {console.log(value, 'value')} */}
-
-              {/* Centered SVG and text */}
-              <div className='relative z-20 flex flex-col items-center justify-center gap-3 p-4'>
-                {getSVGForName(value.name)}
-                <p className='text-sm text-white'>{value.name}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-};
+;
 
 
 
@@ -848,3 +778,505 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
 }
 
 
+export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
+  // Function to determine which SVG path to use based on value.name
+  const getSVGForName = (name: string) => {
+    switch (name) {
+      case 'Phones':
+        return (
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            className='h-20 w-20 text-white'
+          >
+            <path d='M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 22.454C6.073 22.454 1.546 17.927 1.546 12S6.073 1.546 12 1.546 22.454 6.073 22.454 12 17.927 22.454 12 22.454z' />
+            <path d='M16.093 11.268h-3.361V7.907a.732.732 0 1 0-1.464 0v3.361H7.907a.732.732 0 1 0 0 1.464h3.361v3.361a.732.732 0 1 0 1.464 0v-3.361h3.361a.732.732 0 1 0 0-1.464z' />
+          </svg>
+        );
+      case 'Mother And Child':
+        return (
+          <Image src={mother} alt='royalty' width={100} height={100} color='white' />
+
+        )
+
+      case 'Royalty':
+        return (
+
+          <Image src={royalty} alt='royalty' width={100} height={100} color='white' />
+
+
+        );
+      default:
+        return <svg
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 24 24'
+          fill='currentColor'
+          className='h-20 w-20 text-white'
+        >
+          <path d='M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm0 22.454C6.073 22.454 1.546 17.927 1.546 12S6.073 1.546 12 1.546 22.454 6.073 22.454 12 17.927 22.454 12 22.454z' />
+          <path d='M16.093 11.268h-3.361V7.907a.732.732 0 1 0-1.464 0v3.361H7.907a.732.732 0 1 0 0 1.464h3.361v3.361a.732.732 0 1 0 1.464 0v-3.361h3.361a.732.732 0 1 0 0-1.464z' />
+        </svg> // Handle cases where there's no specific SVG for the name
+    }
+  };
+
+  return (
+    <>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
+        {cardInfo?.map((value, index) => (
+          <div
+            className='cursor-pointer gap-2 gap-y-3 rounded hover:scale-110'
+            key={index}
+          >
+
+            {/*  {
+              console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`)
+            } */}
+
+            <div className='relative flex items-center justify-center h-[300px] w-[300px]'>
+              {/* Background image with overlay */}
+              <div className='absolute inset-0 z-10 bg-black bg-opacity-65 '></div>
+              <div
+                className='absolute inset-0 bg-cover bg-center'
+                style={{
+                  backgroundImage: `url(https://ajiroba.onrender.com/media/${value?.image[0]?.image})`,
+                }}
+              ></div>
+
+              {/* {console.log(value, 'value')} */}
+
+              {/* Centered SVG and text */}
+              <div className='relative z-20 flex flex-col items-center justify-center gap-3 p-4'>
+                {getSVGForName(value.name)}
+                <p className='text-sm text-white'>{value.name}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+// export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
+//   return (
+//     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//       {cardInfo?.map((value, index) => (
+//         <div key={index} className="p-4 border rounded-lg">
+
+//           <div className="w-full h-48 overflow-hidden">
+//             <img
+//               src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+//               alt={value.name}
+//               className="object-cover w-full h-full"
+//             />
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
+  const images_ = [foodstufficon, fashionandbeauty, phonessvg, motherandchild];
+
+    const router = useRouter()
+
+  return (
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 cursor-pointer">
+      {cardInfo?.map((value, index) => (
+
+           <motion.div
+          key={index}
+          // className="rounded-lg bg-[#F6F6F6] p-4"
+          // onClick={() => router.push(`/categories/productdetails/${value.id}`)}
+          whileHover={{ scale: 1.05, boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)' }} // Zoom in slightly on hover
+          whileTap={{ scale: 0.95 }} // Slight zoom out on tap/click
+          initial={{ scale: 1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }} // Smooth transition out
+        >
+        <div key={index} className="relative border rounded-lg overflow-hidden" onClick={() => router.push(`/categories/${value.name}?cat_id=${value.id}`)}>
+          <div className="w-full h-56 overflow-hidden relative rounded-lg">
+            {/* Background image */}
+            <img
+              src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+              alt={value.name}
+              className="object-cover w-full h-full rounded-lg"
+            />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 z-10 bg-black bg-opacity-65 rounded-lg"></div>
+            {/* Overlay image */}
+            <div className="absolute inset-0 z-20 flex flex-col gap-4 justify-center items-center">
+              <Image
+                src={images_[index % images_.length]} // Select image based on the index
+                alt="Overlay"
+                className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
+              />
+              <p className="text-base text-white font-Poppins ">{value.name}</p>
+            </div>
+          </div>
+        </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+
+
+
+// export const ProductCardMain = ({ cardInfo }: any) => {
+//   const [hoverState, setHoverState] = useState<string>("");
+//   const [cardCartState, setCardCartState] = useState<boolean>(false);
+//   const [cardAddCartState, setCardAddCartState] = useState<any>();
+//   const { isLoggedIn } = useAuthStore((state) => ({
+//     isLoggedIn: state.isLoggedIn,
+//   }));
+
+//   const handleCartNotification = (value: any) => {
+//     setCardAddCartState(value.name);
+
+//     setCardCartState(!cardCartState);
+//     const timeoutID = setTimeout(() => {
+//       setCardCartState(false);
+//     }, 5000);
+
+//     return () => clearTimeout(timeoutID);
+//   };
+
+//   const router = useRouter();
+
+//   return (
+//     <>
+//       {cardInfo && (
+//         <div
+//           className={`${poppins.className} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
+//         >
+//           {cardInfo?.map((value: any, index: number) => (
+//             <div>
+//               <div
+//                 key={index}
+//                 className="flex flex-col h-full shadow-lg "
+//                 onClick={() =>
+//                   router?.push(`/categories/productdetails/${value.id}`)
+//                 }
+//               >
+//                 <div className="bg-[#F6F6F6]   p-4 rounded-t-lg">
+//                   <div className="flex justify-end items-center py-2">
+
+//                     <div>
+//                       <button className="cursor-pointer rounded-md bg-[#FCFCFC] px-2 py-1 text-sm font-Poppins font-medium shadow-md transition duration-200 ease-in-out hover:bg-[#E84526] hover:text-white">
+//                         Bid
+//                       </button>
+//                     </div>
+//                   </div>
+
+//                   <div className="flex justify-center items-center m-3">
+//                     <div className=" p-0">
+//                       <Image
+//                         src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+//                         width={100}
+//                         height={100}
+//                         alt="human hair"
+//                         className="filter brightness-95 opacity-75 bg-[#FCFCFC]" // Adjust opacity for desired transparency
+//                       />
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="rounded-b-lg  border-t-4 bg-[#FFFFFF] ">
+//                   <div className="mt-2 mb-1 p-4">
+//                     <div className="flex justify-between items-center">
+//                       <div>
+//                         <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
+//                           {value?.name}
+//                         </p>
+//                       </div>
+
+
+//                     </div>
+//                   </div>
+
+//                  <div className=' p-4 flex justify-between items-center' >
+
+
+//                     <div className='justify-start'>
+//                       <p className=' text-xl font-medium'>
+//                         &#8358;{(value?.discount).toLocaleString()}
+//                         <span className=' '></span>
+//                       </p>
+
+//                        <p className='text-sm font-normal text-gray-500 line-through '>
+//                     &#8358;{(value?.price).toLocaleString()}
+//                   </p>
+//                     </div>
+
+//                    <div className="p-4">
+//                     <p className="flex justify-end text-left gap-1">
+//                       {Array.from({ length: value?.reviews }, (_, index) => (
+//                         <span key={index}>
+//                           <FaStar className="text-[#F25E26]" />
+//                         </span>
+//                       ))}
+//                     </p>
+//                   </div>
+//                  </div>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+
+
+// export const ProductCardMain = ({ cardInfo }: any) => {
+//   const [hoverState, setHoverState] = useState<string>("");
+//   const [cardCartState, setCardCartState] = useState<boolean>(false);
+//   const [cardAddCartState, setCardAddCartState] = useState<any>();
+//   const { isLoggedIn } = useAuthStore((state) => ({
+//     isLoggedIn: state.isLoggedIn,
+//   }));
+
+//   const handleCartNotification = (value: any) => {
+//     setCardAddCartState(value.name);
+
+//     setCardCartState(!cardCartState);
+//     const timeoutID = setTimeout(() => {
+//       setCardCartState(false);
+//     }, 5000);
+
+//     return () => clearTimeout(timeoutID);
+//   };
+
+//   const router = useRouter();
+
+//   return (
+//     <>
+//       {cardInfo && (
+//         <div
+//           className={`${poppins.className} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
+//         >
+//           {cardInfo?.map((value: any, index: number) => (
+//             <div key={index}>
+//               <div
+//                 className="flex flex-col h-full shadow-lg"
+//                 onClick={() =>
+//                   router?.push(`/categories/productdetails/${value.id}`)
+//                 }
+//               >
+//                 <motion.div
+//                   className="bg-[#F6F6F6] p-4 rounded-t-lg"
+//                   whileHover={{
+//                     backgroundColor: '#E0E0E0', // Background color change
+//                     scale: 1.05, // Slightly enlarge the div
+//                     transition: { duration: 0.3, ease: 'easeOut' }, // Smooth transition
+//                   }}
+//                 >
+//                   <div className="flex justify-end items-center py-2">
+//                     <div>
+//                       <button className="cursor-pointer rounded-md bg-[#FCFCFC] px-2 py-1 text-sm font-Poppins font-medium shadow-md transition duration-200 ease-in-out hover:bg-[#E84526] hover:text-white">
+//                         Bid
+//                       </button>
+//                     </div>
+//                   </div>
+
+//                   <div className="flex justify-center items-center m-3">
+//                     <div className="p-0">
+//                       <Image
+//                         src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+//                         width={100}
+//                         height={100}
+//                         alt="human hair"
+//                         className="filter brightness-95 opacity-75 bg-[#FCFCFC]"
+//                       />
+//                     </div>
+//                   </div>
+//                 </motion.div>
+
+//                 <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
+//                   <div className="mt-2 mb-1 p-4">
+//                     <div className="flex justify-between items-center">
+//                       <div>
+//                         <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
+//                           {value?.name}
+//                         </p>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   <div className="p-4 flex justify-between items-center">
+//                     <div className="justify-start">
+//                       <p className="text-xl font-medium">
+//                         &#8358;{value?.discount?.toLocaleString()}
+//                         <span className=""></span>
+//                       </p>
+
+//                       <p className="text-sm font-normal text-gray-500 line-through">
+//                         &#8358;{value?.price?.toLocaleString()}
+//                       </p>
+//                     </div>
+
+//                     <div className="p-4">
+//                       <p className="flex justify-end text-left gap-1">
+//                         {Array.from({ length: value?.reviews }, (_, index) => (
+//                           <span key={index}>
+//                             <FaStar className="text-[#F25E26]" />
+//                           </span>
+//                         ))}
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+
+export const ProductCardMain = ({ cardInfo }: any) => {
+  const [hoverState, setHoverState] = useState<string>("");
+  const [cardCartState, setCardCartState] = useState<boolean>(false);
+  const [cardAddCartState, setCardAddCartState] = useState<any>();
+  const { isLoggedIn } = useAuthStore((state) => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
+
+    const handleCartNotification = (value: any) => {
+    setCardAddCartState(value.name);
+
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+  };
+
+  const router = useRouter();
+
+  return (
+    <>
+      {cardInfo && (
+        <div
+          className={`${poppins.className} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
+        >
+          {cardInfo?.map((value: any, index: number) => (
+            <div key={index}>
+              <motion.div    onMouseEnter={() => setHoverState(value.name)}
+            onMouseLeave={() => setHoverState('')}
+                className="flex flex-col h-full shadow-lg"
+
+               /*  whileHover={{
+                  scale: 1.05, // Slightly enlarge the whole card on hover
+                  transition: { duration: 0.3, ease: 'easeOut' },
+                }} */
+              >
+                <motion.div
+                  className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
+                  whileHover={{
+                    backgroundColor: '#E0E0E0', // Background color change
+                  }}
+                >
+
+                  <div className='flex justify-end cursor-pointer' >
+                      {hoverState === value.name ? (
+                <>
+                  <IoCartOutline
+                    className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526] rounded-full ' : 'rounded-full bg-white'}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
+                    onClick={() => handleCartNotification(value)}
+                  />
+                  {isLoggedIn && (
+                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
+                  )}
+                </>
+              ) : (
+                ''
+              )}
+
+
+                <>
+                {cardCartState && (
+                  <div
+                    className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
+                  >
+                    <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
+                      <p>{value.name}</p>
+                      <p>Has been added to cart</p>
+                    </div>
+                  </div>
+                )}
+              </>
+                  </div>
+
+
+                  <motion.div
+                    className="flex justify-center items-center m-3"
+                    whileHover={{ scale: 1.1 }} // Enlarge the image on hover
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                  >
+                    <div  onClick={() =>
+                  router?.push(`/categories/productdetails/${value.id}`)
+                } className="p-0">
+                      <Image
+                        src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                        width={100}
+                        height={100}
+                        alt="human hair"
+                        className=" cursor-pointer ilter brightness-95 opacity-75 bg-[#FCFCFC]"
+                      />
+                    </div>
+                  </motion.div>
+                </motion.div>
+
+                <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
+                  <div className="mt-2 mb-1 p-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
+                          {value?.name}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex justify-between items-center">
+                    <div className="justify-start">
+                      <p className="text-xl font-medium">
+                        &#8358;{value?.discount?.toLocaleString()}
+                        <span className=""></span>
+                      </p>
+
+                      <p className="text-sm font-normal text-gray-500 line-through">
+                        &#8358;{value?.price?.toLocaleString()}
+                      </p>
+                    </div>
+
+                    <div className="p-4">
+                      <p className="flex justify-end text-left gap-1">
+                        {Array.from({ length: value?.reviews }, (_, index) => (
+                          <span key={index}>
+                            <FaStar className="text-[#F25E26]" />
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
