@@ -900,7 +900,7 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
         <div key={index} className="relative border rounded-lg overflow-hidden" onClick={() => router.push(`/categories/${value.name}?cat_id=${value.id}`)}>
           <div className="w-full h-60 overflow-hidden relative rounded-lg">
             {/* Background image */}
-            <img
+            <Image width={50} height={50}
               src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
               alt={value.name}
               className="object-cover w-full h-full rounded-lg"
