@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { Header } from "../component/Header";
 import { Profile } from "../../app/profile/components/Profile";
 import { useAuthStore, userProfile } from "@/store/store";
