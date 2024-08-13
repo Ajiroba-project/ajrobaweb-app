@@ -56,6 +56,12 @@ import { AuctionMarquee } from './Auction-Marquee';
 //   );
 // }
 
+
+interface HeaderProps {
+  onSearch?: React.Dispatch<React.SetStateAction<string>>;
+  // other props can be added here
+}
+
 type MenuState = number | null
 
 interface Subcategory {
@@ -220,7 +226,7 @@ export default Search;
 
 
 
-export const Header = () => {
+export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const pathname = usePathname();
   const isRootPath = pathname === '/';
   const [isOpen, setIsOpen] = useState<boolean | null>(null);
