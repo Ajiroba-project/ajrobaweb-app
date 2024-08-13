@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+// Explicitly mark this API route as dynamic
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
     try {
         // Extract the token from the query parameters or headers
