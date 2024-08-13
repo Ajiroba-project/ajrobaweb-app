@@ -130,14 +130,14 @@ const Page = () => {
           <Header />
         </header>
 
-        <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]">
+        <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh] " >
            <section>
             <div className="">
               <Hero />
             </div>
           </section>
 
-          <section className="container my-[3rem] flex flex-col gap-4">
+          <section className="container my-[3rem] flex flex-col gap-4 px-12" >
             <div className="flex items-center justify-between">
               <SubHeading title="Today" />
 
@@ -169,7 +169,7 @@ const Page = () => {
             </div>
           </section>
 
-          <section className="container flex flex-col  gap-4">
+          <section className="container flex flex-col  gap-4 px-12">
             <div>
               <SubHeading title="How it works" />
             </div>
@@ -180,8 +180,7 @@ const Page = () => {
             </p>
           </section>
 
-
-          <section className="container my-28 flex flex-col  gap-4">
+          <section className="container my-28 flex flex-col  gap-4 px-12">
             <div className="flex items-center justify-between">
               <SubHeading title="Categories" />
               <div className="relative flex items-center">
@@ -207,13 +206,13 @@ const Page = () => {
                   text="View all Categories"
                   type="button"
                   handleClick={() => router.push("/categories")}
-                  className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                  className=" text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                 />
               </div>
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4">
+          <section className="container my-28 flex flex-col  gap-4 px-12">
             <div>
               <SubHeading title="Featured" />
             </div>
@@ -223,7 +222,7 @@ const Page = () => {
             <div className="flex flex-col items-center  ">
          {/*      <ProductCard cardInfo={featuredproductInfo?.data} /> */}
               <ProductCardMain cardInfo={featuredproductInfo?.data}  />
-              <div className="flex justify-center pt-4">
+              <div className="flex justify-center pt-5">
                 <DefaultButton
                   text="View all Deals"
                   type="button"
@@ -232,13 +231,13 @@ const Page = () => {
                       `/categories/${"featured products"}?feat_id=${featuredproductInfo?.data[0]?.id}`,
                     )
                   }
-                  className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                  className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                 />
               </div>
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4">
+          <section className="container my-28 flex flex-col  gap-4 px-12">
             <div>
               <SubHeading title="Deals" />
             </div>
@@ -246,7 +245,8 @@ const Page = () => {
               <Heading title="Shop from Top Deals Collection" />
             </div>
             <div className="flex flex-col items-center">
-              <TopDealsCard cardInfo={topdeals?.data} />
+             {/*  <TopDealsCard cardInfo={topdeals?.data} /> */}
+               <ProductCardMain cardInfo={topdeals?.data}  />
               <div className="flex justify-center pt-4">
                 <DefaultButton
                   text="View all Deals"
@@ -256,7 +256,7 @@ const Page = () => {
                       `/categories/${"top deals"}?top_id=${topdeals?.data[0]?.id}`,
                     )
                   }
-                  className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                 />
               </div>
             </div>
@@ -268,7 +268,7 @@ const Page = () => {
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4">
+          <section className="container my-28 flex flex-col  gap-4 px-12">
             <div>
               <SubHeading title="Top Product" />
             </div>
@@ -276,19 +276,21 @@ const Page = () => {
               <Heading title="This Week Top Product" />
             </div>
             <div className="flex flex-col items-center">
-              <TopWeakCard cardInfo={topweak?.data?.slice(0, 8)} />
-              <div className="flex justify-center pt-4">
+              {/* <TopWeakCard cardInfo={topweak?.data?.slice(0, 8)} /> */}
+                 <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
+              <div className="flex justify-center pt-5">
                 <DefaultButton
-                  text="View all Products"
+                  text="View all Deals"
                   type="button"
                   handleClick={() => router.push("/categories")}
-                  className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                 className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                 />
               </div>
             </div>
           </section>
 
-          <section className="bg-[#F25E26]">
+        {/*   <section className="bg-[#F25E26]"> */}
+        <section className="">
             <Banner />
           </section>
         </main>

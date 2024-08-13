@@ -4,14 +4,14 @@ import { MdOutlineArrowOutward } from 'react-icons/md'
 
 export const Community = () => {
   return (
-    <div className='flex justify-center lg:p-[10rem]'>
-      <div className='border-3 container mx-4 my-5 flex flex-col gap-6 border-[#6E6E6E] px-[3rem] py-[4rem] shadow-xl lg:w-2/3'>
-        <h1 className='text-center text-3xl font-semibold text-[#2A2A2A] lg:leading-3'>
+    <div className='flex justify-center lg:p-[4rem]'>
+      <div className='border-3 container mx-4 my-5 flex flex-col gap-6   py-[4rem] shadow-xl lg:w-2/3'>
+        <h1 className='text-center text-2xl font-Poppins font-semibold text-[#2A2A2A] lg:leading-3'>
           Join Our Community
         </h1>
-        <p className='text-center text-[#6E6E6E]'>
-          Become a part of a part of Ajiroba’s Community where we keep you up to
-          date on important topics and update about our platform.
+        <p className='text-center text-[#6E6E6E] text-sm font-Poppins font-normal'>
+          Become a part of a part of Ajiroba’s Community where we keep <br /> you up to
+          date on important topics and update about our <br />platform.
         </p>
         <div className='flex justify-center '>
           <CustomizeButton
@@ -19,8 +19,8 @@ export const Community = () => {
             handleClick={() => {}}
             type={'button'}
           >
-            <div className='flex items-center gap-2'>
-              <p>Join</p>
+            <div className='flex items-center gap-2 rounded-lg '>
+              <p className='font-Poppins font-normal'>Join</p>
               <MdOutlineArrowOutward className='text-xl' />
             </div>
           </CustomizeButton>

@@ -4,19 +4,30 @@ import Image from 'next/image'
 import banner from '../asset/image/banner.png'
 import { DefaultButton } from '../component/Button'
 import { Poppins } from 'next/font/google'
+import footerbanner from '../asset/image/footerbanner.png'
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
 export const Banner = () => {
   const router = useRouter()
 
   return (
-    <div className={`${poppins.className}flex items-center justify-center`}>
-      <div className='container flex flex-col items-center justify-between pt-[2rem] md:flex-row lg:flex-row'>
+    <div className={`${poppins.className}flex items-center justify-center`}
+
+     style={{
+    backgroundImage: `url('/footerbanner.svg')`,
+    backgroundSize: 'cover', // or 'contain', 'auto', depending on your needs
+    backgroundPosition: 'center', // Adjust the position as needed
+    backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+    width: '100%', // Adjust the width as needed
+    height: '', // Full viewport height, adjust as needed
+  }}
+    >
+      <div className=' px-12 container flex flex-col items-center justify-between pt-[2rem] md:flex-row lg:flex-row'>
         <div className='flex flex-col items-center justify-center gap-4 py-6 text-white md:items-start md:justify-start md:py-0 lg:w-1/3 lg:items-start lg:justify-start lg:py-0 w-'>
-          <h3 className='text-center text-4xl md:text-left lg:text-left font-semibold min-w-96'>
+          <h3 className='text-center text-[36px] md:text-left lg:text-left font-semibold min-w-96 font-Poppins'>
             Ajiroba... Your passport to premium Bids!
           </h3>
-          <p className='text-center md:text-left lg:text-left font-normal text-2xl'>
+          <p className='text-center md:text-left lg:text-left font-normal text-[25px] font-Poppins'>
             Pack your excitement and Bid your way to exclusive treasures.
           </p>
           <div className='pb-4'>

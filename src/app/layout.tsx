@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <RQProviders>
-        <body className={`${poppins.className} ${nunitoSans.className} ${inter.className}`}>
+        <body className={`${poppins.className} ${nunitoSans.className} ${inter.className}`} >
           <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}

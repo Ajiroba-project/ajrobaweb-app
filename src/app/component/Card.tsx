@@ -898,7 +898,7 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
           transition={{ duration: 0.3, ease: 'easeOut' }} // Smooth transition out
         >
         <div key={index} className="relative border rounded-lg overflow-hidden" onClick={() => router.push(`/categories/${value.name}?cat_id=${value.id}`)}>
-          <div className="w-full h-56 overflow-hidden relative rounded-lg">
+          <div className="w-full h-60 overflow-hidden relative rounded-lg">
             {/* Background image */}
             <img
               src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}

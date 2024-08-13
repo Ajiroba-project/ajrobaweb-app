@@ -145,7 +145,7 @@ export const HIW = () => {
           </div>
         </div>
 
-        {/* Display image corresponding to the current indicator */}
+
         <div>
           <Image src={images[indicator]} alt='indicator image' />
         </div>
