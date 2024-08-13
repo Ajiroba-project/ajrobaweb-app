@@ -23,6 +23,7 @@ import { CircularPagination } from "./component/Pagination";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
+import { AuctionComp } from "./component/AuctionComp";
 
 type AuctionData = {
   id: string;
@@ -150,12 +151,19 @@ const Page = () => {
             <div>
               <Heading title="Auction Sales" />
             </div>
-            <div className="flex justify-center">
-              <AuctionCard
+            <div className="">
+            {/*   <AuctionCard
                 cardInfo={filteredAuctionData}
                 currentPage={0}
                 cardsNum={0}
+              /> */}
+              <AuctionComp
+
+              cardInfo={filteredAuctionData}
+                currentPage={0}
+                cardsNum={0}
               />
+            {/*   <AuctionComp cardInfo={[]} currentPage={0} cardsNum={0}/> */}
             </div>
           </section>
 
