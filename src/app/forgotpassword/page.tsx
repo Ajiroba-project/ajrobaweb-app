@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import Image from "next/image";
-import AuthHero from "../component/AuthHero";
+import AuthHero, { HeroSubText } from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -158,13 +158,22 @@ function Page() {
                     </Link>
                 </nav>
 
-                <AuthHero
+
+                   <div className="flex justify-center items-center flex-col min-h-[85vh]">
+
+
+  {/*  <AuthHero
                     title="OTP Verification"
                     menu="Please provide the 6-digit security code sents to your e-mail address"
-                />
+                /> */}
+
+                  <HeroSubText
+             title="OTP Verification"
+                    menu="Please provide the 6-digit security code sents to your e-mail address"
+          />
 
                 <div className=" flex justify-center mb-20 mt-12 ">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col ">
                         <div className="flex  space-x-2 gap-4 items-center justify-center flex-wrap">
                             {otp.map((value, index) => (
                                 <input
@@ -187,7 +196,7 @@ function Page() {
                         <div className="flex justify-center items-center mt-12">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                                className=" rounded-lg w-4/5 bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
                                 text={status === 'pending' ? 'loading...' : 'Verify'}
                                 handleClick={() => handleVerify()}
                             />
@@ -215,6 +224,10 @@ function Page() {
                         </div>
                     </div>
                 </div>
+
+                   </div>
+
+
             </div>
         </>
     );
