@@ -1197,9 +1197,9 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                     className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526] rounded-full ' : 'rounded-full bg-white'}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
                     onClick={() => handleCartNotification(value)}
                   />
-                  {isLoggedIn && (
+                 {/*  {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
-                  )}
+                  )} */}
                 </>
               ) : (
                 ''
