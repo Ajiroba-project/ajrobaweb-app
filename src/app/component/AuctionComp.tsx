@@ -72,13 +72,15 @@ export const AuctionComp = ({ cardInfo }: cardDetails) => {
 
     const progress = (timeLeft / initialTotalMinutes) * 100;
 
+    console.log(progress, "progress")
+
     return (
       <div className="mb-3">
         <p className="text-xs capitalize ">
-          <span className="font-medium">{daysLeft}</span> days{" "}
-          <span className="font-medium">{hoursLeft}</span> hr{" "}
-          <span className="font-medium">{minutesLeft}</span> min{" "}
-          <span className="font-medium">left</span>
+        {/*   <span className="font-medium">{daysLeft}</span> days{" "} */}
+          <span className="font-medium">{hoursLeft}</span> Hr:{" "}
+          <span className="font-medium">{minutesLeft}</span> Min{" "}
+          <span className="font-medium">Left</span>
         </p>
         <div className="border-gray h-2.5 w-full rounded-full border ">
           <div

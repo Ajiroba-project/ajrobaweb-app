@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import Brand from '../asset/logo.svg'
 import Image from 'next/image'
-import AuthHero from '../component/AuthHero'
+import AuthHero, { HeroSubText } from '../component/AuthHero'
 import { DefaultButton } from '../component/Button'
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -32,7 +32,7 @@ function Page() {
   const router = useRouter()
 
   const emailOrPhoneNumberSchema = yup.string().matches(
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$|^(\+\d{1,3}[- ]?)?\d{10}$/, // Regular expression for a string containing either a valid email or a valid phone number
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$|^(\+\d{1,3}[- ]?)?\d{11}$/, // Regular expression for a string containing either a valid email or a valid phone number
     'Valid email or phone number is required'
   )
 
@@ -169,133 +169,119 @@ function Page() {
 
   return (
     <>
-      <div className='px-4 '>
-     {/*    <ToastContainer closeOnClick /> */}
-        <nav className='Brand-logo  flex justify-center p-6 px-7 md:block lg:block lg:px-14   xl:block 2xl:block '>
-          <Link href={'/'}>
-            <Image src={Brand} alt='brand-logo' />
-          </Link>
-        </nav>
-
-        <AuthHero title='Welcome Back' menu='Sign in to shop on Ajiroba' />
-
-        <div className=' mb-20 flex justify-center '>
-          <form onSubmit={handleSubmit(sumbitForm)}>
-            <div className='mt-12 grid grid-cols-1 gap-8  md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1'>
-              <div className='flex flex-col'>
-
-                <label className="text-sm" htmlFor="email_or_phone">
-                  Email Address/Phone Number*
-                </label>
-
-                <Controller
-                  name='email_or_phone'
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Input
-                        {...field}
-                        variant="bordered"
-                        // label="First Name*"
-                        type="text"
-                        // name="first_name"
-                        radius="none"
-                        size="md"
-                        placeholder='Enter your Email or Phone number'
-
-                        // register={register}
-                        /*   errors={errors.first_name} */
-                        className=" "
 
 
-                      />
-
-                    </div>
-
-                  )}
-                />
-                <div className='text-xs text-red-700'>
-                  {errors?.email_or_phone?.message}
-                </div>
-              </div>
-
-              <div className='flex flex-col'>
-
-                <label className="text-sm" htmlFor="password">
-                  Password*
-                </label>
-
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        variant="bordered"
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        radius="none"
-                        size="md"
-                        placeholder="***********"
-                        className=""
-                      />
-                      <div
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                      </div>
-                    </div>
-                  )}
-                />
-                <div className='text-xs text-red-700'>
-                  {errors?.password?.message}
-                </div>
-              </div>
-            </div>
-            <div className='mt-4 flex items-center justify-center'>
 
 
-              <DefaultButton
-                type='submit'
-                className=' h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white'
-                text={status === 'pending' ? 'loading...' : 'Sign in'}
-                handleClick={() => console.log('')}
-              />
-            </div>
 
+      <div className="px-4">
+  <nav className="Brand-logo flex justify-center p-6 px-7 md:block lg:block lg:px-14 xl:block 2xl:block">
+    <Link href={"/"}>
+      <Image src={Brand} alt="brand-logo" />
+    </Link>
+  </nav>
 
-            <div className='mt-4 flex flex-wrap items-center justify-between gap-2'>
-              <div>
+  <div className="flex justify-center items-center flex-col min-h-[90vh]">
+    <HeroSubText title="Welcome Back" menu="Sign in to shop on Ajiroba" />
+
+    <div className="mb-20 flex justify-center w-full">
+      <form
+        onSubmit={handleSubmit(sumbitForm)}
+        className="w-full max-w-sm p-4 md:p-8"
+      >
+        <div className="mt-4 grid grid-cols-1 gap-8">
+          <div className="flex flex-col">
+            <label className="text-sm" htmlFor="email_or_phone">
+              Email Address/Phone Number*
+            </label>
+            <Controller
+              name="email_or_phone"
+              control={control}
+              render={({ field }) => (
                 <input
-                  type='checkbox'
-                  id='agreement'
-                  value='true'
-                  className='text-wdc-inactivebutton mr-2'
+                  type="text"
+                  {...field}
+                  placeholder="Enter your Email or Phone number"
+                  className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
                 />
-                <span className='text-sm'>Remember me</span>
-              </div>
-              <div onClick={() => router.push('forgot-password')}>
-                <span className='cursor-pointer'>Forgot password?</span>
-              </div>
+              )}
+            />
+            <div className="text-xs text-red-700">
+              {errors?.email_or_phone?.message}
             </div>
+          </div>
 
-            <div className='mt-4 flex items-center justify-center'>
-              <small className='text-base'>
-                Don`t have an account?
-                <span
-                  onClick={() => router.push('/signup')}
-                  className='cursor-pointer text-sm  text-[#F25E26] '
-                >
-                  {' '}
-                  Sign up
-                </span>
-              </small>
+          <div className="flex flex-col">
+            <label className="text-sm" htmlFor="password">
+              Password
+            </label>
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    {...field}
+                    placeholder="***********"
+                    className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                  />
+                  <div
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                  </div>
+                </div>
+              )}
+            />
+            <div className="text-xs text-red-700">
+              {errors?.password?.message}
             </div>
-          </form>
+          </div>
         </div>
-      </div>
+
+        <div className="mt-4 flex items-center justify-center">
+          <DefaultButton
+            type="submit"
+            className="rounded-lg h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white"
+            text={status === "pending" ? "loading..." : "Sign in"}
+            handleClick={() => console.log("")}
+          />
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <input
+              type="checkbox"
+              id="agreement"
+              value="true"
+              className="text-wdc-inactivebutton mr-2"
+            />
+            <span className="text-sm">Remember me</span>
+          </div>
+          <div onClick={() => router.push("forgot-password")}>
+            <span className="cursor-pointer">Forgot password?</span>
+          </div>
+        </div>
+
+        <div className="mt-6 flex items-center justify-center">
+          <small className="text-sm text-[#353131] font-normal font-Poppins">
+            Don’t have an account?
+            <span
+              onClick={() => router.push("/signup")}
+              className="cursor-pointer text-base text-[#F25E26] ml-2"
+            >
+              {" "}
+              Sign up
+            </span>
+          </small>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
     </>
   )
 }

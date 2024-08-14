@@ -78,7 +78,7 @@ export const HIW = () => {
   const indicatorColors = ['bg-[#E84526]', 'bg-amber-400', 'bg-emerald-400'];
 
   const Title = ({ text }: title) => (
-    <h3 className='py-2 text-lg font-Poppins font-semibold text-[#F25E26]'>{text}</h3>
+    <h3 className='py-0.5 text-lg font-Poppins font-semibold text-[#F25E26]'>{text}</h3>
   )
 
   // Array of images to be displayed

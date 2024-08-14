@@ -368,7 +368,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                                 {val.submenu.map((subItem, subIndex) => (
                                   <li
                                     key={subIndex}
-                                    className={`  ${(subItem.name === 'Profile' && !isLoggedIn) || (subItem.name === 'Wallet' && !isLoggedIn) || (subItem.name === 'Community' && !isLoggedIn) || (subItem.name === 'Referral Code' && !isLoggedIn) || (subItem.name === 'Sign Out' && !isLoggedIn) ? 'hidden' : 'block'} ${(subItem.name === 'Sign Up' && isLoggedIn) || (subItem.name === 'Sign In' && isLoggedIn) ? 'hidden' : ''} p-2 px-4 text-sm font-medium font-Poppins  text-[#A09F9F] hover:bg-[#FCDFD4] hover:text-[#504D4D]`}
+                                    className={`${(subItem.name === 'Profile' && !isLoggedIn) || (subItem.name === 'Wallet' && !isLoggedIn) || (subItem.name === 'Community' && !isLoggedIn) || (subItem.name === 'Referral Code' && !isLoggedIn) || (subItem.name === 'Sign Out' && !isLoggedIn) ? 'hidden' : 'block'} ${(subItem.name === 'Sign Up' && isLoggedIn) || (subItem.name === 'Sign In' && isLoggedIn) ? 'hidden' : ''} p-2 px-4 text-sm font-medium font-Poppins  text-[#2A2A2A] hover:bg-[#FCDFD4] hover:text-[#504D4D]`}
                                   >
                                     <div
                                       onClick={() =>

@@ -1144,6 +1144,8 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
 
 
 export const ProductCardMain = ({ cardInfo }: any) => {
+
+  // console.log(cardInfo, 'cardinfoooo')
   const [hoverState, setHoverState] = useState<string>("");
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();

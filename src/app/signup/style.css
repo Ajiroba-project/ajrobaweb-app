@@ -10,3 +10,24 @@
 
 
 /* App.css */
+
+
+/* .no-hover-input:hover { */
+/* background-color: transparent !important; */
+/* box-shadow: none !important; */
+/* } */
+
+
+/* Define styles for the Input component */
+.no-hover-input {
+    border-color: transparent !important;
+}
+
+.no-hover-input:hover {
+    border-color: transparent !important;
+}
+
+.no-hover-input:focus {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
