@@ -17,13 +17,13 @@ export const Footer = () => {
 
   return (
     <footer className={`${lato.className} bg-[#111111]`}>
-      <section className='px-12 text-white '>
-        <div className='flex flex-col items-center gap-24 p-8  lg:md:flex-row lg:items-start '>
+      <section className='px-12 py-20 text-white '>
+        <div className='flex flex-col items-center gap-8 justify-between   lg:md:flex-row lg:items-start '>
           <div className='flex w-64 flex-col gap-4'>
             <Link href='/'>
               <Image src={Brand} alt='brand-logo' />
             </Link>
-            <p className={`text-lg italic text-white  ${poppins.className}`}>
+            <p className={`text-sm italic text-[#F6F6F6]  ${poppins.className}`}>
               ... Your foremost consumer auction platform
             </p>
             <div className='header-socials flex gap-3'>
@@ -52,7 +52,7 @@ export const Footer = () => {
                 >
                   <Link
                     href={val.links}
-                    className={`text-base font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className}`}
+                    className={`text-sm font-normal font-Poppins text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className}`}
                   >
                     {val.name}
                   </Link>
@@ -67,7 +67,7 @@ export const Footer = () => {
                 <li key={index} className='cursor-pointer py-2 text-base '>
                   <Link
                     href={val.links}
-                    className={`text-base font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className} `}
+                    className={`text-sm font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className} `}
                   >
                     {val.name}
                   </Link>
@@ -86,7 +86,7 @@ export const Footer = () => {
                   {val.icon}{' '}
                   <Link
                     href={val.links}
-                    className={`text-base font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className}`}
+                    className={`text-sm font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className}`}
                   >
                     {val.name}
                   </Link>
