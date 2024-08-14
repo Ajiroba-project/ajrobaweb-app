@@ -3,7 +3,7 @@ import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import Verify_icon from "../asset/verify.svg";
 import Image from "next/image";
-import AuthHero from "../component/AuthHero";
+import AuthHero, { HeroSubText } from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
 
@@ -24,21 +24,31 @@ function Page() {
                     </Link>
                 </nav>
 
-                <section className="flex justify-center items-center mb-8 mt-20">
+
+   <div className="flex justify-center items-center flex-col min-h-[80vh]">
+
+
+
+                <section className="flex justify-center items-center mb-4 mt-20">
                     <Image src={Verify_icon} alt="brand-logo" width={60} height={60} />
                 </section>
 
-                <AuthHero
+               {/*  <AuthHero
                     title="Password reset successful"
                     menu="You can login into your account with your new password"
                 />
+ */}
 
+     <HeroSubText
+             title="Password reset successful"
+                    menu="You can login into your account with your new password"
+          />
                 <div className=" flex justify-center mb-20 mt-4 ">
                     <div className="flex flex-col">
                         <div className="flex justify-center items-center ">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
+                                className=" rounded-lg w-full bg-[#FCDFD4] h-10 text-sm"
                                 text="Continue to sign in"
                                 handleClick={() => handleVerify()}
                             />
@@ -59,6 +69,13 @@ function Page() {
                         </div>
                     </div>
                 </div>
+
+
+
+   </div>
+
+
+
             </div>
         </>
     );
