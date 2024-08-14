@@ -220,7 +220,7 @@ const Page = () => {
               <Heading title="Featured Products" />
             </div>
             <div className="flex flex-col items-center  ">
-         {/*      <ProductCard cardInfo={featuredproductInfo?.data} /> */}
+
               <ProductCardMain cardInfo={featuredproductInfo?.data}  />
               <div className="flex justify-center pt-5">
                 <DefaultButton

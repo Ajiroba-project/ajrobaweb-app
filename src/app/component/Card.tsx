@@ -643,7 +643,7 @@ type CardDetails = {
   }>;
 }
 
-;
+  ;
 
 
 
@@ -880,14 +880,14 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
 export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
   const images_ = [foodstufficon, fashionandbeauty, phonessvg, motherandchild];
 
-    const router = useRouter()
+  const router = useRouter()
 
   return (
 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 cursor-pointer">
       {cardInfo?.map((value, index) => (
 
-           <motion.div
+        <motion.div
           key={index}
           // className="rounded-lg bg-[#F6F6F6] p-4"
           // onClick={() => router.push(`/categories/productdetails/${value.id}`)}
@@ -897,27 +897,27 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
           animate={{ scale: 1 }}
           transition={{ duration: 0.3, ease: 'easeOut' }} // Smooth transition out
         >
-        <div key={index} className="relative border rounded-lg overflow-hidden" onClick={() => router.push(`/categories/${value.name}?cat_id=${value.id}`)}>
-          <div className="w-full h-60 overflow-hidden relative rounded-lg">
-            {/* Background image */}
-            <Image width={50} height={50}
-              src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
-              alt={value.name}
-              className="object-cover w-full h-full rounded-lg"
-            />
-            {/* Dark overlay */}
-            <div className="absolute inset-0 z-10 bg-black bg-opacity-65 rounded-lg"></div>
-            {/* Overlay image */}
-            <div className="absolute inset-0 z-20 flex flex-col gap-4 justify-center items-center">
-              <Image
-                src={images_[index % images_.length]} // Select image based on the index
-                alt="Overlay"
-                className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
+          <div key={index} className="relative border rounded-lg overflow-hidden" onClick={() => router.push(`/categories/${value.name}?cat_id=${value.id}`)}>
+            <div className="w-full h-60 overflow-hidden relative rounded-lg">
+              {/* Background image */}
+              <Image width={50} height={50}
+                src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+                alt={value.name}
+                className="object-cover w-full h-full rounded-lg"
               />
-              <p className="text-base text-white font-Poppins ">{value.name}</p>
+              {/* Dark overlay */}
+              <div className="absolute inset-0 z-10 bg-black bg-opacity-65 rounded-lg"></div>
+              {/* Overlay image */}
+              <div className="absolute inset-0 z-20 flex flex-col gap-4 justify-center items-center">
+                <Image
+                  src={images_[index % images_.length]} // Select image based on the index
+                  alt="Overlay"
+                  className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20"
+                />
+                <p className="text-base text-white font-Poppins ">{value.name}</p>
+              </div>
             </div>
           </div>
-        </div>
         </motion.div>
       ))}
     </div>
@@ -1153,7 +1153,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     isLoggedIn: state.isLoggedIn,
   }));
 
-    const handleCartNotification = (value: any) => {
+  const handleCartNotification = (value: any) => {
     setCardAddCartState(value.name);
 
     setCardCartState(!cardCartState);
@@ -1174,14 +1174,14 @@ export const ProductCardMain = ({ cardInfo }: any) => {
         >
           {cardInfo?.map((value: any, index: number) => (
             <div key={index}>
-              <motion.div    onMouseEnter={() => setHoverState(value.name)}
-            onMouseLeave={() => setHoverState('')}
+              <motion.div onMouseEnter={() => setHoverState(value.name)}
+                onMouseLeave={() => setHoverState('')}
                 className="flex flex-col h-full shadow-lg"
 
-               /*  whileHover={{
-                  scale: 1.05, // Slightly enlarge the whole card on hover
-                  transition: { duration: 0.3, ease: 'easeOut' },
-                }} */
+              /*  whileHover={{
+                 scale: 1.05, // Slightly enlarge the whole card on hover
+                 transition: { duration: 0.3, ease: 'easeOut' },
+               }} */
               >
                 <motion.div
                   className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
@@ -1191,33 +1191,31 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                 >
 
                   <div className='flex justify-end cursor-pointer' >
-                      {hoverState === value.name ? (
-                <>
-                  <IoCartOutline
-                    className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526] rounded-full ' : 'rounded-full bg-white'}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
-                    onClick={() => handleCartNotification(value)}
-                  />
-                 {/*  {isLoggedIn && (
-                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
-                  )} */}
-                </>
-              ) : (
-                ''
-              )}
+                    {hoverState === value.name ? (
+                      <>
+                        <IoCartOutline
+                          className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526] rounded-full ' : 'rounded-full bg-white'}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
+                          onClick={() => handleCartNotification(value)}
+                        />
+
+                      </>
+                    ) : (
+                      ''
+                    )}
 
 
-                <>
-                {cardCartState && (
-                  <div
-                    className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
-                  >
-                    <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
-                      <p>{value.name}</p>
-                      <p>Has been added to cart</p>
-                    </div>
-                  </div>
-                )}
-              </>
+                    <>
+                      {cardCartState && (
+                        <div
+                          className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
+                        >
+                          <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
+                            <p>{value.name}</p>
+                            <p>Has been added to cart</p>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   </div>
 
 
@@ -1226,16 +1224,35 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                     whileHover={{ scale: 1.1 }} // Enlarge the image on hover
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
-                    <div  onClick={() =>
-                  router?.push(`/categories/productdetails/${value.id}`)
-                } className="p-0">
-                      <Image
-                        src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
-                        width={100}
-                        height={100}
-                        alt="human hair"
-                        className=" cursor-pointer ilter brightness-95 opacity-75 bg-[#FCFCFC]"
-                      />
+                    <div onClick={() =>
+                      router?.push(`/categories/productdetails/${value.id}`)
+                    } className="p-0">
+                      {
+                        hoverState ?
+
+
+
+                          <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
+                            <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+
+                              width={100}
+                              height={100}
+                              alt="image"
+                              className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"/>
+
+                          </div>
+
+
+
+                          : <Image
+                            src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                            width={100}
+                            height={100}
+                            alt="human hair"
+                            className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
+                          />
+                      }
+
                     </div>
                   </motion.div>
                 </motion.div>
