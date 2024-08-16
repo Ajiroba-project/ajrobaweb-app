@@ -1401,8 +1401,8 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
       )}
 
        {
-                    ( isFetching ) && <Loading />
-                }
+            ( isFetching ) && <Loading />
+        }
     </>
   );
 };
