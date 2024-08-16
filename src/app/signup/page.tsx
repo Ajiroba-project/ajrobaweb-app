@@ -194,7 +194,7 @@ function Page() {
                         type="text"
                         {...field}
                         placeholder="Enter firstname"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -217,7 +217,7 @@ function Page() {
                         type="text"
                         {...field}
                         placeholder="Enter surname"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -240,7 +240,7 @@ function Page() {
                         type="email"
                         {...field}
                         placeholder="Enter email"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -263,7 +263,7 @@ function Page() {
                         type="text"
                         {...field}
                         placeholder="Enter phone number"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -286,7 +286,7 @@ function Page() {
                         type="password"
                         {...field}
                         placeholder="***********"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -309,7 +309,7 @@ function Page() {
                         type="text"
                         {...field}
                         placeholder="Referal code"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -330,7 +330,7 @@ function Page() {
                         type="text"
                         {...field}
                         placeholder="Enter your Address"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -424,7 +424,7 @@ function Page() {
                         type="text"
                         {...field}
                         placeholder="residential Number"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                       />
                     </div>
                   )}
@@ -441,7 +441,7 @@ function Page() {
                     id="male"
                     {...register("gender", { required: true })}
                     value="true"
-                    className="mr-2 text-wdc-inactivebutton"
+                    className="mr-2 text-wdc-inactivebutton focus:outline-none"
                   />
                   <label
                     htmlFor="male"
@@ -457,7 +457,7 @@ function Page() {
                     id="female"
                     {...register("gender", { required: true })}
                     value="false"
-                    className="mr-2 text-wdc-inactivebutton"
+                    className="mr-2 text-wdc-inactivebutton focus:outline-none"
                   />
                   <label
                     htmlFor="female"
@@ -492,7 +492,7 @@ function Page() {
                 id="agreement"
                 {...register("agree_terms")}
                 value="true"
-                className="mr-2 text-wdc-inactivebutton"
+                className="mr-2 text-wdc-inactivebutton focus:outline-none"
               />
               <span
                 className="text-sm"

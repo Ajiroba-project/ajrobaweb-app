@@ -20,6 +20,7 @@ import { useAuthStore } from '@/store/store'
 
 import 'react-toastify/dist/ReactToastify.css'
 import { useState } from 'react'
+// import Cookies from 'js-cookie'
 
 function Page() {
   type dataProps = {
@@ -88,6 +89,7 @@ function Page() {
       // console.log(data, 'datat')
       setAuthCookie(data?.data?.token, 0)
       setUser(data?.data)
+      //  Cookies.set('ik', JSON.stringify(data?.data?.token), { sameSite: 'strict' });
 
       reset()
     } else if (data.status === 403 || data.status === 404) {
@@ -202,7 +204,7 @@ function Page() {
                   type="text"
                   {...field}
                   placeholder="Enter your Email or Phone number"
-                  className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                  className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                 />
               )}
             />
@@ -224,7 +226,7 @@ function Page() {
                     type={showPassword ? "text" : "password"}
                     {...field}
                     placeholder="***********"
-                    className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal"
+                    className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
                   />
                   <div
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"

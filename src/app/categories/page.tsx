@@ -54,14 +54,16 @@ const CatPage = () => {
 
   return (
     <>
-      <header className="fixed w-full">
+      <header className="fixed w-full" style={{
+        zIndex: 1000,
+      }}>
         <Header />
       </header>
       <main className="pt-[20vh]" >
         <Title title="Categories" />
         {/*   <div className='container justify-center items-center flex flex-col mb-5'> */}
         {/* <CategoryCard /> */}
-        <div className="px-12 mb-12 sticky top-[60px] " style={{zIndex: -3}}>
+        <div className="px-12 mb-12 sticky top-[60px] " >
           <div className="  ">
             <CategoryCardMain cardInfo={{}} />
           </div>

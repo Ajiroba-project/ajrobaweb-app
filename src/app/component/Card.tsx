@@ -24,6 +24,7 @@ import fashionandbeauty from '@/app/asset/image/fashion_and_beauty.svg'
 import motherandchild from '@/app/asset/image/mother_and_child.svg'
 import { motion } from 'framer-motion'
 import { DefaultButton } from './Button'
+import Loading from './Loading'
 
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
@@ -1304,205 +1305,41 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
 
 export const CategoryCardMain = ({ cardInfo }: any) => {
-
-  // console.log(cardInfo, 'cardinfoooo')
-  const [hoverState, setHoverState] = useState<string>("");
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
   const { isLoggedIn } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
   }));
 
-  const handleCartNotification = (value: any) => {
-    setCardAddCartState(value.name);
-
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
-
-    return () => clearTimeout(timeoutID);
-  };
-
   const router = useRouter();
 
+  const { data: categoriesInfo, isLoading: categoriesLoading, isFetching } =
+    useQueryData<AuctionResponse>(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`,
+      ["get categoriesdetails"],
+      true,
+    );
 
-  const { data: categoriesInfo, isLoading: categoriesLoading } = useQueryData<AuctionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`, ["get categoriesdetails"], true);
-
-  const categorydata = categoriesInfo?.data
-
-  console.log(categorydata, 'category--daa')
+  const categorydata = categoriesInfo?.data;
 
   return (
     <>
-      {/*    {categorydata && (
-        <div
-          className={`${poppins.className} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
-        >
-          {categorydata?.map((value: any, index: number) => (
-            <div key={index}>
-              <motion.div onMouseEnter={() => setHoverState(value.name)}
-                onMouseLeave={() => setHoverState('')}
-                className="flex flex-col h-full shadow-lg"
-              >
-                <motion.div
-                  className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
-                  whileHover={{
-                    backgroundColor: '#E0E0E0',
-                  }}
-                >
-
-                  <div className='flex justify-end cursor-pointer' >
-                    {hoverState === value.name ? (
-                      <>
-                        <IoCartOutline
-                          className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526] rounded-full ' : 'rounded-full bg-white'}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
-                          onClick={() => handleCartNotification(value)}
-                        />
-
-                      </>
-                    ) : (
-                      ''
-                    )}
-
-                    <>
-                      {cardCartState && (
-                        <div
-                          className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
-                        >
-                          <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
-                            <p>{value.name}</p>
-                            <p>Has been added to cart</p>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  </div>
-
-                  <motion.div
-                    className="flex justify-center items-center m-3"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  >
-                    <div onClick={() =>
-                      router?.push(`/categories/productdetails/${value.id}`)
-                    } className="p-0">
-                      {
-                        hoverState ?
-
-                          <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
-                            <Image src={`https://ajiroba.onrender.com/media/${value?.images ?   value?.images[0]?.image :  value?.image[0]?.image}`}
-
-                              width={100}
-                              height={100}
-                              alt="image"
-                              className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"/>
-
-                          </div>
-                          : <Image
-                            src={`https://ajiroba.onrender.com/media/${ value?.images ?   value?.images[0]?.image :  value?.image[0]?.image}`}
-                            width={100}
-                            height={100}
-
-                            alt="human hair"
-                            className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
-                          />
-                      }
-
-                    </div>
-                  </motion.div>
-                </motion.div>
-
-                <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
-                  <div className="mt-2 mb-1 p-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
-                          {value?.name}
-                        </p>
-                         <p className='text-[#A09F9F]'>{value.description}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {
-                    value?.discount || value?.price ?
-
-                  <div className="p-4 flex justify-between items-center">
-                    <div className="justify-start">
-                      <p className="text-xl font-medium">
-                        &#8358;{value?.discount?.toLocaleString()}
-                        <span className=""></span>
-                      </p>
-
-                      <p className="text-sm font-normal text-gray-500 line-through">
-                        &#8358;{value?.price?.toLocaleString()}
-                      </p>
-                    </div>
-
-                    <div className="p-4">
-                      <p className="flex justify-end text-left gap-1">
-                        {Array.from({ length: value?.reviews }, (_, index) => (
-                          <span key={index}>
-                            <FaStar className="text-[#F25E26]" />
-                          </span>
-                        ))}
-                      </p>
-                    </div>
-                  </div> :
-                   <div className="grid grid-cols-1 px-4">
-                <DefaultButton
-                  type="submit"
-                  className="w-auto rounded-lg  bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
-                  text={status === "pending" ? "loading..." : "Create Account"}
-                  handleClick={() => console.log("clcikeddd")}
-                />
-              </div>
-
-                  }
-                </div>
-              </motion.div>
-            </div>
-          ))}
-        </div>
-      )}
- */}
-
       {categorydata && (
         <div
           className={`${poppins.className} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
         >
           {categorydata?.map((value: any, index: number) => (
             <div key={index} className="flex flex-col h-full shadow-lg">
-              <motion.div
-              /*   onMouseEnter={() => setHoverState(value.name)}
-                onMouseLeave={() => setHoverState('')} */
-                className="flex flex-col h-full"
-              >
-
-                <motion.div
-                  className="bg-[#F6F6F6]   rounded-t-lg relative"
-                /*   whileHover={{
-                    backgroundColor: '#E0E0E0',
-                  }} */
-                >
+              <div className="flex flex-col h-full">
+                <div className="bg-[#F6F6F6]   rounded-t-lg relative">
                   <div className="flex justify-end cursor-pointer">
-                  {/*   {hoverState === value.name ? (
-                      <IoCartOutline
-                        className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526]' : ''
-                          } absolute right-2 top-2 p-2 text-4xl text-black rounded-full bg-white`}
-                        onClick={() => handleCartNotification(value)}
-                      />
-                    ) : (
-                      ''
-                    )} */}
-
                     {cardCartState && (
                       <div
-                        className={`${cardAddCartState === value.name
-                            ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center text-white'
-                            : 'hidden'
-                          }`}
+                        className={`${
+                          cardAddCartState === value.name
+                            ? "absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center text-white"
+                            : "hidden"
+                        }`}
                       >
                         <div className="bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium">
                           <p>{value.name}</p>
@@ -1512,34 +1349,29 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                     )}
                   </div>
 
-                  <motion.div
-                      className="flex justify-center items-center m-3 h-auto sm:h-48 w-full"
-              /*       whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }} */
-                  >
+                  <div className="flex justify-center items-center m-3 h-auto sm:h-48 w-full">
                     <div
                       onClick={() =>
                         router?.push(`/categories/productdetails/${value.id}`)
                       }
                       className="p-0"
                     >
-
-                      <Image width={100}
+                      <Image
+                        width={100}
                         height={100}
-                        src={`https://ajiroba.onrender.com/media/${value?.images
+                        src={`https://ajiroba.onrender.com/media/${
+                          value?.images
                             ? value?.images[0]?.image
                             : value?.image[0]?.image
-                          }`}
+                        }`}
                         alt="image"
                         className="cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent object-cover h-auto w-full"
                       />
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
 
-                {/* <div className="rounded-b-lg border-t-4 bg-[#FFFFFF] flex flex-col justify-between h-full"> */}
                 <div className=" rounded-b-2xl border-t-4 bg-[#FCFCFC] flex flex-col justify-between h-full overflow-hidden">
-
                   <div className="p-4 flex-grow">
                     <p className="font-Poppins text-[#000000] text-sm font-normal overflow-hidden text-ellipsis">
                       {value?.name}
@@ -1549,43 +1381,28 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                     </p>
                   </div>
 
-                  {value?.discount || value?.price ? (
-                    <div className="p-4 flex justify-between items-center">
-                      <div>
-                        <p className="text-xl font-medium">
-                          &#8358;{value?.discount?.toLocaleString()}
-                        </p>
-                        <p className="text-sm font-normal text-gray-500 line-through">
-                          &#8358;{value?.price?.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="flex justify-end gap-1">
-                          {Array.from({ length: value?.reviews }, (_, index) => (
-                            <span key={index}>
-                              <FaStar className="text-[#F25E26]" />
-                            </span>
-                          ))}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 px-4 mb-4">
-                      <DefaultButton
-                        type="submit"
-                        className="w-auto rounded-lg bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
-                        text={status === 'pending' ? 'loading...' : 'Explore'}
-                        handleClick={() => router.push(`/categories/${value.name}?cat_id=${value.id}`)}
-                      />
-                    </div>
-                  )}
+                  <div className="grid grid-cols-1 px-4 mb-4 cursor-pointer">
+                    <DefaultButton
+                      type="submit"
+                      className="  cursor-pointer w-auto rounded-lg bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                      text={"Explore"}
+                      handleClick={() =>
+                        router.push(
+                          `/categories/${value.name}?cat_id=${value.id}`,
+                        )
+                      }
+                    />
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           ))}
         </div>
       )}
 
+       {
+                    ( isFetching ) && <Loading />
+                }
     </>
   );
 };

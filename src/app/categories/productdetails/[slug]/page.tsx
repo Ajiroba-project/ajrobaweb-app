@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from 'date-fns';
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
+import Loading from "@/app/component/Loading";
 
 
 interface CardInfoItem {
@@ -586,7 +587,9 @@ const Page = ({ params }: any) => {
                 )}
 
             </section>
-
+ {
+                    ( productdatafetching ) && <Loading />
+                }
 
         </main>
     );
