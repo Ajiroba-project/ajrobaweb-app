@@ -129,6 +129,7 @@ const Closefuncdelete = () => {
     reset()
 
     if (data.status === 201 || data.status === 200 || data.status === 204) {
+      console.log(data, 'data')
       setSuccess(true);
          toast.success(`${data?.data?.message}`, {
         position: "top-right",
@@ -229,6 +230,14 @@ const Closefuncdelete = () => {
   );
 
 
+
+  const { data: datad, error: errord, isError: isErrord, isSuccess: isSussessd, mutate: mutated, status: statusd } = useMutateData(
+    "delete order",
+    handleSuccess,
+    handleError,
+  );
+
+
 const submitForm = async (data: any, event: any) => {
   event.preventDefault();
 
@@ -295,7 +304,7 @@ const submitFormdelete = async (data: any, event: any) => {
     order_Id: selectedTransactiondelete.order_id,
   };
 
-    mutate({
+    mutated({
     url: "/api/deleteorder",
     payload: { payload: payload, token: userToken },
     token: userToken

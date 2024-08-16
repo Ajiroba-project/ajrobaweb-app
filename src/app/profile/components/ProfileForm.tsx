@@ -85,7 +85,7 @@ export const ProfileForm: React.FC = () => {
 
 
   const handleSuccess = (data: any) => {
-    console.log(data, 'datttataaa', error)
+  /*   console.log(data, 'datttataaa', error) */
 
     if (data.status === 201 || data.status === 200) {
       setSuccessModal(!successModal)
@@ -144,8 +144,8 @@ export const ProfileForm: React.FC = () => {
   };
 
   const handleError = (error: any) => {
-    console.log(data, 'datttataaa', error)
-    console.log(error, 'errrr')
+  /*   console.log(data, 'datttataaa', error)
+    console.log(error, 'errrr') */
     toast.error(`${'An Error Occured'}`, {
       position: "top-right",
       autoClose: 5000,

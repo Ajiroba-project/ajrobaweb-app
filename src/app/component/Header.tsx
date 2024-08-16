@@ -249,12 +249,16 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   const handleSuccess = () => {
     clearAuthCookies();
+       localStorage.clear();
+      //  Cookies.clear()
     router.push('/signin');
   };
 
   const handleError = () => {
     console.log('Something went wrong...');
     clearAuthCookies();
+    localStorage.clear();
+    //  Cookies.clear()
     router.push('/signin');
   };
 

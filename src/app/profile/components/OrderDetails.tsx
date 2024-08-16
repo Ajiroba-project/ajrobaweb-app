@@ -392,16 +392,30 @@ export const OrderDetails = () => {
   // console.log(orderinfo?.data?.data?.data?.all_orders);
 
   // Handle data fetching
+  // useEffect(() => {
+  //   if (orderinfo) {
+  //           const allorder = orderinfo?.data?.data?.completed_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[0]));
+  //           setAllorderFilter(allorder);
+  //     const complete = orderinfo?.data?.data?.completed_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[1]));
+  //     setCompletedFilter(complete);
+  //     const pending = orderinfo?.data?.data?.pending_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[2]));
+  //     setPendingFilter(pending);
+  //   }
+  // }, [orderinfo, orderSwitch]);
+
   useEffect(() => {
-    if (orderinfo) {
-            const allorder = orderinfo?.data?.data?.completed_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[0]));
-            setAllorderFilter(allorder);
-      const complete = orderinfo?.data?.data?.completed_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[1]));
-      setCompletedFilter(complete);
-      const pending = orderinfo?.data?.data?.pending_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[2]));
-      setPendingFilter(pending);
-    }
-  }, [orderinfo, orderSwitch]);
+  if (orderinfo) {
+    // Only set state if the data has changed
+    const allOrders = orderinfo?.data?.data?.all_orders || [];
+    const completedOrders = orderinfo?.data?.data?.completed_order || [];
+    const pendingOrders = orderinfo?.data?.data?.pending_order || [];
+
+    setAllorderFilter(allOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[0])));
+    setCompletedFilter(completedOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[1])));
+    setPendingFilter(pendingOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[2])));
+  }
+}, [orderinfo]); // Add only necessary dependencies
+
 
   const handlePageChange = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected);
@@ -472,18 +486,7 @@ export const OrderDetails = () => {
           <tfoot>
             <tr className='text-center'>
               <td colSpan={6} className='pt-3 text-center'>
-            {/*     <CustomPagination
-                  pageCount={Math.ceil(
-                    pipeline === orderSwitch[0]
-                      ? (orderinfo?.data?.data?.data?.all_orders ? orderinfo?.data?.data?.data?.all_orders : 0) / itemsPerPage
-                      : pipeline === orderSwitch[1]
-                      ? completedFilter?.length / itemsPerPage
-                      : pendingFilter?.length / itemsPerPage
-                  )}
-                  className='flex items-center justify-center gap-3'
-                  pageRangeDisplayed={5}
-                  onPageChange={handlePageChange}
-                /> */}
+
                 <CustomPagination
                         pageCount={Math.ceil(
                           pipeline === orderSwitch[0]

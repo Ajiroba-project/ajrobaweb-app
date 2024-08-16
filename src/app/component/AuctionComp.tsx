@@ -72,7 +72,7 @@ export const AuctionComp = ({ cardInfo }: cardDetails) => {
 
     const progress = (timeLeft / initialTotalMinutes) * 100;
 
-    console.log(progress, "progress")
+    // console.log(progress, "progress")
 
     return (
       <div className="mb-3">

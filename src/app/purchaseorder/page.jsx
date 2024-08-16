@@ -566,9 +566,10 @@ const WrappedPage = () => {
               </div>
 
               <div className="flex items-center">
+               {/*  {console.log(productinfo?.data?.data[1], "price")} */}
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N {productinfo?.data?.data[1]?.total_price}
+                    N {productinfo?.data?.data[1]?.cost_price}
                   </p>
                 </div>
               </div>
@@ -584,7 +585,7 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N 0
+                    N {productinfo?.data?.data[1]?.discount_amount}
                   </p>
                 </div>
               </div>
@@ -600,7 +601,7 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N {productinfo?.data?.data[1]?.total_price}
+                    N {productinfo?.data?.data[1]?.total}
                   </p>
                 </div>
               </div>

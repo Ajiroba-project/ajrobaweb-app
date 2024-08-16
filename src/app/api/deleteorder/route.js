@@ -5,7 +5,7 @@ export async function PUT(request) {
     // console.log(request, 'requestttt')
     try {
         const body = await request.json();
-        console.log(body, 'bodyyyyy')
+        // console.log(body, 'bodyyyyy')
         const cacheBuster = `cache=${Date.now()}`;
 
 
@@ -35,7 +35,7 @@ export async function PUT(request) {
         const data = await res.json();
         const status = res.status;
 
-        console.log(data, status)
+        // console.log(data, status)
 
         // Return JSON response with data and status
         return NextResponse.json({ data, status });

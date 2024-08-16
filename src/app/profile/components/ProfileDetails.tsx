@@ -154,7 +154,10 @@ export const ProfileDetails = () => {
   const { data: userInfo, isLoading: userLoading, isFetching } = useGetDatanew(
     url,
     'get_user_details',
-    token
+    token , {
+        cacheTime: 0, // disables cache
+  staleTime: 0, // data will be considered stale immediately
+    }
   );
 
   useEffect(() => {
