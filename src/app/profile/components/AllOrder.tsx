@@ -208,8 +208,8 @@ const Closefuncdelete = () => {
   };
 
   const handleError = (error: any) => {
-    console.log(data, "datttataaa", error);
-    console.log(error, "errrr");
+    // console.log(data, "datttataaa", error);
+    // console.log(error, "errrr");
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 5000,
@@ -266,7 +266,7 @@ const submitForm = async (data: any, event: any) => {
     order_Id: selectedTransaction.order_id,
   };
 
-  console.log(payload, "Payload being submitted");
+  /* console.log(payload, "Payload being submitted"); */
 
    mutate({
     url: "/api/revieworder",
