@@ -85,7 +85,7 @@ export const SideMenu = () => {
                   onMouseEnter={() => setActive(index)}
                 >
                   <span className='flex items-center gap-2'>
-                    <p className='text-[20px] font-normal capitalize font-Poppins' onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)}>{val.category}</p>
+                    <p className='text-base font-normal capitalize font-Poppins' onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
@@ -103,7 +103,7 @@ export const SideMenu = () => {
 
                     >
                        <p
-                        className={` ${ 'w-max p-2 text-[16px] font-Inter font-medium'}`}
+                        className={` ${ 'w-max p-2 text-sm font-Inter font-normal'}`}
                       >
                         {subcategory.subcategory}
                       </p>
@@ -168,7 +168,7 @@ export const MobileSideMenu = () => {
             <Fragment key={index}>
               <div className='relative bg-[#F6F6F6] p-2'>
                 <li
-                  className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 py-2 hover:text-[#F25E26] `}
+                  className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 2 hover:text-[#F25E26] `}
                   onClick={() => {
                     setActive(active === index ? null : index)
                   }}
@@ -184,10 +184,11 @@ export const MobileSideMenu = () => {
                     className={`${inter.className} z-20 px-4  ${active === 1 ? ' -top-0 gap-2 ' : ''} rounded text-sm `}
                   >
                     {val.subcategories?.map((subcategory) => (
-                      <div key={subcategory.subcategory} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}>
-                        <Link href={"#"} className={`${active === 1 ? "font-bold" : ""} `}>{subcategory.subcategory}</Link>
+                      <div key={subcategory.subcategory} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer z-20`}>
+                        <Link href={"#"} className={`${active === 1 ? "p-2 text-sm font-Inter font-normal" : " p-2 text-sm font-Inter font-normal"} `}>{subcategory.subcategory}</Link>
 
                       </div>
+                          // className={` ${ 'w-max p-2 text-sm font-Inter font-normal'}`}
                     ))}
 
                   </div>
