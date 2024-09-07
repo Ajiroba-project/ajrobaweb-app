@@ -9,6 +9,7 @@ import { Pagination } from '../component/Pagination'
 import { useRouter } from 'next/navigation'
 import auctionImg from '../asset/image/auction-banner.png'
 import { useQueryData } from '@/hooks/useQueryData'
+import { userNavStore } from '@/store/store'
 
 
 interface AuctionItem {
@@ -64,6 +65,20 @@ const Page = () => {
   }
 
   const pageCount = Math.ceil((auctionInfo?.data.length || 0) / itemsPerPage);
+
+     const { setHeaderNav, headerNav } = userNavStore(state => ({
+    setHeaderNav: state.setHeaderNav,
+    headerNav: state.headerNav,
+  }));
+
+  useEffect(() => {
+         if (headerNav !== 'auction') {
+        setHeaderNav('Auction Deals');
+     }
+
+
+}, []);  // Add `path` as a dependency to avoid unnecessary updates
+
 
   return (
     <Fragment>
