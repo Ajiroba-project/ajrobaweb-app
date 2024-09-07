@@ -82,14 +82,15 @@ export const useAuthStore = create((set) => ({
 
 
 export const userNavStore = create(set => ({
-  headerNav: 'Home',
+  headerNav: '/',
   userNav: '',
   isNavbarOpen: false,
   sidebar: false,
   walletModal: false,
-  headerNav: '',
+  // headerNav: 'Home',
 
   setUserNav: text => set({ userNav: text }),
+  /*  setHeaderNav: text => set({ headerNav: text }), */
   setHeaderNav: text => set({ headerNav: text }),
   toggleNavbar: () => set(state => ({ isNavbarOpen: !state.isNavbarOpen })),
   toggleSidebar: () => set(state => ({ sidebar: !state.sidebar })),

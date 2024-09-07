@@ -22,8 +22,9 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
     }, [paths])
 
     return (
-        <section className={` bg-[#F6F6F6] -mt-8`}>
-            <div className=" flex gap-2 text-sm container py-4  flex-wrap">
+     /*  <div className="" >
+          <section  className={` flex flex-col  bg-[#F6F6F6] `}>
+            <div  className=" flex gap-2 text-sm container py-4  flex-wrap">
                 <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link>
 
                 {
@@ -35,7 +36,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
                                 className={` underline hover:text-[#F25E26] `}
                             >
                                 {path}
-                                {/* {console.log(path)} */}
+
                             </Link>
                         </Fragment>
                     ))
@@ -47,6 +48,49 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
             </div>
 
         </section>
+
+
+      </div> */
+
+       <div className="bg-[#F6F6F6]" >
+          <section style={{
+        margin: '0 auto',
+        width: '90%',
+        maxWidth: '100%',
+        zIndex: 51
+      }}  className={` flex flex-col bg-[#F6F6F6] `}>
+              <div  className=" flex gap-2 text-sm  py-4  flex-wrap">
+                <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link>
+
+                 {
+                    paths?.map((path: string, index: number) => (
+                        <Fragment key={index}>
+                           {/*  <span> {`>`} </span> */}
+                           {index < paths.length - 1 && <span>&gt; </span>}
+                            <Link
+                                href={`/${paths.slice(0, index + 1).join("/")}`}
+                              /*   className={` underline hover:text-[#F25E26] ` + (index === paths.length - 1 ? "text-[#F25E26]" : "")} */
+                              className={`underline hover:text-[#F25E26] ${index === paths.length - 2 ? "text-[#F25E26]" : ""}`}
+
+                            >
+                                {path}
+
+                            </Link>
+
+
+                        </Fragment>
+                    ))
+                }
+
+
+
+            </div>
+            <div className="">
+                <p className={` capitalize text-xl pb-4`}>{Category}</p>
+            </div>
+
+        </section>
+      </div>
     )
 }
 

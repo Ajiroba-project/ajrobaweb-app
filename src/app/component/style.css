@@ -41,3 +41,9 @@ select[name="state"]+.dropdown-container .option:selected {
     background-color: aqua !important;
     color: blue !important;
 }
+
+
+img {
+    background-color: transparent !important;
+    /* Ensures no white background */
+}

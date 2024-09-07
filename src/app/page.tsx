@@ -125,7 +125,7 @@ const Page = () => {
 
   return (
     <>
-      <Suspense>
+      <Suspense >
          <header className="fixed z-50 w-full">
           <Header />
         </header>
@@ -223,6 +223,12 @@ const Page = () => {
 
               <ProductCardMain cardInfo={featuredproductInfo?.data}  />
               <div className="flex justify-center pt-5">
+                {/*  <DefaultButton
+                  text="View all Categories"
+                  type="button"
+                  handleClick={() => router.push("/categories")}
+                  className=" text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                /> */}
                 <DefaultButton
                   text="View all Deals"
                   type="button"
@@ -231,7 +237,7 @@ const Page = () => {
                       `/categories/${"featured products"}?feat_id=${featuredproductInfo?.data[0]?.id}`,
                     )
                   }
-                  className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                  className=" font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                 />
               </div>
             </div>
@@ -248,15 +254,16 @@ const Page = () => {
              {/*  <TopDealsCard cardInfo={topdeals?.data} /> */}
                <ProductCardMain cardInfo={topdeals?.data}  />
               <div className="flex justify-center pt-4">
-                <DefaultButton
+
+                 <DefaultButton
                   text="View all Deals"
                   type="button"
-                  handleClick={() =>
+                   handleClick={() =>
                     router.push(
                       `/categories/${"top deals"}?top_id=${topdeals?.data[0]?.id}`,
                     )
                   }
-                className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                  className=" font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                 />
               </div>
             </div>
@@ -279,11 +286,22 @@ const Page = () => {
               {/* <TopWeakCard cardInfo={topweak?.data?.slice(0, 8)} /> */}
                  <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
               <div className="flex justify-center pt-5">
-                <DefaultButton
+              {/*   <DefaultButton
                   text="View all Deals"
                   type="button"
                   handleClick={() => router.push("/categories")}
                  className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                /> */}
+
+                 <DefaultButton
+                  text="View all Deals"
+                  type="button"
+                   handleClick={() =>
+                    router.push(
+                      `/categories/${"This Week Top Product"}?top_id=${topdeals?.data[0]?.id}`,
+                    )
+                  }
+                  className=" font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                 />
               </div>
             </div>

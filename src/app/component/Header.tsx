@@ -17,44 +17,7 @@ import { useQueryData } from '@/hooks/useQueryData';
 import { AuctionMarquee } from './Auction-Marquee';
 
 
-// function Search() {
-//   const searchParams = useSearchParams();
-//   const [searchInput, setSearchInput] = useState('');
 
-//   const handleSearchChange = (e: { target: { value: SetStateAction<string> } }) => {
-//     setSearchInput(e.target.value);
-//   };
-
-//   const router = useRouter();
-//   const pathname = usePathname();
-
-//   const handleSearchSubmit = (e: { preventDefault: () => void }) => {
-//     e.preventDefault();
-
-//     const params = new URLSearchParams(searchParams);
-//     if (searchInput) {
-//       params.set('search', searchInput);
-//     } else {
-//       params.delete('search');
-//     }
-//     router.replace(`${pathname}?${params.toString()}`);
-//   };
-
-//   return (
-//     <form className='relative mx-4 flex lg:mx-0' onSubmit={handleSearchSubmit}>
-//       <input
-//         type="text"
-//         className=' bg-[#F5F5F5] p-2 '
-//         value={searchInput}
-//         onChange={handleSearchChange}
-//         placeholder="Search products..."
-//       />
-//       <button type="submit">
-//         <CiSearch className='absolute  right-3 top-2 cursor-pointer bg-[#F5F5F5] text-xl outline-[#F25E26]' />
-//       </button>
-//     </form>
-//   );
-// }
 
 
 interface HeaderProps {
@@ -277,6 +240,10 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   // Handle clicks outside the menu
   useEffect(() => {
+
+    console.log(headerNav)
+
+
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setActiveMenu(null);
@@ -287,17 +254,17 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [menuRef]);
+  }, [menuRef, ]);
 
   return (
     <>
-      <header className='mb-9'>
+      <header className='' >
         <div className='bg-[#2A2A2A] p-3 text-sm text-white'>
             <div className='flex items-center justify-between gap-3 px-7'>
               <div className='w-full'>
                 <AuctionMarquee info={marqueeInfo} />
               </div>
-              <div className='header-socials mr-3 hidden gap-3 lg:flex '>
+              <div className='header-socials mr-3 hidden gap-3 lg:flex overflow-scroll '>
                 {socialIcon.map((val, index) => (
                   <div key={index} className='w-3.5 lg:w-4'>
                     <Image src={val.icon} alt={'socials'} />
@@ -306,18 +273,26 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
               </div>
             </div>
           </div>
-        <div className='relative bg-white p-2 shadow-md'>
-          <div
+        <div className='relative bg-white p-2 shadow-md' >
+          <div style={{
+        margin: '0 auto',
+        width: '100%',
+        maxWidth: '100%',
+        zIndex: 51
+      }}
             className={`${isOpen ? 'bg-opacity-4 fixed left-0 top-0 z-50 h-screen w-screen bg-[#000000d1] bg-opacity-[0.9] bg-clip-padding backdrop-blur-sm backdrop-filter' : 'h-auto w-auto bg-transparent '}`}
           >
             <div className='flex w-full items-center justify-between gap-0 md:justify-between lg:justify-around lg:gap-[1em]'>
               <div className='flex cursor-pointer items-center gap-2'>
                 <Link href={'/'} className={`${isOpen ? 'hidden' : null}`}>
-                  <Image src={Brand} alt='brand-logo' />
+                  <Image onClick={()=> {
+                    setHeaderNav('Home'),
+                    router.push('/')
+                  }} src={Brand} alt='brand-logo' />
                 </Link>
 
                 <div
-                  ref={menuRef} // Attach the ref to the menu container
+                  ref={menuRef}
                   className={
                     !isOpen
                       ? `hidden items-center lg:flex`
@@ -348,10 +323,26 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                         : 'w-full items-center gap-2 py-2 lg:flex'
                     }
                   >
-                    {headerMenu.map((val, index) => (
+                    {headerMenu?.map((val, index) => {
+
+
+
+
+                   /*       const isActive =
+                        pathname === val.path || pathname.startsWith(val.path); */
+
+                        // console.log(headerMenu)
+
+
+                     /*       const isActive =
+                        pathname === val.path ||
+                        (pathname.startsWith(val.path) && val.path !== '/') ||  (pathname.startsWith(val.path) && val.path !== 'Home');
+ */
+
+                      return  (
                       <li
                         key={index}
-                        className={` font-Poppins cursor-pointer px-4  ${val.name === headerNav ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
+                        className={` font-Poppins cursor-pointer px-4  ${val.name === headerNav   ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
                         onClick={() => {
                           setActiveMenu(activeMenu === index ? null : index);
                           setHeaderNav(val.name);
@@ -399,7 +390,16 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           </Link>
                         )}
                       </li>
-                    ))}
+                    )
+
+                    }
+
+
+
+
+
+
+                    )}
                     <div className='relative mx-4 flex lg:mx-0'>
                       <Search />
                     </div>

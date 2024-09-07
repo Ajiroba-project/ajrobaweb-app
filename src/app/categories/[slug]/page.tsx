@@ -20,6 +20,7 @@ import { CiSearch } from "react-icons/ci";
 import { useSearchParams } from "next/navigation";
 import { useQueryData } from "@/hooks/useQueryData";
 import Loading from "@/app/component/Loading";
+import { userNavStore } from "@/store/store";
 
 interface CardInfoItem {
     id: number;
@@ -74,6 +75,11 @@ const Page = () => {
         setIsOpen(!isOpen);
     };
 
+      const { setHeaderNav, headerNav } = userNavStore(state => ({
+    setHeaderNav: state.setHeaderNav,
+    headerNav: state.headerNav,
+  }));
+
     const decodedPaths = pathname
         .split("/")
         .filter((path) => path !== "")
@@ -89,11 +95,24 @@ const Page = () => {
         [decodedPaths, sub,],
     );
 
+    // useEffect(() => {
+
+    //     setHeaderNav('Categories')
+
+    //     if (paths.length > 0) {
+    //         setPath(paths[paths.length - 1]);
+    //     }
+    // }, [paths]);
     useEffect(() => {
-        if (paths.length > 0) {
-            setPath(paths[paths.length - 1]);
-        }
-    }, [paths]);
+    if (headerNav !== 'Categories') {
+        setHeaderNav('Categories');
+    }
+
+    if (paths.length > 0) {
+        setPath(paths[paths.length - 1]);
+    }
+}, [paths, headerNav, setHeaderNav]);
+
 
     const { data: filtercat, isLoading: filtercatLoading, isFetching } = useQueryData<AuctionResponse>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_category/${cat_id}/`,
@@ -340,15 +359,21 @@ const Page = () => {
         filtercat, cat_id, filter_by_price_under, sub, price_query, min, max,
         filter_by_price_range, filter_by_ratings, rating, feat_id, topdeals, featuredproductInfo, top_id]);
 
+
+
     return (
         <main>
             <Header onSearch={setSearchQuery} />
 
             <Breadcrumb paths={verifiedpaths} text={undefined} />
-            <div className="flex gap-4 container justify-around ">
-                <div className="hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full 2xl:w-3/12 xl:w-3/12 lg:w-3/12 px-8 ">
-                    <SearchFilter />
+            <div className="flex gap-4  justify-around ">
+
+                 <div className=" mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full 2xl:w-3/12 xl:w-3/12 lg:w-3/12  ">
+                   <div className="flex justify-around" >
+                     <SearchFilter />
+                   </div>
                 </div>
+
 
                 <div className="text-xl 2xl:hidden xl:hidden md:hidden lg:hidden block">
                     <FiMenu onClick={hamburgerfunc} className="" />

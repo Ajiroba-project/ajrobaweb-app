@@ -146,3 +146,8 @@
     transform: rotate(360deg);
   }
 }
+
+img {
+  background-color: transparent !important;
+  /* Ensures no white background */
+}

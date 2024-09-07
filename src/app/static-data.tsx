@@ -50,7 +50,7 @@ export const headerMenu = [
   },
   {
     name: 'Account',
-    path: '/',
+    path: '/account',
     submenu: [
       { name: 'Sign Up', path: '/signup' },
       { name: 'Sign In', path: '/signin' },
@@ -63,7 +63,7 @@ export const headerMenu = [
   },
   {
     name: 'Help',
-    path: '/',
+    path: '/help',
     submenu: [
       { name: 'FAQ', path: '/faq' },
       { name: 'About Us', path: '/aboutUs' },

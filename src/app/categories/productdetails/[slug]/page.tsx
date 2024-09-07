@@ -587,7 +587,7 @@ const Page = ({ params }: any) => {
                 )}
 
             </section>
- {
+                {
                     ( productdatafetching ) && <Loading />
                 }
 
