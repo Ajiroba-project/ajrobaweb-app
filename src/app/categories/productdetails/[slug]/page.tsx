@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo, SetStateAction, Key } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Breadcrumb } from "@/app/component/Breadcrumb";
+import { Breadcrumb, ProductBreadcrumb } from "@/app/component/Breadcrumb";
 import { Header } from "@/app/component/Header";
 import { Footer } from "@/app/component/Footer";
 import Image from "next/image";
@@ -33,7 +33,7 @@ interface CardInfoItem {
     discount?: string;
     reviews?: string;
     message?: string;
-    category: string;
+    category?: string;
     delivery_estimation: string;
     related_products: [];
 }
@@ -41,6 +41,7 @@ interface CardInfoItem {
 interface AuctionResponse {
     message: any;
     data: CardInfoItem;
+    category?: any
 }
 
 
@@ -77,6 +78,24 @@ const Page = ({ params }: any) => {
         [decodedPaths, sub],
     );
 
+
+           const product_id = params.slug;
+
+    const {
+        data: productdata,
+        isLoading: productdataLoading,
+        isFetching: productdatafetching,
+        error,
+        status,
+    } = useQueryData<AuctionResponse>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/view_product/${product_id}/`,
+        ["product_details", product_id],
+        true,
+    );
+
+
+    console.log(verifiedpaths, 'verifiedd paths')
+
     useEffect(() => {
         if (paths.length > 0) {
             setPath(paths[paths.length - 1]);
@@ -108,19 +127,11 @@ const Page = ({ params }: any) => {
         });
     };
 
-    const product_id = params.slug;
 
-    const {
-        data: productdata,
-        isLoading: productdataLoading,
-        isFetching: productdatafetching,
-        error,
-        status,
-    } = useQueryData<AuctionResponse>(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/view_product/${product_id}/`,
-        ["product_details", product_id],
-        true,
-    );
+
+    console.log([productdata?.category, null])
+
+    console.log(verifiedpaths, 'vpaths')
 
 
     if (error) {
@@ -300,6 +311,8 @@ const Page = ({ params }: any) => {
 
 
 
+
+
     const RelatedProduct = ({ data }: any) => {
     return (
         <div className="container py-4 mb-12 ">
@@ -320,7 +333,8 @@ const Page = ({ params }: any) => {
         <main >
         {/*     <ToastContainer /> */}
             <Header />
-            <Breadcrumb paths={verifiedpaths} text={undefined} />
+         {/*    <Breadcrumb paths={verifiedpaths} text={undefined} /> */}
+         <ProductBreadcrumb paths={['Categories', productdata?.category, null]} text={undefined}  />
 
             <div onClick={() => router.back()}>
                 <div className=" cursor-pointer container  flex justify-start">
