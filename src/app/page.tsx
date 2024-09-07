@@ -23,7 +23,7 @@ import "./globals.css";
 import { Suspense } from "react";
 import { CircularPagination } from "./component/Pagination";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/store";
+import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
 import { AuctionComp } from "./component/AuctionComp";
 
@@ -64,6 +64,11 @@ const Page = () => {
   const catCount = Math.ceil(categories.length / cardsPerPage);
   const router = useRouter();
 
+        const { setHeaderNav, headerNav } = userNavStore(state => ({
+    setHeaderNav: state.setHeaderNav,
+    headerNav: state.headerNav,
+  }));
+
   const { data: auctionInfo, isLoading: auctionLoading } =
     useQueryData<AuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`,
@@ -96,6 +101,17 @@ const Page = () => {
     );
 
   useEffect(() => {
+
+
+
+     if (headerNav !== 'Home') {
+        setHeaderNav('Home');
+    }
+
+
+
+
+
     if (categoriesInfo?.data) {
       const filteredCat = categoriesInfo.data.slice(
         categoryCurrentPage * cardsPerPage,
@@ -103,7 +119,7 @@ const Page = () => {
       );
       setFilteredCatData(filteredCat);
     }
-  }, [categoriesInfo, categoryCurrentPage, cardsPerPage]);
+  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, ]);
 
   useEffect(() => {
     if (auctionInfo?.data) {

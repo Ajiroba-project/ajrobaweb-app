@@ -70,7 +70,7 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
                             <Link
                                 href={`/${paths.slice(0, index + 1).join("/")}`}
                               /*   className={` underline hover:text-[#F25E26] ` + (index === paths.length - 1 ? "text-[#F25E26]" : "")} */
-                              className={`underline hover:text-[#F25E26] ${index === paths.length - 2 ? "text-[#F25E26]" : ""}`}
+                              className={`underline hover:text-[#F25E26] ${index === paths.length - 2 ? " no-underline text-[#F25E26]" : ""}`}
 
                             >
                                 {path}

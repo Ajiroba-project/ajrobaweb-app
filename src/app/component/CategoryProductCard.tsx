@@ -29,7 +29,7 @@ interface cardDetails {
 
 export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
 
-    console.log(cardInfo, 'cardiiiiii')
+    // console.log(cardInfo, 'cardiiiiii')
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; // adjust this value to change the number of items per page

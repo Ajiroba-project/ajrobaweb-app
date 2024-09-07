@@ -15,6 +15,7 @@ import { CiSearch } from 'react-icons/ci';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryData } from '@/hooks/useQueryData';
 import { AuctionMarquee } from './Auction-Marquee';
+import React from 'react';
 
 
 
@@ -239,22 +240,21 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Handle clicks outside the menu
-  useEffect(() => {
+useEffect(() => {
 
-    console.log(headerNav)
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setActiveMenu(null);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [headerNav, menuRef]); // Add relevant dependencies here
 
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setActiveMenu(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [menuRef, ]);
 
   return (
     <>
@@ -285,10 +285,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             <div className='flex w-full items-center justify-between gap-0 md:justify-between lg:justify-around lg:gap-[1em]'>
               <div className='flex cursor-pointer items-center gap-2'>
                 <Link href={'/'} className={`${isOpen ? 'hidden' : null}`}>
-                  <Image onClick={()=> {
-                    setHeaderNav('Home'),
-                    router.push('/')
-                  }} src={Brand} alt='brand-logo' />
+                  <Image  src={Brand} alt='brand-logo' />
                 </Link>
 
                 <div

@@ -95,23 +95,30 @@ const Page = () => {
         [decodedPaths, sub,],
     );
 
-    // useEffect(() => {
 
-    //     setHeaderNav('Categories')
+//     useEffect(() => {
+//      if (headerNav !== 'Categories') {
+//         setHeaderNav('Categories');
+//     }
 
-    //     if (paths.length > 0) {
-    //         setPath(paths[paths.length - 1]);
-    //     }
-    // }, [paths]);
-    useEffect(() => {
-    if (headerNav !== 'Categories') {
+//     if (paths.length > 0) {
+//         setPath(paths[paths.length - 1]);
+//     }
+// }, [paths,]);
+
+useEffect(() => {
+         if (headerNav !== 'Categories') {
         setHeaderNav('Categories');
-    }
+     }
 
     if (paths.length > 0) {
-        setPath(paths[paths.length - 1]);
+        const newPath = paths[paths.length - 1];
+        if (newPath !== path) {
+            setPath(newPath);  // Only update if the path has actually changed
+        }
     }
-}, [paths, headerNav, setHeaderNav]);
+}, [paths, path]);  // Add `path` as a dependency to avoid unnecessary updates
+
 
 
     const { data: filtercat, isLoading: filtercatLoading, isFetching } = useQueryData<AuctionResponse>(
