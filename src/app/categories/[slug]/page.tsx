@@ -375,8 +375,8 @@ useEffect(() => {
             <Breadcrumb paths={verifiedpaths} text={undefined} />
             <div className="flex gap-4  justify-around ">
 
-                 <div className=" mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full 2xl:w-3/12 xl:w-3/12 lg:w-3/12  ">
-                   <div className="flex justify-around" >
+                 <div  className=" mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full w-3/12  ">
+                   <div className=""   >
                      <SearchFilter />
                    </div>
                 </div>

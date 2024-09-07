@@ -7,268 +7,131 @@ import { CatMobileSideMenu } from "./SideMenu";
 import { FaStar } from "react-icons/fa6";
 import { it } from "node:test";
 import { useQueryData } from "@/hooks/useQueryData";
+import { IoMdArrowDropright } from "react-icons/io";
+import './style.css'
 
 
-interface SelectedItem {
-  id: number;
-}
+// interface SelectedItem {
+//   id: number;
+// }
 
-interface SelectedRating {
-  id: number
-  rating: any
-}
-
-export const BrandFilter = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  const items = [
-    { id: 1, name: 'LG' },
-    { id: 2, name: 'Hisense' },
-    { id: 3, name: 'Sony' },
-    { id: 4, name: 'Samsung' },
-  ];
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const searchTerm = e.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-  };
+// interface SelectedRating {
+//   id: number
+//   rating: any
+// }
 
 
+// export const SearchFilter = () => {
+//   const [isOpen, setIsOpen] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("Foodstuff");
+//   const pathname = usePathname();
+//   const searchParams = useSearchParams();
+//   const { replace } = useRouter();
+//   const sub = searchParams.get("sub");
 
-  const handleCheckboxChange = (item: SelectedItem) => {
-    const selectedIndex = selectedItems.indexOf(item.id);
-    let newSelectedItems = [...selectedItems];
+//   const decodedPaths = pathname
+//     .split("/")
+//     .filter((path) => path !== "")
+//     .map((path) => decodeURIComponent(path));
 
-    if (selectedIndex === -1) {
-      newSelectedItems.push(item.id);
-    } else {
-      newSelectedItems.splice(selectedIndex, 1);
-    }
+//   const { data: catInfo, isLoading: catnLoading } = useQueryData<any>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
-    setSelectedItems(newSelectedItems);
-
-    const selectedBrandIds = newSelectedItems.join(',');
-    const params = new URLSearchParams(searchParams);
-    if (selectedBrandIds) {
-      params.set('selectedBrands', selectedBrandIds);
-    } else {
-      params.delete('selectedBrands', selectedBrandIds);
-    }
-    replace(`${pathname}?${params.toString()}`);
-  };
+//   const currentCategory = catInfo?.data?.find(
+//     (category: any) =>
+//       category.category.toLowerCase() ===
+//       decodedPaths[decodedPaths.length - 1].toLowerCase(),
+//   );
 
 
-  return (
-    <div>
-      <p className="mb-2 text-[#2A2A2A]" >Brand</p>
-      <input
-        type="search"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Search"
-        className=" w-auto p-2 mb-2"
-      />
-      <ul>
-        {items
-          .filter(item => {
-            return item.name.toLowerCase().includes(searchTerm.toLowerCase());
-          })
-          .map(item => (
-            <li key={item.id}>
-              <input
-                type="checkbox"
-                checked={selectedItems.includes(item.id)}
-                onChange={() => handleCheckboxChange(item)}
-              />
-              <span className="ml-2">{item.name}</span>
-            </li>
-          ))}
-      </ul>
-    </div>
-  );
-};
+//   const handlesubcat = (subCategory: string, id: string) => {
+//     console.log(subCategory, 'subcategory', id, 'idddd')
+
+//     const params = new URLSearchParams(searchParams);
+//     if (subCategory) {
+//       params.set('sub', subCategory);
+//       params.set('subid', id);
+//     } else {
+//       params.delete('sub');
+//       params.delete('subid');
+//     }
+//     replace(`${pathname}?${params.toString()}`);
+
+//   }
 
 
-export const RatingFilter = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+//   return (
+//     <div className="mb-8" >
+
+//       <div  className="flex cursor-pointer text-sm font-Poppins items-center gap-3 mb-4 bg-[#D9D9D9] py-2 text-[#2A2A2A] ">
+//         <div className="flex gap-2 items-center " style={{
+//         margin: '0 auto',
+//         width: '60%',
+//         maxWidth: '100%',
+//         zIndex: 51
+//       }}  >
+//           <FiMenu size={18} />
+//         <p onClick={() => setIsOpen(!isOpen)}>All Category</p>
+//         </div>
+//       </div>
+
+//       {
+//         isOpen &&
+
+//         <div className='hidden bg-[#FFFFFF] lg:block  '>
+//           <div className="" >
+//              <AllCategories />
+//           </div>
+
+//         </div>
+//       }
+
+//       {isOpen && (
+//         <div className='  z-50 h-full w-full'>
+//            <CatMobileSideMenu />
+
+//         </div>
+//       )}
+
+//       <div className="pl-3 mt-4 flex " style={{
+//         margin: '0 auto',
+//         width: '70%',
+//         maxWidth: '100%',
+//         zIndex: 51
+//       }}  >
+//         {currentCategory && (
+//           <div key={currentCategory.category}>
+//             <p
+//               onClick={() => setSelectedCategory(currentCategory.category)}
+//               className={`flex items-center pb-3  ${selectedCategory === currentCategory.category ? "font-bold" : ""}`}
+//             >
+//             <IoMdArrowDropright color="" size={20} />  {currentCategory.category}
+//             </p>
+
+//             <ul
 
 
+//             >
+//               {currentCategory?.subcategories?.map((subCategory: any) => (
+//                 <li
+//                   key={subCategory?.subcategory}
+//                   className={`pl-5   ${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""}`}
 
-  const generateStars = (rating: number): JSX.Element[] => {
-    const stars = [];
-    for (let i = 0; i < rating; i++) {
-      stars.push(<FaStar key={i} className='text-[#F25E26]' />);
-    }
-    return stars;
-  };
+//                   onClick={() => handlesubcat(subCategory?.subcategory, subCategory?.id)}
+//                 >
+//                   {subCategory?.subcategory}
+//                 </li>
+//               ))}
+//             </ul>
+//           </div>
+//         )}
+//       </div>
 
-
-
-  const items = [
-    { id: 5, name: generateStars(5), rating: 5, tag: 'five_star' },
-    { id: 4, name: generateStars(4), rating: 4, tag: 'four_star' },
-    { id: 3, name: generateStars(3), rating: 3, tag: 'three_star' },
-    { id: 2, name: generateStars(2), rating: 2, tag: 'two_star' },
-    { id: 1, name: generateStars(1), rating: 1, tag: 'one_star' },
-  ];
-
-
-
-  const handleCheckboxChange = (item: SelectedRating) => {
-    const selectedIndex = selectedRatings.indexOf(item.rating);
-    let newSelectedRatings = [...selectedRatings];
-
-    if (selectedIndex === -1) {
-      newSelectedRatings.push(item.rating);
-    } else {
-      newSelectedRatings.splice(selectedIndex, 1);
-    }
-
-    setSelectedRatings(newSelectedRatings);
-
-    const selectedRatingIds = newSelectedRatings.join(',');
-    // console.log(selectedRatingIds)
-    const params = new URLSearchParams(searchParams);
-    if (selectedRatingIds) {
-      const lastItem = newSelectedRatings[newSelectedRatings.length - 1];
-      params.set('selectedRatings', lastItem.toString());
-    } else {
-      const lastItem = newSelectedRatings[newSelectedRatings.length - 1];
-      params.delete('selectedRatings', lastItem.toString());
-    }
-    replace(`${pathname}?${params.toString()}`);
-  };
-
-
-  return (
-    <div>
-      <p className="p-2 mb-2 text-[#2A2A2A] mt-4">Rating</p>
-      <ul>
-
-        {items.map(item => (
-          <li key={item.id} className="flex mb-4">
-            <input
-              type="radio"
-              name="rating"
-              id={item.tag}
-              value={item.tag}
-              checked={selectedRatings.includes(item.id)}
-              onChange={() => handleCheckboxChange(item)}
-            />
-            <span className="ml-2 flex">{item.name}</span>
-          </li>
-        ))}
-
-      </ul>
-    </div>
-  );
-};
-
-
-export const PriceFilter = () => {
-
-  const [selectedPrice, setSelectedPrice] = useState('');
-
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  const [minvalue, setMinvalue] = useState('');
-  const [maxvalue, setMaxvalue] = useState('');
+//     </div>
+//   );
+// };
 
 
 
-
-  const handlePriceSelection = (price: string) => {
-    setSelectedPrice(price);
-
-    const params = new URLSearchParams(searchParams);
-    if (price) {
-      params.set('greaterthan', price);
-    } else {
-      params.delete('greaterthan');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }
-
-
-  const handleminandmax = (min: string, max: string) => {
-    setMinvalue('')
-    setMaxvalue('')
-    /*   console.log(min, max) */
-    const params = new URLSearchParams(searchParams);
-    if (min && max) {
-      // params.set('min_max', min + '&' + max);
-      params.set('min', min);
-      params.set('max', max);
-    } else {
-      params.delete('min');
-      params.delete('max');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }
-
-  return (
-    <div className="py-6 ">
-      <p>Price</p>
-
-      <div>
-
-
-        <input
-          type="radio"
-          name="price1"
-          value="<2000"
-          id="under2000"
-          className="mr-3"
-          onChange={() => handlePriceSelection('<5000')}
-        />
-        <label htmlFor="under5000">under 5000</label>
-
-      </div>
-
-
-
-      <div>
-        <input
-          type="radio"
-          name="price1"
-          value="₦5000-Above"
-          id="₦5000-Above"
-          className="mr-3"
-          onChange={() => handlePriceSelection('>5000')}
-        />
-        <label htmlFor="₦5000-Above">₦5000 - Above</label>
-      </div>
-
-
-      <div className="gap-2">
-        <p className="py-5">Custom Price Range</p>
-        <div >
-          <form onSubmit={(e) => e.preventDefault()} className="flex gap-3 flex-wrap">
-            <input value={minvalue} onChange={(e) => setMinvalue(e.target.value)} type="text" name="minvalue" placeholder="min" className="w-14 p-2" />
-            <input value={maxvalue} type="text" name="maxvalue" placeholder="max" className="w-14 p-2" onChange={(e) => setMaxvalue(e.target.value)} />
-            <input onClick={() => handleminandmax(minvalue, maxvalue)}
-              type="button"
-              value="Apply"
-              className=" rounded border-2 border-[#F25E26] text-[#F25E26] p-3"
-            />
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export const SearchFilter = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -285,30 +148,13 @@ export const SearchFilter = () => {
 
   const { data: catInfo, isLoading: catnLoading } = useQueryData<any>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
-
-  // console.log(catInfo?.data)
-
-
-  // const { data: catInfo, isLoading: catnLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, "get categories_and_subcategories", true);
-
-
-  // catInfo?.data?
-
   const currentCategory = catInfo?.data?.find(
     (category: any) =>
       category.category.toLowerCase() ===
       decodedPaths[decodedPaths.length - 1].toLowerCase(),
   );
 
-  // console.log(currentCategory, 'current category')
-
-  // href = {`/categories/${value.name}?cat_id=${value.id}`
-
-
-
   const handlesubcat = (subCategory: string, id: string) => {
-    console.log(subCategory, 'subcategory', id, 'idddd')
-
     const params = new URLSearchParams(searchParams);
     if (subCategory) {
       params.set('sub', subCategory);
@@ -318,54 +164,64 @@ export const SearchFilter = () => {
       params.delete('subid');
     }
     replace(`${pathname}?${params.toString()}`);
+  };
 
-  }
-
+  // Function to close modal
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   return (
     <div className="mb-8">
-
-      <div className="flex cursor-pointer items-center gap-3 p-3">
-        <FiMenu />
-        <p onClick={() => setIsOpen(!isOpen)}>All Category</p>
+      {/* Button to open modal */}
+      <div
+        className="flex cursor-pointer text-sm font-Poppins items-center gap-3 mb-4 bg-[#D9D9D9] py-2 text-[#2A2A2A]"
+        onClick={() => setIsOpen(true)}
+      >
+        <div
+          className="flex gap-2 items-center menu-content"
+          style={{
+           /*  margin: "0 auto",
+            width: "60%",
+            maxWidth: "100%",
+            zIndex: 51, */
+              margin: "0 auto",
+      width: "60%",
+      maxWidth: "100%",
+          }}
+        >
+          <FiMenu size={18} />
+          <p>All Category</p>
+        </div>
       </div>
 
-      {
-        isOpen &&
-
-        <div className='hidden bg-[#FFFFFF] lg:block  '>
-          <div className="" >
-            <AllCategories />
-            {/* <p>all categories</p> */}
-          </div>
-
-        </div>
-      }
-
-      {isOpen && (
-        <div className='  z-50 h-full w-full'>
-          <CatMobileSideMenu />
-
-        </div>
-      )}
-
-      <div className="pl-3">
+      <div
+        className="pl-3 mt-4 flex"
+        style={{
+          margin: "0 auto",
+          width: "70%",
+          maxWidth: "100%",
+          zIndex: 51,
+        }}
+      >
         {currentCategory && (
           <div key={currentCategory.category}>
             <p
               onClick={() => setSelectedCategory(currentCategory.category)}
-              className={`${selectedCategory === currentCategory.category ? "font-bold" : ""}`}
+              className={`flex items-center pb-3 ${
+                selectedCategory === currentCategory.category ? "font-bold" : ""
+              }`}
             >
-              {currentCategory.category}
+              <IoMdArrowDropright color="" size={20} /> {currentCategory.category}
             </p>
 
             <ul>
-              {/*     {console.log(currentCategory, 'currentcateg')} */}
               {currentCategory?.subcategories?.map((subCategory: any) => (
                 <li
                   key={subCategory?.subcategory}
-                  className={`${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""}`}
-
+                  className={`pl-5 ${
+                    sub === subCategory?.subcategory ? "text-[#F25E26]" : ""
+                  }`}
                   onClick={() => handlesubcat(subCategory?.subcategory, subCategory?.id)}
                 >
                   {subCategory?.subcategory}
@@ -374,18 +230,44 @@ export const SearchFilter = () => {
             </ul>
           </div>
         )}
+
+       {/*  {isOpen && (
+          <div className="fixed inset-0 z-50 flex items-start justify-start bg-black bg-opacity-50">
+            <div className="bg-white w-auto max-h-[80%] overflow-auto p-4 relative mt-4 ml-4 top-48 left-80">
+              <button
+                className="absolute top-2 right-2 text-xl font-bold"
+                onClick={() => setIsOpen(false)}
+              >
+                &times;
+              </button>
+              <AllCategories closeModal={closeModal} />
+            </div>
+          </div>
+        )} */}
+        {isOpen && (
+  <div className="fixed inset-0 z-50 flex items-start justify-start bg-black bg-opacity-50">
+    <div
+      className={`bg-white w-auto max-h-[80%] overflow-auto p-4 relative mt-4 ml-4 top-48 left-80`}
+      style={{
+       /*  top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+         width: '50%',
+        maxWidth: '500px', */
+      }}
+    >
+      <button
+        className="absolute top-2 right-2 text-xl font-bold"
+        onClick={() => setIsOpen(false)}
+      >
+        &times;
+      </button>
+      <AllCategories closeModal={closeModal} />
+    </div>
+  </div>
+)}
+
       </div>
-
-      <PriceFilter />
-
-      <BrandFilter />
-
-      <RatingFilter />
-
-
     </div>
   );
 };
-
-
-

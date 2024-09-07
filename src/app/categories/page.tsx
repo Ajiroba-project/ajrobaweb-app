@@ -69,7 +69,6 @@ const CatPage = () => {
           </div>
         </div>
 
-        {/*     </div> */}
       </main>
       <Footer />
     </>

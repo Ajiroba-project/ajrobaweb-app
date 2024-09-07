@@ -47,3 +47,16 @@ img {
     background-color: transparent !important;
     /* Ensures no white background */
 }
+
+
+.menu-content {
+    z-index: 51;
+    /* Default z-index for larger screens */
+}
+
+@media (max-width: 768px) {
+    .menu-content {
+        z-index: 0;
+        /* On mobile, set z-index to 0 */
+    }
+}
