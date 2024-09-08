@@ -131,10 +131,10 @@ export const MobileSideMenu = () => {
   const { replace } = useRouter()
   const pathname = usePathname();
 
-  const handlesubcat = (subCategory: string, id: string) => {
+  const handlesubcat = (subCategory: string, id: string, val?: any) => {
     setActive(null)
+    const params = new URLSearchParams(searchParams)
 
-    const params = new URLSearchParams(searchParams);
     if (subCategory) {
       params.set('sub', subCategory);
       params.set('subid', id);
@@ -142,7 +142,7 @@ export const MobileSideMenu = () => {
       params.delete('sub');
       params.delete('subid');
     }
-    replace(`${pathname}?${params.toString()}`);
+    replace(`/categories/${val && val.category}?cat_id=${val.id}?${params.toString()}`)
   }
 
   const router = useRouter()
@@ -174,25 +174,33 @@ export const MobileSideMenu = () => {
                   }}
                 >
                   <span className='flex items-center gap-2 '>
-                    <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
+                    <p onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)} className={``}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
 
-                {active === index && (
-                  <div
-                    className={`${inter.className} z-20 px-4  ${active === 1 ? ' -top-0 gap-2 ' : ''} rounded text-sm `}
-                  >
-                    {val.subcategories?.map((subcategory) => (
-                      <div key={subcategory.subcategory} className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer z-20`}>
-                        <Link href={"#"} className={`${active === 1 ? "p-2 text-sm font-Inter font-normal" : " p-2 text-sm font-Inter font-normal"} `}>{subcategory.subcategory}</Link>
+                 {active === index && (
+                <div
+                  className={`${inter.className} z-20 bg-white ${ 'left-[10rem] -mt-[30px] w-48 rounded-md'} absolute rounded text-sm shadow-md transition delay-300 duration-300 ease-in-out`}
+                >
+                  {val.subcategories?.map(subcategory => (
+                    <div
+                      onClick={() => handlesubcat(subcategory.subcategory, subcategory.id, val)}
+                      key={subcategory.subcategory}
+                      className=' hover:bg-[#FCDFD4] relative z-20 cursor-pointer font-Inter'
 
-                      </div>
-                          // className={` ${ 'w-max p-2 text-sm font-Inter font-normal'}`}
-                    ))}
+                    >
+                       <p
+                        className={` ${ 'w-max p-2 text-sm font-Inter font-normal'}`}
+                      >
+                        {subcategory.subcategory}
+                      </p>
 
-                  </div>
-                )}
+
+                    </div>
+                  ))}
+                </div>
+              )}
               </div>
             </Fragment>
           ))}
@@ -257,7 +265,7 @@ export const CatMobileSideMenu = () => {
                   }}
                 >
                   <span className='flex items-center gap-2 '>
-                    <p onClick={() => router.push(`/categories/${val.category}`)} className={``}>{val.category}</p>
+                    <p onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)} className={``}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>

@@ -87,7 +87,7 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ closeModal }) => {
 
   return (
     <>
-      <section className="px-2">
+    {/*   <section className="px-2">
         <ul className="relative pt-6 bottom-4 z-10">
           {catInfo?.data?.map((val, index) => (
             <Fragment key={index}>
@@ -112,26 +112,26 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ closeModal }) => {
 
 
                   {active === index && dropdownPosition &&
-  <div
-    className={`fixed z-50 bg-white shadow-md rounded text-sm`}
-    style={{
-      top: `${dropdownPosition.top}px`,
-      left: `${dropdownPosition.left}px`,
-      width: '200px',
-      maxHeight: '80vh',
-      overflowY: 'auto',
-    }}
-  >
-    {val.subcategories?.map((subcategory) => (
-      <div
-               onClick={() => handlesubcat(subcategory?.subcategory, subcategory.id)}
-        key={subcategory.subcategory}
-        className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
-      >
-        {subcategory.subcategory}
-      </div>
-    ))}
-  </div>}
+                    <div
+                        className={`fixed z-50 bg-white shadow-md rounded text-sm`}
+                        style={{
+                        top: `${dropdownPosition.top}px`,
+                        left: `${dropdownPosition.left}px`,
+                        width: '200px',
+                        maxHeight: '80vh',
+                        overflowY: 'auto',
+                        }}
+                    >
+                        {val.subcategories?.map((subcategory) => (
+                        <div
+                                onClick={() => handlesubcat(subcategory?.subcategory, subcategory.id)}
+                            key={subcategory.subcategory}
+                            className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"}  cursor-pointer p-2 z-20`}
+                        >
+                            {subcategory.subcategory}
+                        </div>
+                        ))}
+                    </div>}
 
 
 
@@ -139,63 +139,122 @@ export const AllCategories: React.FC<AllCategoriesProps> = ({ closeModal }) => {
             </Fragment>
           ))}
         </ul>
-      </section>
+      </section> */}
+
+     <section className="px-2">
+  <ul className="relative pt-6 bottom-4 z-10">
+    {catInfo?.data?.map((val, index) => (
+      <Fragment key={index}>
+        <div className="relative">
+          <li
+            className={`${
+              active === index ? "text-[#F25E26]" : ""
+            } py-2 cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26]`}
+            onClick={(e) => handleCategoryClick(e, index)}
+          >
+            <span className="flex gap-2 items-center">
+              <p
+                onClick={() => {
+                  SetSubcategory(val.category);
+                  router.push(`/categories/${val.category}?cat_id=${val.id}`);
+                  closeModal();
+                }}
+              >
+                {val.category}
+              </p>
+              {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </span>
+          </li>
+
+          {active === index && dropdownPosition && (
+            <div
+              className={`fixed z-50 bg-white shadow-md rounded text-sm`}
+              style={{
+                top: `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+                width: "200px",
+                maxHeight: "80vh",
+                overflowY: "auto",
+              }}
+            >
+              {val.subcategories?.map((subcategory) => (
+                <div
+                  onClick={() => handlesubcat(subcategory?.subcategory, subcategory.id)}
+                  key={subcategory.subcategory}
+                  className={`${
+                    active === 1 ? "" : "hover:bg-[#FCDFD4]"
+                  } cursor-pointer p-2 z-20`}
+                >
+                  {subcategory.subcategory}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Fragment>
+    ))}
+  </ul>
+</section>
+
+
+
+
     </>
   );
 };
 
 
 
-export const MobileSideMenu = () => {
-    const [active, setActive] = useState<MenuState>(null);
+// export const MobileSideMenu = () => {
+//     const [active, setActive] = useState<MenuState>(null);
 
-    const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
+//     const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
 
-    return (
-        <>
-            <section className="bg-[#F6F6F6] p-6">
-                <ul className="relative ">
-                    {catInfo?.data?.map((val, index) => (
-                        <Fragment key={index}>
-                            <div className="relative bg-[#F6F6F6] p-2">
-                                <li
-                                    className={`${poppins.className} ${active === index ? "" : ""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `}
-                                    onClick={() => {
-                                        setActive(active === index ? null : index);
-                                    }}
-                                >
-                                    <span className="flex gap-2 items-center ">
-                                        <p className={``}>{val.category}</p>{" "}
-                                        {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                                    </span>
-                                </li>
+//     return (
+//         <>
+//             <section className="bg-[#F6F6F6] p-6">
+//                 <ul className="relative ">
+//                     {catInfo?.data?.map((val, index) => (
+//                         <Fragment key={index}>
+//                             <div className="relative bg-[#F6F6F6] p-2">
+//                                 <li
+//                                     className={`${poppins.className} ${active === index ? "" : ""}  py-2  cursor-pointer flex gap-1.5 items-center hover:text-[#F25E26] `}
+//                                     onClick={() => {
+//                                         setActive(active === index ? null : index);
+//                                     }}
+//                                 >
+//                                     <span className="flex gap-2 items-center ">
+//                                         <p className={``}>{val.category}</p>{" "}
+//                                         {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
+//                                     </span>
+//                                 </li>
 
-                                {active === index && (
-                                    <div
-                                        className={`${inter.className} px-4 z-20  ${active === 1 ? " gap-2 -top-0 " : ""} rounded text-sm `}
-                                    >
-                                        {val.subcategories?.map((subcategory) => (
-                                            <div
-                                                key={subcategory.subcategory}
-                                                className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
-                                            >
-                                                <Link
-                                                    href={"#"}
-                                                    className={`${active === 1 ? "font-bold" : ""} `}
-                                                >
-                                                    {subcategory.subcategory}
-                                                </Link>
+//                                 {active === index && (
+//                                     <div
+//                                         className={`${inter.className} px-4 z-20  ${active === 1 ? " gap-2 -top-0 " : ""} rounded text-sm `}
+//                                     >
+//                                         {val.subcategories?.map((subcategory) => (
+//                                             <div
+//                                                 key={subcategory.subcategory}
+//                                                 className={` ${active === 1 ? "" : "hover:bg-[#FCDFD4]"} my-4 cursor-pointer p-2 z-20`}
+//                                             >
+//                                                 <Link
+//                                                     href={"#"}
+//                                                     className={`${active === 1 ? "font-bold" : ""} `}
+//                                                 >
+//                                                     {subcategory.subcategory}
+//                                                 </Link>
 
 
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </Fragment>
-                    ))}
-                </ul>
-            </section>
-        </>
-    );
-};
+//                                             </div>
+//                                         ))}
+//                                     </div>
+//                                 )}
+//                             </div>
+//                         </Fragment>
+//                     ))}
+//                 </ul>
+//             </section>
+//         </>
+//     );
+// };
