@@ -31,11 +31,11 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
     return (
         <>
             <div
-                className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF] `}
+                className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF]  `}
             >
                 {paginatedCardInfo?.map((value, index) => (
                     <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='w-[25%] border border-white shadow-sm ' key={index}>
-                        {console.log(value, 'value')}
+                      {/*   {console.log(value, 'value')} */}
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
                                 <Image
@@ -49,7 +49,7 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
                             </div>
                         </div>
                         {/* <hr /> */}
-                        <div className='py-3 '>
+                        <div className='py-3 mb-8 '>
                             <div className='flex flex-col gap-2 px-2'>
                                 <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                                     <div className=' text-sm font-semibold'>

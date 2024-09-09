@@ -97,8 +97,12 @@ const Page = ({ params }: any) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const images = [image4, image2];
 
+     const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Step 1: State to track the selected image
+
+
   const handleImageClick = (index: SetStateAction<number>) => {
     setSelectedImage(index);
+     setSelectedImageIndex(index);
   };
 
   const notify = () => {
@@ -513,7 +517,9 @@ const handlePageClick = (pageNumber: number) => {
     );
   };
 
-  return (
+
+
+    return (
     <main>
       <Header />
       <ProductBreadcrumb
@@ -577,7 +583,7 @@ const handlePageClick = (pageNumber: number) => {
               <div className="  flex  justify-center items-center px-12 ">
                 <div className="thumbnail-images w-auto     ">
                   <div className="main-image ">
-                    <Image
+                   {/*  <Image
                       src={
                         productdata?.data?.images?.[0]?.image
                           ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
@@ -588,7 +594,19 @@ const handlePageClick = (pageNumber: number) => {
                       height={400}
                       objectFit="cover"
                       className="object-cover"
+                    /> */}
+                     {productdata?.data?.images?.[selectedImageIndex] ? ( // Check if the selected image exists
+                    <Image
+                      src={`https://ajiroba.onrender.com/media/${productdata.data.images[selectedImageIndex].image}`}
+                      alt="Product Image"
+                      width={400}
+                      height={400}
+                      objectFit="cover"
+                      className="object-cover"
                     />
+                  ) : (
+                    <p>No main image available</p> // Fallback if main image is not available
+                  )}
                   </div>
                 </div>
               </div>
