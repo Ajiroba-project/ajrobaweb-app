@@ -308,7 +308,9 @@ export const SearchFilter = () => {
       {isOpen && (
         <div className="hidden bg-[#FFFFFF] lg:block  ">
           <div className="">
-            <AllCategories />
+            <AllCategories closeModal={function (): void {
+              throw new Error("Function not implemented.");
+            } } />
           </div>
         </div>
       )}

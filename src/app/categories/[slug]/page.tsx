@@ -122,6 +122,8 @@ const Page = () => {
     [decodedPaths, sub],
   );
 
+  console.log(verifiedpaths, 'veeee')
+
   useEffect(() => {
     if (headerNav !== "Categories") {
       setHeaderNav("Categories");
@@ -510,25 +512,7 @@ const Page = () => {
       <div className="text-xl 2xl:hidden xl:hidden md:hidden lg:hidden block px-6 py-2 ">
         <FiMenu onClick={hamburgerfunc} className="" />
       </div>
-      {/*   <div className="flex gap-4 justify-center ">
-        <div className=" mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full w-3/12  ">
-          <div className="">
-            <SearchFilter />
-          </div>
 
-
-        </div>
-
-        <div className="w-9/12">
-          {filteredProducts.length > 0 ? (
-            <CategoryProductCard cardInfo={filteredProducts} />
-          ) : (
-            <div className="text-center flex h-full items-center justify-center">
-              No data available
-            </div>
-          )}
-        </div>
-      </div> */}
 
       <div className="flex gap-4 justify-center items-stretch min-h-screen">
         <div className="mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full w-3/12">

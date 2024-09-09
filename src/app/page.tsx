@@ -239,12 +239,7 @@ const Page = () => {
 
               <ProductCardMain cardInfo={featuredproductInfo?.data}  />
               <div className="flex justify-center pt-5">
-                {/*  <DefaultButton
-                  text="View all Categories"
-                  type="button"
-                  handleClick={() => router.push("/categories")}
-                  className=" text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                /> */}
+
                 <DefaultButton
                   text="View all Deals"
                   type="button"
