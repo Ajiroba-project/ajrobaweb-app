@@ -103,79 +103,63 @@ export const DefaultBreadCrumb = ({ paths }: BreadcrubProps) => {
 
 
 export const ProductBreadcrumb = ({ paths, text }: BreadcrubProps) => {
-    const [Category, setCategory] = useState()
+  const [Category, setCategory] = useState();
 
-    useEffect(() => {
+  useEffect(() => {
+    if (paths.length > 0) {
+      setCategory(paths[paths.length - 2]);
+    }
+  }, [paths]);
 
+  return (
+    <div className="bg-[#F6F6F6]">
+      <section
+        style={{
+          margin: "0 auto",
+          width: "90%",
+          maxWidth: "100%",
+          zIndex: 51,
+        }}
+        className={` flex flex-col bg-[#F6F6F6] `}
+      >
+        <div className=" flex gap-2 text-sm  py-4  flex-wrap">
+          <Link href="/" className="underline hover:text-[#F25E26]">
+            Home{" "}
+          </Link>
 
-        if (paths.length > 0) {
-            setCategory(paths[paths.length - 2]);
-        }
-    }, [paths])
+          {paths?.map((path: string, index: number) => (
+            <Fragment key={index}>
+              {index < paths.length - 1 && <span>&gt; </span>}
 
-    return (
-
-
-       <div className="bg-[#F6F6F6]" >
-          <section style={{
-        margin: '0 auto',
-        width: '90%',
-        maxWidth: '100%',
-        zIndex: 51
-      }}  className={` flex flex-col bg-[#F6F6F6] `}>
-              <div  className=" flex gap-2 text-sm  py-4  flex-wrap">
-                <Link href="/" className="underline hover:text-[#F25E26]">Home  </Link>
-
-                {/*  {
-                    paths?.map((path: string, index: number) => (
-                        <Fragment key={index}>
-                           {index < paths.length - 1 && <span>&gt; </span>}
-                            <Link
-                                href={`/${paths.slice(0, index + 1).join("/")}`}
-                              className={`underline hover:text-[#F25E26] ${index === paths.length - 2 ? " no-underline text-[#F25E26]" : ""}`}
-
-                            >
-                                {path}
-
-                            </Link>
-
-
-                        </Fragment>
-                    ))
-                } */}
-
-                {
-    paths?.map((path: string, index: number) => (
-        <Fragment key={index}>
-            {/* Render '>' separator except for the last item */}
-            {index < paths.length - 1 && <span>&gt; </span>}
-
-            {/* Render link for all items except the last one */}
-            {index < paths.length - 2 ? (
+              {index < paths.length - 2 ? (
                 <Link
-                  /*   href={`/${paths.slice(0, index + 1).join("/")}`} */
-                   href={`/${paths.slice(0, index + 1).map(p => p.toLowerCase()).join("/")}`}
-                    className="underline hover:text-[#F25E26]"
+
+                  href={`/${paths
+                    .slice(0, index + 1)
+                    .map((p) => p.toLowerCase())
+                    .join("/")}`}
+                  className="underline hover:text-[#F25E26]"
                 >
-                    {path}
+                  {path}
                 </Link>
-            ) : (
-                /* Render plain text for the last item */
+              ) : (
                 <span className="text-[#F25E26]">{path}</span>
-            )}
-        </Fragment>
-    ))
-}
+              )}
+            </Fragment>
+          ))}
+        </div>
+        <div className="">
+       {/*    <p className={` capitalize text-xl pb-4`}>{Category}</p> */}
+        </div>
 
 
 
-
-            </div>
-            <div className="">
-                <p className={` capitalize text-xl pb-4`}>{Category}</p>
-            </div>
-
-        </section>
-      </div>
-    )
-}
+         <div className="bg-[#F6F6F6] flex py-4  justify-center items-center" >
+            <h1 className="text-center text-base 2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px] font-semibold font-Poppins" >
+                Product Details
+            </h1>
+        </div>
+      </section>
+    </div>
+  );
+};

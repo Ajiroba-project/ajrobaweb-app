@@ -9,10 +9,6 @@ import { useRouter } from 'next/navigation'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
-// interface cardDetails {
-//     cardInfo: any[]
-//     currentPage?: number
-// }
 
 export const RelatedProductsDetails = ({ cardInfo }) => {
 
@@ -31,24 +27,17 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
 
 
 
- /*    const handleFirstPage = () => {
-        setCurrentPage(1);
-    };
 
-    const handleLastPage = () => {
-        setCurrentPage(totalPages);
-    };
- */
     return (
         <>
             <div
-                className={`${poppins.className} my-8 grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4`}
+                className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF] `}
             >
                 {paginatedCardInfo?.map((value, index) => (
-                    <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='w-[25%] ' key={index}>
+                    <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='w-[25%] border border-white shadow-sm ' key={index}>
+                        {console.log(value, 'value')}
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
-                                {/*   <Image src={value.image} alt='product' className='w-fit' /> */}
                                 <Image
                                     src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
                                     alt="product"
@@ -59,11 +48,10 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
                                 />
                             </div>
                         </div>
-                        <hr />
-                        <div className='py-3 shadow-inner'>
+                        {/* <hr /> */}
+                        <div className='py-3 '>
                             <div className='flex flex-col gap-2 px-2'>
                                 <div className='flex  w-full items-center justify-between gap-3 capitalize'>
-                                    {/* product name */}
                                     <div className=' text-sm font-semibold'>
                                         <p className=' font-Poppins text-[13px] font-bold'>{value.name}</p>
                                     </div>
@@ -76,10 +64,7 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
                                     </div>
                                 </div>
                                 <div className='flex justify-between'>
-                                    {/* price */}
 
-
-                                    {/* stars */}
                                     <p className='flex justify-end text-left'>
                                         {Array.from({ length: value?.product_reviews?.average_ratings }, (_, index) => (
                                             <span key={index}>
