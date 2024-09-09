@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
 import { CustomFilter, SearchFilter } from "@/app/component/SearchFilter";
 import { Products, demoProducts } from "@/app/static-data";
-import { CategoryCard, ProductCard } from "@/app/component/Card";
+import { CategoryCard, ProductCard, ProductCardMain, ProductCategoryCard } from "@/app/component/Card";
 import { CategoryProductCard } from "@/app/component/CategoryProductCard";
 import { Header } from "@/app/component/Header";
 import { Footer } from "@/app/component/Footer";
@@ -537,9 +537,11 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="w-9/12 h-full">
+        <div className="w-9/12 h-full pr-8">
           {filteredProducts.length > 0 ? (
-            <CategoryProductCard cardInfo={filteredProducts} />
+            //   <CategoryProductCard cardInfo={filteredProducts} />
+            // <ProductCardMain cardInfo={filteredProducts} />
+            <ProductCategoryCard cardInfo={filteredProducts} />
           ) : (
             <div className="text-center flex h-full items-center justify-center">
               No data available
@@ -578,7 +580,12 @@ const Page = () => {
           filter_by_price_underfetching ||
           filter_from_price_abovefetching) && <Loading />}
       </div>
-      <Footer />
+
+
+
+    <div className="mt-40" >
+          <Footer />
+    </div>
     </main>
   );
 };

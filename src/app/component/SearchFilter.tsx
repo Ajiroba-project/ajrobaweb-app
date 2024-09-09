@@ -508,7 +508,6 @@ export const SearchFilter = () => {
           margin: "50px auto 10px auto",
           width: "70%",
           maxWidth: "100%",
-          /*  zIndex: 51, */
           position: "relative",
           transform: "translateX(30px)",
         }}
@@ -523,7 +522,6 @@ export const SearchFilter = () => {
           margin: "30px auto 10px auto",
           width: "70%",
           maxWidth: "100%",
-          /*   zIndex: 51, */
           position: "relative",
           transform: "translateX(30px)",
         }}
@@ -538,7 +536,6 @@ export const SearchFilter = () => {
           margin: "30px auto 10px auto",
           width: "70%",
           maxWidth: "100%",
-          /*   zIndex: 51, */
           position: "relative",
           transform: "translateX(30px)",
         }}
@@ -554,7 +551,6 @@ export const SearchFilter = () => {
           margin: "30px auto 10px auto",
           width: "70%",
           maxWidth: "100%",
-          /*   zIndex: 51, */
           position: "relative",
           transform: "translateX(30px)",
         }}
