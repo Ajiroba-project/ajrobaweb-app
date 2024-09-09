@@ -387,21 +387,7 @@ export const OrderDetails = () => {
 
   const { data: orderinfo, isLoading: ordersLoading, error: ordererror } = useGetOrderData('/api/getallorders', "get_order_details", userToken);
 
-  // console.log(orderinfo, 'orderinfo');
-  // console.log(ordererror, 'ordererror');
-  // console.log(orderinfo?.data?.data?.data?.all_orders);
 
-  // Handle data fetching
-  // useEffect(() => {
-  //   if (orderinfo) {
-  //           const allorder = orderinfo?.data?.data?.completed_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[0]));
-  //           setAllorderFilter(allorder);
-  //     const complete = orderinfo?.data?.data?.completed_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[1]));
-  //     setCompletedFilter(complete);
-  //     const pending = orderinfo?.data?.data?.pending_order?.filter((transac: { delivery_status: string; }) => transac.delivery_status.includes(orderSwitch[2]));
-  //     setPendingFilter(pending);
-  //   }
-  // }, [orderinfo, orderSwitch]);
 
   useEffect(() => {
   if (orderinfo) {

@@ -20,6 +20,7 @@ import { useAuthStore } from "@/store/store";
 import * as yup from "yup";
 import { FaStar } from "react-icons/fa";
 import { useMutateData } from "@/hooks/useMutateNewData";
+import { RiH1 } from "react-icons/ri";
 
 type Product = {
   name: string;
@@ -47,6 +48,8 @@ export const AllOrder = ({ transac }: transacProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
     const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
    const [isSussessModal, setisSucceessModal] = useState(false);
+
+   console.log(transac, 'transacc')
 
 
        const router = useRouter();
@@ -311,10 +314,14 @@ const submitFormdelete = async (data: any, event: any) => {
   });
 };
 
+    {console.log(transac, transac?.length, 'transac')}
+
   return transac?.map((val, index) => (
     <>
-  {/*    <ToastContainer closeOnClick limit={1} /> */}
-      <tr key={index} className="relative border-b">
+
+     {
+      transac?.length === 0 ? <h1 className="text-black flex justify-center items-start text-center">No Available Order </h1> :
+       <tr key={index} className="relative border-b">
         <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
           {val?.order_id}
         </td>
@@ -354,6 +361,7 @@ const submitFormdelete = async (data: any, event: any) => {
           />
         </td>
       </tr>
+     }
 
       {
 

@@ -191,7 +191,7 @@ export const Profile = () => {
   }, [isLoggedIn, userInfo, setProfileurl]);
 
   const userData = isLoggedIn ? userInfo?.data : userDetails;
-  const userphoto = profileurl || userDetails?.profile_image_url || photo;
+  const userphoto = profileurl || userDetails?.profile_image_url || '';
 
   const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community'];
 

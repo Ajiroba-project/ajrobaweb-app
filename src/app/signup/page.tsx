@@ -79,6 +79,7 @@ function Page() {
 
   const handleSuccess = (data: any) => {
     if (data.status === 201) {
+      reset()
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 5000,
@@ -92,6 +93,7 @@ function Page() {
       });
       reset();
     } else if (data.status === 400 || data.status === 409) {
+        reset()
       toast.error(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 5000,
@@ -104,7 +106,9 @@ function Page() {
       });
       reset();
     } else {
+        reset()
       toast.error(`${"An Error Occured"}`, {
+
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -119,6 +123,7 @@ function Page() {
   };
 
   const handleError = (error: any) => {
+      reset()
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 5000,
