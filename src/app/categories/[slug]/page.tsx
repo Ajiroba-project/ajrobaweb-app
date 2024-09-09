@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
-import { SearchFilter } from "@/app/component/SearchFilter";
+import { CustomFilter, SearchFilter } from "@/app/component/SearchFilter";
 import { Products, demoProducts } from "@/app/static-data";
 import { CategoryCard, ProductCard } from "@/app/component/Card";
 import { CategoryProductCard } from "@/app/component/CategoryProductCard";
@@ -122,16 +122,6 @@ const Page = () => {
     [decodedPaths, sub],
   );
 
-  //     useEffect(() => {
-  //      if (headerNav !== 'Categories') {
-  //         setHeaderNav('Categories');
-  //     }
-
-  //     if (paths.length > 0) {
-  //         setPath(paths[paths.length - 1]);
-  //     }
-  // }, [paths,]);
-
   useEffect(() => {
     if (headerNav !== "Categories") {
       setHeaderNav("Categories");
@@ -140,10 +130,10 @@ const Page = () => {
     if (paths.length > 0) {
       const newPath = paths[paths.length - 1];
       if (newPath !== path) {
-        setPath(newPath); // Only update if the path has actually changed
+        setPath(newPath);
       }
     }
-  }, [paths, path]); // Add `path` as a dependency to avoid unnecessary updates
+  }, [paths, path]);
 
   const {
     data: filtercat,
@@ -154,8 +144,6 @@ const Page = () => {
     ["filter_by_cat_id", cat_id],
     !!cat_id,
   );
-
-  /*  console.log(filtercat, 'filtercat', cat_id) */
 
   const {
     data: filter_by_sub_cat,
@@ -229,8 +217,6 @@ const Page = () => {
     ["filter_by_name", cat_id, searchval],
     true,
   );
-
-  // https://ajiroba.onrender.com/v1/commerce/filter_by_name/?category=3fbdea59-515d-40bc-8294-a715b74268b8&name=women
 
   const ProductsNew = useMemo(
     () =>
@@ -524,14 +510,34 @@ const Page = () => {
       <div className="text-xl 2xl:hidden xl:hidden md:hidden lg:hidden block px-6 py-2 ">
         <FiMenu onClick={hamburgerfunc} className="" />
       </div>
-      <div className="flex gap-4 justify-center ">
+      {/*   <div className="flex gap-4 justify-center ">
         <div className=" mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full w-3/12  ">
+          <div className="">
+            <SearchFilter />
+          </div>
+
+
+        </div>
+
+        <div className="w-9/12">
+          {filteredProducts.length > 0 ? (
+            <CategoryProductCard cardInfo={filteredProducts} />
+          ) : (
+            <div className="text-center flex h-full items-center justify-center">
+              No data available
+            </div>
+          )}
+        </div>
+      </div> */}
+
+      <div className="flex gap-4 justify-center items-stretch min-h-screen">
+        <div className="mt-4 hidden 2xl:block xl:block md:block lg:block bg-[#F6F6F6] shadow h-full w-3/12">
           <div className="">
             <SearchFilter />
           </div>
         </div>
 
-        <div className="w-9/12">
+        <div className="w-9/12 h-full">
           {filteredProducts.length > 0 ? (
             <CategoryProductCard cardInfo={filteredProducts} />
           ) : (

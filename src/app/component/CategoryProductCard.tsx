@@ -54,10 +54,9 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
     return (
         <>
             <div
-                className={`${poppins.className} my-4 grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 mb-8 mt-4`}
+                className={`${poppins.className} my-4 grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 mb-8 mt-4 `}
             >
- {/* `/categories/${value.name}?cat_id=${value.id}`, */}
-  {/* router.push(`/categories/productdetails/${value.id}`)} */}
+
                 {paginatedCardInfo?.map((value, index) => (
                     <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
                         <div className='py-2'>
