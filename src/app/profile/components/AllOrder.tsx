@@ -49,7 +49,7 @@ export const AllOrder = ({ transac }: transacProps) => {
     const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
    const [isSussessModal, setisSucceessModal] = useState(false);
 
-   console.log(transac, 'transacc')
+  //  console.log(transac, 'transacc')
 
 
        const router = useRouter();
@@ -314,7 +314,7 @@ const submitFormdelete = async (data: any, event: any) => {
   });
 };
 
-    {console.log(transac, transac?.length, 'transac')}
+   /*   */{console.log(transac, transac?.length, 'transac')}
 
   return transac?.map((val, index) => (
     <>
