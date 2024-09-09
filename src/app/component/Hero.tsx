@@ -36,7 +36,7 @@ export const Hero = () => {
 
                 {active && (
                   <div className='top-2.8 absolute left-0 h-full w-full'>
-                    <MobileSideMenu />
+                     <MobileSideMenu />
                   </div>
                 )}
               </div>

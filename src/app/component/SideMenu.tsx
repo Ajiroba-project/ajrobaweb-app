@@ -52,7 +52,7 @@ export const SideMenu = () => {
       params.delete('sub');
       params.delete('subid');
     }
-    replace(`/categories/${val && val.category}?cat_id=${val.id}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?cat_id=${val.id}&${params.toString()}`)
   }
 
   const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, ["get categories_and_subcategories"], true);
@@ -142,7 +142,7 @@ export const MobileSideMenu = () => {
       params.delete('sub');
       params.delete('subid');
     }
-    replace(`/categories/${val && val.category}?cat_id=${val.id}?${params.toString()}`)
+    replace(`/categories/${val && val.category}?cat_id=${val.id}&${params.toString()}`)
   }
 
   const router = useRouter()
