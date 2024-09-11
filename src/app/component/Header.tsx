@@ -19,8 +19,6 @@ import React from 'react';
 
 
 
-
-
 interface HeaderProps {
   onSearch?: React.Dispatch<React.SetStateAction<string>>;
   // other props can be added here
@@ -195,6 +193,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const isRootPath = pathname === '/';
   const [isOpen, setIsOpen] = useState<boolean | null>(null);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
+    const [hoveredMenu, setHoveredMenu] = useState<number | null>(null);
   const { isLoggedIn, clearAuthCookies } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
     clearAuthCookies: state.clearAuthCookies,
@@ -237,6 +236,10 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       url: '/api/signout',
       payload: {},
     });
+  };
+
+    const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
   // Handle clicks outside the menu
@@ -322,40 +325,31 @@ useEffect(() => {
                   >
                     {headerMenu?.map((val, index) => {
 
-
-
-
-                   /*       const isActive =
-                        pathname === val.path || pathname.startsWith(val.path); */
-
-                        // console.log(headerMenu)
-
-
-                     /*       const isActive =
-                        pathname === val.path ||
-                        (pathname.startsWith(val.path) && val.path !== '/') ||  (pathname.startsWith(val.path) && val.path !== 'Home');
- */
-
                       return  (
                       <li
                         key={index}
                         className={` font-Poppins cursor-pointer px-4  ${val.name === headerNav   ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
-                        onClick={() => {
+                     /*    onClick={() => {
                           setActiveMenu(activeMenu === index ? null : index);
                           setHeaderNav(val.name);
-                        }}
+                        }} */
+                           onClick={() => {
+                        setActiveMenu(activeMenu === index ? null : index);
+                      }}
+                      onMouseEnter={() => setHoveredMenu(index)} // Open on hover
+                      onMouseLeave={() => setHoveredMenu(null)} // Close when hover ends
                       >
                         {val.submenu ? (
                           <div className='relative'>
                             <span className='flex items-center gap-2 '>
                               {val.name}
-                              {activeMenu === index ? (
+                              {activeMenu === index || hoveredMenu === index ? (
                                 <IoIosArrowUp />
                               ) : (
                                 <IoIosArrowDown />
                               )}
                             </span>
-                            {activeMenu === index && (
+                            {(activeMenu === index || hoveredMenu === index)  && (
                               <ul className='absolute left-0 z-10 mt-2 h-fit w-max rounded-md bg-white pb-2 shadow-md'>
                                 {val.submenu.map((subItem, subIndex) => (
                                   <li
@@ -390,11 +384,6 @@ useEffect(() => {
                     )
 
                     }
-
-
-
-
-
 
                     )}
                     <div className='relative mx-4 flex lg:mx-0'>

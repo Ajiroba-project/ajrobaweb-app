@@ -166,8 +166,6 @@ function Page() {
     })
   }
 
-  // console.log(data, 'datat')
-  // console.log(error, 'error')
 
   return (
     <>

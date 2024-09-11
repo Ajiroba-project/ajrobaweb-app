@@ -52,7 +52,7 @@ export const AllOrder = ({ transac }: transacProps) => {
   //  console.log(transac, 'transacc')
 
 
-       const router = useRouter();
+  const router = useRouter();
 
   const handleCloseModal = () => {
     setModalOpen(false);

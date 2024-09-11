@@ -223,7 +223,7 @@ export const Profile = () => {
               ? 'My Wallet'
               : 'Community'}
           </h3>
-          <div className="flex flex-col lg:border lg:border-gray-500 rounded-md px-2">
+          <div className={`${activeMenu === 'my order' ||  activeMenu === 'wallet'  ||  activeMenu === 'wallet' || activeMenu === 'community'  ? 'border rounded  flex flex-col  px-2' : ' flex flex-col  px-2'}`}>
             <div className="relative justify-center flex items-center mt-2 ">
               <Image
                 src={userphoto}
@@ -241,7 +241,7 @@ export const Profile = () => {
                 <IoIosCamera className="text-xl text-[#F25E26]" />
               </span>
             </div>
-            <div className="py-3">
+            <div className="py-3  shadow-sm">
               <ul className="">
                 {menu.map((val, index) => (
                   <li

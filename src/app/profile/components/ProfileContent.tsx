@@ -4,13 +4,18 @@ import { ProfileDetails } from './ProfileDetails'
 import { AuctionDetails } from './AuctionDetails'
 import { OrderDetails } from './OrderDetails'
 import { WalletDetails } from './WalletDetails'
+import MainLayout from './CommunityDetails'
+
+// import { useAuthStore } from '@/store/store'
+// import { useAuthStore } from '@/store/store'
+// import { useAuthStore } from '@/store/store'
 
 export const ProfileContent = () => {
   const activeMenu = userProfile(state => state.activeMenu)
   // const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community']
 
   return (
-    <section className='w-full'>
+    <section className='w-full' >
       {activeMenu === 'my profile' ? (
         <ProfileDetails />
       ) : activeMenu === 'auction win' ? (
@@ -19,7 +24,13 @@ export const ProfileContent = () => {
         <OrderDetails />
       ) : activeMenu === 'wallet' ? (
         <WalletDetails />
-      ) : (
+      ) :  activeMenu === 'community' ? (
+      /*   <CommunityDetails /> */
+      <MainLayout/>
+      ) :
+
+
+      (
         ''
       )}
     </section>

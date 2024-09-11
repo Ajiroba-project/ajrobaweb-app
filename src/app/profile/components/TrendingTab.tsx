@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { transactions } from '@/app/static-data'
 import { GoArrowDownLeft, GoArrowUpRight } from 'react-icons/go'
 
-export const WalletTransaction = () => {
-  const TransactionTemplate = () => {
+export const TrendingTab = () => {
+
+
+    const TransactionTemplate = () => {
     return (
       <div>
         {transactions.map((val, index) => (
@@ -76,15 +78,15 @@ export const WalletTransaction = () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start">
+      {/* <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start">
         <p className='text-lg lg:text-xl font-semibold capitalize leading-relaxed'>
         recent transactions
       </p>
       <p className='date-history'>january 2024</p>
-      </div>
+      </div> */}
       <div className="py-2">
-         <TransactionTemplate />
-      {/*  <TabComponent/> */}
+       {/*   <TransactionTemplate /> */}
+        <TabComponent/>
       </div>
 
 
@@ -96,3 +98,5 @@ export const WalletTransaction = () => {
     </div>
   )
 }
+
+

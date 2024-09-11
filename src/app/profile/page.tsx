@@ -22,7 +22,12 @@ const Page = () => {
         <Header />
       </header>
 
-      <main className='container '>
+      <main className='container ' style={{
+        width: '95%',
+        maxWidth: '100%',
+        margin: '0 auto',
+        marginTop: '20px'
+      }}>
         <Profile />
       </main>
 

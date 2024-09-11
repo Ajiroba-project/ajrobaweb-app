@@ -430,7 +430,7 @@ export const OrderDetails = () => {
   }
 
   return (
-    <section className='mb-6 flex lg:w-[50dvw] w-full flex-col'>
+    <section className='mb-6 flex  flex-col'>
       <div className='flex lg:justify-between lg:flex-row flex-col justify-center lg:my-0 my-4'>
         <h3 className='mb-1.5 text-xl font-Poppins text-[#101928] font-semibold'>Transactions</h3>
         <IconButton
