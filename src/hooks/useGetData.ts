@@ -37,6 +37,7 @@ interface UserData {
   my_wallet: { balance: string; point: string }[];
   profile_image_url?: any;
   amount?: any;
+  map?: any
 }
 
 
@@ -58,7 +59,7 @@ interface ResponseData {
 interface ApiResponse {
   status: string;
   message: string;
-  data: UserData;
+  data?: UserData;
   profile_image_url: string;
   filter?: any;
   slice?: any;

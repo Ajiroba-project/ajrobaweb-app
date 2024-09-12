@@ -1,19 +1,61 @@
 import React, { useState } from 'react'
 import { transactions } from '@/app/static-data'
 import { GoArrowDownLeft, GoArrowUpRight } from 'react-icons/go'
+import { useAuthStore } from '@/store/store'
+import { useGetDatanew } from '@/hooks/useGetData'
+import { useRouter } from 'next/navigation'
+
+
+// Helper function to format date
+const formatDateTo12Hour = (dateString: string) => {
+  const date = new Date(dateString);
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // If hours is 0, set it to 12
+  const minutesStr = minutes < 10 ? '0' + minutes : minutes; // Ensure double digits for minutes
+  return `${hours}:${minutesStr} ${ampm}`;
+};
 
 export const WalletTransaction = () => {
   const TransactionTemplate = () => {
+
+  const { isLoggedIn, user, token } = useAuthStore((state) => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token,
+  }));
+
+    const router = useRouter();
+
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/recent_transactions/`;
+
+  const { data: transInfo, isLoading: transLoading } = useGetDatanew(url, 'get_recent_transactions', token, {
+    cacheTime: 0,
+    staleTime: 0,
+  });
+
+  // console.log(transInfo)
+
+
     return (
       <div>
-        {transactions.map((val, index) => (
+        {transInfo?.data?.map((val: {
+          description: any,
+          channel: any,
+          date: any,
+          amount: string,
+          reference: string
+}, index: React.Key | null | undefined) => (
           <>
             <div
               key={index}
-              className='flex w-full  flex-col items-start justify-around gap-6  py-5 lg:flex-row'
+              className='flex justify-between w-full  flex-col items-start  gap-6  py-5 lg:flex-row'
             >
-              <div className='flex items-center gap-3 lg:flex-row flex-col w-full'>
-                {val.type === 'purchase' ? (
+              <div className='flex items-center gap-3 lg:flex-row flex-col w-1/2'>
+                {val.description === 'Purchase Product' ? (
                   <div className='flex w-fit items-center lg:justify-center rounded-full bg-emerald-200 p-2'>
                     <GoArrowUpRight className='text-lg font-semibold text-green-700' />
                   </div>
@@ -25,16 +67,16 @@ export const WalletTransaction = () => {
                 )}
                 <div className='flex w-full flex-col  justify-center items-center lg:justify-start lg:items-start'>
                   <p className='line-clamp-1 cursor-pointer truncate text-ellipsis text-sm text-pretty text-[#101928] font-Poppins font-medium  '>
-                    {val.title}
+                    {val.description}
                   </p>
-                  <p className='text-[8px] text-sm text-pretty text-[#111111] font-Poppins font-normal '>{val.brand}</p>
+                  <p className='text-[8px] text-sm text-pretty text-[#111111] font-Poppins font-normal '>{val.channel}</p>
                 </div>
               </div>
-              {/*  */}
-              <div className="flex flex-col justify-center items-center lg:items-baseline  lg:justify-start w-full lg:w-max">
+
+              <div className="flex flex-col justify-center items-center lg:items-baseline  lg:justify-start  lg:w-max w-1/2">
                 <p className='font-medium w-max line-clamp-1 cursor-pointer truncate text-ellipsis text-sm text-pretty text-[#101928] font-Poppins  '>₦ {val.amount}</p>
-                <p className='text-[8px] text-sm text-pretty text-[#111111] font-Poppins font-normal '>{val.time}PM</p>
-                <p className='brand1 w-max cursor-pointer pt-4 text-xs capitalize underline'>
+                <p className='text-[8px] text-sm text-pretty text-[#111111] font-Poppins font-normal '> {formatDateTo12Hour(val.date)}</p>
+                <p className='brand1 w-max cursor-pointer pt-4 text-xs capitalize underline'  onClick={()=> router.push(`/transreceipt?transId=${val?.reference}`)}>
                   view receipt
                 </p>
               </div>
@@ -47,31 +89,7 @@ export const WalletTransaction = () => {
   }
 
 
-  const TabComponent = () => {
-  const [activeTab, setActiveTab] = useState<string>("Trending");
 
-  return (
-    <div className="w-full flex justify-center">
-      <div className="flex w-full max-w-lg bg-white rounded-lg border border-gray-300">
-        {["Trending", "Liked", "Bookmarked"].map((tab, idx) => (
-          <button
-            key={idx}
-            onClick={() => setActiveTab(tab)}
-            className={` p-2 text-center ${
-              activeTab === tab
-                ? "bg-[#f25e26] text-white rounded-l-md" // Active tab style
-                : "bg-white text-gray-600 hover:bg-gray-100" // Inactive tab style
-            } ${idx === 0 ? "rounded-l-lg" : ""} ${
-              idx === 2 ? "rounded-r-lg" : ""
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 
   return (
