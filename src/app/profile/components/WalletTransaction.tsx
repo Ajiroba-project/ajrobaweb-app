@@ -24,16 +24,16 @@ export const WalletTransaction = () => {
                   </div>
                 )}
                 <div className='flex w-full flex-col  justify-center items-center lg:justify-start lg:items-start'>
-                  <p className='line-clamp-1 cursor-pointer truncate text-ellipsis text-pretty'>
+                  <p className='line-clamp-1 cursor-pointer truncate text-ellipsis text-sm text-pretty text-[#101928] font-Poppins font-medium  '>
                     {val.title}
                   </p>
-                  <p className='text-sm '>{val.brand}</p>
+                  <p className='text-[8px] text-sm text-pretty text-[#111111] font-Poppins font-normal '>{val.brand}</p>
                 </div>
               </div>
               {/*  */}
               <div className="flex flex-col justify-center items-center lg:items-baseline  lg:justify-start w-full lg:w-max">
-                <p className='font-medium text-lg w-max'>₦ {val.amount}</p>
-                <p>{val.time}</p>
+                <p className='font-medium w-max line-clamp-1 cursor-pointer truncate text-ellipsis text-sm text-pretty text-[#101928] font-Poppins  '>₦ {val.amount}</p>
+                <p className='text-[8px] text-sm text-pretty text-[#111111] font-Poppins font-normal '>{val.time}PM</p>
                 <p className='brand1 w-max cursor-pointer pt-4 text-xs capitalize underline'>
                   view receipt
                 </p>
@@ -77,10 +77,10 @@ export const WalletTransaction = () => {
   return (
     <div>
       <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start">
-        <p className='text-lg lg:text-xl font-semibold capitalize leading-relaxed'>
+        <p className='text-base lg:text-base text-[#000000] font-semibold font-Poppins  capitalize leading-relaxed'>
         recent transactions
       </p>
-      <p className='date-history'>january 2024</p>
+      <p className='date-history text-[#111111] font-Poppins text-sm font-normal mt-4'>january 2024</p>
       </div>
       <div className="py-2">
          <TransactionTemplate />
