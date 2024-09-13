@@ -168,7 +168,7 @@ export const ChangePassword = () => {
   }
 
   return (
-    <section className='fixed z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50 '>
+        <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-black bg-opacity-50 p-4">
     {/*   <ToastContainer closeOnClick /> */}
       {!success ? (
         <div className='mb-8 flex h-auto flex-col items-center justify-center gap-6 rounded-md bg-white p-8'>
