@@ -5,17 +5,17 @@ type PipelineProps ={
     props:string[],
     setProps:any
     start:string;
-  
+
 }
 export const Pipeline = ({props, setProps, start}:PipelineProps) => {
     const [pipeline, setPipeline]=useState<string>(start)
     useEffect(()=>{
       setProps(pipeline);
 
-    }, [pipeline, setProps])  
-      
+    }, [pipeline, setProps])
+
   return (
-    <div className='flex lg:items-center lg:gap-8 lg:flex-row md:flex-row flex-col gap-2 '>
+    <div className='flex lg:items-center lg:gap-8 lg:flex-row md:flex-row flex-row mt-2 flex-wrap gap-2 '>
       {props.map((val: string, index: number) => (
         <label
           key={index}

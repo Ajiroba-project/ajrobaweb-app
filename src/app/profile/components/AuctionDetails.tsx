@@ -21,7 +21,8 @@ export const AuctionDetails = () => {
   }, [])
 
   return (
-    <section className='mb-6  flex w-full flex-col  lg:w-[50dvw] '>
+  /*   <section className='mb-6  flex w-full flex-col  lg:w-[50dvw] '> */
+    <section className='mb-6  flex  flex-col  w-full lg:w-[50dvw]'>
       <Pipeline props={auctionSwitch} setProps={setPipeline} start={pipeline} />
       <div className='mt-6 rounded-md  border-2 p-4'>
         {pipeline === auctionSwitch[0] ? (
@@ -32,7 +33,7 @@ export const AuctionDetails = () => {
           <CloseAuction product={closeFilter} />
         )}
       </div>
-     
+
     </section>
   )
 }

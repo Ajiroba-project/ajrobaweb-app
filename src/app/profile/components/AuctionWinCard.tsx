@@ -12,18 +12,23 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       <div className=' '>
         <div className='flex flex-col '>
           {product.map((val: any, index: number) => (
-            <div key={index} className='relative my-2 flex gap-4 border p-3'>
+            <div key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
+
               <Image
                 src={val.image}
                 alt={val.name}
-                width={300}
-                className='h-auto w-auto rounded-md bg-gray-100 bg-contain'
+                width={50}
+                height={50}
+                layout='intrinsic'
+                // className='rounded-md bg-gray-100 bg-contain'
+                className='object-cover w-full rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
               />
+
               <div className='flex flex-col gap-3 capitalize'>
                 <p className=' font-semibold'>{val.name}</p>
                 <p>OrderID: </p>
                 <p>TicketPrice: ₦{val.price}</p>
-                <div className='mt-5 flex gap-3'>
+                <div className='mt-5 flex gap-3 flex-wrap'>
                   {val.tag &&
                     val.tag.map((value: string, index: number) => (
                       <p

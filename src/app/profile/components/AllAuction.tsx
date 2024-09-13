@@ -3,7 +3,7 @@ import { AuctionWinCard } from './AuctionWinCard'
 
 type AuctionProps = {
   product: [] | any
-} 
+}
 
 export const AllAuction = ({product}:AuctionProps) => {
   return (
