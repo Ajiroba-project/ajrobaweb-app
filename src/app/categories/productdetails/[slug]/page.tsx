@@ -517,6 +517,8 @@ const handlePageClick = (pageNumber: number) => {
     );
   };
 
+  console.log(productdata)
+
 
 
     return (
@@ -550,7 +552,7 @@ const handlePageClick = (pageNumber: number) => {
         }}
         className="text-[#363636] font-Poppins text-sm font-semibold"
       >
-        {productdata?.category} | {productdata?.subcategory}
+        {productdata?.category } | {productdata?.subcategory }
       </div>
 
       <section
@@ -561,7 +563,7 @@ const handlePageClick = (pageNumber: number) => {
       >
         {productdata ? (
           <>
-            <div className="flex mt-8 justify-between flex-wrap" >
+            <div className="flex mt-8 justify-between lg:flex-row md:flex-row 2xl:flex-row flex-col" >
               <div>
                 <div className=" flex gap-8 flex-col ">
                   {productdata?.data?.images?.map((image, index) => (

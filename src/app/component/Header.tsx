@@ -394,10 +394,10 @@ useEffect(() => {
               </div>
 
               <div className='flex gap-4'>
-                <BiBell className='cursor-pointer text-xl text-[#A09F9F]' />
+                <BiBell className='cursor-pointer text-xl text-[#000000]' color='black'/>
                 <IoCartOutline
                   onClick={() => router.push('/cart')}
-                  className='cursor-pointer text-xl text-[#A09F9F]'
+                  className='cursor-pointer text-xl text-[#000000]' color='black'
                 />
                 {isOpen ? (
                   <IoClose

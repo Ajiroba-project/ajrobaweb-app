@@ -1572,7 +1572,8 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                   <div className="flex justify-center items-center m-3 h-auto sm:h-48 w-full">
                     <div
                       onClick={() =>
-                        router?.push(`/categories/productdetails/${value.id}`)
+                        router?.push(`/categories/${value.name}?cat_id=${value.id}`)
+                       /*   href={`/categories/${value.name}?cat_id=${value.id}`} */
                       }
                       className="p-0"
                     >
