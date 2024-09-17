@@ -1139,7 +1139,13 @@ export const ProductCardMain = ({ cardInfo }: any) => {
         onClose: () => router.push("/profile"),
       }); */
 
-          setCardAddCartState('value.name');
+      console.log(data, 'data')
+      console.log(data?.data?.message, 'message')
+      const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+      console.log(result)
+
+          setCardAddCartState(result);
     setCardCartState(!cardCartState);
     const timeoutID = setTimeout(() => {
       setCardCartState(false);
@@ -1207,25 +1213,23 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
-  //       const sessionKey = getSessionKeyForProduct(data.id);
-  //   const payload = {
-  //     product_id: data.id,
-  //     quantity: Number(1),
-  //  session_key: sessionKey,
-  //   };
-
-  console.log(data, 'dattaaa')
+        const sessionKey = getSessionKeyForProduct(data.id);
+    const payload = {
+      product_id: data.id,
+      quantity: Number(1),
+   session_key: sessionKey,
+    };
 
  /*    console.log(data, 'dattaaa')
     console.log(payload, 'payload')
  */
 
-      /*   console.log(payload, 'payload') */
- /*     mutate({
+        console.log(payload, 'payload')
+     mutate({
        url: "/api/addtocart/",
        payload: { payload: payload, tkn: userToken },
        token: userToken,
-     }); */
+     });
 
 
     // reset();

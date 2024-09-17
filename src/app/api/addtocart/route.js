@@ -10,6 +10,8 @@ export async function POST(request) {
             console.log(body.tkn); */
 
         // Create headers object dynamically
+
+        // console.log(body, 'bodyyy');
         const headers = {
             "Content-Type": "application/json",
         };
@@ -24,9 +26,9 @@ export async function POST(request) {
             maxBodyLength: Infinity,
             headers: headers, // Use the dynamically created headers object
             body: JSON.stringify({
-                "product_id": body.product_id,
-                "quantity": body.quantity,
-                "session_key": body.session_key,
+                "product_id": body.payload.product_id,
+                "quantity": body.payload.quantity,
+                "session_key": body.payload.session_key,
             }),
         });
 
