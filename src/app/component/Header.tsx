@@ -1,5 +1,5 @@
  'use client';
-import { useState, SetStateAction, Suspense, useEffect, useRef } from 'react';
+import { useState, SetStateAction, Suspense, useEffect, useRef, useCallback } from 'react';
 import { socialIcon, headerMenu, marqueeInfo } from '../static-data';
 import { IoCartOutline } from 'react-icons/io5';
 import { BiBell } from 'react-icons/bi';
@@ -203,6 +203,22 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     headerNav: state.headerNav,
   }));
 
+
+  const searchParams = useSearchParams()
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
 
@@ -360,7 +376,8 @@ useEffect(() => {
                                       onClick={() =>
                                         subItem.name === 'Sign Out'
                                           ? SignoutFunc()
-                                          : router.push(`${subItem.path}`)
+                                           : router.push(`${subItem.path}`)
+                                        //  :  router.push(`${subItem.path}` + '?' + createQueryString('q', `${subItem.name}`))
                                       }
                                     >
                                       <span className='' > {subItem.name} </span>
@@ -418,3 +435,7 @@ useEffect(() => {
     </>
   );
 };
+function replace(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

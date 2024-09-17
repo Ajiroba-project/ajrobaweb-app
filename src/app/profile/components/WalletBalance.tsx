@@ -21,6 +21,9 @@ import { useMutateData } from '@/hooks/useMutateData'
 import receipt from '@/app/asset/print_receipt.svg'
 import Image from 'next/image'
 import { PrintReceipt } from './PrintReceipt'
+import axios from 'axios';
+import Cookies from 'js-cookie'
+
 
 type ConfirmationModalProps = {
   amount: string;
@@ -30,11 +33,122 @@ type ConfirmationModalProps = {
 const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
 
-  const handleContinue = async () => {
-    console.log(amount)
-    onClose()
+const handleContinue = async () => {
+  try {
+    console.log(amount);  // Check if the amount is correct.
 
+    // Ensure amount is valid
+    if (!amount ) {
+      toast.error('Please enter a valid amount.');
+      return;
+    }
+
+    // Token from your auth store (modify based on your auth logic)
+    // const token = useAuthStore((state) => state.token);
+
+    const tkn_: string = Cookies.get('token') as string;
+
+    // Request payload
+    const payload = {
+      amount: Number(amount),  // Amount to be funded
+    };
+
+    // Make the API call to fund the wallet
+    const response = await axios.post(
+      'https://ajiroba.onrender.com/v1/pay/fund_wallet/',
+      payload,
+      {
+        headers: {
+          Authorization: `token ${tkn_}`,  // Pass the token in the headers
+        },
+      }
+    );
+
+    // Handle the response based on the status code
+    if (response.status === 200) {
+      const { payment_url, reference } = response.data;
+      console.log('Payment initiated, redirecting to:', payment_url);
+
+      // Show success toast
+      toast.success('Payment initiated successfully.');
+
+      // Redirect the user to the payment URL
+      window.location.href = payment_url;
+    // await verifyWalletPayment(reference);
+
+    } else {
+      // Handle other successful but unexpected status
+      toast.error('An unexpected status was returned.');
+    }
+
+  } catch (error) {
+    // Handle different error scenarios
+    if (error.response) {
+      // Server responded with a status other than 200
+      const { status, data } = error.response;
+
+      if (status === 400 || status === 401 || status === 405) {
+        console.log(data, 'datata')
+        toast.error(data.message || data.detail || 'Invalid request. Amount or email may be missing.');
+      } else if (status === 500) {
+        toast.error(data.message || data.detail ||  'Server error, please try again later.');
+      } else {
+        toast.error('An error occurred, please try again.');
+      }
+    } else {
+      // Network or other errors
+      toast.error('Network error, please check your connection.');
+    }
+  } finally {
+    // Close modal (optional based on your logic)
+    onClose();
   }
+};
+
+
+const verifyWalletPayment = async (reference: any) => {
+  try {
+    // const token = useAuthStore((state) => state.token);
+     const tkn_: string = Cookies.get('token') as string;
+
+    const response = await axios.put(
+      `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
+      {},
+      {
+        headers: {
+          Authorization: `token ${tkn_}`, // Pass the token in the headers
+        },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      toast.success('Payment verified successfully. Thank you!');
+    } else {
+      toast.error('Unexpected status during verification.');
+    }
+
+  } catch (error) {
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400 ) {
+        toast.error( data.message || data.detail || 'Invalid reference ID.');
+      }
+        if (status === 405 ) {
+        toast.error( data.message || data.detail || 'Invalid reference ID.');
+      }
+       else if (status === 401) {
+        toast.error(data.message || data.detail || 'Invalid Token');
+      } else if (status === 409) {
+        toast.error(data.message || data.detail || 'Payment already verified.');
+      } else if (status === 500) {
+        toast.error(data.message || data.detail || 'Server error during verification.');
+      }
+    } else {
+      toast.error('Network error during verification.');
+    }
+  }
+};
+
 
     const [success, setSuccess] = useState(false)
 

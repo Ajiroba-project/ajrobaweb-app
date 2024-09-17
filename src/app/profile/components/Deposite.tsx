@@ -79,6 +79,15 @@ export const Deposite = ({ handleClick, handleNext }: DepositeProps) => {
 
 
 const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: string }) => {
+
+
+const handlefundwalletandVerifyPayment =  ()=>{
+console.log('fund and verify wallet')
+}
+
+
+
+
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
       <div className='xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
@@ -88,7 +97,7 @@ const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: s
             text='Continue'
             type='button'
             className='w-full rounded-md bg-[#E84526] p-3 text-white'
-            handleClick={onClose}
+            handleClick={handlefundwalletandVerifyPayment}
           />
           <DefaultButton
             text='Back'
