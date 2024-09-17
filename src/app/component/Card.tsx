@@ -26,6 +26,10 @@ import { motion } from 'framer-motion'
 import { DefaultButton } from './Button'
 import Loading from './Loading'
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import { toast } from 'react-toastify'
+import { useForm } from 'react-hook-form'
+import { useMutateData } from '@/hooks/useMutateData'
+import Cookies from 'js-cookie'
 
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
@@ -1065,6 +1069,12 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
 //   );
 // };
 
+type CommentFormValues = {
+  id: any
+  comment: string;
+  commentImage?: string;
+  post_id?: string;
+};
 
 export const ProductCardMain = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<number | null>(null); // Use index or id for hover state
@@ -1073,6 +1083,20 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   const { isLoggedIn } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
   }));
+
+  // Generate or retrieve session key for each product
+  const getSessionKeyForProduct = (productId: string) => {
+    // Check if a session_key exists for the specific product in cookies
+    let sessionKey = Cookies.get(`session_key_${productId}`);
+
+    // If it doesn't exist, generate a new one and save it in cookies
+    if (!sessionKey) {
+      sessionKey = `session_${productId}_${Math.random().toString(36).substr(2, 9)}`; // Generate unique session key for the product
+      Cookies.set(`session_key_${productId}`, sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
+    }
+    return sessionKey;
+  };
+
 
   const handleCartNotification = (value: any) => {
     setCardAddCartState(value.name);
@@ -1085,6 +1109,128 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   };
 
   const router = useRouter();
+
+    const userToken = Cookies.get("token") as string || ''
+
+
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<CommentFormValues>({
+    // resolver: yupResolver(commentSchema),
+  });
+
+  const handleSuccess = (data?: any) => {
+
+    if (data.status === 200 || data.status === 201) {
+    /*   toast.success(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => router.push("/profile"),
+      }); */
+
+          setCardAddCartState('value.name');
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+     /*  refetch(); */
+    } else if (
+      data.status === 403 ||
+      data.status === 404 ||
+      data.status === 401 ||
+      data.status === 409 ||
+      data.status === 500
+    ) {
+
+      toast.error(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    /*   refetch(); */
+    } else {
+
+      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+     /*  refetch(); */
+    }
+  };
+
+  const handleError = (error?: any) => {
+    console.log(error, "errr",  "daaaattt");
+
+    toast.error(`${  error || "An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+   /*  refetch(); */
+  };
+
+
+
+  const { mutate: mutate, status: likedstatus } = useMutateData(
+    "addtocart",
+    handleSuccess,
+    handleError,
+  );
+
+  const onSubmit = (data: CommentFormValues) => {
+  //       const sessionKey = getSessionKeyForProduct(data.id);
+  //   const payload = {
+  //     product_id: data.id,
+  //     quantity: Number(1),
+  //  session_key: sessionKey,
+  //   };
+
+  console.log(data, 'dattaaa')
+
+ /*    console.log(data, 'dattaaa')
+    console.log(payload, 'payload')
+ */
+
+      /*   console.log(payload, 'payload') */
+ /*     mutate({
+       url: "/api/addtocart/",
+       payload: { payload: payload, tkn: userToken },
+       token: userToken,
+     }); */
+
+
+    // reset();
+  };
+
 
   return (
     <>
@@ -1105,7 +1251,8 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                     {hoverState === index && ( // Only show the cart icon for the hovered card
                       <IoCartOutline
                         className="absolute right-2 top-2 rounded-full bg-white p-2 text-4xl text-black hover:text-[#ffffff] hover:bg-[#E84526]"
-                        onClick={() => handleCartNotification(value)}
+                       /*  onClick={() => handleCartNotification(value)} */
+                       onClick={()=> onSubmit(value)}
                       />
                     )}
 
@@ -1196,6 +1343,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   const { isLoggedIn } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
   }));
+
 
   const handleCartNotification = (value: any) => {
     setCardAddCartState(value.name);
