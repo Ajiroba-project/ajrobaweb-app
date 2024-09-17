@@ -12,7 +12,7 @@ export async function POST(request) {
         /*  console.log(body, 'bodyyy')
          console */
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/like_post/?${cacheBuster}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/bookmark_post/?${cacheBuster}`, {
             method: "POST",
             maxBodyLength: Infinity,
             headers: {

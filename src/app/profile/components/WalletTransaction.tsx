@@ -19,6 +19,8 @@ const formatDateTo12Hour = (dateString: string) => {
 };
 
 export const WalletTransaction = () => {
+
+
   const TransactionTemplate = () => {
 
   const { isLoggedIn, user, token } = useAuthStore((state) => ({
@@ -37,12 +39,19 @@ export const WalletTransaction = () => {
     staleTime: 0,
   });
 
-  // console.log(transInfo)
-
-
     return (
       <div>
-        {transInfo?.data?.map((val: {
+        { transInfo?.data?.length === 0 ?
+
+        <h1>No Data Available </h1> :
+
+
+
+
+
+
+
+        transInfo?.data?.map((val: {
           description: any,
           channel: any,
           date: any,
@@ -83,13 +92,22 @@ export const WalletTransaction = () => {
             </div>
             <hr />
           </>
-        ))}
+        ))
+
+
+
+        }
       </div>
     )
   }
 
 
-
+// Helper function to get the current month and year
+const getCurrentMonthAndYear = () => {
+  const date = new Date();
+  const options: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options); // Example: September 2024
+};
 
 
   return (
@@ -98,7 +116,7 @@ export const WalletTransaction = () => {
         <p className='text-base lg:text-base text-[#000000] font-semibold font-Poppins  capitalize leading-relaxed'>
         recent transactions
       </p>
-      <p className='date-history text-[#111111] font-Poppins text-sm font-normal mt-4'>january 2024</p>
+      <p className='date-history text-[#111111] font-Poppins text-sm font-normal mt-4'>{getCurrentMonthAndYear()}</p>
       </div>
       <div className="py-2">
          <TransactionTemplate />

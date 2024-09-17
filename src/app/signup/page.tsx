@@ -71,6 +71,7 @@ function Page() {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
     trigger,
   } = useForm({
     mode: "all",
@@ -78,6 +79,7 @@ function Page() {
   });
 
   const handleSuccess = (data: any) => {
+    setValue('first_name', '')
     if (data.status === 201) {
       reset()
       toast.success(`${data?.data?.message}`, {
@@ -123,6 +125,7 @@ function Page() {
   };
 
   const handleError = (error: any) => {
+        setValue('first_name', '')
       reset()
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",

@@ -37,7 +37,8 @@ interface UserData {
   my_wallet: { balance: string; point: string }[];
   profile_image_url?: any;
   amount?: any;
-  map?: any
+  map?: any;
+  length?: any
 }
 
 

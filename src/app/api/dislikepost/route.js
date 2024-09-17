@@ -7,13 +7,13 @@ export async function POST(request) {
 
         const cacheBuster = `cache=${Date.now()}`;
 
-        console.log(body, 'bodyyy')
+        // console.log(body, 'bodyyy')
 
         /*  console.log(body, 'bodyyy')
          console */
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/like_post/?${cacheBuster}`, {
-            method: "POST",
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/dislike_post/?${cacheBuster}`, {
+            method: "DELETE",
             maxBodyLength: Infinity,
             headers: {
                 "Content-Type": "application/json",

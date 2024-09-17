@@ -366,6 +366,7 @@ import { MdOutlineFileDownload } from 'react-icons/md';
 import { CustomPagination } from '../../component/Pagination';
 import { useAuthStore } from '@/store/store';
 import { useGetOrderData } from '@/hooks/useGetData';
+import Cookies from 'js-cookie'
 
 export const OrderDetails = () => {
   const orderSwitch = ['all', 'Completed', 'Pending'];
@@ -383,7 +384,10 @@ export const OrderDetails = () => {
     token: state.token
   }));
 
-  const userToken = token;
+  // const userToken = token;
+  const userToken = Cookies.get('token') as string;
+
+  const tkn_: string = Cookies.get('token') as string;
 
   const { data: orderinfo, isLoading: ordersLoading, error: ordererror } = useGetOrderData('/api/getallorders', "get_order_details", userToken);
 
@@ -459,13 +463,33 @@ export const OrderDetails = () => {
           </thead>
 
           <tbody>
-            {pipeline === orderSwitch[0] ? (
-              <AllOrder transac={paginatedTransactions} />
+            {
+
+ paginatedTransactions?.length === 0 ?
+
+(
+  <tr>
+        <td colSpan={tableHeader.length} className='text-center py-6'>
+          <h1 className='font-Poppins text-center'>No Order Available</h1>
+        </td>
+      </tr>
+)
+:
+
+
+            <>
+            {
+             pipeline === orderSwitch[0] ? (
+
+<AllOrder transac={paginatedTransactions} />
+
             ) : pipeline === orderSwitch[1] ? (
               <CompletedOrder transac={paginatedTransactions} />
             ) : (
               <PendingOrder transac={paginatedTransactions} />
             )}
+            </>
+           }
           </tbody>
 
           {/* Pagination */}

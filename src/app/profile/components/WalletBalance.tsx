@@ -18,6 +18,9 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutateData } from '@/hooks/useMutateData'
+import receipt from '@/app/asset/print_receipt.svg'
+import Image from 'next/image'
+import { PrintReceipt } from './PrintReceipt'
 
 type ConfirmationModalProps = {
   amount: string;
@@ -34,8 +37,6 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
   }
 
     const [success, setSuccess] = useState(false)
-
-
 
       const router = useRouter();
 
@@ -207,6 +208,7 @@ export const WalletBalance = () => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
   const [showPin, setShowPin] = useState<boolean>(false);
   const [createPin, setCreatePin] = useState<boolean>(false);
+    const [printreceipt, setprintreceipt] = useState<boolean>(false);
   const [viewPoint, setViewPoint] = useState<boolean>(false);
   const [changePin, setChangePin] = useState<boolean>(false);
   const [deposite, setDeposite] = useState<boolean>(false);
@@ -325,6 +327,28 @@ export const WalletBalance = () => {
         />
       </div>
 
+
+        <div className="mt-10 flex w-full flex-col justify-between gap-4 md:flex-row lg:flex-row">
+       <div className='flex gap-2 flex-wrap' >
+                   <Image
+                      src={receipt}
+                      alt="receipt"
+                      width={15}
+                      height={15}
+                      className=" object-cover rounded-lg"
+                    />
+        {/*  <IconButton
+          text="Generate Statement"
+          type="button"
+          className="flex items-center justify-center gap-1 justify-self-center rounded-lg bg-[#f25e26] p-2 text-xs capitalize text-white lg:w-max"
+          icon={<FaPlus />}
+          handleClick={() => setDeposite(true)}
+        /> */}
+        <p onClick={() => setprintreceipt(!printreceipt)} className='text-[#111111] cursor-pointer font-Poppins text-base font-normal'>Generate Statement</p>
+       </div>
+
+      </div>
+
       {deposite && (
        <Deposite
           handleClick={() => setDeposite(false)}
@@ -346,8 +370,11 @@ export const WalletBalance = () => {
         />
       )}
 
-      {createPin && <CreatePin setCreatePin={setCreatePin} createPin={createPin} />}
+      {createPin && <CreatePin createPin={createPin} setCreatePin={setCreatePin}  />}
       {changePin && <ChangePin changePin={changePin} setChangePin={setChangePin} />}
+      {
+        printreceipt && <PrintReceipt receipt={receipt} setreceipt={setprintreceipt} />
+      }
       {viewPoint && (
         <ReferralPointsModal isOpen={viewPoint} setIsOpen={setViewPoint} referralData={sampleReferralData} />
       )}
