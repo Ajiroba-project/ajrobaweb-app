@@ -11,10 +11,64 @@ import image3 from "../asset/image/rice3.jpeg";
 import image4 from "../asset/image/rice4.jpeg";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { Suspense } from 'react'
+import { useGetOrderData } from "@/hooks/useGetData";
+import Cookies from 'js-cookie';
+import { error } from "console";
+import axios from "axios";
 
 const Page = () => {
 
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    const [cartItemsn, setCartItemsn] = useState([]);
+
+
+    const userToken = Cookies.get('token') as string;
+
+    const tkn_: string = Cookies.get('token') as string;
+
+    //   const { data: cartinfo, isLoading: cartsLoading, error: carterror } = useGetOrderData('/api/getcartitems', "get_cart_items", userToken);
+
+
+    //   console.log(cartinfo, "cartinfo", carterror)
+
+
+    const sessionKey = Cookies.get('session_key') as string || 'session_ea94bef0-33a2-48e3-814d-94e97c5debbb_fz7xj0vnx';
+
+const fetchCartItems = async () => {
+    setLoading(true);
+
+    let data = JSON.stringify({
+        session_key: "session_ea94bef0-33a2-48e3-814d-94e97c5debbb_fz7xj0vnx"
+    });
+
+    let config = {
+        method: 'GET',
+        maxBodyLength: Infinity,
+        url: 'https://ajiroba.onrender.com/v1/commerce/cart/',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: data // Sending the body with session_key for anonymous cart
+    };
+
+    axios.request(config)
+        .then((response) => {
+            console.log(response);
+            console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+// Fetch cart data when the component mounts
+useEffect(() => {
+    fetchCartItems();
+}, []);
+
 
 
     const [cartItems, setCartItems] = useState([

@@ -1139,11 +1139,11 @@ export const ProductCardMain = ({ cardInfo }: any) => {
         onClose: () => router.push("/profile"),
       }); */
 
-      console.log(data, 'data')
-      console.log(data?.data?.message, 'message')
+   /*    console.log(data, 'data')
+      console.log(data?.data?.message, 'message') */
       const result = data?.data?.message?.split('added to cart.')[0].trim();
 
-      console.log(result)
+      // console.log(result)
 
           setCardAddCartState(result);
     setCardCartState(!cardCartState);
