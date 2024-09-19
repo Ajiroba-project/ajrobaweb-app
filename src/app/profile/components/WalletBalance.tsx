@@ -1,321 +1,419 @@
-'use client'
-import { FaRegEye } from 'react-icons/fa6'
-import { FaRegEyeSlash } from 'react-icons/fa'
-import { SetStateAction, useEffect, useState } from 'react'
-import { Modal } from '../../component/Modal'
-import { DefaultButton, IconButton } from '@/app/component/Button'
-import { FaPlus } from 'react-icons/fa6'
-import { Deposite } from './Deposite'
-import { ChangePin } from './ChangePin'
-import { CreatePin } from './CreatePin'
-import { useAuthStore, userProfile } from '@/store/store'
-import success from '../../asset/verify.svg'
-import { useGetDatanew } from '@/hooks/useGetData'
-import Loading from '@/app/component/Loading'
-import { ReferralPointsModal } from './ViewPoint'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutateData } from '@/hooks/useMutateData'
-import receipt from '@/app/asset/print_receipt.svg'
-import Image from 'next/image'
-import { PrintReceipt } from './PrintReceipt'
-import axios from 'axios';
-import Cookies from 'js-cookie'
-
+"use client";
+import { FaRegEye } from "react-icons/fa6";
+import { FaRegEyeSlash } from "react-icons/fa";
+import { SetStateAction, useEffect, useState } from "react";
+import { Modal } from "../../component/Modal";
+import { DefaultButton, IconButton } from "@/app/component/Button";
+import { FaPlus } from "react-icons/fa6";
+import { Deposite } from "./Deposite";
+import { ChangePin } from "./ChangePin";
+import { CreatePin } from "./CreatePin";
+import { useAuthStore, userProfile } from "@/store/store";
+import success from "../../asset/verify.svg";
+import { useGetDatanew } from "@/hooks/useGetData";
+import Loading from "@/app/component/Loading";
+import { ReferralPointsModal } from "./ViewPoint";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutateData } from "@/hooks/useMutateData";
+import receipt from "@/app/asset/print_receipt.svg";
+import Image from "next/image";
+import { PrintReceipt } from "./PrintReceipt";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 type ConfirmationModalProps = {
   amount: string;
   onClose: () => void;
 };
 
+
+
+// const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
+
+//     const [loadingverify, setloadingverify] = useState(false)
+
+
+
+
+
+
+//   const handleContinue = async () => {
+//     try {
+//       console.log(amount);
+
+//       if (!amount) {
+//         toast.error("Please enter a valid amount.");
+//         return;
+//       }
+
+//       const tkn_: string = Cookies.get("token") as string;
+
+//       const payload = { amount: Number(amount) };
+
+//       const response = await axios.post(
+//         "https://ajiroba.onrender.com/v1/pay/fund_wallet/",
+//         payload,
+//         {
+//           headers: {
+//             Authorization: `token ${tkn_}`,
+//           },
+//         },
+//       );
+
+//       if (response.status === 200) {
+//         const { payment_url, reference } = response.data;
+//         console.log("Payment initiated, redirecting to:", payment_url);
+
+//         localStorage.setItem("paymentReference", reference);
+//         Cookies.set("paymentReference", reference, { expires: 1 });
+
+//         startVerificationLoop(reference);
+
+//         window.open(payment_url, "_blank");
+
+//         toast.success("Payment initiated successfully.");
+//       } else {
+//         toast.error("An unexpected status was returned.");
+//       }
+//     } catch (error) {
+//       toast.error("An error occurred during the payment process.");
+//     } finally {
+//       onClose();
+//     }
+//   };
+
+//   const startVerificationLoop = (reference: string) => {
+//     const intervalTime = 2000;
+//     const totalDuration = 2 * 60 * 1000;
+//     const maxAttempts = totalDuration / intervalTime;
+//     let attempts = 0;
+
+//     const stopLoop = () => {
+//       clearInterval(intervalId);
+//       console.log("Verification loop stopped.");
+//     };
+
+//     let intervalId: NodeJS.Timeout;
+
+//     setTimeout(() => {
+//       intervalId = setInterval(async () => {
+//         attempts++;
+
+//         await verifyWalletPayment(reference, stopLoop);
+
+//         if (attempts >= maxAttempts) {
+//           clearInterval(intervalId);
+//           console.log("Verification loop stopped after max attempts.");
+//         }
+//       }, intervalTime);
+
+//       setTimeout(() => clearInterval(intervalId), totalDuration);
+//     }, 15 * 1000);
+//   };
+
+//   const router = useRouter();
+
+
+
+//   const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+//     setloadingverify(true)
+//     try {
+//       const tkn_: string = Cookies.get("token") as string;
+
+
+//       const response = await axios.get(
+//         `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
+//         {
+//           headers: {
+//             Authorization: `token ${tkn_}`,
+//           },
+//         },
+//       );
+
+//       console.log(response, "response");
+//       if (response.status === 200 || response.status === 201) {
+//           setloadingverify(false)
+//         toast.success(`${response?.data?.message}`),
+//           {
+//             position: "top-right",
+//             autoClose: 5000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: "light",
+//             onClose: () => router.push("/profile"),
+//           };
+//         stopLoop();
+//       } else {
+//         toast.error("Unexpected status during verification.");
+//         console.log(response, "response");
+//            setloadingverify(false)
+//       }
+//     } catch (error) {
+//          setloadingverify(false)
+//       console.error(error);
+//       toast.error("Error occurred during payment verification.");
+//     }
+//   };
+
+//   const [success, setSuccess] = useState(false);
+
+//   const {
+//     reset,
+//     register,
+//     handleSubmit,
+//     formState: { errors },
+//   } = useForm({
+//     mode: "all",
+//   });
+
+//   const Closefunc = () => {
+//     setSuccess(false);
+//     reset();
+//   };
+
+//   const handleSuccess = (data: any) => {
+//     if (data.status === 201 || data.status === 200) {
+//       setSuccess(true);
+
+//       reset();
+//     } else if (data.status === 400 || data.status === 409) {
+//       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+//         position: "top-right",
+//         autoClose: 5000,
+//         hideProgressBar: false,
+//         closeOnClick: true,
+//         pauseOnHover: true,
+//         draggable: true,
+//         progress: undefined,
+//         theme: "light",
+//       });
+//       reset();
+//     } else if (data.status === 401) {
+//       toast.error(`${data?.data?.message || "Authentication error"} `, {
+//         position: "top-right",
+//         autoClose: 5000,
+//         hideProgressBar: false,
+//         closeOnClick: true,
+//         pauseOnHover: true,
+//         draggable: true,
+//         progress: undefined,
+//         theme: "light",
+//       });
+//       reset();
+//     } else if (data.status === 500) {
+//       toast.error(`${data?.data?.message || "old_password"} `, {
+//         position: "top-right",
+//         autoClose: 5000,
+//         hideProgressBar: false,
+//         closeOnClick: true,
+//         pauseOnHover: true,
+//         draggable: true,
+//         progress: undefined,
+//         theme: "light",
+//       });
+//       reset();
+//     } else {
+//       toast.error(`${"An Error Occured" || "Error"}`, {
+//         position: "top-right",
+//         autoClose: 5000,
+//         hideProgressBar: false,
+//         closeOnClick: true,
+//         pauseOnHover: true,
+//         draggable: true,
+//         progress: undefined,
+//         theme: "light",
+//       });
+//       reset();
+//     }
+//   };
+
+//   const handleError = (error: any) => {
+//     console.log(data, "datttataaa", error);
+//     console.log(error, "errrr");
+//     toast.error(`${"An Error Occured"}`, {
+//       position: "top-right",
+//       autoClose: 5000,
+//       hideProgressBar: false,
+//       closeOnClick: true,
+//       pauseOnHover: true,
+//       draggable: true,
+//       progress: undefined,
+//       theme: "light",
+//     });
+//     reset();
+//   };
+
+//   const { isLoggedIn, user, token } = useAuthStore((state) => ({
+//     isLoggedIn: state.isLoggedIn,
+//     user: state.user,
+//     token: state.token,
+//   }));
+
+//   const userToken = token;
+
+//   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+//     "makepayment",
+//     handleSuccess,
+//     handleError,
+//   );
+
+
+//   if (loadingverify ) {
+//     return <Loading />;
+//   }
+
+//   return (
+//     <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
+//       <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
+//         <p className="text-center">
+//           You are going to deposit the amount of N {amount}
+//         </p>
+//         <div className="flex w-full gap-5 flex-col">
+//           <DefaultButton
+//             text="Continue"
+//             type="button"
+//             className="w-full rounded-md bg-[#E84526] p-3 text-white"
+//             handleClick={handleContinue}
+//           />
+//           <DefaultButton
+//             text="Back"
+//             type="button"
+//             className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
+//             handleClick={onClose}
+//           />
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+
 const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
+  const [loadingverify, setloadingverify] = useState(false);
 
+  const handleContinue = async () => {
+    try {
+      console.log(amount);
 
-const handleContinue = async () => {
-  try {
-    console.log(amount);
-
-    if (!amount) {
-      toast.error('Please enter a valid amount.');
-      return;
-    }
-
-    const tkn_: string = Cookies.get('token') as string;
-
-    const payload = { amount: Number(amount) };
-
-    const response = await axios.post(
-      'https://ajiroba.onrender.com/v1/pay/fund_wallet/',
-      payload,
-      {
-        headers: {
-          Authorization: `token ${tkn_}`,
-        },
+      if (!amount) {
+        toast.error("Please enter a valid amount.");
+        return;
       }
-    );
 
-    if (response.status === 200) {
-      const { payment_url, reference } = response.data;
-      console.log('Payment initiated, redirecting to:', payment_url);
+      const tkn_: string = Cookies.get("token") as string;
 
-      // Store reference in localStorage and Cookies for later verification
-      localStorage.setItem('paymentReference', reference);
-      Cookies.set('paymentReference', reference, { expires: 1 });
+      const payload = { amount: Number(amount) };
 
-      // Start the payment verification process
-      startVerificationLoop(reference);
+      const response = await axios.post(
+        "https://ajiroba.onrender.com/v1/pay/fund_wallet/",
+        payload,
+        {
+          headers: {
+            Authorization: `token ${tkn_}`,
+          },
+        }
+      );
 
-      // Open the payment URL in a new tab
-      window.open(payment_url, '_blank');
+      if (response.status === 200) {
+        const { payment_url, reference } = response.data;
+        console.log("Payment initiated, redirecting to:", payment_url);
 
-      toast.success('Payment initiated successfully.');
+        localStorage.setItem("paymentReference", reference);
+        Cookies.set("paymentReference", reference, { expires: 1 });
 
-    } else {
-      toast.error('An unexpected status was returned.');
-    }
+        startVerificationLoop(reference);
 
-  } catch (error) {
-    toast.error('An error occurred during the payment process.');
-  } finally {
-    onClose();
-  }
-};
+        window.open(payment_url, "_blank");
 
-
-const startVerificationLoop = (reference: string) => {
-  const intervalTime = 5000; // 5 seconds
-  const totalDuration = 2 * 60 * 1000; // 2 minutes in milliseconds
-  const maxAttempts = totalDuration / intervalTime;
-  let attempts = 0;
-
-  // Function to stop the loop
-  const stopLoop = () => {
-    clearInterval(intervalId);
-    console.log("Verification loop stopped.");
-  };
-
-  let intervalId: NodeJS.Timeout;
-
-  // Start the verification loop after a 1-minute delay
-  setTimeout(() => {
-    intervalId = setInterval(async () => {
-      attempts++;
-
-      // Call the payment verification and pass stopLoop to stop the loop on success
-      await verifyWalletPayment(reference, stopLoop);
-
-      if (attempts >= maxAttempts) {
-        // Stop the interval after 2 minutes (maxAttempts reached)
-        clearInterval(intervalId);
-        console.log("Verification loop stopped after max attempts.");
+        toast.success("Payment initiated successfully.");
+      } else {
+        toast.error("An unexpected status was returned.");
       }
-    }, intervalTime);
-
-    // Optional: Stop after 2 minutes in case interval is not cleared by maxAttempts
-    setTimeout(() => clearInterval(intervalId), totalDuration);
-  }, 60 * 1000); // 1 minute delay before starting the interval
-};
-
-
-
-      const router = useRouter();
-
-
-
-const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
-  console.log(reference, 'reference');
-  try {
-    const tkn_: string = Cookies.get('token') as string;
-
-    const response = await axios.get(
-      `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
-      {
-        headers: {
-          Authorization: `token ${tkn_}`,
-        },
-      }
-    );
-
-    console.log(response, 'response');
-    if (response.status === 200 || response.status === 201) {
-      console.log(response, 'response--201');
-      // toast.success('Payment verified successfully. Thank you!');
-       toast.success(`${response?.data?.message}`), {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => router.push('/profile')
-      }
-      stopLoop(); // Stop the loop when payment is successfully verified
-   /*    refetch() */
-
-    } else {
-      toast.error('Unexpected status during verification.');
-      console.log(response, 'response');
-    }
-  } catch (error) {
-    console.error(error);
-    toast.error('Error occurred during payment verification.');
-  }
-};
-
-
-    const [success, setSuccess] = useState(false)
-
-
-
-  const {
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    mode: 'all',
-    // resolver: yupResolver(ChangePass)
-  })
-
-  const Closefunc = () => {
-    // setEditPassword()
-    setSuccess(false)
-    reset()
-  }
-
-
-
-
-  const handleSuccess = (data: any) => {
-    // console.log(data, 'datttataaa', error)
-
-    if (data.status === 201 || data.status === 200) {
-     setSuccess(true)
-    /*   toast.success(`${data?.data?.message}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => router.push('/profile')
-      }); */
-      reset();
-    } else if (data.status === 400 || data.status === 409) {
-      toast.error(`${data?.data?.message || 'Password doesnt match' } `, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      reset();
-    } else if (data.status === 401) {
-      toast.error(`${data?.data?.message || 'Authentication error'} `, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      reset();
-    }
-    else if (data.status === 500) {
-      toast.error(`${data?.data?.message || 'old_password'} `, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      reset();
-    }
-    else {
-      toast.error(`${'An Error Occured' || 'Error'}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      reset();
+    } catch (error) {
+      toast.error("An error occurred during the payment process.");
+    } finally {
+      onClose();
     }
   };
 
-  const handleError = (error: any) => {
-    console.log(data, 'datttataaa', error)
-    console.log(error, 'errrr')
-    toast.error(`${'An Error Occured'}`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    reset();
+  const startVerificationLoop = (reference: string) => {
+    const intervalTime = 2000;
+    const totalDuration = 2 * 60 * 1000;
+    const maxAttempts = totalDuration / intervalTime;
+    let attempts = 0;
+
+    const stopLoop = () => {
+      clearInterval(intervalId);
+      console.log("Verification loop stopped.");
+    };
+
+    let intervalId: NodeJS.Timeout;
+
+    setTimeout(() => {
+      intervalId = setInterval(async () => {
+        attempts++;
+
+        await verifyWalletPayment(reference, stopLoop);
+
+        if (attempts >= maxAttempts) {
+          clearInterval(intervalId);
+          console.log("Verification loop stopped after max attempts.");
+        }
+      }, intervalTime);
+
+      setTimeout(() => clearInterval(intervalId), totalDuration);
+    }, 15 * 1000);
   };
 
+  const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+    setloadingverify(true); // Set loading to true when verification starts
+    try {
+      const tkn_: string = Cookies.get("token") as string;
 
-  const { isLoggedIn, user, token } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn,
-    user: state.user,
-    token: state.token
-  }))
+      const response = await axios.get(
+        `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
+        {
+          headers: {
+            Authorization: `token ${tkn_}`,
+          },
+        }
+      );
 
-
-  const userToken = token;
-
-
-  const { data, error, isError, isSuccess, mutate, status } = useMutateData(
-    "makepayment",
-    handleSuccess,
-    handleError,
-  );
-
-
-
-  const submitForm = async (data: any) => {
-    // Simulate a successful form submission
-
-    // Add your form submission logic here
-    // console.log(data, 'datatat')
-    const payload = {
-      old_password: data?.oldpass,
-      new_password: data?.newpass
+      console.log(response, "response");
+      if (response.status === 200 || response.status === 201) {
+        setloadingverify(false); // Stop loading when verification is successful
+        toast.success(`${response?.data?.message}`);
+        stopLoop(); // Stop the loop after success
+      } else {
+        setloadingverify(false); // Stop loading even for unsuccessful responses
+        toast.error("Unexpected status during verification.");
+      }
+    } catch (error) {
+      setloadingverify(false); // Ensure loading stops on error
+      console.error(error);
+      toast.error("Error occurred during payment verification.");
     }
+  };
 
-     mutate({
-      url: "/api/makepayment",
-      payload: { payload: payload, token: userToken },
-      token: userToken
-    });
+  const router = useRouter();
+
+  // Show Loading component while verification is in progress
+  if (loadingverify) {
+    return <Loading />;
   }
 
   return (
     <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
       <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
-        <p className="text-center">You are going to deposit the amount of N {amount}</p>
+        <p className="text-center">
+          You are going to deposit the amount of N {amount}
+        </p>
         <div className="flex w-full gap-5 flex-col">
           <DefaultButton
             text="Continue"
@@ -335,17 +433,19 @@ const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
   );
 };
 
+
+
 export const WalletBalance = () => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
   const [showPin, setShowPin] = useState<boolean>(false);
   const [createPin, setCreatePin] = useState<boolean>(false);
-    const [printreceipt, setprintreceipt] = useState<boolean>(false);
+  const [printreceipt, setprintreceipt] = useState<boolean>(false);
   const [viewPoint, setViewPoint] = useState<boolean>(false);
   const [changePin, setChangePin] = useState<boolean>(false);
   const [deposite, setDeposite] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
-    const [depositAmount, setDepositAmount] = useState<string>('');
+  const [depositAmount, setDepositAmount] = useState<string>("");
 
   const { successModal, setSuccessModal } = userProfile((state) => ({
     successModal: state.successModal,
@@ -373,12 +473,14 @@ export const WalletBalance = () => {
   const [isTokenReady, setIsTokenReady] = useState(false);
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 
-
-  const { data: userInfo, isLoading: userLoading, refetch } = useGetDatanew(url, 'get_user_details', token, {
+  const {
+    data: userInfo,
+    isLoading: userLoading,
+    refetch,
+  } = useGetDatanew(url, "get_user_details", token, {
     cacheTime: 0,
     staleTime: 0,
   });
-
 
   useEffect(() => {
     if (token) {
@@ -396,16 +498,15 @@ export const WalletBalance = () => {
     }
   }, [isTokenReady, userInfo, isLoggedIn, userDetails]);
 
-  if (userLoading || !userData) {
+  if (userLoading || !userData ) {
     return <Loading />;
   }
 
-
   const sampleReferralData = [
-    { name: 'Alex Jones', points: 50, date: '12 Feb, 2024' },
-    { name: 'Rachel Jade', points: 50, date: '12 Feb, 2024' },
-    { name: 'Malik Berry', points: 50, date: '12 Feb, 2024' },
-    { name: 'Alex Jones', points: 50, date: '12 Feb, 2024' },
+    { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
+    { name: "Rachel Jade", points: 50, date: "12 Feb, 2024" },
+    { name: "Malik Berry", points: 50, date: "12 Feb, 2024" },
+    { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
   ];
 
   return (
@@ -418,18 +519,24 @@ export const WalletBalance = () => {
       </div>
       <div className="balance pt-1">
         <p className="text-2xl font-semibold slashed-zero leading-normal">
-          {showBalance ? userInfo?.data?.my_wallet[0]?.balance : '*****'}
+          {showBalance ? userInfo?.data?.my_wallet[0]?.balance : "*****"}
         </p>
       </div>
 
       <div className="wallet-pin flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <p>{showPin ? '1234' : '*****'}</p>
-          <div onClick={() => setShowPin(!showPin)} className="justify-center text-sm">
+          <p>{showPin ? "1234" : "*****"}</p>
+          <div
+            onClick={() => setShowPin(!showPin)}
+            className="justify-center text-sm"
+          >
             {showPin ? <FaRegEyeSlash /> : <FaRegEye />}
           </div>
         </div>
-        <p className="cursor-pointer justify-end text-end text-sm capitalize" onClick={() => setCreatePin(!createPin)}>
+        <p
+          className="cursor-pointer justify-end text-end text-sm capitalize"
+          onClick={() => setCreatePin(!createPin)}
+        >
           create pin
         </p>
       </div>
@@ -437,9 +544,14 @@ export const WalletBalance = () => {
       <div className="flex justify-between py-4">
         <div className="flex flex-col">
           <p className="text-sm capitalize leading-snug">ajiroba point</p>
-          <p className="text-sm font-semibold slashed-zero">{userInfo?.data?.my_wallet[0]?.point}</p>
+          <p className="text-sm font-semibold slashed-zero">
+            {userInfo?.data?.my_wallet[0]?.point}
+          </p>
         </div>
-        <p className="cursor-pointer text-sm capitalize" onClick={() => setViewPoint(!viewPoint)}>
+        <p
+          className="cursor-pointer text-sm capitalize"
+          onClick={() => setViewPoint(!viewPoint)}
+        >
           view
         </p>
       </div>
@@ -460,66 +572,75 @@ export const WalletBalance = () => {
         />
       </div>
 
+      <div className="mt-10 flex w-full flex-col justify-between gap-4 md:flex-row lg:flex-row">
+        <div className="flex gap-2 flex-wrap">
+          <Image
+            src={receipt}
+            alt="receipt"
+            width={15}
+            height={15}
+            className=" object-cover rounded-lg"
+          />
 
-        <div className="mt-10 flex w-full flex-col justify-between gap-4 md:flex-row lg:flex-row">
-       <div className='flex gap-2 flex-wrap' >
-                   <Image
-                      src={receipt}
-                      alt="receipt"
-                      width={15}
-                      height={15}
-                      className=" object-cover rounded-lg"
-                    />
-        {/*  <IconButton
-          text="Generate Statement"
-          type="button"
-          className="flex items-center justify-center gap-1 justify-self-center rounded-lg bg-[#f25e26] p-2 text-xs capitalize text-white lg:w-max"
-          icon={<FaPlus />}
-          handleClick={() => setDeposite(true)}
-        /> */}
-        <p onClick={() => setprintreceipt(!printreceipt)} className='text-[#111111] cursor-pointer font-Poppins text-base font-normal'>Generate Statement</p>
-       </div>
-
+          <p
+            onClick={() => setprintreceipt(!printreceipt)}
+            className="text-[#111111] cursor-pointer font-Poppins text-base font-normal"
+          >
+            Generate Statement
+          </p>
+        </div>
       </div>
 
       {deposite && (
-       <Deposite
+        <Deposite
           handleClick={() => setDeposite(false)}
           handleNext={(amount: SetStateAction<string>) => {
-            setDeposite(false)
-            setDepositAmount(amount)
-            setShowConfirmation(true)
-          } } handleCancel={function (): void {
-            throw new Error('Function not implemented.')
-          } }        />
+            setDeposite(false);
+            setDepositAmount(amount);
+            setShowConfirmation(true);
+          }}
+          handleCancel={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       )}
 
       {showConfirmation && (
         <ConfirmationModal
-             amount={depositAmount}
+          amount={depositAmount}
           onClose={() => {
             setShowConfirmation(false);
           }}
         />
       )}
 
-      {createPin && <CreatePin createPin={createPin} setCreatePin={setCreatePin}  />}
-      {changePin && <ChangePin changePin={changePin} setChangePin={setChangePin} />}
-      {
-        printreceipt && <PrintReceipt receipt={receipt} setreceipt={setprintreceipt} />
-      }
+      {createPin && (
+        <CreatePin createPin={createPin} setCreatePin={setCreatePin} />
+      )}
+      {changePin && (
+        <ChangePin changePin={changePin} setChangePin={setChangePin} />
+      )}
+      {printreceipt && (
+        <PrintReceipt receipt={receipt} setreceipt={setprintreceipt} />
+      )}
       {viewPoint && (
-        <ReferralPointsModal isOpen={viewPoint} setIsOpen={setViewPoint} referralData={sampleReferralData} />
+        <ReferralPointsModal
+          isOpen={viewPoint}
+          setIsOpen={setViewPoint}
+          referralData={sampleReferralData}
+        />
       )}
 
       {successModal && (
-        <div className={`${successModal ? 'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50' : 'hidden'}`}>
+        <div
+          className={`${successModal ? "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" : "hidden"}`}
+        >
           <Modal
             buttoncount={1}
             icon={success}
             handleEvent={handleSuccess}
             title="Successful"
-            subtitle={'You have successfully created your wallet pin'}
+            subtitle={"You have successfully created your wallet pin"}
             buttontext="Proceed"
             buttonclass="w-full rounded-md bg-[#FCDFD4] p-3 hover:bg-[#f25e26] hover:text-white"
           />
