@@ -122,7 +122,7 @@ const Page = () => {
     [decodedPaths, sub],
   );
 
-  console.log(verifiedpaths, 'veeee')
+
 
   useEffect(() => {
     if (headerNav !== "Categories") {

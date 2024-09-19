@@ -1097,6 +1097,20 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     return sessionKey;
   };
 
+    // Get or generate session key for the user
+  const getSessionKey = () => {
+    // Check if a session_key already exists in cookies
+    let sessionKey = Cookies.get('session_key');
+
+    // If it doesn't exist, generate a new one and save it in cookies
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
+      Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
+    }
+
+    return sessionKey;
+  };
+
 
   const handleCartNotification = (value: any) => {
     setCardAddCartState(value.name);
@@ -1213,7 +1227,8 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
-        const sessionKey = getSessionKeyForProduct(data.id);
+      /*   const sessionKey = getSessionKeyForProduct(data.id); */
+      const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
       quantity: Number(1),

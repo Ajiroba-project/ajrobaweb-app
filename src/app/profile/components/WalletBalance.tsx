@@ -35,124 +35,141 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
 const handleContinue = async () => {
   try {
-    console.log(amount);  // Check if the amount is correct.
+    console.log(amount);
 
-    // Ensure amount is valid
-    if (!amount ) {
+    if (!amount) {
       toast.error('Please enter a valid amount.');
       return;
     }
 
-    // Token from your auth store (modify based on your auth logic)
-    // const token = useAuthStore((state) => state.token);
-
     const tkn_: string = Cookies.get('token') as string;
 
-    // Request payload
-    const payload = {
-      amount: Number(amount),  // Amount to be funded
-    };
+    const payload = { amount: Number(amount) };
 
-    // Make the API call to fund the wallet
     const response = await axios.post(
       'https://ajiroba.onrender.com/v1/pay/fund_wallet/',
       payload,
       {
         headers: {
-          Authorization: `token ${tkn_}`,  // Pass the token in the headers
+          Authorization: `token ${tkn_}`,
         },
       }
     );
 
-    // Handle the response based on the status code
     if (response.status === 200) {
       const { payment_url, reference } = response.data;
       console.log('Payment initiated, redirecting to:', payment_url);
 
-      // Show success toast
+      // Store reference in localStorage and Cookies for later verification
+      localStorage.setItem('paymentReference', reference);
+      Cookies.set('paymentReference', reference, { expires: 1 });
+
+      // Start the payment verification process
+      startVerificationLoop(reference);
+
+      // Open the payment URL in a new tab
+      window.open(payment_url, '_blank');
+
       toast.success('Payment initiated successfully.');
 
-      // Redirect the user to the payment URL
-      window.location.href = payment_url;
-    // await verifyWalletPayment(reference);
-
     } else {
-      // Handle other successful but unexpected status
       toast.error('An unexpected status was returned.');
     }
 
   } catch (error) {
-    // Handle different error scenarios
-    if (error.response) {
-      // Server responded with a status other than 200
-      const { status, data } = error.response;
-
-      if (status === 400 || status === 401 || status === 405) {
-        console.log(data, 'datata')
-        toast.error(data.message || data.detail || 'Invalid request. Amount or email may be missing.');
-      } else if (status === 500) {
-        toast.error(data.message || data.detail ||  'Server error, please try again later.');
-      } else {
-        toast.error('An error occurred, please try again.');
-      }
-    } else {
-      // Network or other errors
-      toast.error('Network error, please check your connection.');
-    }
+    toast.error('An error occurred during the payment process.');
   } finally {
-    // Close modal (optional based on your logic)
     onClose();
   }
 };
 
 
-const verifyWalletPayment = async (reference: any) => {
-  try {
-    // const token = useAuthStore((state) => state.token);
-     const tkn_: string = Cookies.get('token') as string;
+const startVerificationLoop = (reference: string) => {
+  const intervalTime = 5000; // 5 seconds
+  const totalDuration = 2 * 60 * 1000; // 2 minutes in milliseconds
+  const maxAttempts = totalDuration / intervalTime;
+  let attempts = 0;
 
-    const response = await axios.put(
+  // Function to stop the loop
+  const stopLoop = () => {
+    clearInterval(intervalId);
+    console.log("Verification loop stopped.");
+  };
+
+  let intervalId: NodeJS.Timeout;
+
+  // Start the verification loop after a 1-minute delay
+  setTimeout(() => {
+    intervalId = setInterval(async () => {
+      attempts++;
+
+      // Call the payment verification and pass stopLoop to stop the loop on success
+      await verifyWalletPayment(reference, stopLoop);
+
+      if (attempts >= maxAttempts) {
+        // Stop the interval after 2 minutes (maxAttempts reached)
+        clearInterval(intervalId);
+        console.log("Verification loop stopped after max attempts.");
+      }
+    }, intervalTime);
+
+    // Optional: Stop after 2 minutes in case interval is not cleared by maxAttempts
+    setTimeout(() => clearInterval(intervalId), totalDuration);
+  }, 60 * 1000); // 1 minute delay before starting the interval
+};
+
+
+
+      const router = useRouter();
+
+
+
+const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+  console.log(reference, 'reference');
+  try {
+    const tkn_: string = Cookies.get('token') as string;
+
+    const response = await axios.get(
       `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
-      {},
       {
         headers: {
-          Authorization: `token ${tkn_}`, // Pass the token in the headers
+          Authorization: `token ${tkn_}`,
         },
       }
     );
 
+    console.log(response, 'response');
     if (response.status === 200 || response.status === 201) {
-      toast.success('Payment verified successfully. Thank you!');
+      console.log(response, 'response--201');
+      // toast.success('Payment verified successfully. Thank you!');
+       toast.success(`${response?.data?.message}`), {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => router.push('/profile')
+      }
+      stopLoop(); // Stop the loop when payment is successfully verified
+   /*    refetch() */
+
     } else {
       toast.error('Unexpected status during verification.');
+      console.log(response, 'response');
     }
-
   } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400 ) {
-        toast.error( data.message || data.detail || 'Invalid reference ID.');
-      }
-        if (status === 405 ) {
-        toast.error( data.message || data.detail || 'Invalid reference ID.');
-      }
-       else if (status === 401) {
-        toast.error(data.message || data.detail || 'Invalid Token');
-      } else if (status === 409) {
-        toast.error(data.message || data.detail || 'Payment already verified.');
-      } else if (status === 500) {
-        toast.error(data.message || data.detail || 'Server error during verification.');
-      }
-    } else {
-      toast.error('Network error during verification.');
-    }
+    console.error(error);
+    toast.error('Error occurred during payment verification.');
   }
 };
 
 
     const [success, setSuccess] = useState(false)
 
-      const router = useRouter();
+
 
   const {
     reset,
@@ -356,10 +373,12 @@ export const WalletBalance = () => {
   const [isTokenReady, setIsTokenReady] = useState(false);
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 
-  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', token, {
+
+  const { data: userInfo, isLoading: userLoading, refetch } = useGetDatanew(url, 'get_user_details', token, {
     cacheTime: 0,
     staleTime: 0,
   });
+
 
   useEffect(() => {
     if (token) {
