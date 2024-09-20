@@ -1,5 +1,5 @@
 'use client'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, Suspense, useState } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
@@ -7,7 +7,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa6'
 import { faq } from '@/app/static-data'
 import {ChatBox} from "../component/ChatBox"
 
-const Page = () => {
+const FAQPage = () => {
   const [active, setActive] = useState<number | null>(null)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -54,7 +54,7 @@ const Page = () => {
         <div className='fixed bottom-[1rem]'>
           <ChatBox
             isOpen={isOpen}
-            
+
           />
         </div>
       </main>
@@ -63,4 +63,13 @@ const Page = () => {
   )
 }
 
-export default Page
+// export default Page
+
+export default function Searchbar() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <FAQPage />
+    </Suspense>
+  )
+}
