@@ -5,8 +5,6 @@ import { SetStateAction, useEffect, useMemo, useState } from "react";
 import { Header } from "../component/Header";
 import { Title } from "../component/Title";
 import { Footer } from "../component/Footer";
-
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { Suspense } from "react";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -20,40 +18,43 @@ import * as yup from "yup";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuthStore } from "@/store/store";
+import { useMutateData } from "@/hooks/useMutateNewData";
 
 const Page = () => {
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmordermodal, setConfirmOrder] = useState(false);
-  const [isPaymentMethodConfirmed, setIsPaymentMethodConfirmed] = useState(false);
-
+  const [isPaymentMethodConfirmed, setIsPaymentMethodConfirmed] =
+    useState(false);
+  const [successModal, setSuccessModal] = useState(false);
+  const [verfiywallet, setverifywallet] = useState<any>(false);
 
   const [orderSummary, setOrderSummary] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
-    const [loading, setLoading] = useState(true);
-      const [error, setError] = useState("");
-        const [cartItemsn, setCartItemsn] = useState<any>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [cartItemsn, setCartItemsn] = useState<any>();
 
   const tkn_: string = Cookies.get("token") as string;
 
-    const fetchCartItems = async () => {
-          const tkn_: string = Cookies.get("token") as string;
+  const fetchCartItems = async () => {
+    const tkn_: string = Cookies.get("token") as string;
 
-   if (!tkn_) {
-        toast.error("Please log in to continue.");
-        router.push("/signin"); // Redirect to login if no token
-        return;
-      }
-
+    if (!tkn_) {
+      toast.error("Please log in to continue.");
+      router.push("/signin"); // Redirect to login if no token
+      return;
+    }
 
     setLoading(true);
 
     let sessionKey = Cookies.get("session_key");
 
-       if (!sessionKey) {
-      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
-      Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set("session_key", sessionKey, { expires: 7 });
     }
 
     let headers: { [key: string]: string } = {
@@ -74,7 +75,7 @@ const Page = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response, 'response')
+        console.log(response, "response");
         setCartItemsn(response.data?.data);
       })
       .catch((error) => {
@@ -87,13 +88,10 @@ const Page = () => {
     fetchCartItems();
   }, []);
 
-
-    // Handle payment method selection
   const handlePaymentSelection = (method: SetStateAction<string>) => {
     setPaymentMethod(method);
   };
 
-  // Confirm Payment method and allow order submission
   const confirmPaymentMethod = () => {
     if (!paymentMethod) {
       toast.error("Please select a payment method.");
@@ -102,7 +100,6 @@ const Page = () => {
 
     setIsPaymentMethodConfirmed(true);
   };
-
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -128,10 +125,6 @@ const Page = () => {
     setConfirmOrder(false);
   };
 
-//   const confirmPaymentMethod = () => {
-//     setIsPaymentMethodConfirmed(true);
-//   };
-
   const schema = yup.object().shape({
     password: yup
       .string()
@@ -153,10 +146,150 @@ const Page = () => {
     resolver: yupResolver(schema),
   });
 
+  const handleSuccess = (data: any) => {
 
-  {
-    console.log(cartItemsn, 'cartItemsn')
+    if ( data.status === 200 || data?.data?.status === 201 || data?.data?.status === 200 || data.status === 201  ) {
+    localStorage.setItem("pin_id", 'yes');
+      setSuccessModal(!successModal);
+   /*    verfiywallet(false); */
+    console.log(data, "data");
+   toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+  position: "top-right",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+  onClose: () => {
+    // Check if the message contains "Order placed successfully. Order Code"
+    if (data?.data?.message && data.data.message.includes("Order placed successfully. Order Code")) {
+      router.push('/profile'); // Redirect to profile page
+    } else {
+      router.push('/paymentpage'); // Redirect to payment page
+    }
   }
+});
+      reset();
+    } else if ( data?.data?.status === 400  || data?.data?.status === 409 || data.status === 400 || data.status === 409  ) {
+
+
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured" || "Error"}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleError = (error: any) => {
+    console.log(error);
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+  const { isLoggedIn, user, token } = useAuthStore((state) => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token,
+  }));
+
+  const userToken = token;
+
+  const {
+    data,
+    error: walleterror,
+    isError,
+    isSuccess,
+    mutate,
+    status,
+  } = useMutateData("verifywalletpin", handleSuccess, handleError);
+
+  const submitForm = (data: any) => {
+
+      Cookies.set("nvd", data?.password, { expires: 1 });
+    const payload = {
+      wallet_pin: data?.password,
+    };
+
+    mutate({
+      url: "/api/verifywalletpin",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });
+  };
+
+  const handleOrderbutton = ()=>{
+
+      let pin = Cookies.get("nvd");
+          // console.log('yes....', pin)
+
+          const payload = {
+            wallet_pin: pin,
+            shipping_address:  cartItemsn?.["Delivery Details"],
+            shipping_method: 'standard',
+            payment_method: 'Wallet'
+          }
+
+             mutate({
+      url: "/api/orderpayment",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });
+  }
+
   return (
     <Suspense fallback={<>Loading...</>}>
       <main>
@@ -185,17 +318,12 @@ const Page = () => {
                         <div>
                           <p className="text-[#111111] text-base  ">
                             Delivery Details
-
                           </p>
                         </div>
 
-
-
-
                         <div className="">
                           <small className="  text-[#A09F9F]">
-                               {cartItemsn?.["Delivery Details"]}
-
+                            {cartItemsn?.["Delivery Details"]}
                           </small>
                         </div>
                       </div>
@@ -263,7 +391,9 @@ const Page = () => {
                                 id="wallet"
                                 name="wallet"
                                 value="wallet"
-                                 onChange={() => handlePaymentSelection("wallet")}
+                                onChange={() =>
+                                  handlePaymentSelection("wallet")
+                                }
                               />
                               <label className="ml-2" htmlFor="wallet">
                                 Wallet
@@ -284,7 +414,7 @@ const Page = () => {
                                 id="card"
                                 name="wallet"
                                 value="card"
-                                 onChange={() => handlePaymentSelection("card")}
+                                onChange={() => handlePaymentSelection("card")}
                               />
                               <label className="ml-2" htmlFor="card">
                                 Pay with Cards, USSD or bank transfer
@@ -303,193 +433,248 @@ const Page = () => {
                   </div>
 
                   <div className="flex justify-end mt-2">
-                   {/*  <button
+                    <button
                       onClick={confirmPaymentMethod}
-                      className=" flex justify-center cursor-pointer text-[#E84526] text-sm"
+                      disabled={!paymentMethod}
+                      className={`flex justify-center cursor-pointer text-[#E84526] text-sm ${paymentMethod ? "active" : "disabled"}`}
                     >
-                      Confirm Payment Method{" "}
-                    </button> */}
-                     <button
-          onClick={confirmPaymentMethod}
-          disabled={!paymentMethod}
-          className={`flex justify-center cursor-pointer text-[#E84526] text-sm ${paymentMethod ? "active" : "disabled"}`}
-        >
-          Confirm Payment Method
-        </button>
+                      Confirm Payment Method
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className=" container justify-center flex xl:block md:block lg:block 2xl:block">
+              {paymentMethod === "wallet" ? (
+                <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
+                  <h1 className="text-[#111111] text-xl">Order SUMMARY</h1>
 
-
-                    {
-                        paymentMethod === 'wallet' ?
-
-
-
-
-
-              <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
-                <h1 className="text-[#111111] text-xl">Order SUMMARY</h1>
-
-
-                 <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#504D4D] font-Poppins text-base mt-4 font-semibold">
-                      Wallet Balance
-                    </p>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#504D4D] font-Poppins text-base mt-4 font-semibold">
+                        Wallet Balance
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 font-semibold ">
+                        {cartItemsn?.["Order Summary"]?.wallet_balance}
+                      </h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 font-semibold ">
-                      {cartItemsn?.["Order Summary"]?.wallet_balance}
-                    </h1>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Total Item
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.total_items}
+                      </h1>
+                    </div>
                   </div>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Delivery Fees
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.delivery_fee}
+                      </h1>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Service Charge
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.service_charge}
+                      </h1>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">Total</p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 font-bold ">
+                        N{cartItemsn?.["Order Summary"]?.total}
+                      </h1>
+                    </div>
+                  </div>
+
+                  {/*        font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all */}
+
+                  <button
+                    onClick={ localStorage.getItem('pin_id') === 'yes' ? handleOrderbutton :  showConfirmOrder}
+                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
+                      isPaymentMethodConfirmed
+                        ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
+                        : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
+                    }`}
+                    disabled={!isPaymentMethodConfirmed}
+                  >
+                  {
+                      status === 'pending' ? '...' : 'Confirm Order'
+                    }
+                  </button>
                 </div>
+              ) : paymentMethod === "card" ? (
+                <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
+                  <h1 className="text-[#111111] text-xl">Order SUMMARY</h1>
 
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">
-                      Total Item
-                    </p>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Total Item
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.total_items}
+                      </h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 ">
-                      {cartItemsn?.["Order Summary"]?.total_items}
-                    </h1>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Delivery Fees
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.delivery_fee}
+                      </h1>
+                    </div>
                   </div>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Service Charge
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.service_charge}
+                      </h1>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">Total</p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 font-bold ">
+                        N{cartItemsn?.["Order Summary"]?.total}
+                      </h1>
+                    </div>
+                  </div>
+
+                  <button
+                    /* onClick={showConfirmOrder} */
+                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
+                      isPaymentMethodConfirmed
+                        ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
+                        : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
+                    }`}
+                    disabled={!isPaymentMethodConfirmed}
+                  >
+                    Confirm Order
+                  </button>
                 </div>
+              ) :   <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
+                  <h1 className="text-[#111111] text-xl">Order SUMMARY</h1>
 
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">
-                      Delivery Fees
-                    </p>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#504D4D] font-Poppins text-base mt-4 font-semibold">
+                        Wallet Balance
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 font-semibold ">
+                        {cartItemsn?.["Order Summary"]?.wallet_balance}
+                      </h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 ">
-                      {cartItemsn?.["Order Summary"]?.delivery_fee}
 
-                    </h1>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Total Item
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.total_items}
+                      </h1>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">
-                      Service Charge
-                    </p>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Delivery Fees
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.delivery_fee}
+                      </h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 ">
-                    {cartItemsn?.["Order Summary"]?.service_charge}
-                    </h1>
+
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">
+                        Service Charge
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 ">
+                        {cartItemsn?.["Order Summary"]?.service_charge}
+                      </h1>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">Total</p>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <p className="text-[#b4a3a3] text-base mt-4">Total</p>
+                    </div>
+                    <div>
+                      <h1 className="text-[#111111] text-lg mt-4 font-bold ">
+                        N{cartItemsn?.["Order Summary"]?.total}
+                      </h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 font-bold ">
 
-                       N{cartItemsn?.["Order Summary"]?.total}
-                    </h1>
-                  </div>
-                </div>
+                  {/*        font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all */}
 
-         {/*        font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all */}
-
-                <button
-                  onClick={showConfirmOrder}
-                  className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
-                    isPaymentMethodConfirmed
-                      ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
-                      : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
-                  }`}
-                  disabled={!isPaymentMethodConfirmed}
-                >
-                  Confirm Order
-                </button>
-              </div> : paymentMethod === "card" ?
-
-              <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
-                <h1 className="text-[#111111] text-xl">Order SUMMARY</h1>
-
-
-
-
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">
-                      Total Item
-                    </p>
-                  </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 ">
-                      {cartItemsn?.["Order Summary"]?.total_items}
-                    </h1>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">
-                      Delivery Fees
-                    </p>
-                  </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 ">
-                      {cartItemsn?.["Order Summary"]?.delivery_fee}
-
-                    </h1>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">
-                      Service Charge
-                    </p>
-                  </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 ">
-                    {cartItemsn?.["Order Summary"]?.service_charge}
-                    </h1>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div>
-                    <p className="text-[#b4a3a3] text-base mt-4">Total</p>
-                  </div>
-                  <div>
-                    <h1 className="text-[#111111] text-lg mt-4 font-bold ">
-
-                       N{cartItemsn?.["Order Summary"]?.total}
-                    </h1>
-                  </div>
-                </div>
-
-         {/*        font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all */}
-
-                <button
-                  onClick={showConfirmOrder}
-                  className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
-                    isPaymentMethodConfirmed
-                      ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
-                      : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
-                  }`}
-                  disabled={!isPaymentMethodConfirmed}
-                >
-                  Confirm Order
-                </button>
-              </div> : null
-
-
-            }
+                  <button
+                   /*  onClick={ localStorage.getItem('pin_id') === 'yes' ? handleOrderbutton :  showConfirmOrder} */
+                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
+                      isPaymentMethodConfirmed
+                        ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
+                        : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
+                    }`}
+                    disabled={!isPaymentMethodConfirmed}
+                  >
+                    Confirm Order
+                  </button>
+                </div>}
             </div>
           </div>
         </div>
@@ -576,6 +761,7 @@ const Page = () => {
               <form
                 action=""
                 className="flex justify-center items-center flex-col mt-8 mb-4"
+                onSubmit={handleSubmit(submitForm)}
               >
                 <div className="flex flex-col">
                   <Input
@@ -596,7 +782,7 @@ const Page = () => {
                     className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
                                     }`}
                   >
-                    Pay
+                    {status === "pending" ? "..." : "Pay"}
                   </button>
                 </div>
               </form>

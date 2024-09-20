@@ -22,7 +22,7 @@ export const WalletPin = () => {
     setCableStepper,
     setElectricityStepper
   }
-   = userNavStore(state => ({setWalletModal:state.setWalletModal, userNav:state.userNav, setStepper:state.setStepper, setAirtimeStepper:state.setAirtimeStepper, setElectricityStepper:state.setElectricityStepper, 
+   = userNavStore(state => ({setWalletModal:state.setWalletModal, userNav:state.userNav, setStepper:state.setStepper, setAirtimeStepper:state.setAirtimeStepper, setElectricityStepper:state.setElectricityStepper,
   setCableStepper:state.setCableStepper
 
     }))
