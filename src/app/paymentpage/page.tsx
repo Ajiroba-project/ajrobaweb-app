@@ -20,6 +20,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/store";
 import { useMutateData } from "@/hooks/useMutateNewData";
+import Loading from "../component/Loading";
 
 const Page = () => {
   const router = useRouter();
@@ -77,9 +78,11 @@ const Page = () => {
       .then((response) => {
        /*  console.log(response, "response"); */
         setCartItemsn(response.data?.data);
+            setLoading(false);
       })
       .catch((error) => {
         setError("Error loading cart items");
+           setLoading(false);
       })
       .finally(() => setLoading(false));
   };
@@ -288,6 +291,10 @@ const Page = () => {
       payload: { payload: payload, token: userToken },
       token: userToken,
     });
+  }
+
+      if (loading) {
+    return <Loading />;
   }
 
   return (

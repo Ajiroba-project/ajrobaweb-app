@@ -30,13 +30,6 @@ export const ProfileContent = () => {
   const query = searchParams.get('q')
 
 
-  // useEffect(() => {
-
-  //   console.log(query)
-
-  // }, [])
-
-
 
 
   return (

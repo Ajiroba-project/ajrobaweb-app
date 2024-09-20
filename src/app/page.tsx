@@ -297,12 +297,6 @@ const Page = () => {
               {/* <TopWeakCard cardInfo={topweak?.data?.slice(0, 8)} /> */}
                  <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
               <div className="flex justify-center pt-5">
-              {/*   <DefaultButton
-                  text="View all Deals"
-                  type="button"
-                  handleClick={() => router.push("/categories")}
-                 className=" font-Poppins font-normal text-sm  px-2 py-4 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-                /> */}
 
                  <DefaultButton
                   text="View all Deals"

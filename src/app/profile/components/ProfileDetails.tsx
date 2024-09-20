@@ -55,10 +55,7 @@ const tkn_: string = Cookies.get('token') as string;
   );
 
   useEffect(() => {
-  /*   console.log(token, 'tokennn')
-    console.log(userDetails, 'user')
-    console.log(Cookies.get('token'))
-    console.log(user, 'user') */
+
     if (token || Cookies.get('token')) {
       setIsTokenReady(true);
     }
