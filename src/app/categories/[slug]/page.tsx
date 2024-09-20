@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
@@ -41,7 +41,7 @@ interface AuctionResponse {
   data: CardInfoItem[];
 }
 
-const Page = () => {
+const CategoryPage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -578,4 +578,21 @@ const Page = () => {
   );
 };
 
-export default Page;
+
+
+
+
+
+
+export function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <CategoryPage />
+    </Suspense>
+  )
+}
+
+
+
+
