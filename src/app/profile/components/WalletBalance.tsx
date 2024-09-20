@@ -30,276 +30,12 @@ type ConfirmationModalProps = {
 };
 
 
-
-// const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
-
-//     const [loadingverify, setloadingverify] = useState(false)
-
-
-
-
-
-
-//   const handleContinue = async () => {
-//     try {
-//       console.log(amount);
-
-//       if (!amount) {
-//         toast.error("Please enter a valid amount.");
-//         return;
-//       }
-
-//       const tkn_: string = Cookies.get("token") as string;
-
-//       const payload = { amount: Number(amount) };
-
-//       const response = await axios.post(
-//         "https://ajiroba.onrender.com/v1/pay/fund_wallet/",
-//         payload,
-//         {
-//           headers: {
-//             Authorization: `token ${tkn_}`,
-//           },
-//         },
-//       );
-
-//       if (response.status === 200) {
-//         const { payment_url, reference } = response.data;
-//         console.log("Payment initiated, redirecting to:", payment_url);
-
-//         localStorage.setItem("paymentReference", reference);
-//         Cookies.set("paymentReference", reference, { expires: 1 });
-
-//         startVerificationLoop(reference);
-
-//         window.open(payment_url, "_blank");
-
-//         toast.success("Payment initiated successfully.");
-//       } else {
-//         toast.error("An unexpected status was returned.");
-//       }
-//     } catch (error) {
-//       toast.error("An error occurred during the payment process.");
-//     } finally {
-//       onClose();
-//     }
-//   };
-
-//   const startVerificationLoop = (reference: string) => {
-//     const intervalTime = 2000;
-//     const totalDuration = 2 * 60 * 1000;
-//     const maxAttempts = totalDuration / intervalTime;
-//     let attempts = 0;
-
-//     const stopLoop = () => {
-//       clearInterval(intervalId);
-//       console.log("Verification loop stopped.");
-//     };
-
-//     let intervalId: NodeJS.Timeout;
-
-//     setTimeout(() => {
-//       intervalId = setInterval(async () => {
-//         attempts++;
-
-//         await verifyWalletPayment(reference, stopLoop);
-
-//         if (attempts >= maxAttempts) {
-//           clearInterval(intervalId);
-//           console.log("Verification loop stopped after max attempts.");
-//         }
-//       }, intervalTime);
-
-//       setTimeout(() => clearInterval(intervalId), totalDuration);
-//     }, 15 * 1000);
-//   };
-
-//   const router = useRouter();
-
-
-
-//   const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
-//     setloadingverify(true)
-//     try {
-//       const tkn_: string = Cookies.get("token") as string;
-
-
-//       const response = await axios.get(
-//         `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
-//         {
-//           headers: {
-//             Authorization: `token ${tkn_}`,
-//           },
-//         },
-//       );
-
-//       console.log(response, "response");
-//       if (response.status === 200 || response.status === 201) {
-//           setloadingverify(false)
-//         toast.success(`${response?.data?.message}`),
-//           {
-//             position: "top-right",
-//             autoClose: 2000,
-//             hideProgressBar: false,
-//             closeOnClick: true,
-//             pauseOnHover: true,
-//             draggable: true,
-//             progress: undefined,
-//             theme: "light",
-//             onClose: () => router.push("/profile"),
-//           };
-//         stopLoop();
-//       } else {
-//         toast.error("Unexpected status during verification.");
-//         console.log(response, "response");
-//            setloadingverify(false)
-//       }
-//     } catch (error) {
-//          setloadingverify(false)
-//       console.error(error);
-//       toast.error("Error occurred during payment verification.");
-//     }
-//   };
-
-//   const [success, setSuccess] = useState(false);
-
-//   const {
-//     reset,
-//     register,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm({
-//     mode: "all",
-//   });
-
-//   const Closefunc = () => {
-//     setSuccess(false);
-//     reset();
-//   };
-
-//   const handleSuccess = (data: any) => {
-//     if (data.status === 201 || data.status === 200) {
-//       setSuccess(true);
-
-//       reset();
-//     } else if (data.status === 400 || data.status === 409) {
-//       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
-//         position: "top-right",
-//         autoClose: 2000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: "light",
-//       });
-//       reset();
-//     } else if (data.status === 401) {
-//       toast.error(`${data?.data?.message || "Authentication error"} `, {
-//         position: "top-right",
-//         autoClose: 2000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: "light",
-//       });
-//       reset();
-//     } else if (data.status === 500) {
-//       toast.error(`${data?.data?.message || "old_password"} `, {
-//         position: "top-right",
-//         autoClose: 2000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: "light",
-//       });
-//       reset();
-//     } else {
-//       toast.error(`${"An Error Occured" || "Error"}`, {
-//         position: "top-right",
-//         autoClose: 2000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: "light",
-//       });
-//       reset();
-//     }
-//   };
-
-//   const handleError = (error: any) => {
-//     console.log(data, "datttataaa", error);
-//     console.log(error, "errrr");
-//     toast.error(`${"An Error Occured"}`, {
-//       position: "top-right",
-//       autoClose: 2000,
-//       hideProgressBar: false,
-//       closeOnClick: true,
-//       pauseOnHover: true,
-//       draggable: true,
-//       progress: undefined,
-//       theme: "light",
-//     });
-//     reset();
-//   };
-
-//   const { isLoggedIn, user, token } = useAuthStore((state) => ({
-//     isLoggedIn: state.isLoggedIn,
-//     user: state.user,
-//     token: state.token,
-//   }));
-
-//   const userToken = token;
-
-//   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
-//     "makepayment",
-//     handleSuccess,
-//     handleError,
-//   );
-
-
-//   if (loadingverify ) {
-//     return <Loading />;
-//   }
-
-//   return (
-//     <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
-//       <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
-//         <p className="text-center">
-//           You are going to deposit the amount of N {amount}
-//         </p>
-//         <div className="flex w-full gap-5 flex-col">
-//           <DefaultButton
-//             text="Continue"
-//             type="button"
-//             className="w-full rounded-md bg-[#E84526] p-3 text-white"
-//             handleClick={handleContinue}
-//           />
-//           <DefaultButton
-//             text="Back"
-//             type="button"
-//             className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
-//             handleClick={onClose}
-//           />
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-
 const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
   const [loadingverify, setloadingverify] = useState(false);
 
   const handleContinue = async () => {
     try {
-      console.log(amount);
+      // console.log(amount);
 
       if (!amount) {
         toast.error("Please enter a valid amount.");
@@ -322,7 +58,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
       if (response.status === 200) {
         const { payment_url, reference } = response.data;
-        console.log("Payment initiated, redirecting to:", payment_url);
+        // console.log("Payment initiated, redirecting to:", payment_url);
 
         localStorage.setItem("paymentReference", reference);
         Cookies.set("paymentReference", reference, { expires: 1 });
@@ -350,7 +86,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
     const stopLoop = () => {
       clearInterval(intervalId);
-      console.log("Verification loop stopped.");
+    /*   console.log("Verification loop stopped."); */
     };
 
     let intervalId: NodeJS.Timeout;
@@ -363,7 +99,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
         if (attempts >= maxAttempts) {
           clearInterval(intervalId);
-          console.log("Verification loop stopped after max attempts.");
+        /*   console.log("Verification loop stopped after max attempts."); */
         }
       }, intervalTime);
 
@@ -385,7 +121,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         }
       );
 
-      console.log(response, "response");
+     /*  console.log(response, "response"); */
       if (response.status === 200 || response.status === 201) {
         setloadingverify(false); // Stop loading when verification is successful
         toast.success(`${response?.data?.message}`);

@@ -75,7 +75,7 @@ const Page = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response, "response");
+       /*  console.log(response, "response"); */
         setCartItemsn(response.data?.data);
       })
       .catch((error) => {
@@ -152,7 +152,7 @@ const Page = () => {
     localStorage.setItem("pin_id", 'yes');
       setSuccessModal(!successModal);
    /*    verfiywallet(false); */
-    console.log(data, "data");
+   /*  console.log(data, "data"); */
    toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
   position: "top-right",
   autoClose: 2000,
@@ -226,7 +226,7 @@ const Page = () => {
   };
 
   const handleError = (error: any) => {
-    console.log(error);
+    // console.log(error);
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
