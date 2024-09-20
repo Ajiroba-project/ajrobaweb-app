@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Header } from '../component/Header'
 import { Profile } from './components/Profile'
 import { PhotoUpload } from "./components/PhotoUpload"
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 // import useAuthMiddleware from '@/hooks/useAuth'
 import AuthMiddleware from '@/hooks/useAuth'
 
-const Page = () => {
+const ProfilePage = () => {
   const router = useRouter()
 
   /*  useAuthMiddleware(router) */
@@ -37,4 +37,13 @@ const Page = () => {
   )
 }
 
-export default Page
+// export default Page
+
+export default function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ProfilePage />
+    </Suspense>
+  )
+}

@@ -1,10 +1,11 @@
 'use client'
-import { Fragment } from 'react'
+import { Fragment, Suspense } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
 import { useRouter } from 'next/navigation'
-const Page = () => {
+
+const PrivacyPage = () => {
   const router = useRouter()
   return (
     <Fragment>
@@ -48,4 +49,13 @@ const Page = () => {
   )
 }
 
-export default Page
+// export default Page
+
+export default function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <PrivacyPage />
+    </Suspense>
+  )
+}

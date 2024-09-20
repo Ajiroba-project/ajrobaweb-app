@@ -1,5 +1,5 @@
 'use client'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, Suspense, useState } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
@@ -27,7 +27,7 @@ type dataProps = {
   email: string
 }
 
-const Page = () => {
+const ContactUsPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const router = useRouter()
   const decodedPaths = usePathName()
@@ -236,4 +236,14 @@ const Page = () => {
   )
 }
 
-export default Page
+// export default Page
+
+
+export default function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ContactUsPage />
+    </Suspense>
+  )
+}

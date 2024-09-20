@@ -2,7 +2,7 @@
 import { AuctionBanner } from '../component/AuctionBanner'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
-import { Fragment } from 'react'
+import { Fragment, Suspense } from 'react'
 import { RechargeCategory } from './components/RechargeCategory'
 import { RecentTransaction } from './components/RecentTransaction'
 import { userNavStore, useAuthStore } from '@/store/store'
@@ -20,8 +20,8 @@ const Reroute =()=>{
    return null
 }
 
-const Page = () => {
-  
+const RechargePage = () => {
+
   const { userNavMenu, sidebar, toggleSidebar } = userNavStore(state => ({
     userNavMenu: state.userNav,
     sidebar: state.sidebar,
@@ -78,4 +78,11 @@ const Page = () => {
   )
 }
 
-export default Page
+export default function Searchbar() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <RechargePage />
+    </Suspense>
+  )
+}

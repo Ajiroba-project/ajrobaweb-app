@@ -8,7 +8,7 @@ import Image from 'next/image'
 import raf from '../asset/image/raf.png'
 import useAuthMiddleware from '@/hooks/useAuth'
 
-const Page = () => {
+const RafflePage = () => {
   const router = useRouter()
   useAuthMiddleware(router)
 
@@ -85,7 +85,7 @@ const Page = () => {
               onPageChange={()=>{}}
               className={"flex gap-2 items-center"}
               pageRangeDisplayed={3}
-                
+
                 />
               </div>
 
@@ -95,4 +95,11 @@ const Page = () => {
   )
 }
 
-export default Page
+export default function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <RafflePage />
+    </Suspense>
+  )
+}

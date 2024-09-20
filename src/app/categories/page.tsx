@@ -8,6 +8,7 @@ import { categories } from "../static-data";
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import { useQueryData } from "@/hooks/useQueryData";
+import { Suspense } from "react";
 // import { useQueryData } from '@/hooks/useQueryData'
 // import { useQueryData } from '@/hooks/useQueryData'
 
@@ -75,4 +76,14 @@ const CatPage = () => {
   );
 };
 
-export default CatPage;
+// export default CatPage;
+
+
+export default function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <CatPage />
+    </Suspense>
+  )
+}

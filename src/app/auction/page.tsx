@@ -1,5 +1,5 @@
 'use client'
-import { Fragment, useState, useEffect, useMemo } from 'react'
+import { Fragment, useState, useEffect, useMemo, Suspense } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { AuctionBanner } from '../component/AuctionBanner'
@@ -26,7 +26,7 @@ interface AuctionResponse {
 }
 
 
-const Page = () => {
+const AuctionPage = () => {
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [filteredData, setFilteredData] = useState<any>([]);
@@ -117,4 +117,13 @@ const Page = () => {
   )
 }
 
-export default Page
+
+
+export default function Page() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <AuctionPage />
+    </Suspense>
+  )
+}

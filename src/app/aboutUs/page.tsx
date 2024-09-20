@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, Suspense, useState } from 'react'
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import { ChatBox } from "../component/ChatBox";
@@ -14,7 +14,7 @@ import vision from "../asset/image/vision.png"
 import Image from "next/image"
 
 
-const Page = () => {
+const AboutUsPage = () => {
 
   const decodedPaths = usePathName()
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -126,4 +126,12 @@ const Page = () => {
   )
 }
 
-export default Page
+// export default Page
+
+export default function Page() {
+  return (
+    <Suspense>
+      <AboutUsPage />
+    </Suspense>
+  )
+}
