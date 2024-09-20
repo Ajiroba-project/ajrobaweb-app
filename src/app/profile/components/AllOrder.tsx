@@ -424,7 +424,7 @@ const submitFormdelete = async (data: any, event: any) => {
       }
 
 {
-  success &&
+ /*  success &&
 
       <Modal
           title='Successful'
@@ -434,9 +434,9 @@ const submitFormdelete = async (data: any, event: any) => {
           buttonclass='w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white'
           buttontext='Continue'
           handleEvent={Closefunc}
-        />
+        /> */
 
-        }
+}
 
 
 

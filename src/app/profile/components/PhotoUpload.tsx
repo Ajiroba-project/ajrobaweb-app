@@ -79,11 +79,11 @@ export const PhotoUpload = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Response data:', responseData);
+    /*     console.log('Response data:', responseData); */
         setUploadSuccess(true);
-        console.log('Image uploaded successfully');
+   /*      console.log('Image uploaded successfully'); */
         setProfile(false);
-        console.log('Image uploaded successfully');
+        // console.log('Image uploaded successfully');
         setProfileurl(responseData?.profile_image_url)
       } else {
         console.error('Failed to upload image');
