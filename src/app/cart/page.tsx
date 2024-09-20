@@ -391,7 +391,7 @@ const Page = () => {
          const successMessage = response.data?.message || "Item quantity increased successfully!";
        toast.success(`${successMessage}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -406,7 +406,7 @@ const Page = () => {
          const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
     toast.error(`${errorMessage}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -445,7 +445,7 @@ const Page = () => {
          const successMessage = response.data?.message || "Item quantity increased successfully!";
        toast.success(`${successMessage}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -460,7 +460,7 @@ const Page = () => {
          const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
     toast.error(`${errorMessage}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -502,7 +502,7 @@ const handleDelete = async (id: number, quantity: number) => {
     const successMessage = response.data?.message || "Item removed successfully!";
     toast.success(`${successMessage}`, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -520,7 +520,7 @@ const handleDelete = async (id: number, quantity: number) => {
     const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
     toast.error(`${errorMessage}`, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

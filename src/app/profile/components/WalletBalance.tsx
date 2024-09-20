@@ -139,7 +139,7 @@ type ConfirmationModalProps = {
 //         toast.success(`${response?.data?.message}`),
 //           {
 //             position: "top-right",
-//             autoClose: 5000,
+//             autoClose: 2000,
 //             hideProgressBar: false,
 //             closeOnClick: true,
 //             pauseOnHover: true,
@@ -185,7 +185,7 @@ type ConfirmationModalProps = {
 //     } else if (data.status === 400 || data.status === 409) {
 //       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
 //         position: "top-right",
-//         autoClose: 5000,
+//         autoClose: 2000,
 //         hideProgressBar: false,
 //         closeOnClick: true,
 //         pauseOnHover: true,
@@ -197,7 +197,7 @@ type ConfirmationModalProps = {
 //     } else if (data.status === 401) {
 //       toast.error(`${data?.data?.message || "Authentication error"} `, {
 //         position: "top-right",
-//         autoClose: 5000,
+//         autoClose: 2000,
 //         hideProgressBar: false,
 //         closeOnClick: true,
 //         pauseOnHover: true,
@@ -209,7 +209,7 @@ type ConfirmationModalProps = {
 //     } else if (data.status === 500) {
 //       toast.error(`${data?.data?.message || "old_password"} `, {
 //         position: "top-right",
-//         autoClose: 5000,
+//         autoClose: 2000,
 //         hideProgressBar: false,
 //         closeOnClick: true,
 //         pauseOnHover: true,
@@ -221,7 +221,7 @@ type ConfirmationModalProps = {
 //     } else {
 //       toast.error(`${"An Error Occured" || "Error"}`, {
 //         position: "top-right",
-//         autoClose: 5000,
+//         autoClose: 2000,
 //         hideProgressBar: false,
 //         closeOnClick: true,
 //         pauseOnHover: true,
@@ -238,7 +238,7 @@ type ConfirmationModalProps = {
 //     console.log(error, "errrr");
 //     toast.error(`${"An Error Occured"}`, {
 //       position: "top-right",
-//       autoClose: 5000,
+//       autoClose: 2000,
 //       hideProgressBar: false,
 //       closeOnClick: true,
 //       pauseOnHover: true,

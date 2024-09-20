@@ -91,7 +91,7 @@ export const ProfileForm: React.FC = () => {
       setSuccessModal(!successModal)
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -104,7 +104,7 @@ export const ProfileForm: React.FC = () => {
     } else if (data.status === 400 || data.status === 409) {
       toast.error(`${data?.data?.message || 'user with this email already exists.' || "user with this phone already exists."} `, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -116,7 +116,7 @@ export const ProfileForm: React.FC = () => {
     } else if (data.status === 401) {
       toast.error(`${data?.data?.message || 'Authentication error'} `, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -131,7 +131,7 @@ export const ProfileForm: React.FC = () => {
     else {
       toast.error(`${'An Error Occured' || 'Error'}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -148,7 +148,7 @@ export const ProfileForm: React.FC = () => {
     console.log(error, 'errrr') */
     toast.error(`${'An Error Occured'}`, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

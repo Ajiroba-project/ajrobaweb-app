@@ -67,7 +67,7 @@ function Page() {
 
             toast.success(`${data?.data?.message}`, {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -82,7 +82,7 @@ function Page() {
         } else if (data.data.status === 400 || data.data.status === 409) {
             toast.error(`${data?.data?.message}`, {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -95,7 +95,7 @@ function Page() {
         } else {
             toast.error(`${'An Error Occured'}`, {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -114,7 +114,7 @@ function Page() {
 
         toast.error(`${'An Error Occured'}`, {
             position: "top-right",
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,

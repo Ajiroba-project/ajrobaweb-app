@@ -84,7 +84,7 @@ function Page() {
       reset()
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -98,7 +98,7 @@ function Page() {
         reset()
       toast.error(`${data?.data?.message}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -112,7 +112,7 @@ function Page() {
       toast.error(`${"An Error Occured"}`, {
 
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -129,7 +129,7 @@ function Page() {
       reset()
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

@@ -1143,7 +1143,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     if (data.status === 200 || data.status === 201) {
     /*   toast.success(`${data?.data?.message || data?.data?.detail}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1177,7 +1177,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
       toast.error(`${data?.data?.message || data?.data?.detail}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1190,7 +1190,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
       toast.error(`${"An Error Occured" || data?.data?.detail}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -1207,7 +1207,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
     toast.error(`${  error || "An Error Occured"}`, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

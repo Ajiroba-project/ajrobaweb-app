@@ -155,7 +155,7 @@ const Page = () => {
     console.log(data, "data");
    toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
   position: "top-right",
-  autoClose: 5000,
+  autoClose: 2000,
   hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,
@@ -177,7 +177,7 @@ const Page = () => {
 
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -189,7 +189,7 @@ const Page = () => {
     } else if (data.status === 401) {
       toast.error(`${data?.data?.message || "Authentication error"} `, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -201,7 +201,7 @@ const Page = () => {
     } else if (data.status === 500) {
       toast.error(`${data?.data?.message || "old_password"} `, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -213,7 +213,7 @@ const Page = () => {
     } else {
       toast.error(`${"An Error Occured" || "Error"}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -229,7 +229,7 @@ const Page = () => {
     console.log(error);
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

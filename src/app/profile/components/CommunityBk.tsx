@@ -78,7 +78,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     if (data.status === 200 || data.status === 201) {
       toast.success(`${data?.data?.message || data?.data?.detail}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -98,7 +98,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
       setCommentImage("");
       toast.error(`${data?.data?.message || data?.data?.detail}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -112,7 +112,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
       setCommentImage("");
       toast.error(`${"An Error Occured" || data?.data?.detail}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -129,7 +129,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     setCommentImage("");
     toast.error(`${data?.data?.detail || error || "An Error Occured"}`, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

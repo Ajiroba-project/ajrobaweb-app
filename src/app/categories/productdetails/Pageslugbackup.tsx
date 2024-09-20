@@ -234,7 +234,7 @@ const Page = ({ params }: any) => {
     const notify = () => {
         toast("🦄 ‘Mama Gold Rice’ has been added to cart", {
             position: "top-center",
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
