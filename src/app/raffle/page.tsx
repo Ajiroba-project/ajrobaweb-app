@@ -97,7 +97,6 @@ const RafflePage = () => {
 
 export default function Page() {
   return (
-    // You could have a loading skeleton as the `fallback` too
     <Suspense>
       <RafflePage />
     </Suspense>

@@ -31,7 +31,7 @@ const Page = ({params}:any) => {
 
     }, [params.id])
 
-    
+
 
   return (
     <section className='z-auto'>
@@ -81,3 +81,5 @@ const Page = ({params}:any) => {
 }
 
 export default Page
+
+
