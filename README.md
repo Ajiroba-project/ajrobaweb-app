@@ -79,7 +79,7 @@ Add additional notes about how to deploy this on a live system.
 - [@Peter Samuel](https://github.com/petsamuel) - jnr Frontend Developer
 
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+
 
 ### 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
