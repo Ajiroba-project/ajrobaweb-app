@@ -503,6 +503,11 @@ const Page = () => {
     setIsOpen(true);
   }, []);
 
+
+
+
+
+
   return (
     <main>
       <Header onSearch={setSearchQuery} />
@@ -523,8 +528,7 @@ const Page = () => {
 
         <div className="w-9/12 h-full pr-8">
           {filteredProducts.length > 0 ? (
-            //   <CategoryProductCard cardInfo={filteredProducts} />
-            // <ProductCardMain cardInfo={filteredProducts} />
+
             <ProductCategoryCard cardInfo={filteredProducts} />
           ) : (
             <div className="text-center flex h-full items-center justify-center">

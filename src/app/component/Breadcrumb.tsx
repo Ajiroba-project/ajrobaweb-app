@@ -19,10 +19,6 @@ export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
     }
   }, [paths]);
 
-  console.log(paths, 'pathsss')
-console.log(paths[0 + 1], '0')
-console.log(paths[0 + 2], '1')
-console.log(paths[0 + 3], '2')
 
 
   return (

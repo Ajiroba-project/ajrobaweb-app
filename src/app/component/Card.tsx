@@ -108,6 +108,132 @@ export const ProductCard = ({ cardInfo }: any) => {
   const router = useRouter()
 
 
+    const getSessionKey = () => {
+    let sessionKey = Cookies.get('session_key');
+
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
+    }
+
+    return sessionKey;
+  };
+
+
+    const userToken = Cookies.get("token") as string || ''
+
+
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<CommentFormValues>({
+    // resolver: yupResolver(commentSchema),
+  });
+
+  const handleSuccess = (data?: any) => {
+
+    if (data.status === 200 || data.status === 201) {
+
+      const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+          setCardAddCartState(result);
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+     /*  refetch(); */
+    } else if (
+      data.status === 403 ||
+      data.status === 404 ||
+      data.status === 401 ||
+      data.status === 409 ||
+      data.status === 500
+    ) {
+
+      toast.error(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    /*   refetch(); */
+    } else {
+
+      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+     /*  refetch(); */
+    }
+  };
+
+  const handleError = (error?: any) => {
+    console.log(error, "errr",  "daaaattt");
+
+    toast.error(`${  error || "An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+   /*  refetch(); */
+  };
+
+
+
+  const { mutate: mutate, status: likedstatus } = useMutateData(
+    "addtocart",
+    handleSuccess,
+    handleError,
+  );
+
+  const onSubmit = (data: CommentFormValues) => {
+      /*   const sessionKey = getSessionKeyForProduct(data.id); */
+      const sessionKey = getSessionKey();
+    const payload = {
+      product_id: data.id,
+      quantity: Number(1),
+   session_key: sessionKey,
+    };
+
+ /*    console.log(data, 'dattaaa')
+    console.log(payload, 'payload')
+ */
+
+        console.log(payload, 'payload')
+     mutate({
+       url: "/api/addtocart/",
+       payload: { payload: payload, tkn: userToken },
+       token: userToken,
+     });
+
+
+    // reset();
+  };
+
+
+
+
   return (
     <>
       {cardInfo && <div
@@ -136,7 +262,8 @@ export const ProductCard = ({ cardInfo }: any) => {
                 <>
                   <IoCartOutline
                     className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-                    onClick={() => handleCartNotification(value)}
+              /*       onClick={() => handleCartNotification(value)} */
+                 onClick={()=> onSubmit(value)}
                   />
                   {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
@@ -226,6 +353,135 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   }
 
 
+
+
+
+
+    const getSessionKey = () => {
+    let sessionKey = Cookies.get('session_key');
+
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
+    }
+
+    return sessionKey;
+  };
+
+
+    const userToken = Cookies.get("token") as string || ''
+
+
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<CommentFormValues>({
+    // resolver: yupResolver(commentSchema),
+  });
+
+  const handleSuccess = (data?: any) => {
+
+    if (data.status === 200 || data.status === 201) {
+
+      const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+          setCardAddCartState(result);
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+     /*  refetch(); */
+    } else if (
+      data.status === 403 ||
+      data.status === 404 ||
+      data.status === 401 ||
+      data.status === 409 ||
+      data.status === 500
+    ) {
+
+      toast.error(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    /*   refetch(); */
+    } else {
+
+      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+     /*  refetch(); */
+    }
+  };
+
+  const handleError = (error?: any) => {
+    console.log(error, "errr",  "daaaattt");
+
+    toast.error(`${  error || "An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+   /*  refetch(); */
+  };
+
+
+
+  const { mutate: mutate, status: likedstatus } = useMutateData(
+    "addtocart",
+    handleSuccess,
+    handleError,
+  );
+
+  const onSubmit = (data: CommentFormValues) => {
+      /*   const sessionKey = getSessionKeyForProduct(data.id); */
+      const sessionKey = getSessionKey();
+    const payload = {
+      product_id: data.id,
+      quantity: Number(1),
+   session_key: sessionKey,
+    };
+
+ /*    console.log(data, 'dattaaa')
+    console.log(payload, 'payload')
+ */
+
+        console.log(payload, 'payload')
+     mutate({
+       url: "/api/addtocart/",
+       payload: { payload: payload, tkn: userToken },
+       token: userToken,
+     });
+
+
+    // reset();
+  };
+
+
+
   return (
     <>
       <div
@@ -255,7 +511,8 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                 <>
                   <IoCartOutline
                     className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-                    onClick={() => handleCartNotification(value)}
+                  /*   onClick={() => handleCartNotification(value)} */
+                     onClick={()=> onSubmit(value)}
                   />
                   {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
@@ -343,6 +600,132 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   const router = useRouter()
 
 
+
+    const getSessionKey = () => {
+    let sessionKey = Cookies.get('session_key');
+
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
+    }
+
+    return sessionKey;
+  };
+
+
+    const userToken = Cookies.get("token") as string || ''
+
+
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<CommentFormValues>({
+    // resolver: yupResolver(commentSchema),
+  });
+
+  const handleSuccess = (data?: any) => {
+
+    if (data.status === 200 || data.status === 201) {
+
+      const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+          setCardAddCartState(result);
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+     /*  refetch(); */
+    } else if (
+      data.status === 403 ||
+      data.status === 404 ||
+      data.status === 401 ||
+      data.status === 409 ||
+      data.status === 500
+    ) {
+
+      toast.error(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    /*   refetch(); */
+    } else {
+
+      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+     /*  refetch(); */
+    }
+  };
+
+  const handleError = (error?: any) => {
+    console.log(error, "errr",  "daaaattt");
+
+    toast.error(`${  error || "An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+   /*  refetch(); */
+  };
+
+
+
+  const { mutate: mutate, status: likedstatus } = useMutateData(
+    "addtocart",
+    handleSuccess,
+    handleError,
+  );
+
+  const onSubmit = (data: CommentFormValues) => {
+      /*   const sessionKey = getSessionKeyForProduct(data.id); */
+      const sessionKey = getSessionKey();
+    const payload = {
+      product_id: data.id,
+      quantity: Number(1),
+   session_key: sessionKey,
+    };
+
+ /*    console.log(data, 'dattaaa')
+    console.log(payload, 'payload')
+ */
+
+        console.log(payload, 'payload')
+     mutate({
+       url: "/api/addtocart/",
+       payload: { payload: payload, tkn: userToken },
+       token: userToken,
+     });
+
+
+    // reset();
+  };
+
+
+
   return (
     <>
       <div
@@ -372,7 +755,8 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                 <>
                   <IoCartOutline
                     className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-                    onClick={() => handleCartNotification(value)}
+                 /*    onClick={() => handleCartNotification(value)} */
+                    onClick={()=> onSubmit(value)}
                   />
                   {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
@@ -914,161 +1298,6 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
 };
 
 
-
-// export const ProductCardMain = ({ cardInfo }: any) => {
-
-//   // console.log(cardInfo, 'cardinfoooo')
-//   const [hoverState, setHoverState] = useState<string>("");
-//   const [cardCartState, setCardCartState] = useState<boolean>(false);
-//   const [cardAddCartState, setCardAddCartState] = useState<any>();
-//   const { isLoggedIn } = useAuthStore((state) => ({
-//     isLoggedIn: state.isLoggedIn,
-//   }));
-
-//   const handleCartNotification = (value: any) => {
-//     setCardAddCartState(value.name);
-
-//     setCardCartState(!cardCartState);
-//     const timeoutID = setTimeout(() => {
-//       setCardCartState(false);
-//     }, 5000);
-
-//     return () => clearTimeout(timeoutID);
-//   };
-
-//   const router = useRouter();
-
-//   return (
-//     <>
-//       {cardInfo && (
-//         <div
-//           className={`${poppins.className} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
-//         >
-//           {cardInfo?.map((value: any, index: number) => (
-//             <div key={index}>
-//               <motion.div onMouseEnter={() => setHoverState(value.name)}
-//                 onMouseLeave={() => setHoverState('')}
-//                 className="flex flex-col h-full shadow-lg"
-
-
-//               >
-//                 <motion.div
-//                   className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
-//                   whileHover={{
-//                     backgroundColor: '#E0E0E0', // Background color change
-//                   }}
-//                 >
-
-//                   <div className='flex justify-end cursor-pointer' >
-//                     {hoverState === value.name ? (
-//                       <>
-//                         <IoCartOutline
-//                           className={`${hoverState ? 'hover:text-[#ffffff] hover:bg-[#E84526] rounded-full ' : 'rounded-full bg-white'}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
-//                           onClick={() => handleCartNotification(value)}
-//                         />
-
-//                       </>
-//                     ) : (
-//                       ''
-//                     )}
-
-
-//                     <>
-//                       {cardCartState && (
-//                         <div
-//                           className={`${cardAddCartState === value.name ? 'absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white' : 'hidden'}`}
-//                         >
-//                           <div className='bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium'>
-//                             <p>{value.name}</p>
-//                             <p>Has been added to cart</p>
-//                           </div>
-//                         </div>
-//                       )}
-//                     </>
-//                   </div>
-
-
-//                   <motion.div
-//                     className="flex justify-center items-center m-3"
-//                     whileHover={{ scale: 1.1 }} // Enlarge the image on hover
-//                     transition={{ duration: 0.3, ease: 'easeOut' }}
-//                   >
-//                     <div onClick={() =>
-//                       router?.push(`/categories/productdetails/${value.id}`)
-//                     } className="p-0">
-//                       {
-//                         hoverState ?
-
-
-
-//                           <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
-//                             <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
-
-//                               width={100}
-//                               height={100}
-//                               alt="image"
-//                               className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent" />
-
-//                           </div>
-
-
-
-//                           : <Image
-//                             src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
-//                             width={100}
-//                             height={100}
-//                             alt="human hair"
-//                             className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
-//                           />
-//                       }
-
-//                     </div>
-//                   </motion.div>
-//                 </motion.div>
-
-//                 <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
-//                   <div className="mt-2 mb-1 p-4">
-//                     <div className="flex justify-between items-center">
-//                       <div>
-//                         <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
-//                           {value?.name}
-//                         </p>
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   <div className="p-4 flex justify-between items-center">
-//                     <div className="justify-start">
-//                       <p className="text-xl font-medium">
-//                         &#8358;{value?.discount?.toLocaleString()}
-//                         <span className=""></span>
-//                       </p>
-
-//                       <p className="text-sm font-normal text-gray-500 line-through">
-//                         &#8358;{value?.price?.toLocaleString()}
-//                       </p>
-//                     </div>
-
-//                     <div className="p-4">
-//                       <p className="flex justify-end text-left gap-1">
-//                         {Array.from({ length: value?.reviews }, (_, index) => (
-//                           <span key={index}>
-//                             <FaStar className="text-[#F25E26]" />
-//                           </span>
-//                         ))}
-//                       </p>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </motion.div>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </>
-//   );
-// };
-
 type CommentFormValues = {
   id: any
   comment: string;
@@ -1084,28 +1313,15 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     isLoggedIn: state.isLoggedIn,
   }));
 
-  // Generate or retrieve session key for each product
-  const getSessionKeyForProduct = (productId: string) => {
-    // Check if a session_key exists for the specific product in cookies
-    let sessionKey = Cookies.get(`session_key_${productId}`);
 
-    // If it doesn't exist, generate a new one and save it in cookies
-    if (!sessionKey) {
-      sessionKey = `session_${productId}_${Math.random().toString(36).substr(2, 9)}`; // Generate unique session key for the product
-      Cookies.set(`session_key_${productId}`, sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
-    }
-    return sessionKey;
-  };
 
-    // Get or generate session key for the user
+
   const getSessionKey = () => {
-    // Check if a session_key already exists in cookies
     let sessionKey = Cookies.get('session_key');
 
-    // If it doesn't exist, generate a new one and save it in cookies
     if (!sessionKey) {
-      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
-      Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
     }
 
     return sessionKey;
@@ -1141,23 +1357,8 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   const handleSuccess = (data?: any) => {
 
     if (data.status === 200 || data.status === 201) {
-    /*   toast.success(`${data?.data?.message || data?.data?.detail}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => router.push("/profile"),
-      }); */
 
-   /*    console.log(data, 'data')
-      console.log(data?.data?.message, 'message') */
       const result = data?.data?.message?.split('added to cart.')[0].trim();
-
-      // console.log(result)
 
           setCardAddCartState(result);
     setCardCartState(!cardCartState);
@@ -1355,13 +1556,134 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
 
 export const ProductCategoryCard = ({ cardInfo }: any) => {
-  // console.log(cardInfo, 'cardinfoooo')
   const [hoverState, setHoverState] = useState<string>("");
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
   const { isLoggedIn } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
   }));
+
+
+
+
+
+  const getSessionKey = () => {
+    let sessionKey = Cookies.get('session_key');
+
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
+    }
+
+    return sessionKey;
+  };
+
+
+    const userToken = Cookies.get("token") as string || ''
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<CommentFormValues>({
+    // resolver: yupResolver(commentSchema),
+  });
+
+  const handleSuccess = (data?: any) => {
+
+    if (data.status === 200 || data.status === 201) {
+
+      const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+          setCardAddCartState(result);
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+     /*  refetch(); */
+    } else if (
+      data.status === 403 ||
+      data.status === 404 ||
+      data.status === 401 ||
+      data.status === 409 ||
+      data.status === 500
+    ) {
+
+      toast.error(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    /*   refetch(); */
+    } else {
+
+      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+     /*  refetch(); */
+    }
+  };
+
+  const handleError = (error?: any) => {
+    console.log(error, "errr",  "daaaattt");
+
+    toast.error(`${  error || "An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+   /*  refetch(); */
+  };
+
+
+
+  const { mutate: mutate, status: likedstatus } = useMutateData(
+    "addtocart",
+    handleSuccess,
+    handleError,
+  );
+
+  const onSubmit = (data: CommentFormValues) => {
+      const sessionKey = getSessionKey();
+    const payload = {
+      product_id: data.id,
+      quantity: Number(1),
+   session_key: sessionKey,
+    };
+
+
+        console.log(payload, 'payload')
+     mutate({
+       url: "/api/addtocart/",
+       payload: { payload: payload, tkn: userToken },
+       token: userToken,
+     });
+
+
+    // reset();
+  };
+
 
 
   const handleCartNotification = (value: any) => {
@@ -1401,132 +1723,7 @@ const handleMouseLeave = (index: number) => {
 
   return (
     <>
-    {/*   {cardInfo && (
-        <div
-          className={`${poppins.className} my-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6`}
-        >
-          {cardInfo?.map((value: any, index: number) => (
-            <div key={index}>
-              <motion.div
-                onMouseEnter={() => setHoverState(value.name)}
-                onMouseLeave={() => setHoverState("")}
-                className="flex flex-col h-full shadow-lg"
-              >
-                <motion.div
-                  className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
-                  whileHover={{
-                    backgroundColor: "#E0E0E0", // Background color change
-                  }}
-                >
-                  <div className="flex justify-end cursor-pointer">
-                    {hoverState === value.name ? (
-                      <>
-                        <IoCartOutline
-                          className={`${hoverState ? "hover:text-[#ffffff] hover:bg-[#E84526] rounded-full " : "rounded-full bg-white"}  absolute right-2 top-2 rounded-full bg-white  p-2 text-4xl text-black `}
-                          onClick={() => handleCartNotification(value)}
-                        />
-                      </>
-                    ) : (
-                      ""
-                    )}
 
-                    <>
-                      {cardCartState && (
-                        <div
-                          className={`${cardAddCartState === value.name ? "absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white" : "hidden"}`}
-                        >
-                          <div className="bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium">
-                            <p>{value.name}</p>
-                            <p>Has been added to cart</p>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  </div>
-
-                  <motion.div
-                    className="flex justify-center items-center m-3"
-                    whileHover={{ scale: 1.1 }} // Enlarge the image on hover
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                  >
-                    <div
-                      onClick={() =>
-                        router?.push(`/categories/productdetails/${value.id}`)
-                      }
-                      className="p-0"
-                    >
-                      {
-                        hoverState ? (
-                          <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
-                            <Image
-                              src={`https://ajiroba.onrender.com/media/${value?.image}`}
-                              width={100}
-                              height={100}
-                              alt="image"
-                              className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"
-                            />
-                          </div>
-                        ) : (
-                          <Image
-                            src={`https://ajiroba.onrender.com/media/${value?.image}`}
-                            width={100}
-                            height={100}
-                            alt="human hair"
-                            className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
-                          />
-                        )
-                      }
-                    </div>
-                  </motion.div>
-                </motion.div>
-
-                <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
-                  <div className="mt-2 mb-1 p-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className=" text-[#353131] text-pretty text-base font-normal font-Poppins">
-                          {value?.name}
-                        </p>
-
-                         <p className=" text-[#A09F9F] text-pretty text-sm font-normal font-Poppins mt-2">
-                          {value?.description ? value?.description : 'No Description'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 flex justify-between items-center">
-                    <div className="justify-start">
-                      <p className="text-xl font-medium">
-                        &#8358;{value?.previousPrice?.toLocaleString()}
-                        <span className=""></span>
-                      </p>
-
-                      <p className="text-sm font-normal text-gray-500 line-through">
-                        &#8358;{value?.price?.toLocaleString()}
-                      </p>
-                    </div>
-
-                    <div className="p-4">
-                      <p className="flex justify-end text-left gap-1">
-                        {Array.from({ length: value?.rating }, (_, index) => (
-                          <span key={index}>
-                            <FaStar className="text-[#F25E26]" />
-                          </span>
-                        ))}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          ))}
-
-
-        </div>
-
-
-      )} */}
 
       {cardInfo && (
     <div
@@ -1549,7 +1746,8 @@ const handleMouseLeave = (index: number) => {
                 {hoverStates[index] ? (
                   <IoCartOutline
                     className="hover:text-[#ffffff] hover:bg-[#E84526] rounded-full absolute right-2 top-2 p-2 text-4xl text-black"
-                    onClick={() => handleCartNotification(value)}
+                   /*  onClick={() => handleCartNotification(value)} */
+                         onClick={()=> onSubmit(value)}
                   />
                 ) : (
                   ""
