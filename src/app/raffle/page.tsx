@@ -7,15 +7,19 @@ import {Pagination} from "@/app/component/Pagination"
 import Image from 'next/image'
 import raf from '../asset/image/raf.png'
 import useAuthMiddleware from '@/hooks/useAuth'
+import { Header } from '../component/Header'
 
 const RafflePage = () => {
   const router = useRouter()
-  useAuthMiddleware(router)
+  // useAuthMiddleware(router)
 
   return (
     <>
-      <Suspense>
+
         <section className=''>
+           <header className="z-50">
+        <Header />
+      </header>
           <div className='w-full bg-[#F6F6F6] pt-[15vh]'>
             <div className='container flex flex-col'>
               <p
@@ -90,14 +94,14 @@ const RafflePage = () => {
               </div>
 
         </section>
-      </Suspense>
+
     </>
   )
 }
 
 export default function Page() {
   return (
-    <Suspense>
+ <Suspense fallback={<div>Loading...</div>}>
       <RafflePage />
     </Suspense>
   )
