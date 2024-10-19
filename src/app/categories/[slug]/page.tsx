@@ -579,11 +579,6 @@ const CategoryPage = () => {
 };
 
 
-
-
-
-
-
 export default function Page() {
   return (
     // You could have a loading skeleton as the `fallback` too
