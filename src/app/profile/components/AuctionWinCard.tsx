@@ -166,7 +166,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       });
       reset();
     } else {
-       toast.error(`${data?.data?.message || "An Error Occured"} `, {
+       toast.error(`${data?.data?.message } `, {
    /*    toast.error(`${"An Error Occured" || "Error"}`, { */
         position: "top-right",
         autoClose: 2000,
