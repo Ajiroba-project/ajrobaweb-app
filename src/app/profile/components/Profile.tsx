@@ -7,6 +7,7 @@ import { IoIosCamera } from 'react-icons/io';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { LuMenuSquare } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
+import Cookies from 'js-cookie';
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false);
@@ -38,11 +39,15 @@ export const Profile = () => {
     token: state.token,
   }));
 
-  const [userToken, setUserToken] = useState<string | null>(null);
+  // const [userToken, setUserToken] = useState<string | null>(null);
+
+ /*  const userToken =  Cookies.get('token') as string; */
+
+  const [userToken, setUserToken] = useState(Cookies.get('token'))
 
   useEffect(() => {
-    setUserToken(token);
-  }, [token]);
+    setUserToken(userToken);
+  }, [userToken]);
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 

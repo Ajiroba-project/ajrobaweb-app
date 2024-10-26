@@ -5,6 +5,7 @@ import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { IoClose } from 'react-icons/io5';
 import { useDropzone } from 'react-dropzone';
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from 'js-cookie';
 
 interface FileProps {
   name: string;
@@ -21,6 +22,9 @@ export const PhotoUpload = () => {
   const { token } = useAuthStore((state) => ({
     token: state.token,
   }));
+
+
+  const userToken =  Cookies.get('token') as string;
 
   const [files, setFiles] = useState<FileProps[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -70,7 +74,7 @@ export const PhotoUpload = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
+          'Authorization': `Token ${userToken}`,
         },
         body: JSON.stringify({
           profile_image: base64Image,
