@@ -3,37 +3,39 @@ import { Fragment, useState, useEffect, useMemo, Suspense } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { AuctionBanner } from '../component/AuctionBanner'
-import { Products } from '../static-data'
-import { AuctionCard, AuctionCardMain } from '../component/Card'
+import { AuctionComp } from '../component/AuctionComp'
 import { Pagination } from '../component/Pagination'
 import { useRouter } from 'next/navigation'
 import auctionImg from '../asset/image/auction-banner.png'
 import { useQueryData } from '@/hooks/useQueryData'
 import { userNavStore } from '@/store/store'
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
+// Add this helper function to get auction dates from the data
+const extractAuctionDates = (data: any[]) => {
+  return data.map((item: { auctionDate: string | number | Date }) => new Date(item.auctionDate)); // Ensure `auctionDate` is in a valid format
+}
 
 interface AuctionItem {
+  starts_in: string
   id: number;
   title: string;
   description: string;
   imageUrl: string;
-  // add other fields as necessary
+  auctionDate: string; // Add auction date to the interface
 }
 
 interface AuctionResponse {
   data: AuctionItem[];
-  // add other fields as necessary
 }
 
-
 const AuctionPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [filteredData, setFilteredData] = useState<any>([]);
   const [itemsPerPage] = useState<number>(12);
-
-
-  // const { data: auctionInfo, isLoading: auctionLoading } = useQueryData(`${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`, "get auctiondetails", true);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`,
@@ -41,44 +43,51 @@ const AuctionPage = () => {
     true
   );
 
+  console.log(auctionInfo?.data);
+
+  // Extract and set auction dates
+  const auctionDates = useMemo(() => {
+    if (auctionInfo?.data) {
+      return extractAuctionDates(auctionInfo.data);
+    }
+    return [];
+  }, [auctionInfo]);
+
   useMemo(() => {
-
-    /*    const filteredProducts = Products.slice(
-         currentPage * itemsPerPage,
-         (currentPage + 1) * itemsPerPage)
-
-       setFilteredData(filteredProducts); */
-
-
     if (auctionInfo?.data) {
       const filteredProducts = auctionInfo?.data.slice(
         currentPage * itemsPerPage,
-        (currentPage + 1) * itemsPerPage)
-
+        (currentPage + 1) * itemsPerPage
+      );
       setFilteredData(filteredProducts);
     }
-
   }, [currentPage, itemsPerPage, auctionInfo]);
 
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   const pageCount = Math.ceil((auctionInfo?.data.length || 0) / itemsPerPage);
 
-     const { setHeaderNav, headerNav } = userNavStore(state => ({
+  const { setHeaderNav, headerNav } = userNavStore(state => ({
     setHeaderNav: state.setHeaderNav,
     headerNav: state.headerNav,
   }));
 
   useEffect(() => {
-         if (headerNav !== 'auction') {
-        setHeaderNav('Auction Deals');
-     }
+    if (headerNav !== 'auction') {
+      setHeaderNav('Auction Deals');
+    }
+  }, []);  // Add `path` as a dependency to avoid unnecessary updates
 
+  // Check if there are active auctions based on current data
+  const isAuctionActive = auctionInfo?.data.some(item => item.starts_in !== "Raffle Ended");
 
-}, []);  // Add `path` as a dependency to avoid unnecessary updates
-
+  // Exclude dates that are not part of the auction dates
+  const excludedDates = auctionDates.filter(date => {
+    const today = new Date();
+    return date < today; // Example: Exclude past dates
+  });
 
   return (
     <Fragment>
@@ -92,38 +101,45 @@ const AuctionPage = () => {
             View All Raffle Draw Video
           </div>
 
+          {/* Date Input */}
           <div>
-            <input
-              type='date'
-              name='search'
-              id='search'
-              className='rounded border p-4'
-            />
+            {isAuctionActive ? (
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date: Date | null) => setSelectedDate(date)}
+                excludeDates={excludedDates}
+                className=" rounded border p-4"
+              />
+            ) : (
+              <p>Auction has ended.</p>
+            )}
           </div>
         </section>
 
-        <section className='my-4 flex justify-center flex-col items-center'>
-          <AuctionCardMain cardInfo={filteredData} currentPage={0} cardsNum={0} />
+        <section className='my-4'>
+          <h1>Auction</h1>
+          <AuctionComp
+            cardInfo={filteredData}
+            currentPage={0}
+            cardsNum={0}
+          />
           <Pagination
             pageCount={pageCount}
-           /*  onPageChange={(pageNumber: number) => handlePageChange(pageNumber)} */
-               onPageChange={({ selected }) => handlePageChange(selected)}
+            onPageChange={({ selected }) => handlePageChange(selected)}
             className='my-6 flex items-center justify-center gap-4 '
           />
         </section>
       </main>
       <Footer />
     </Fragment>
-  )
+  );
 }
-
-
 
 export default function Page() {
   return (
-    // You could have a loading skeleton as the `fallback` too
     <Suspense>
       <AuctionPage />
     </Suspense>
-  )
+  );
 }
+

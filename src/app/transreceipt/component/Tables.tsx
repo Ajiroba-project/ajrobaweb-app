@@ -27,11 +27,11 @@ interface DataProps {
 export const Tables: React.FC<DataProps> = ({ Data }) => {
   const userNav =userNavStore( state =>state.userNav)
 
-  console.log(Data)
+  // console.log(Data)
 
 //   console.log(userNav)
 
-console.log(Data?.data[1]?.sender)
+// console.log(Data?.data[1]?.sender)
 
   return (
     <div style={{
