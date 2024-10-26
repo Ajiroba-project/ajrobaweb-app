@@ -110,7 +110,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     } else {
       setComment("");
       setCommentImage("");
-      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

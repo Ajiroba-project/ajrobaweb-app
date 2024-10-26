@@ -169,7 +169,7 @@ export const ProductCard = ({ cardInfo }: any) => {
     /*   refetch(); */
     } else {
 
-      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -418,7 +418,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
     /*   refetch(); */
     } else {
 
-      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -662,7 +662,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
     /*   refetch(); */
     } else {
 
-      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -1389,7 +1389,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     /*   refetch(); */
     } else {
 
-      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -1626,7 +1626,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
     /*   refetch(); */
     } else {
 
-      toast.error(`${"An Error Occured" || data?.data?.detail}`, {
+      toast.error(`${ data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

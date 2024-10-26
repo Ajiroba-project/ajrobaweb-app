@@ -12,6 +12,7 @@ import { useMutateData } from '@/hooks/useMutateNewData'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie'
 
 export const ChangePassword = () => {
   const [success, setSuccess] = useState(false)
@@ -101,7 +102,7 @@ export const ChangePassword = () => {
       reset();
     }
     else {
-      toast.error(`${'An Error Occured' || 'Error'}`, {
+      toast.error(`${'An Error Occured' }`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -139,7 +140,7 @@ export const ChangePassword = () => {
   }))
 
 
-  const userToken = token;
+const userToken =  Cookies.get('token') as string;
 
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(

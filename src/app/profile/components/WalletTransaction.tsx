@@ -4,6 +4,7 @@ import { GoArrowDownLeft, GoArrowUpRight } from 'react-icons/go'
 import { useAuthStore } from '@/store/store'
 import { useGetDatanew } from '@/hooks/useGetData'
 import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 
 // Helper function to format date
@@ -29,12 +30,14 @@ export const WalletTransaction = () => {
     token: state.token,
   }));
 
+   const userToken =  Cookies.get('token') as string;
+
     const router = useRouter();
 
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/recent_transactions/`;
 
-  const { data: transInfo, isLoading: transLoading } = useGetDatanew(url, 'get_recent_transactions', token, {
+  const { data: transInfo, isLoading: transLoading } = useGetDatanew(url, 'get_recent_transactions', userToken, {
     cacheTime: 0,
     staleTime: 0,
   });

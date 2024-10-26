@@ -16,6 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/store'
+import Cookies from 'js-cookie';
 
 type ProfileFormValues = {
   first_name: string;
@@ -167,7 +168,7 @@ export const ProfileForm: React.FC = () => {
   }))
 
 
-  const userToken = token;
+  const userToken =  Cookies.get('token') as string;
 
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
