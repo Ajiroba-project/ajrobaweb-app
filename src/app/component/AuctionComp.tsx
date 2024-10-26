@@ -41,7 +41,7 @@ function parseStartsIn(startsIn = "0 Days, 0 Hr: 3 Mins Left") {
 }
 
 // Countdown Timer component
-const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 3 Mins Left" }) => {
+const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
   const {
     totalMinutes: initialTotalMinutes,
     daysLeft: initialDaysLeft,
@@ -69,6 +69,7 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 3 Mins Left" }) => {
   return (
     <div className="mb-3">
       <p className="text-xs capitalize mb-2 ">
+         <span className="font-medium">{daysLeft}</span> dy:{" "}
         <span className="font-medium">{hoursLeft}</span> Hr:{" "}
         <span className="font-medium">{minutesLeft}</span> Min{" "}
         <span className="font-medium">Left</span>
@@ -98,7 +99,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                 key={index}
                /*  className="rounded-lg bg-[#FFFFFF] border border-[#F6F6F6] cursor-pointer" */
                 className="rounded-lg bg-[#fdfdfd] border border-[#F6F6F6] cursor-pointer"
-                onClick={() => router.push(`/categories/productdetails/${value.id}`)}
+                onClick={() => router.push(`/auction/productdetails/${value.id}`)}
                 whileHover={{ scale: 1.05, boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)" }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ scale: 1 }}
@@ -133,7 +134,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                 </div>
 
               <div>
-              {/*     <div className="bg-[#F6F6F6] p-12 "> */}
+
                   <div className="bg-[#F6F6F6] px-4 py-4 ">
                   <div className="flex justify-between items-center">
                     <div>

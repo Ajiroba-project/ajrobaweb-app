@@ -214,7 +214,7 @@ const Page = () => {
       });
       reset();
     } else {
-      toast.error(`${"An Error Occured" || "Error"}`, {
+      toast.error(`${"An Error Occured" }`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,

@@ -21,6 +21,7 @@ import * as yup from "yup";
 import { FaStar } from "react-icons/fa";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import { RiH1 } from "react-icons/ri";
+import Cookies from "js-cookie";
 
 type Product = {
   name: string;
@@ -125,7 +126,7 @@ const Closefuncdelete = () => {
     token: state.token,
   }));
 
-  const userToken = token;
+  const userToken =  Cookies.get('token') as string;
 
   const handleSuccess = (data: any) => {
     Setreviewerror('')
@@ -314,7 +315,7 @@ const submitFormdelete = async (data: any, event: any) => {
   });
 };
 
-   /*   */{console.log(transac, transac?.length, 'transac')}
+
 
   return transac?.map((val, index) => (
     <>
