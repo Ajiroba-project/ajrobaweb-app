@@ -50,6 +50,7 @@ const Page = () => {
       .request(config)
       .then((response) => {
         setCartItemsn(response.data?.data[0]?.items);
+        localStorage.setItem('cnt', response.data?.data[0]?.items)
       })
       .catch((error) => {
         setError("Error loading cart items");

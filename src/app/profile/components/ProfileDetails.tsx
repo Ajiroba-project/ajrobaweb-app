@@ -56,10 +56,10 @@ const tkn_: string = Cookies.get('token') as string;
 
   useEffect(() => {
 
-    if (token || Cookies.get('token')) {
+    if (tkn_ || Cookies.get('token')) {
       setIsTokenReady(true);
     }
-  }, [token]);
+  }, [tkn_]);
 
   useEffect(() => {
     if (isTokenReady) {

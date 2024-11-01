@@ -16,21 +16,33 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Cookies from "js-cookie";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/store";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import Loading from "../component/Loading";
+import { Deposite } from "../profile/components/Deposite";
+import { DefaultButton } from "../component/Button";
+import { DepositeCard } from "../profile/components/DepositeCard";
+
+
+type ConfirmationModalProps = {
+  amount: string;
+  onClose: () => void;
+};
+
 
 const Page = () => {
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmordermodal, setConfirmOrder] = useState(false);
+  const [cardpayment, setcardpayment] = useState(false);
+    const [depositAmount, setDepositAmount] = useState<string>("");
+      const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [isPaymentMethodConfirmed, setIsPaymentMethodConfirmed] =
     useState(false);
   const [successModal, setSuccessModal] = useState(false);
-  const [verfiywallet, setverifywallet] = useState<any>(false);
 
   const [orderSummary, setOrderSummary] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -45,7 +57,7 @@ const Page = () => {
 
     if (!tkn_) {
       toast.error("Please log in to continue.");
-      router.push("/signin"); // Redirect to login if no token
+      router.push("/signin");
       return;
     }
 
@@ -76,13 +88,12 @@ const Page = () => {
     axios
       .request(config)
       .then((response) => {
-       /*  console.log(response, "response"); */
         setCartItemsn(response.data?.data);
-            setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         setError("Error loading cart items");
-           setLoading(false);
+        setLoading(false);
       })
       .finally(() => setLoading(false));
   };
@@ -120,6 +131,10 @@ const Page = () => {
     setConfirmOrder(true);
   };
 
+    const showConfirmOrderCard = () => {
+    setcardpayment(true);
+  };
+
   const handleConfirmOrder = () => {
     setConfirmOrder(false);
   };
@@ -150,34 +165,41 @@ const Page = () => {
   });
 
   const handleSuccess = (data: any) => {
-
-    if ( data.status === 200 || data?.data?.status === 201 || data?.data?.status === 200 || data.status === 201  ) {
-    localStorage.setItem("pin_id", 'yes');
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
-   /*    verfiywallet(false); */
-   /*  console.log(data, "data"); */
-   toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
-  position: "top-right",
-  autoClose: 2000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  onClose: () => {
-    // Check if the message contains "Order placed successfully. Order Code"
-    if (data?.data?.message && data.data.message.includes("Order placed successfully. Order Code")) {
-      router.push('/profile'); // Redirect to profile page
-    } else {
-      router.push('/paymentpage'); // Redirect to payment page
-    }
-  }
-});
+      toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+          if (
+            data?.data?.message &&
+            data.data.message.includes("Order placed successfully. Order Code")
+          ) {
+            router.push("/profile");
+          } else {
+            router.push("/paymentpage");
+          }
+        },
+      });
       reset();
-    } else if ( data?.data?.status === 400  || data?.data?.status === 409 || data.status === 400 || data.status === 409  ) {
-
-
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
         position: "top-right",
         autoClose: 2000,
@@ -214,7 +236,7 @@ const Page = () => {
       });
       reset();
     } else {
-      toast.error(`${"An Error Occured" }`, {
+      toast.error(`${"An Error Occured"}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -229,7 +251,6 @@ const Page = () => {
   };
 
   const handleError = (error: any) => {
-    // console.log(error);
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
@@ -261,8 +282,7 @@ const Page = () => {
   } = useMutateData("verifywalletpin", handleSuccess, handleError);
 
   const submitForm = (data: any) => {
-
-      Cookies.set("nvd", data?.password, { expires: 1 });
+    Cookies.set("nvd", data?.password, { expires: 1 });
     const payload = {
       wallet_pin: data?.password,
     };
@@ -274,26 +294,196 @@ const Page = () => {
     });
   };
 
-  const handleOrderbutton = ()=>{
+  const handleOrderbutton = () => {
+    let pin = Cookies.get("nvd");
+    // console.log('yes....', pin)
 
-      let pin = Cookies.get("nvd");
-          // console.log('yes....', pin)
+    const payload = {
+      wallet_pin: pin,
+      shipping_address: cartItemsn?.["Delivery Details"],
+      shipping_method: "standard",
+      payment_method: "Wallet",
+    };
 
-          const payload = {
-            wallet_pin: pin,
-            shipping_address:  cartItemsn?.["Delivery Details"],
-            shipping_method: 'standard',
-            payment_method: 'Wallet'
-          }
-
-             mutate({
+    mutate({
       url: "/api/orderpayment",
       payload: { payload: payload, token: userToken },
       token: userToken,
     });
+  };
+
+
+
+const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
+  const [loadingverify, setloadingverify] = useState(false);
+
+  const handleContinue = async () => {
+    try {
+      // console.log(amount);
+
+      if (!amount) {
+        toast.error("Please enter a valid amount.");
+        return;
+      }
+
+      const tkn_: string = Cookies.get("token") as string;
+
+      // const payload = { amount: Number(amount) };
+
+
+           const payload = {
+
+      shipping_address: cartItemsn?.["Delivery Details"],
+      shipping_method: "standard",
+      payment_method: "Electronic",
+      amount: Number(amount)
+    };
+
+ /*    mutate({
+      url: "/api/orderpayment",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });  */
+
+      const response = await axios.post(
+        "https://ajiroba.onrender.com/v1/commerce/order/",
+        payload,
+        {
+          headers: {
+            Authorization: `token ${tkn_}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const { payment_url, reference } = response.data;
+
+        localStorage.setItem("paymentReference", reference);
+        Cookies.set("paymentReference", reference, { expires: 1 });
+
+        startVerificationLoop(reference);
+
+        window.open(payment_url, "_blank");
+
+        toast.success("Payment initiated successfully.");
+      } else {
+        toast.error("An unexpected status was returned.");
+      }
+    } catch (error) {
+
+if (axios.isAxiosError(error)) {
+    toast.error(
+      error.response?.data?.message || "An error occurred during the payment process."
+    );
+  } else {
+    toast.error("An unexpected error occurred.");
   }
 
-      if (loading) {
+    } finally {
+      onClose();
+    }
+  };
+
+  const startVerificationLoop = (reference: string) => {
+    const intervalTime = 2000;
+    const totalDuration = 60 * 1000;
+    const maxAttempts = totalDuration / intervalTime;
+    let attempts = 0;
+
+    const stopLoop = () => {
+      clearInterval(intervalId);
+    /*   console.log("Verification loop stopped."); */
+    };
+
+    let intervalId: NodeJS.Timeout;
+
+    setTimeout(() => {
+      intervalId = setInterval(async () => {
+        attempts++;
+
+        await verifyWalletPayment(reference, stopLoop);
+
+        if (attempts >= maxAttempts) {
+          clearInterval(intervalId);
+        /*   console.log("Verification loop stopped after max attempts."); */
+        }
+      }, intervalTime);
+
+      setTimeout(() => clearInterval(intervalId), totalDuration);
+    }, 1 * 15 * 1000);
+  };
+
+  const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+    setloadingverify(true); // Set loading to true when verification starts
+    try {
+      const tkn_: string = Cookies.get("token") as string;
+
+      const response = await axios.get(
+        `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
+        {
+          headers: {
+            Authorization: `token ${tkn_}`,
+          },
+        }
+      );
+
+     /*  console.log(response, "response"); */
+      if (response.status === 200 || response.status === 201) {
+      stopLoop();
+        setloadingverify(false); // Stop loading when verification is successful
+        toast.success(`${response?.data?.message}`);
+         // Stop the loop after success
+      } else {
+        stopLoop();
+        setloadingverify(false); // Stop loading even for unsuccessful responses
+        toast.error("Unexpected status during verification.");
+      }
+    } catch (error) {
+      stopLoop();
+      setloadingverify(false); // Ensure loading stops on error
+      console.error(error);
+      toast.error("Error occurred during payment verification.");
+    }
+  };
+
+  const router = useRouter();
+
+  // Show Loading component while verification is in progress
+  if (loadingverify) {
+    return <Loading />;
+  }
+
+  return (
+    <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
+      <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
+        <p className="text-center">
+
+          Please make a payment of ₦ {amount} for your purchase.
+        </p>
+        <div className="flex w-full gap-5 flex-col">
+          <DefaultButton
+            text="Continue"
+            type="button"
+            className="w-full rounded-md bg-[#E84526] p-3 text-white"
+            handleClick={handleContinue}
+          />
+          <DefaultButton
+            text="Back"
+            type="button"
+            className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
+            handleClick={onClose}
+          />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+
+
+
+  if (loading) {
     return <Loading />;
   }
 
@@ -520,10 +710,12 @@ const Page = () => {
                     </div>
                   </div>
 
-                  {/*        font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all */}
-
                   <button
-                    onClick={ localStorage.getItem('pin_id') === 'yes' ? handleOrderbutton :  showConfirmOrder}
+                    onClick={
+                      localStorage.getItem("pin_id") === "yes"
+                        ? handleOrderbutton
+                        : showConfirmOrder
+                    }
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
                       isPaymentMethodConfirmed
                         ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
@@ -531,9 +723,7 @@ const Page = () => {
                     }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
-                  {
-                      status === 'pending' ? '...' : 'Confirm Order'
-                    }
+                    {status === "pending" ? "..." : "Confirm Order"}
                   </button>
                 </div>
               ) : paymentMethod === "card" ? (
@@ -591,7 +781,7 @@ const Page = () => {
                   </div>
 
                   <button
-                    /* onClick={showConfirmOrder} */
+                     onClick={showConfirmOrderCard}
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
                       isPaymentMethodConfirmed
                         ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
@@ -602,7 +792,8 @@ const Page = () => {
                     Confirm Order
                   </button>
                 </div>
-              ) :   <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
+              ) : (
+                <div className="border rounded border-[#D2D2D2] px-4  py-4 shadow-lg">
                   <h1 className="text-[#111111] text-xl">Order SUMMARY</h1>
 
                   <div className="flex items-center justify-between flex-wrap gap-4">
@@ -668,10 +859,7 @@ const Page = () => {
                     </div>
                   </div>
 
-                  {/*        font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all */}
-
                   <button
-                   /*  onClick={ localStorage.getItem('pin_id') === 'yes' ? handleOrderbutton :  showConfirmOrder} */
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
                       isPaymentMethodConfirmed
                         ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
@@ -681,7 +869,8 @@ const Page = () => {
                   >
                     Confirm Order
                   </button>
-                </div>}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -752,6 +941,31 @@ const Page = () => {
           handleOk={handleOk}
           handleCancel={handleCancel}
         />
+
+
+          {cardpayment && (
+        <DepositeCard
+          handleClick={() => setcardpayment(false)}
+          handleNext={(amount: SetStateAction<string>) => {
+            setcardpayment(false);
+            setDepositAmount(amount);
+            setShowConfirmation(true);
+          }}
+          handleCancel={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      )}
+
+
+          {showConfirmation && (
+        <ConfirmationModal
+          amount={depositAmount}
+          onClose={() => {
+            setShowConfirmation(false);
+          }}
+        />
+      )}
 
         <ModalComponent
           content={

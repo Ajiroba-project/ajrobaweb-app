@@ -1404,7 +1404,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   };
 
   const handleError = (error?: any) => {
-    console.log(error, "errr",  "daaaattt");
+    // console.log(error, "errr",  "daaaattt");
 
     toast.error(`${  error || "An Error Occured"}`, {
       position: "top-right",
@@ -1440,7 +1440,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     console.log(payload, 'payload')
  */
 
-        console.log(payload, 'payload')
+    /*     console.log(payload, 'payload') */
      mutate({
        url: "/api/addtocart/",
        payload: { payload: payload, tkn: userToken },

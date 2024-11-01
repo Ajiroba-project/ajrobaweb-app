@@ -82,7 +82,7 @@ import { ModalProfile } from "./ModalProfile";
 import Verify from "@/app/asset/verify.svg";
 import { Modal } from "@/app/component/Modal";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

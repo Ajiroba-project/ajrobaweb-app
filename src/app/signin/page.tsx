@@ -18,7 +18,7 @@ import { Button } from "@nextui-org/react";
 
 import { useAuthStore } from '@/store/store'
 
-import 'react-toastify/dist/ReactToastify.css'
+// import 'react-toastify/dist/ReactToastify.css'
 import { useState } from 'react'
 // import Cookies from 'js-cookie'
 
