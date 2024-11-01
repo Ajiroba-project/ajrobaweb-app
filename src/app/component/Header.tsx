@@ -192,6 +192,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const pathname = usePathname();
   const isRootPath = pathname === '/';
   const [isOpen, setIsOpen] = useState<boolean | null>(null);
+  const [cartCount, setcartCount] =  useState<string | number | any>(0);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
     const [hoveredMenu, setHoveredMenu] = useState<number | null>(null);
   const { isLoggedIn, clearAuthCookies } = useAuthStore(state => ({
@@ -273,6 +274,16 @@ useEffect(() => {
   };
 }, [headerNav, menuRef]); // Add relevant dependencies here
 
+
+
+useEffect(() => {
+  // Retrieve the cart number from localStorage and parse it
+  const cartnumber = JSON.parse(localStorage.getItem('cnt') || '3'); // Use '0' as a fallback if null
+
+  // console.log(cartnumber, 'cccc');
+
+  setcartCount(Number(cartnumber?.length));
+}, []);
 
 
   return (
@@ -410,7 +421,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              <div className='flex gap-4'>
+           {/*    <div className='flex gap-4'>
                 <BiBell className='cursor-pointer text-xl text-[#000000]' color='black'/>
                 <IoCartOutline
                   onClick={() => router.push('/cart')}
@@ -427,7 +438,37 @@ useEffect(() => {
                     className='text-xl text-[#A09F9F] lg:hidden'
                   />
                 )}
-              </div>
+              </div> */}
+
+              <div className='flex gap-4'>
+      <BiBell className='cursor-pointer text-xl text-[#000000]' color='black' />
+
+      {/* Cart icon with cart count */}
+      <div className='relative cursor-pointer' onClick={() => router.push('/cart')}>
+        <IoCartOutline className='text-xl text-[#000000]' color='black' />
+
+
+        {/*  {cartCount > 0 && (
+          <span className='absolute -top-1 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center md:w-5 md:h-5 md:text-sm'>
+            {cartCount}
+          </span>
+        )} */}
+
+      </div>
+
+      {/* Menu or Close button for mobile */}
+      {isOpen ? (
+        <IoClose
+          onClick={hamburgerfunc}
+          className='text-xl text-[#A09F9F] lg:hidden'
+        />
+      ) : (
+        <FiMenu
+          onClick={hamburgerfunc}
+          className='text-xl text-[#A09F9F] lg:hidden'
+        />
+      )}
+    </div>
             </div>
           </div>
         </div>
