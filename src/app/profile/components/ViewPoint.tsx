@@ -19,7 +19,7 @@ export const ReferralPointsModal = ({ isOpen, setIsOpen, referralData }: any) =>
   const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
 
 
-console.log(pointinfo?.data?.data, 'pointinfo')
+// console.log(pointinfo?.data?.data, 'pointinfo')
 
 
 

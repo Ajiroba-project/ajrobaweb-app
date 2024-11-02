@@ -1,20 +1,37 @@
 "use clients";
 
-import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+import {
+  AwaitedReactNode,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
-import { FaStar } from "react-icons/fa6";
+import { FaRegEye, FaRegEyeSlash, FaStar } from "react-icons/fa6";
 import Image from "next/image";
-import { motion } from "framer-motion"
-import './style.css'
+import { motion } from "framer-motion";
+import "./style.css";
 import ModalComponent from "./ModalComponent";
 import { useMutateData } from "@/hooks/useMutateDataBid";
 import Cookies from "js-cookie";
 import { Axios } from "axios";
 import axios from "axios";
 import { toast } from "react-toastify";
-import rice from '../asset/image/rice2.jpeg'
+import rice from "../asset/image/rice2.jpeg";
 import { DefaultButton } from "./Button";
 import { useGetPointData } from "@/hooks/useGetData";
+import { SetStateAction } from "react";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+// import { useMutateData } from '@/hooks/useMutateData'
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import Input from "../component/Input";
+import InputAction from "./InputAction";
 
 interface cardDetails {
   cardInfo: Array<{
@@ -29,7 +46,6 @@ interface cardDetails {
   currentPage: number;
   cardsNum: number;
 }
-
 
 // Utility function to parse time remaining from a string
 function parseStartsIn(startsIn = "0 Days, 0 Hr: 3 Mins Left") {
@@ -73,12 +89,13 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
   const daysLeft = Math.floor(timeLeft / 1440);
 
   // Progress should be 0% when timeLeft is 0 or when the total time is 0
-  const progress = initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+  const progress =
+    initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
 
   return (
     <div className="mb-3">
       <p className="text-xs capitalize mb-2 ">
-         <span className="font-medium">{daysLeft}</span> dy:{" "}
+        <span className="font-medium">{daysLeft}</span> dy:{" "}
         <span className="font-medium">{hoursLeft}</span> Hr:{" "}
         <span className="font-medium">{minutesLeft}</span> Min{" "}
         <span className="font-medium">Left</span>
@@ -93,30 +110,30 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
   );
 };
 
-
-
-
 // Auction Component
 export const AuctionComp = ({ cardInfo }: any) => {
   const router = useRouter();
 
-    const userToken =  Cookies.get('token') as string;
+  const userToken = Cookies.get("token") as string;
 
-  const [bidopen, setbidopen] = useState(false)
+  const [bidopen, setbidopen] = useState(false);
 
   const [bidData, setBidData] = useState(null);
-  const [viewticket, setViewTicket] = useState(false)
+  const [viewticket, setViewTicket] = useState(false);
 
+  const [makepayment, setmakepayment] = useState(false);
 
+  const tkn_: string = Cookies.get("token") as string;
 
-  const tkn_: string = Cookies.get('token') as string;
+  const {
+    data: pointinfo,
+    isLoading: pointsLoading,
+    error: pointerror,
+  } = useGetPointData("/api/getpoints", "get_point_details", userToken);
 
-  const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
+  const [paymentMethod, setPaymentMethod] = useState("");
 
-
-
-
-// Handle API success
+  // Handle API success
   const handleSuccess = (data?: any) => {
     if (data.status === 200 || data.status === 201) {
       setBidData(data?.data); // Store the API response in bidData for modal usage
@@ -136,130 +153,143 @@ export const AuctionComp = ({ cardInfo }: any) => {
   // Initialize the mutation hook
   const { mutate } = useMutateData("bidinfo", handleSuccess, handleError);
 
-
   // Function to handle bid button click
-//   const handleBidClick = async (productId: any) => {
+  //   const handleBidClick = async (productId: any) => {
 
+  // try {
+  //    /*  const response = await axios.get('https://ajiroba.onrender.com/v1/auction/bid_info/', {
+  //         headers: {
+  //             Authorization: `token ${userToken}`,
+  //         },
+  //         params: JSON.stringify({
+  //             auction_id: productId
+  //         })
+  //     }); */
 
-// try {
-//    /*  const response = await axios.get('https://ajiroba.onrender.com/v1/auction/bid_info/', {
-//         headers: {
-//             Authorization: `token ${userToken}`,
-//         },
-//         params: JSON.stringify({
-//             auction_id: productId
-//         })
-//     }); */
+  //     const axios = require('axios');
+  // let data = JSON.stringify({
+  //   "auction_id": productId
+  // });
 
+  // let config = {
+  //   method: 'get',
+  //   maxBodyLength: Infinity,
+  //   url: 'https://ajiroba.onrender.com/v1/auction/bid_info/',
+  //   headers: {
+  //     'Authorization': `token ${userToken}`,
+  //     'Content-Type': 'application/json'
+  //   },
+  //   data : data
+  // };
 
-//     const axios = require('axios');
-// let data = JSON.stringify({
-//   "auction_id": productId
-// });
+  // axios.request(config)
+  // .then((response: { data: any; }) => {
+  //   console.log(JSON.stringify(response.data));
 
-// let config = {
-//   method: 'get',
-//   maxBodyLength: Infinity,
-//   url: 'https://ajiroba.onrender.com/v1/auction/bid_info/',
-//   headers: {
-//     'Authorization': `token ${userToken}`,
-//     'Content-Type': 'application/json'
-//   },
-//   data : data
-// };
+  //       // Handle success
+  //     if (response.status === 200 || response.status === 201) {
+  //         console.log('Data retrieved successfully:', response.data);
+  //             setBidData(response?.data);
 
-// axios.request(config)
-// .then((response: { data: any; }) => {
-//   console.log(JSON.stringify(response.data));
+  //     } else {
+  //         console.error('Unexpected response status:', response.status);
+  //     }
+  // })
+  // .catch((error) => {
+  //   console.log(error);
 
-//       // Handle success
-//     if (response.status === 200 || response.status === 201) {
-//         console.log('Data retrieved successfully:', response.data);
-//             setBidData(response?.data);
+  //    if (axios.isAxiosError(error)) {
+  //           setbidopen(false);
+  //         const errorMessage = error.response?.data?.message || "Error!.";
+  //     toast.error(`${errorMessage}`, {
+  //         position: 'top-right',
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: 'light'
+  //       })
 
-//     } else {
-//         console.error('Unexpected response status:', response.status);
-//     }
-// })
-// .catch((error) => {
-//   console.log(error);
+  //     } else {
+  //         // Handle other types of errors that may not be Axios-specific
+  //         console.error('An unexpected error occurred:', error);
+  //     }
+  // });
 
-//    if (axios.isAxiosError(error)) {
-//           setbidopen(false);
-//         const errorMessage = error.response?.data?.message || "Error!.";
-//     toast.error(`${errorMessage}`, {
-//         position: 'top-right',
-//         autoClose: 2000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//         theme: 'light'
-//       })
+  // }
 
-//     } else {
-//         // Handle other types of errors that may not be Axios-specific
-//         console.error('An unexpected error occurred:', error);
-//     }
-// });
+  //   };
 
+  const schema = yup.object().shape({
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Can't be lesser than 6 digits"),
+  });
 
+  const {
+    reset,
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    watch,
+    setValue,
+  } = useForm({
+    mode: "all",
+    resolver: yupResolver(schema),
+  });
 
-// }
+  const handleBidClick = async (productId: any) => {
+    const myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      "token f6264d7fad27137261803f6b4ab85df2701d1e5ea3049d433409958f6da044f2",
+    );
+    myHeaders.append("Content-Type", "application/json");
 
+    // Construct the URL with query parameters
+    const url = new URL("https://ajiroba.onrender.com/v1/auction/bid_info/");
+    url.searchParams.append("auction_id", productId); // Add auction_id as a URL parameter
 
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
 
+    try {
+      const response = await fetch(url, requestOptions);
 
-//   };
+      // Check if the response is ok (status in the range 200-299)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
+      const result = await response.json(); // Parse the JSON response
+      console.log(result); // Handle the result as needed
 
-
-const handleBidClick = async (productId: any) => {
-  const myHeaders = new Headers();
-  myHeaders.append("Authorization", "token f6264d7fad27137261803f6b4ab85df2701d1e5ea3049d433409958f6da044f2");
-  myHeaders.append("Content-Type", "application/json");
-
-  // Construct the URL with query parameters
-  const url = new URL("https://ajiroba.onrender.com/v1/auction/bid_info/");
-  url.searchParams.append("auction_id", productId); // Add auction_id as a URL parameter
-
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow"
-  };
-
-  try {
-    const response = await fetch(url, requestOptions);
-
-    // Check if the response is ok (status in the range 200-299)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      // You can set the bid data or handle success here
+      setBidData(result); // Assuming setBidData is a function to store the result
+    } catch (error) {
+      console.error("Error fetching bid info:", error);
+      // Handle error (e.g., show a toast notification)
+      setbidopen(true);
+      toast.error("Failed to retrieve bid info. Please try again later.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
-
-    const result = await response.json(); // Parse the JSON response
-    console.log(result); // Handle the result as needed
-
-    // You can set the bid data or handle success here
-    setBidData(result); // Assuming setBidData is a function to store the result
-  } catch (error) {
-    console.error("Error fetching bid info:", error);
-    // Handle error (e.g., show a toast notification)
-    setbidopen(true)
-    toast.error("Failed to retrieve bid info. Please try again later.", {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light'
-    });
-  }
-};
-
+  };
 
   const initialTicketPrice = 200;
   const [ticketCount, setTicketCount] = useState(1);
@@ -280,491 +310,536 @@ const handleBidClick = async (productId: any) => {
     }
   };
 
+  const handlePaymentSelection = (method: SetStateAction<string>) => {
+    setPaymentMethod(method);
+  };
 
+  const submitForm = (data: any) => {
+    console.log(data, 'dddd', paymentMethod, 'paymmm');
 
+    // mutate(data)
+  };
+
+  const handlePay = () => {};
 
   return (
     <>
       {cardInfo && (
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cardInfo?.map((value: { id: any; images: { image: any; }[]; name: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; ticket_price: { toLocaleString: () => string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }; reviews: any; starts_in: string | undefined; }, index: Key | null | undefined) => (
-              <motion.div
-                key={index}
-               /*  className="rounded-lg bg-[#FFFFFF] border border-[#F6F6F6] cursor-pointer" */
-                className="rounded-lg bg-[#fdfdfd] border border-[#F6F6F6] cursor-pointer"
-
-                whileHover={{ scale: 1.05, boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ scale: 1 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                <div className="border-b-4 pb-4">
-                  <div className="flex justify-between items-center py-2 p-4">
-                    <div>
-                      <p className="text-[#A09F9F] text-sm font-medium font-Poppins">
-                        On Auction
-                      </p>
+            {cardInfo?.map(
+              (
+                value: {
+                  id: any;
+                  images: { image: any }[];
+                  name:
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | ReactElement<any, string | JSXElementConstructor<any>>
+                    | Iterable<ReactNode>
+                    | ReactPortal
+                    | Promise<AwaitedReactNode>
+                    | null
+                    | undefined;
+                  ticket_price: {
+                    toLocaleString: () =>
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                  };
+                  reviews: any;
+                  starts_in: string | undefined;
+                },
+                index: Key | null | undefined,
+              ) => (
+                <motion.div
+                  key={index}
+                  /*  className="rounded-lg bg-[#FFFFFF] border border-[#F6F6F6] cursor-pointer" */
+                  className="rounded-lg bg-[#fdfdfd] border border-[#F6F6F6] cursor-pointer"
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ scale: 1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <div className="border-b-4 pb-4">
+                    <div className="flex justify-between items-center py-2 p-4">
+                      <div>
+                        <p className="text-[#A09F9F] text-sm font-medium font-Poppins">
+                          On Auction
+                        </p>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => handleBidClick(value.id)}
+                          className="cursor-pointer rounded-md bg-[#FCFCFC] px-2 py-1 text-sm font-Poppins font-medium shadow-md transition duration-200 ease-in-out hover:bg-[#E84526] hover:text-white"
+                        >
+                          Bid
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <button onClick={() => handleBidClick(value.id)} className="cursor-pointer rounded-md bg-[#FCFCFC] px-2 py-1 text-sm font-Poppins font-medium shadow-md transition duration-200 ease-in-out hover:bg-[#E84526] hover:text-white">
-                        Bid
-                      </button>
+
+                    <div
+                      className="flex justify-center items-center m-3"
+                      onClick={() =>
+                        router.push(`/auction/productdetails/${value.id}`)
+                      }
+                    >
+                      <div className="bg-transparent p-0">
+                        <Image
+                          src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                          width={100}
+                          height={100}
+                          alt="human hair"
+                          className=""
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex justify-center items-center m-3" onClick={() => router.push(`/auction/productdetails/${value.id}`)}>
-                    <div className="bg-transparent p-0">
+                  <div>
+                    <div className="bg-[#F6F6F6] px-4 py-4 ">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
+                            {value?.name}
+                          </p>
+                        </div>
+
+                        <div className="flex justify-center items-center gap-2">
+                          <div>
+                            <p className="text-xs font-normal font-Poppins text-[#000000]">
+                              Ticket Price:
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-pretty text-base font-Poppins font-medium text-[#F25E26]">
+                              &#8358;{value?.ticket_price.toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/*  <div className="bg-[#F6F6F6] px-4"> */}
+                    <div className="bg-[#f6f6f6] px-4">
+                      <p className="flex justify-end text-left gap-1">
+                        {Array.from({ length: value?.reviews }, (_, index) => (
+                          <span key={index}>
+                            <FaStar className="text-[#F25E26]" />
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+
+                    {/*      <div className="bg-[#F6F6F6] px-4 "> */}
+                    <div className="bg-[#f6f6f6] px-4 ">
+                      <CountdownTimer startsIn={value?.starts_in} />
+                    </div>
+                  </div>
+                </motion.div>
+              ),
+            )}
+          </div>
+
+          <ModalComponent
+            content={
+              <div className="flex flex-col  px-6 py-4">
+                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                  Back
+                </div>
+
+                <div className="flex justify-between flex-wrap py-2">
+                  <div>
+                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                      <span className="font-Poppins">Foodstuffs</span>
+                      <span>|</span>
+                      <span className="font-Poppins font-medium">Rice</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="font-Poppins font-medium">
+                      Raffle Draw
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
+                  <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                    <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
                       <Image
-                        src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                        src={rice}
                         width={100}
                         height={100}
                         alt="human hair"
                         className=""
                       />
+                      <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
+
+                      <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+                        <div className="bg-orange-500 p-3 rounded-lg text-center">
+                          <span className="text-sm block">Raffle Ticket</span>
+                          <span className="text-sm font-bold">
+                            ₦ {ticketPrice}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-              <div>
-
-                  <div className="bg-[#F6F6F6] px-4 py-4 ">
-                  <div className="flex justify-between items-center">
+                  <div className="w-full lg:w-1/2 flex flex-col space-y-4">
                     <div>
-                      <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
-                        {value?.name}
-                      </p>
+                      <label className="font-Poppins text-gray-700">
+                        Product
+                      </label>
+                      <input
+                        type="text"
+                        value="Rice"
+                        readOnly
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
+                      />
                     </div>
 
-                    <div className="flex justify-center items-center gap-2">
-                      <div>
-                        <p className="text-xs font-normal font-Poppins text-[#000000]">
-                          Ticket Price:
-                        </p>
+                    <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                      <div className="flex flex-col items-center w-full sm:w-1/2">
+                        <label className="font-Poppins text-gray-700 mb-4">
+                          Ticket Price (₦)
+                        </label>
+                        <div className="flex items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            onClick={handleDecrease}
+                            disabled={ticketCount <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="mx-4 font-bold text-sm">
+                            {" "}
+                            {ticketPrice}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            onClick={handleIncrease}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-pretty text-base font-Poppins font-medium text-[#F25E26]">
-                          &#8358;{value?.ticket_price.toLocaleString()}
-                        </p>
+
+                      <div className="flex flex-col items-center w-full sm:w-1/2">
+                        <label className="font-Poppins text-gray-700 mb-4">
+                          No of Ticket
+                        </label>
+                        <div className="flex items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            onClick={handleDecrease}
+                            disabled={ticketCount <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="mx-4 font-bold text-sm">
+                            {ticketCount}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-orange-500 text-white rounded"
+                            onClick={handleIncrease}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => {
+                          return (
+                            setbidopen(!bidopen), setViewTicket(!viewticket)
+                          );
+                        }}
+                        className="text-orange-500 font-Poppins text-xs mt-1"
+                      >
+                        View Ticket
+                      </button>
+                    </div>
+
+                    <div>
+                      <label className="font-Poppins text-gray-700">
+                        Amount (₦)
+                      </label>
+                      <input
+                        type="text"
+                        value={`₦ ${totalAmount.toLocaleString()}`}
+                        readOnly
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                      />
+                    </div>
+
+                    <DefaultButton
+                      text="Proceed"
+                      type="submit"
+                      handleClick={() => {
+                        return (
+                          setmakepayment(!makepayment), setbidopen(!bidopen)
+                        );
+                      }}
+                      className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            }
+            isModalOpen={bidopen}
+            showModal={() => setbidopen(!bidopen)}
+            handleOk={() => setbidopen(false)}
+            handleCancel={() => setbidopen(false)}
+          />
+
+          <ModalComponent
+            content={
+              <div className="flex flex-col  px-6 py-4">
+                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                  Back
+                </div>
+
+                <div className="flex justify-between flex-wrap py-2">
+                  <div>
+                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                      <span className="font-Poppins">Foodstuffs</span>
+                      <span>|</span>
+                      <span className="font-Poppins font-medium">Rice</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="font-Poppins font-medium">
+                      Raffle Draw
+                    </span>
                   </div>
                 </div>
 
-               {/*  <div className="bg-[#F6F6F6] px-4"> */}
-                    <div className="bg-[#f6f6f6] px-4">
-                  <p className="flex justify-end text-left gap-1">
-                    {Array.from({ length: value?.reviews }, (_, index) => (
-                      <span key={index}>
-                        <FaStar className="text-[#F25E26]" />
-                      </span>
-                    ))}
+                <div className="flex gap-4 justify-center items-center ">
+                  <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                    <div className="flex flex-col items-center w-full sm:w-1/2">
+                      <label className="font-Poppins text-gray-700 mb-4">
+                        Ticket Price (₦)
+                      </label>
+                      <div className="flex items-center">
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded"
+                          onClick={handleDecrease}
+                          disabled={ticketCount <= 1}
+                        >
+                          -
+                        </button>
+                        <span className="mx-4 font-bold text-sm">
+                          {" "}
+                          {ticketPrice}
+                        </span>
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded"
+                          onClick={handleIncrease}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-center w-full sm:w-1/2">
+                      <label className="font-Poppins text-gray-700 mb-4">
+                        No of Ticket
+                      </label>
+                      <div className="flex items-center">
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded"
+                          onClick={handleDecrease}
+                          disabled={ticketCount <= 1}
+                        >
+                          -
+                        </button>
+                        <span className="mx-4 font-bold text-sm">
+                          {ticketCount}
+                        </span>
+                        <button
+                          className="px-2 py-1 bg-orange-500 text-white rounded"
+                          onClick={handleIncrease}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-Poppins text-gray-700">
+                      Amount (₦)
+                    </label>
+                    <input
+                      type="text"
+                      value={`₦ ${totalAmount.toLocaleString()}`}
+                      readOnly
+                      className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <table className="w-full border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-[#FCDFD4] text-left">
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          S/N
+                        </th>
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          Ticket Type
+                        </th>
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          Ticket Number
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="mt-8">
+                      {pointinfo?.data?.data?.map(
+                        (referral: any, index: number) => (
+                          <tr key={index}>
+                            <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                              {index + 1}
+                            </td>
+                            <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                              {referral.description}
+                            </td>
+                            <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                              {referral.point}
+                            </td>
+                          </tr>
+                        ),
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            }
+            isModalOpen={viewticket}
+            showModal={() => setViewTicket(!viewticket)}
+            handleOk={() => setViewTicket(false)}
+            handleCancel={() => setViewTicket(false)}
+          />
+
+          <ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Make Payment
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    Kindly select your payment option
                   </p>
                 </div>
 
-           {/*      <div className="bg-[#F6F6F6] px-4 "> */}
-                 <div className="bg-[#f6f6f6] px-4 ">
-                  <CountdownTimer startsIn={value?.starts_in} />
+                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+                  <div>
+                    <p className="text-[#111111] text-base mb-4  ">
+                      Payment Method
+                    </p>
+                  </div>
+
+                  <form action="">
+                    <div className="mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet"
+                          name="wallet"
+                          value="wallet"
+                          onChange={() => handlePaymentSelection("wallet")}
+                        />
+                        <label className="ml-2" htmlFor="wallet">
+                          Wallet
+                        </label>
+                      </div>
+
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          pay with the money in your wallet
+                        </small>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="card"
+                          name="wallet"
+                          value="card"
+                          onChange={() => handlePaymentSelection("card")}
+                        />
+                        <label className="ml-2" htmlFor="card">
+                          Pay with Cards, USSD or bank transfer
+                        </label>
+                      </div>
+
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          pay with the money in your wallet
+                        </small>
+                      </div>
+                    </div>
+                  </form>
                 </div>
+
+                <form
+                  action=""
+                  className="flex  flex-col mt-8 mb-4"
+                  onSubmit={handleSubmit(submitForm)}
+                >
+                  <div className="flex flex-col">
+                    <InputAction
+                      label="Enter Pin"
+                      type="password"
+                      name="password"
+                      placeholder="****"
+                      register={register}
+                      errors={errors.password}
+                      HiEyeSlash={<FaRegEyeSlash />}
+                      HiEye={<FaRegEye />}
+                    />
+                    <div className="text-xs text-red-700">
+                      {errors?.password?.message}
+                    </div>
+
+                    <button
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+                    >
+                      {status === "pending" ? "..." : "Pay"}
+                    </button>
+                  </div>
+                </form>
               </div>
-              </motion.div>
-            ))}
-          </div>
-
-
-
-
-
-
-<ModalComponent
-  content={
- <div className="flex flex-col  px-6 py-4">
-  <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
-    Back
-  </div>
-
-<div className="flex justify-between flex-wrap py-2" >
-
-  <div>
-   <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-    <span className="font-Poppins">Foodstuffs</span>
-    <span>|</span>
-    <span className="font-Poppins font-medium">Rice</span>
-  </div>
- </div>
-
- <div>
-   <span className="font-Poppins font-medium">Raffle Draw</span>
- </div>
-</div>
-
-  <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
-    <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-      <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-        <Image
-          src={rice}
-          width={100}
-          height={100}
-          alt="human hair"
-          className=""
-        />
-        <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
-
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
-          <div className="bg-orange-500 p-3 rounded-lg text-center">
-            <span className="text-sm block">Raffle Ticket</span>
-            <span className="text-sm font-bold">₦ {ticketPrice}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="w-full lg:w-1/2 flex flex-col space-y-4">
-      <div>
-        <label className="font-Poppins text-gray-700">Product</label>
-        <input
-          type="text"
-          value="Rice"
-          readOnly
-          className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
-        />
-      </div>
-
-      <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-        <div className="flex flex-col items-center w-full sm:w-1/2">
-          <label className="font-Poppins text-gray-700 mb-4">Ticket Price (₦)</label>
-          <div className="flex items-center">
-            <button className="px-2 py-1 bg-gray-200 rounded"   onClick={handleDecrease}
-                disabled={ticketCount <= 1}>-</button>
-            <span className="mx-4 font-bold text-sm"> {ticketPrice}</span>
-            <button className="px-2 py-1 bg-gray-200 rounded" onClick={handleIncrease}>+</button>
-          </div>
-        </div>
-
-
-        <div className="flex flex-col items-center w-full sm:w-1/2">
-          <label className="font-Poppins text-gray-700 mb-4">No of Ticket</label>
-          <div className="flex items-center">
-            <button className="px-2 py-1 bg-gray-200 rounded"  onClick={handleDecrease}
-                disabled={ticketCount <= 1}>-</button>
-            <span className="mx-4 font-bold text-sm">{ticketCount}</span>
-            <button className="px-2 py-1 bg-orange-500 text-white rounded" onClick={handleIncrease}>
-              +
-            </button>
-          </div>
-
-        </div>
-
-
-      </div>
-
-      <div className="flex justify-end" >
-          <button onClick={()=> {
-            return (
-              setbidopen(!bidopen),
-              setViewTicket(!viewticket)
-            )
-          }} className="text-orange-500 font-Poppins text-xs mt-1">
-            View Ticket
-          </button>
-      </div>
-
-      <div>
-        <label className="font-Poppins text-gray-700">Amount (₦)</label>
-        <input
-          type="text"
-          value={`₦ ${totalAmount.toLocaleString()}`}
-
-          readOnly
-          className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
-        />
-      </div>
-
-     <DefaultButton
-              text='Proceed'
-              type='submit'
-              handleClick={() => { }}
-              className='my-10 w-full bg-[#FCDFD4] p-3 rounded-lg'
-            />
-    </div>
-  </div>
-</div>
-
-  }
-  isModalOpen={bidopen}
-  showModal={() => setbidopen(!bidopen)}
-  handleOk={() => setbidopen(false)}
-  handleCancel={() => setbidopen(false)}
-/>
-
-
-
-<ModalComponent
-  content={
- <div className="flex flex-col  px-6 py-4">
-  <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
-    Back
-  </div>
-
-<div className="flex justify-between flex-wrap py-2" >
-
-  <div>
-   <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-    <span className="font-Poppins">Foodstuffs</span>
-    <span>|</span>
-    <span className="font-Poppins font-medium">Rice</span>
-  </div>
- </div>
-
- <div>
-   <span className="font-Poppins font-medium">Raffle Draw</span>
- </div>
-</div>
-
-
-<div className="flex gap-4 justify-center items-center " >
-
-
-
-     <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-        <div className="flex flex-col items-center w-full sm:w-1/2">
-          <label className="font-Poppins text-gray-700 mb-4">Ticket Price (₦)</label>
-          <div className="flex items-center">
-            <button className="px-2 py-1 bg-gray-200 rounded"   onClick={handleDecrease}
-                disabled={ticketCount <= 1}>-</button>
-            <span className="mx-4 font-bold text-sm"> {ticketPrice}</span>
-            <button className="px-2 py-1 bg-gray-200 rounded" onClick={handleIncrease}>+</button>
-          </div>
-        </div>
-
-
-        <div className="flex flex-col items-center w-full sm:w-1/2">
-          <label className="font-Poppins text-gray-700 mb-4">No of Ticket</label>
-          <div className="flex items-center">
-            <button className="px-2 py-1 bg-gray-200 rounded"  onClick={handleDecrease}
-                disabled={ticketCount <= 1}>-</button>
-            <span className="mx-4 font-bold text-sm">{ticketCount}</span>
-            <button className="px-2 py-1 bg-orange-500 text-white rounded" onClick={handleIncrease}>
-              +
-            </button>
-          </div>
-
-        </div>
-
-
-      </div>
-
-
-
-      <div>
-        <label className="font-Poppins text-gray-700">Amount (₦)</label>
-        <input
-          type="text"
-          value={`₦ ${totalAmount.toLocaleString()}`}
-
-          readOnly
-          className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
-        />
-      </div>
-</div>
-
-
-
-
-   <div className="mt-6">
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-[#FCDFD4] text-left">
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">S/N</th>
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Ticket Type</th>
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Ticket Number</th>
-              </tr>
-            </thead>
-            <tbody className='mt-8' >
-              {pointinfo?.data?.data?.map((referral: any, index: number) => (
-                <tr key={index}>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-</div>
-
-  }
-  isModalOpen={viewticket}
-  showModal={() => setViewTicket(!viewticket)}
-  handleOk={() => setViewTicket(false)}
-  handleCancel={() => setViewTicket(false)}
-/>
-
-
+            }
+            isModalOpen={makepayment}
+            showModal={() => setmakepayment(!makepayment)}
+            handleOk={() => setmakepayment(false)}
+            handleCancel={() => setmakepayment(false)}
+          />
         </section>
       )}
     </>
   );
 };
-
-// export const AuctionComp = ({ cardInfo }: cardDetails) => {
-
-//   function parseStartsIn(startsIn = "0 Days, 0 Hr: 3 Mins Left") {
-//     const daysMatch = startsIn.match(/(\d+)\s*Days/);
-//     const hoursMatch = startsIn.match(/(\d+)\s*Hr/);
-//     const minutesMatch = startsIn.match(/(\d+)\s*Mins/);
-
-//     const daysLeft = daysMatch ? parseInt(daysMatch[1], 10) : 0;
-//     const hoursLeft = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
-//     const minutesLeft = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
-
-//     return {
-//       totalMinutes: daysLeft * 24 * 60 + hoursLeft * 60 + minutesLeft,
-//       daysLeft,
-//       hoursLeft,
-//       minutesLeft,
-//     };
-//   }
-
-//   const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 3 Mins Left" }) => {
-//     const {
-//       totalMinutes: initialTotalMinutes,
-//       daysLeft: initialDaysLeft,
-//       hoursLeft: initialHoursLeft,
-//       minutesLeft: initialMinutesLeft,
-//     } = parseStartsIn(startsIn);
-
-//     const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
-
-//     useEffect(() => {
-//       const timer = setInterval(() => {
-//         setTimeLeft((prev) => Math.max(prev - 1, 0));
-//       }, 1000);
-
-//       return () => clearInterval(timer);
-//     }, []);
-
-//     const minutesLeft = timeLeft % 60;
-//     const hoursLeft = Math.floor(timeLeft / 60) % 24;
-//     const daysLeft = Math.floor(timeLeft / 1440);
-
-//     const progress = (timeLeft / initialTotalMinutes) * 100;
-
-//     console.log(progress, 'progresss')
-
-//     return (
-//       <div className="mb-3">
-//         <p className="text-xs capitalize ">
-//           <span className="font-medium">{hoursLeft}</span> Hr:{" "}
-//           <span className="font-medium">{minutesLeft}</span> Min{" "}
-//           <span className="font-medium">Left</span>
-//         </p>
-//         <div className="border-gray h-2.5 w-full rounded-full border ">
-//           <div
-//             className="h-2 rounded-full bg-[#F25E26]"
-//             style={{ width: `${progress}%` }}
-//           ></div>
-//         </div>
-//       </div>
-//     );
-//   };
-
-//   const router = useRouter();
-
-//   return (
-//     <>
-
-//     {
-//       cardInfo &&  <section className="">
-
-//  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-//       {cardInfo?.map((value, index) => (
-
-//        <motion.div
-//           key={index}
-//           className="rounded-lg bg-[#FFFFFF]  border border-[#F6F6F6] cursor-pointer"
-//           onClick={() => router.push(`/categories/productdetails/${value.id}`)}
-//           whileHover={{ scale: 1.05, boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)' }}
-//           whileTap={{ scale: 0.95 }}
-//           initial={{ scale: 1 }}
-//           animate={{ scale: 1 }}
-//           transition={{ duration: 0.3, ease: 'easeOut' }}
-//         >
-//           <div className="border-b-4 pb-4">
-//             <div className="flex justify-between items-center py-2 p-4">
-//               <div>
-//                 <p className="text-[#A09F9F] text-sm font-medium font-Poppins">
-//                   On Auction
-//                 </p>
-//               </div>
-//               <div>
-//                 <button className="cursor-pointer rounded-md bg-[#FCFCFC] px-2 py-1 text-sm font-Poppins font-medium shadow-md transition duration-200 ease-in-out hover:bg-[#E84526] hover:text-white">
-//                   Bid
-//                 </button>
-//               </div>
-//             </div>
-
-//             <div className="flex justify-center items-center m-3">
-//               <div className="bg-transparent p-0">
-//                 <Image
-//                   src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
-//                   width={100}
-//                   height={100}
-//                   alt="human hair"
-//                   className=""
-//                 />
-//               </div>
-//             </div>
-//           </div>
-
-//           <div className=" bg-[#F6F6F6]  p-4">
-//             <div className="flex justify-between items-center">
-//               <div>
-//                 <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
-//                   {value?.name}
-//                 </p>
-//               </div>
-
-//               <div className="flex justify-center items-center gap-2">
-//                 <div>
-//                   <p className="text-xs font-normal font-Poppins text-[#000000]">
-//                     Ticket Price:
-//                   </p>
-//                 </div>
-//                 <div>
-//                   <p className="text-pretty text-base font-Poppins font-medium text-[#F25E26]">
-//                     &#8358;{value?.ticket_price.toLocaleString()}
-//                   </p>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-
-//              <div className=" bg-[#F6F6F6] px-4">
-//             <p className="flex justify-end text-left gap-1">
-//               {Array.from({ length: value?.reviews }, (_, index) => (
-//                 <span key={index}>
-//                   <FaStar className="text-[#F25E26]" />
-//                 </span>
-//               ))}
-//             </p>
-//           </div>
-
-//      <div className=" bg-[#F6F6F6] px-4">
-//             <CountdownTimer startsIn={value?.starts_in} />
-//           </div>
-//         </motion.div>
-//       ))}
-//     </div>
-
-
-
-
-//       </section>
-//     }
-
-//     </>
-//   );
-// };
