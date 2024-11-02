@@ -167,5 +167,31 @@ export const useGetProductData = (url: string, userToken: string, order_id: stri
 };
 
 
+// Define the fetch function with type annotations
+const fetchBidData = async (url: string, userToken: string, auction_id: string, title?: string): Promise<ResponseData> => {
+  //  console.log(url, userToken, order_id, title);
+  const response = await Axios.get<ResponseData>(url, {
+    headers: {
+      Authorization: `Token ${userToken}`,
+      auction_id: auction_id
+    }
+  });
+  return response.data;
+};
+
+
+
+// Define the hook with type annotations
+export const useGetBidData = (url: string, userToken: string, order_id: string, title: string): UseQueryResult<ApiResponse> => {
+  /*  console.log(url, userToken, order_id, title); */
+  return useQuery({
+    queryKey: [title, url],
+    queryFn: () => fetchBidData(url, userToken, order_id, title), // Correct parameter order
+    refetchOnWindowFocus: false,
+  });
+};
+
+
+
 
 
