@@ -1,12 +1,28 @@
 import React from 'react';
 import { CustomModal } from '../../component/Modal'; // Assuming CustomModal is a reusable modal component
  // Import a reusable button component for the close button
+ import Cookies from 'js-cookie';
+import { useGetOrderData, useGetPointData } from '@/hooks/useGetData';
 
 export const ReferralPointsModal = ({ isOpen, setIsOpen, referralData }: any) => {
 
   const closeModal = () => {
     setIsOpen(false);
   }
+
+
+    // const userToken = token;
+  const userToken = Cookies.get('token') as string;
+
+  const tkn_: string = Cookies.get('token') as string;
+
+  const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
+
+
+console.log(pointinfo?.data?.data, 'pointinfo')
+
+
+
 
   return (
     <CustomModal isOpen={isOpen}>
@@ -34,12 +50,12 @@ export const ReferralPointsModal = ({ isOpen, setIsOpen, referralData }: any) =>
               </tr>
             </thead>
             <tbody className='mt-8' >
-              {referralData?.map((referral: any, index: number) => (
+              {pointinfo?.data?.data?.map((referral: any, index: number) => (
                 <tr key={index}>
                   <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.name}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.points}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.date}</td>
+                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
+                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
+                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.date_created}</td>
                 </tr>
               ))}
             </tbody>

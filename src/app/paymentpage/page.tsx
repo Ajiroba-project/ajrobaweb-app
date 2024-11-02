@@ -384,67 +384,125 @@ if (axios.isAxiosError(error)) {
     }
   };
 
+  // const startVerificationLoop = (reference: string) => {
+  //   const intervalTime = 2000;
+  //   const totalDuration = 60 * 1000;
+  //   const maxAttempts = totalDuration / intervalTime;
+  //   let attempts = 0;
+
+  //   const stopLoop = () => {
+  //     clearInterval(intervalId);
+  //   /*   console.log("Verification loop stopped."); */
+  //   };
+
+  //   let intervalId: NodeJS.Timeout;
+
+  //   setTimeout(() => {
+  //     intervalId = setInterval(async () => {
+  //       attempts++;
+
+  //       await verifyWalletPayment(reference, stopLoop);
+
+  //       if (attempts >= maxAttempts) {
+  //         clearInterval(intervalId);
+  //       /*   console.log("Verification loop stopped after max attempts."); */
+  //       }
+  //     }, intervalTime);
+
+  //     setTimeout(() => clearInterval(intervalId), totalDuration);
+  //   }, 1 * 15 * 1000);
+  // };
+
+  // const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+  //   setloadingverify(true); // Set loading to true when verification starts
+  //   try {
+  //     const tkn_: string = Cookies.get("token") as string;
+
+  //     const response = await axios.get(
+  //       `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
+  //       {
+  //         headers: {
+  //           Authorization: `token ${tkn_}`,
+  //         },
+  //       }
+  //     );
+
+  //    /*  console.log(response, "response"); */
+  //     if (response.status === 200 || response.status === 201) {
+  //      stopLoop();
+  //       setloadingverify(false); // Stop loading when verification is successful
+  //       toast.success(`${response?.data?.message}`);
+  //        // Stop the loop after success
+  //        router.push('/cart')
+  //     } else {
+  //       stopLoop();
+  //       setloadingverify(false); // Stop loading even for unsuccessful responses
+  //       toast.error("Unexpected status during verification.");
+  //     }
+  //   } catch (error) {
+  //     stopLoop();
+  //     setloadingverify(false); // Ensure loading stops on error
+  //     console.error(error);
+  //     toast.error("Error occurred during payment verification.");
+  //   }
+  // };
+
+
+
   const startVerificationLoop = (reference: string) => {
-    const intervalTime = 2000;
-    const totalDuration = 60 * 1000;
-    const maxAttempts = totalDuration / intervalTime;
-    let attempts = 0;
+  const intervalTime = 2000; // 2 seconds
+  const totalDuration = 60 * 1000; // 60 seconds
+  const maxAttempts = totalDuration / intervalTime;
+  let attempts = 0;
 
-    const stopLoop = () => {
-      clearInterval(intervalId);
-    /*   console.log("Verification loop stopped."); */
-    };
+  let intervalId: NodeJS.Timeout;
 
-    let intervalId: NodeJS.Timeout;
-
-    setTimeout(() => {
-      intervalId = setInterval(async () => {
-        attempts++;
-
-        await verifyWalletPayment(reference, stopLoop);
-
-        if (attempts >= maxAttempts) {
-          clearInterval(intervalId);
-        /*   console.log("Verification loop stopped after max attempts."); */
-        }
-      }, intervalTime);
-
-      setTimeout(() => clearInterval(intervalId), totalDuration);
-    }, 1 * 15 * 1000);
+  const stopLoop = () => {
+    clearInterval(intervalId);
   };
 
-  const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
-    setloadingverify(true); // Set loading to true when verification starts
-    try {
-      const tkn_: string = Cookies.get("token") as string;
+  // Start the interval after 15 seconds
+  setTimeout(() => {
+    intervalId = setInterval(async () => {
+      attempts++;
 
-      const response = await axios.get(
-        `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
-        {
-          headers: {
-            Authorization: `token ${tkn_}`,
-          },
-        }
-      );
-
-     /*  console.log(response, "response"); */
-      if (response.status === 200 || response.status === 201) {
-      stopLoop();
-        setloadingverify(false); // Stop loading when verification is successful
-        toast.success(`${response?.data?.message}`);
-         // Stop the loop after success
-      } else {
+      // Call verifyWalletPayment and stop loop if successful
+      const success = await verifyWalletPayment(reference);
+      if (success || attempts >= maxAttempts) {
         stopLoop();
-        setloadingverify(false); // Stop loading even for unsuccessful responses
-        toast.error("Unexpected status during verification.");
       }
-    } catch (error) {
-      stopLoop();
-      setloadingverify(false); // Ensure loading stops on error
-      console.error(error);
-      toast.error("Error occurred during payment verification.");
+    }, intervalTime);
+  }, 15 * 1000); // 15 seconds delay
+};
+
+const verifyWalletPayment = async (reference: any): Promise<boolean> => {
+  setloadingverify(true);
+  try {
+    const tkn_: string = Cookies.get("token") as string;
+    const response = await axios.get(
+      `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
+      {
+        headers: { Authorization: `token ${tkn_}` },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      setloadingverify(false);
+      toast.success(`${response?.data?.message}`);
+     /*  router.push('/cart'); */
+      return true; // Indicates success, stops loop
+    } else {
+      setloadingverify(false);
+      toast.error("Unexpected status during verification.");
+      return false; // Indicates unsuccessful but keeps loop
     }
-  };
+  } catch (error) {
+    setloadingverify(false);
+    console.error(error);
+    toast.error("Error occurred during payment verification.");
+    return false; // Indicates error, keeps loop
+  }
+};
 
   const router = useRouter();
 
