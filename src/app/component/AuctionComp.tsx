@@ -13,6 +13,8 @@ import { Axios } from "axios";
 import axios from "axios";
 import { toast } from "react-toastify";
 import rice from '../asset/image/rice2.jpeg'
+import { DefaultButton } from "./Button";
+import { useGetPointData } from "@/hooks/useGetData";
 
 interface cardDetails {
   cardInfo: Array<{
@@ -92,6 +94,8 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
 };
 
 
+
+
 // Auction Component
 export const AuctionComp = ({ cardInfo }: any) => {
   const router = useRouter();
@@ -101,6 +105,14 @@ export const AuctionComp = ({ cardInfo }: any) => {
   const [bidopen, setbidopen] = useState(false)
 
   const [bidData, setBidData] = useState(null);
+  const [viewticket, setViewTicket] = useState(false)
+
+
+
+  const tkn_: string = Cookies.get('token') as string;
+
+  const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
+
 
 
 
@@ -249,6 +261,27 @@ const handleBidClick = async (productId: any) => {
 };
 
 
+  const initialTicketPrice = 200;
+  const [ticketCount, setTicketCount] = useState(1);
+  const [ticketPrice, setTicketPrice] = useState(initialTicketPrice);
+  const [totalAmount, setTotalAmount] = useState(ticketCount * ticketPrice);
+
+  // Handler to increase ticket count
+  const handleIncrease = () => {
+    setTicketCount((prevCount) => prevCount + 1);
+    setTotalAmount((prevTotal) => prevTotal + ticketPrice);
+  };
+
+  // Handler to decrease ticket count, ensuring count doesn’t go below 1
+  const handleDecrease = () => {
+    if (ticketCount > 1) {
+      setTicketCount((prevCount) => prevCount - 1);
+      setTotalAmount((prevTotal) => prevTotal - ticketPrice);
+    }
+  };
+
+
+
 
   return (
     <>
@@ -339,28 +372,10 @@ const handleBidClick = async (productId: any) => {
             ))}
           </div>
 
-      {/*   <ModalComponent
-            content={
-              <div className="flex flex-col justify-center">
-                <div className="flex justify-center items-center flex-col">
-                  <p className="text-[#2A2A2A] font-bold text-xl font-Poppins">Wallet Pin</p>
-                  <small className="text-[#504D4D] text-lg font-Poppins">Kindly enter your wallet pin</small>
-                  {bidData ? (
-                    <div className="mt-4">
-                      <p className="text-gray-700">Bid Amount: {bidData}</p>
-                      <p className="text-gray-700">Message: {bidData}</p>
-                    </div>
-                  ) : (
-                    <p>Loading bid information...</p>
-                  )}
-                </div>
-              </div>
-            }
-            isModalOpen={bidopen}
-            showModal={() => setbidopen(!bidopen)}
-            handleOk={() => setbidopen(false)}
-            handleCancel={() => setbidopen(false)}
-          /> */}
+
+
+
+
 
 <ModalComponent
   content={
@@ -399,7 +414,7 @@ const handleBidClick = async (productId: any) => {
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
           <div className="bg-orange-500 p-3 rounded-lg text-center">
             <span className="text-sm block">Raffle Ticket</span>
-            <span className="text-xl font-bold">₦ 200</span>
+            <span className="text-sm font-bold">₦ {ticketPrice}</span>
           </div>
         </div>
       </div>
@@ -416,47 +431,62 @@ const handleBidClick = async (productId: any) => {
         />
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+      <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
         <div className="flex flex-col items-center w-full sm:w-1/2">
-          <label className="font-Poppins text-gray-700">Ticket Price </label>
+          <label className="font-Poppins text-gray-700 mb-4">Ticket Price (₦)</label>
           <div className="flex items-center">
-            <button className="px-2 py-1 bg-gray-200 rounded">-</button>
-            <span className="mx-4 font-bold text-lg">200</span>
-            <button className="px-2 py-1 bg-gray-200 rounded">+</button>
+            <button className="px-2 py-1 bg-gray-200 rounded"   onClick={handleDecrease}
+                disabled={ticketCount <= 1}>-</button>
+            <span className="mx-4 font-bold text-sm"> {ticketPrice}</span>
+            <button className="px-2 py-1 bg-gray-200 rounded" onClick={handleIncrease}>+</button>
           </div>
         </div>
 
 
         <div className="flex flex-col items-center w-full sm:w-1/2">
-          <label className="font-Poppins text-gray-700">No of Ticket</label>
+          <label className="font-Poppins text-gray-700 mb-4">No of Ticket</label>
           <div className="flex items-center">
-            <button className="px-2 py-1 bg-gray-200 rounded">-</button>
-            <span className="mx-4 font-bold text-lg">5</span>
-            <button className="px-2 py-1 bg-orange-500 text-white rounded">
+            <button className="px-2 py-1 bg-gray-200 rounded"  onClick={handleDecrease}
+                disabled={ticketCount <= 1}>-</button>
+            <span className="mx-4 font-bold text-sm">{ticketCount}</span>
+            <button className="px-2 py-1 bg-orange-500 text-white rounded" onClick={handleIncrease}>
               +
             </button>
           </div>
-          <a href="#" className="text-orange-500 font-Poppins text-xs mt-1">
-            View Ticket
-          </a>
+
         </div>
 
 
+      </div>
+
+      <div className="flex justify-end" >
+          <button onClick={()=> {
+            return (
+              setbidopen(!bidopen),
+              setViewTicket(!viewticket)
+            )
+          }} className="text-orange-500 font-Poppins text-xs mt-1">
+            View Ticket
+          </button>
       </div>
 
       <div>
         <label className="font-Poppins text-gray-700">Amount (₦)</label>
         <input
           type="text"
-          value="1,000"
+          value={`₦ ${totalAmount.toLocaleString()}`}
+
           readOnly
-          className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins text-center font-bold"
+          className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
         />
       </div>
 
-      <button className="w-full py-3 bg-orange-200 text-gray-800 font-Poppins rounded">
-        Proceed
-      </button>
+     <DefaultButton
+              text='Proceed'
+              type='submit'
+              handleClick={() => { }}
+              className='my-10 w-full bg-[#FCDFD4] p-3 rounded-lg'
+            />
     </div>
   </div>
 </div>
@@ -467,6 +497,111 @@ const handleBidClick = async (productId: any) => {
   handleOk={() => setbidopen(false)}
   handleCancel={() => setbidopen(false)}
 />
+
+
+
+<ModalComponent
+  content={
+ <div className="flex flex-col  px-6 py-4">
+  <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+    Back
+  </div>
+
+<div className="flex justify-between flex-wrap py-2" >
+
+  <div>
+   <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+    <span className="font-Poppins">Foodstuffs</span>
+    <span>|</span>
+    <span className="font-Poppins font-medium">Rice</span>
+  </div>
+ </div>
+
+ <div>
+   <span className="font-Poppins font-medium">Raffle Draw</span>
+ </div>
+</div>
+
+
+<div className="flex gap-4 justify-center items-center " >
+
+
+
+     <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+        <div className="flex flex-col items-center w-full sm:w-1/2">
+          <label className="font-Poppins text-gray-700 mb-4">Ticket Price (₦)</label>
+          <div className="flex items-center">
+            <button className="px-2 py-1 bg-gray-200 rounded"   onClick={handleDecrease}
+                disabled={ticketCount <= 1}>-</button>
+            <span className="mx-4 font-bold text-sm"> {ticketPrice}</span>
+            <button className="px-2 py-1 bg-gray-200 rounded" onClick={handleIncrease}>+</button>
+          </div>
+        </div>
+
+
+        <div className="flex flex-col items-center w-full sm:w-1/2">
+          <label className="font-Poppins text-gray-700 mb-4">No of Ticket</label>
+          <div className="flex items-center">
+            <button className="px-2 py-1 bg-gray-200 rounded"  onClick={handleDecrease}
+                disabled={ticketCount <= 1}>-</button>
+            <span className="mx-4 font-bold text-sm">{ticketCount}</span>
+            <button className="px-2 py-1 bg-orange-500 text-white rounded" onClick={handleIncrease}>
+              +
+            </button>
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div>
+        <label className="font-Poppins text-gray-700">Amount (₦)</label>
+        <input
+          type="text"
+          value={`₦ ${totalAmount.toLocaleString()}`}
+
+          readOnly
+          className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+        />
+      </div>
+</div>
+
+
+
+
+   <div className="mt-6">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-[#FCDFD4] text-left">
+                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">S/N</th>
+                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Ticket Type</th>
+                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Ticket Number</th>
+              </tr>
+            </thead>
+            <tbody className='mt-8' >
+              {pointinfo?.data?.data?.map((referral: any, index: number) => (
+                <tr key={index}>
+                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
+                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
+                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+</div>
+
+  }
+  isModalOpen={viewticket}
+  showModal={() => setViewTicket(!viewticket)}
+  handleOk={() => setViewTicket(false)}
+  handleCancel={() => setViewTicket(false)}
+/>
+
 
         </section>
       )}
