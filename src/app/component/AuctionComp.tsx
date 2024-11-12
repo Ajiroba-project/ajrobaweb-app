@@ -16,7 +16,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import "./style.css";
 import ModalComponent from "./ModalComponent";
-import { useMutateData } from "@/hooks/useMutateDataBid";
+// import { useMutateData } from "@/hooks/useMutateDataBid";
 import Cookies from "js-cookie";
 import { Axios } from "axios";
 import axios from "axios";
@@ -27,7 +27,7 @@ import { useGetPointData } from "@/hooks/useGetData";
 import { SetStateAction } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { useMutateData } from '@/hooks/useMutateData'
+ import { useMutateData } from '@/hooks/useMutateNewData'
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import Input from "../component/Input";
@@ -135,6 +135,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
   // Handle API success
   const handleSuccess = (data?: any) => {
+    console.log(data)
     if (data.status === 200 || data.status === 201) {
       setBidData(data?.data); // Store the API response in bidData for modal usage
       setbidopen(true); // Open modal after successful API response
@@ -258,7 +259,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
     const requestOptions = {
       method: "GET",
       headers: myHeaders,
-      redirect: "follow",
+      redirect: "follow" as RequestRedirect,
     };
 
     try {
@@ -314,10 +315,36 @@ export const AuctionComp = ({ cardInfo }: any) => {
     setPaymentMethod(method);
   };
 
+
+    const {
+    data,
+    error: walleterror,
+    isError,
+    isSuccess,
+    mutate: mutatev,
+    status,
+  } = useMutateData("verifywalletpin", handleSuccess, handleError);
+
+
+
+
   const submitForm = (data: any) => {
     console.log(data, 'dddd', paymentMethod, 'paymmm');
 
     // mutate(data)
+
+
+    Cookies.set("pvd", data?.password, { expires: 1 });
+    const payload = {
+      wallet_pin: data?.password,
+    };
+
+    mutatev({
+      url: "/api/verifywalletpin",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });
+
   };
 
   const handlePay = () => {};
