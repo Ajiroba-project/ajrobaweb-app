@@ -5,6 +5,8 @@ import { OpenAuction } from './OpenAuction'
 import { CloseAuction } from './CloseAuction'
 import { Products } from '@/app/static-data'
 import { Pipeline } from './Pipeline'
+import { useGetOrderWinsData } from '@/hooks/useGetData'
+import Cookies from 'js-cookie'
 
 export const AuctionDetails = () => {
   const auctionSwitch = ['all', 'open', 'close']
@@ -20,13 +22,21 @@ export const AuctionDetails = () => {
     setCloseFilter(filteredClose)
   }, [])
 
+
+    // const userToken = token;
+  const userToken = Cookies.get('token') as string;
+
+  const tkn_: string = Cookies.get('token') as string;
+
+  const { data: auctioninfo, isLoading: auctionLoading, error: ordererror } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken);
+
   return (
   /*   <section className='mb-6  flex w-full flex-col  lg:w-[50dvw] '> */
     <section className='mb-6  flex  flex-col  w-full lg:w-[50dvw]'>
       <Pipeline props={auctionSwitch} setProps={setPipeline} start={pipeline} />
       <div className='mt-6 rounded-md  border-2 p-4'>
         {pipeline === auctionSwitch[0] ? (
-          <AllAuction product={Filtered} />
+          <AllAuction product={auctioninfo?.data?.data?.all} />
         ) : pipeline === auctionSwitch[1] ? (
           <OpenAuction product={openFilter} />
         ) : (

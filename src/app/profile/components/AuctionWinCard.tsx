@@ -10,6 +10,8 @@ import { toast } from 'react-toastify'
 import { useAuthStore } from '@/store/store'
 import { useRouter } from "next/navigation";
 import { useMutateData } from '@/hooks/useMutateNewData'
+import Cookies from 'js-cookie'
+import { useGetOrderWinsData } from '@/hooks/useGetData'
 
 type AuctionProps = {
   product: any[]
@@ -28,6 +30,29 @@ type Order = {
 };
 
 export const AuctionWinCard = ({ product }: AuctionProps) => {
+
+
+      // const userToken = token;
+  const userToken_ = Cookies.get('token') as string;
+
+  const tkn_: string = Cookies.get('token') as string;
+
+  const { data: auctioninfo, isLoading: auctionLoading, error: ordererror } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken_);
+
+const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
+
+  const isOpen = auctioninfo?.data?.data?.open?.some((openItem: { id: any }) => openItem.id === item.id);
+  const isClosed = auctioninfo?.data?.data?.closed?.some((closedItem: { id: any }) => closedItem.id === item.id);
+
+  let tag;
+  if (isOpen) tag = "open";
+  else if (isClosed) tag = "close";
+  else tag = "unknown";
+
+  return { ...item, tag: [tag] };
+});
+
+
 
     const [selectedTransaction, setSelectedTransaction] = useState<Order | null>(null);
   const [selectedTransactiondelete, setSelectedTransactiondelete] = useState<Order | null>(null);
@@ -247,87 +272,85 @@ const Closefuncdelete = () => {
 
 
   return (
-    <div>
-      <div className=' '>
-        <div className='flex flex-col '>
-          {product.map((val: any, index: number) => (
-            <div key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
+ <div>
+  <div className=''>
+    <div className='flex flex-col '>
 
-              <Image
-                src={val.image}
-                alt={val.name}
-                width={50}
-                height={50}
-                layout='intrinsic'
-                // className='rounded-md bg-gray-100 bg-contain'
-                className='object-cover w-full rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
-              />
+      {auctionLoading ? (
+            <p className="text-center text-gray-500 py-8">Loading...</p>
+          ) :
 
-              <div className='flex flex-col gap-3 capitalize'>
-                <p className=' font-semibold'>{val.name}</p>
-                <p>OrderID: </p>
-                <p>TicketPrice: ₦{val.price}</p>
-                <div className='mt-5 flex gap-3 flex-wrap'>
-                  {val.tag &&
-                    val.tag.map((value: string, index: number) => (
-                      <p
-                        key={index}
-                        className={`text-xs ${value === 'open' || value === 'delivered' ? 'bg-green-200 text-emerald-800' : value === 'close' ? 'bg-rose-200 text-red-800' : value === 'redeem items' ? 'bg-blue-700 text-white' : 'bg-[#F25E26] text-white'} rounded-xl px-2.5  py-1 `}
-                      >
-                        {value}
-                      </p>
-                    ))}
-                </div>
+      productMain?.length === 0 ? (
+        <p className="text-center text-gray-500 py-8">No data available</p>
+      ) : (
+        productMain?.map((val: any, index: number) => (
+          <div key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
+
+            <Image
+              src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
+              alt={val?.auction[0]?.name}
+              width={50}
+              height={50}
+              layout='intrinsic'
+              className='object-cover w-full rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
+            />
+
+            <div className='flex flex-col gap-3 capitalize'>
+              <p className=' font-semibold'>{val?.auction[0]?.name}</p>
+              <p>ID: {val?.id} </p>
+              <p>Bid Number: {val?.bid_number}</p>
+              <p>Ticket Price: ₦{val?.ticket_price}</p>
+              <div className='mt-5 flex gap-3 flex-wrap'>
+                {val.tag &&
+                  val.tag.map((value: string, index: number) => (
+                    <p
+                      key={index}
+                      className={`text-xs ${value === 'open' || value === 'delivered' ? 'bg-green-200 text-emerald-800' : value === 'close' ? 'bg-rose-200 text-red-800' : value === 'redeem items' ? 'bg-blue-700 text-white' : 'bg-[#F25E26] text-white'} rounded-xl px-2.5  py-1 `}
+                    >
+                      {value}
+                    </p>
+                  ))}
               </div>
-              <span className='absolute right-3 top-2 rounded-md border p-2 cursor-pointer'>
-             {/*    <CiMenuKebab /> */}
-               <DropDownAuction
-            onOptionClick={(option) => handleOptionClick(option, val)}
-            transaction={val}
-          />
-              </span>
             </div>
-          ))}
-        </div>
-      </div>
-
-
-      {
-
-        isdeleteModalOpen &&
-
-      <ModalProfile
-        icon={""}
-        isOpen={isdeleteModalOpen}
-        onClose={handleCloseModaldelete}
-        title=""
-        handleEvent={handleCloseModaldelete}
-      >
-        <form onSubmit={handleSubmitDelete(submitFormdelete)} className="flex flex-col">
-
-          <p className="flex justify-center text-left py-8">Are you sure you want to delete this product?</p>
-
-          <div className="mt-5 flex gap-4 justify-center">
-
-
-            <DefaultButton
-              text="No"
-              className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
-              type="button"
-              handleClick={Closefuncdelete}
-            />
-            <DefaultButton
-              text={status === "pending" ? "loading..." : "Yes"}
-              className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
-              type="submit"
-            />
-
-
+            <span className='absolute right-3 top-2 rounded-md border p-2 cursor-pointer'>
+              <DropDownAuction
+                onOptionClick={(option) => handleOptionClick(option, val)}
+                transaction={val}
+              />
+            </span>
           </div>
-        </form>
-      </ModalProfile>
-
-      }
+        ))
+      )}
     </div>
+  </div>
+
+  {isdeleteModalOpen && (
+    <ModalProfile
+      icon={""}
+      isOpen={isdeleteModalOpen}
+      onClose={handleCloseModaldelete}
+      title=""
+      handleEvent={handleCloseModaldelete}
+    >
+      <form onSubmit={handleSubmitDelete(submitFormdelete)} className="flex flex-col">
+        <p className="flex justify-center text-left py-8">Are you sure you want to delete this product?</p>
+        <div className="mt-5 flex gap-4 justify-center">
+          <DefaultButton
+            text="No"
+            className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+            type="button"
+            handleClick={Closefuncdelete}
+          />
+          <DefaultButton
+            text={status === "pending" ? "loading..." : "Yes"}
+            className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+            type="submit"
+          />
+        </div>
+      </form>
+    </ModalProfile>
+  )}
+    </div>
+
   )
 }
