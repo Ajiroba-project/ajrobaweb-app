@@ -117,7 +117,7 @@ const AuctionPage = () => {
         </section>
 
         <section className='my-4'>
-          <h1>Auction</h1>
+    {/*       <h1>Auction</h1> */}
           <AuctionComp
             cardInfo={filteredData}
             currentPage={0}

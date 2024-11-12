@@ -36,6 +36,9 @@ const DropDownAuction: React.FC<DropdownProps> = ({ onOptionClick, value, transa
   const router = useRouter();
 
   const handleOptionClick = (option: string) => {
+
+console.log(transaction, 'transaction' )
+
     switch (option) {
       case 'Purchase order':
         router.push(`/purchaseorder?orderId=${transaction.order_id}`);

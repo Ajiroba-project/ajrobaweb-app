@@ -91,6 +91,11 @@ const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
     setisdeleteModalOpen(true);
   }
 
+       if (option === "Purchase Order") {
+      setSelectedTransactiondelete(transaction);
+   console.log(transaction, 'transaction', 'Purchhhh')
+    }
+
   };
 
     const {
@@ -284,7 +289,9 @@ const Closefuncdelete = () => {
         <p className="text-center text-gray-500 py-8">No data available</p>
       ) : (
         productMain?.map((val: any, index: number) => (
-          <div key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
+          <div   onClick={() =>
+                        router.push(`/auction/productdetails/${val?.id}`)
+                      } key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
 
             <Image
               src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
@@ -292,7 +299,7 @@ const Closefuncdelete = () => {
               width={50}
               height={50}
               layout='intrinsic'
-              className='object-cover w-full rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
+              className='object-cover w-full cursor-pointer rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
             />
 
             <div className='flex flex-col gap-3 capitalize'>

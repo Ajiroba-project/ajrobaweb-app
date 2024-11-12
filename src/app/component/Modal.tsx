@@ -97,7 +97,10 @@ return (
       </section>
     )} */}
     {isOpen && (
-  <section className='fixed left-0 top-0 z-50 flex overflow-x-scroll overflow-y-scroll w-screen items-center justify-center bg-black bg-opacity-50 p-4'>
+  <section style={{
+          height: '100vh',
+          overflow: 'scroll'
+        }}  className='fixed left-0 top-0 z-50 flex overflow-x-scroll overflow-y-scroll w-screen items-center justify-center bg-black bg-opacity-50 p-4'>
     <div className='flex h-auto flex-col gap-6 rounded-md bg-white p-6 max-h-[100vh] overflow-y-auto'>
       {children}
     </div>
