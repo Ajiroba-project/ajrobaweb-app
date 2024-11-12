@@ -55,7 +55,6 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
 
 
 
-
     if (data.status === 201 || data.status === 200) {
      setSuccess(true)
          setSuccessModal(!successModal)
