@@ -517,7 +517,7 @@ const handlePageClick = (pageNumber: number) => {
     );
   };
 
-  console.log(productdata)
+  console.log(productdata, 'datatatat')
 
 
 

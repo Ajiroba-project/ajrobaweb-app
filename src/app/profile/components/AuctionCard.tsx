@@ -695,7 +695,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     userToken_,
   );
 
-  const closedProducts = demodata.data.closed.map((item: { id: any }) => {
+  const closedProducts = auctioninfo?.data?.data?.close?.map((item: { id: any }) => {
     return {
       ...item,
       tag: ["close", "redeem items", "winning advise"],

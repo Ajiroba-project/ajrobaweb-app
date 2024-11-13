@@ -43,7 +43,7 @@ const AuctionPage = () => {
     true
   );
 
-  console.log(auctionInfo?.data);
+  // console.log(auctionInfo?.data);
 
   // Extract and set auction dates
   const auctionDates = useMemo(() => {

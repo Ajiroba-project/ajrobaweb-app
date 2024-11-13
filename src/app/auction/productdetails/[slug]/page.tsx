@@ -36,6 +36,9 @@ interface CardInfoItem {
   category?: string;
   delivery_estimation: string;
   related_products: [];
+  ticket_price?: string;
+  auction_reviews?: any;
+  starts_in?: any
 }
 
 interface AuctionResponse {
@@ -378,9 +381,72 @@ const handlePageClick = (pageNumber: number) => {
     );
   };
 
-  console.log(productdata)
+  console.log(productdata, 'productdsataaa')
 
+// Utility function to parse time remaining from a string
+function parseStartsIn(startsIn = "0 Days, 0 Hr: 3 Mins Left") {
+  const daysMatch = startsIn.match(/(\d+)\s*Days/);
+  const hoursMatch = startsIn.match(/(\d+)\s*Hr/);
+  const minutesMatch = startsIn.match(/(\d+)\s*Mins/);
 
+  const daysLeft = daysMatch ? parseInt(daysMatch[1], 10) : 0;
+  const hoursLeft = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+  const minutesLeft = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
+
+  return {
+    totalMinutes: daysLeft * 24 * 60 + hoursLeft * 60 + minutesLeft,
+    daysLeft,
+    hoursLeft,
+    minutesLeft,
+  };
+}
+
+  // Countdown Timer component
+const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
+  const {
+    totalMinutes: initialTotalMinutes,
+    daysLeft: initialDaysLeft,
+    hoursLeft: initialHoursLeft,
+    minutesLeft: initialMinutesLeft,
+  } = parseStartsIn(startsIn);
+
+  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => Math.max(prev - 1, 0)); // Decrease time left, but don't go below 0
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const minutesLeft = timeLeft % 60;
+  const hoursLeft = Math.floor(timeLeft / 60) % 24;
+  const daysLeft = Math.floor(timeLeft / 1440);
+
+  // Progress should be 0% when timeLeft is 0 or when the total time is 0
+  const progress =
+    initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+
+  return (
+    <div className="mb-3">
+
+      <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
+        <div
+          className="h-2 rounded-full bg-[#F25E26]"
+          style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+
+       <p className="text-xs capitalize mb-2 mt-2 ">
+        <span className="font-medium">{daysLeft}</span> dy:{" "}
+        <span className="font-medium">{hoursLeft}</span> Hr:{" "}
+        <span className="font-medium">{minutesLeft}</span> Min{" "}
+        <span className="font-medium">Left</span>
+      </p>
+    </div>
+  );
+};
 
     return (
     <main>
@@ -486,7 +552,7 @@ const handlePageClick = (pageNumber: number) => {
                           <span key={index}>
                             <FaStar
                               className={
-                                index < rating
+                                index < productdata?.data?.auction_reviews?.average_ratings
                                   ? "text-[#FFD60A]"
                                   : "text-[#A09F9F]"
                               }
@@ -494,17 +560,26 @@ const handlePageClick = (pageNumber: number) => {
                           </span>
                         </span>
                       ))}
-                      (300) Reviews
+                      ({productdata?.data?.auction_reviews?.total_reviews}) Review(s)
                     </p>
-                    <h1 className="text-[#111111] text-2xl mt-2 font-semibold font-Poppins ">
-                      &#x20A6; {totalPrice.toLocaleString()}
+
+                    <div className="flex items-center gap-2 flex-wrap mt-2" >
+                       <small className="text-[#111111] font-Poppins font-normal text-base ">
+                     Ticket Price
+                    </small>
+                     <h1 className="text-[#111111] text-xl  font-semibold font-Poppins ">
+                      &#x20A6; {productdata?.data?.ticket_price?.toLocaleString()}
                     </h1>
-                    <h1 className="text-[#504D4D] font-medium font-Poppins text-lg mt-2 line-through ">
+                    </div>
+
+                  {/*   <h1 className="text-[#504D4D] font-medium font-Poppins text-lg mt-2 line-through ">
                       {formattedPrice}
-                    </h1>
+                    </h1> */}
+
+
 
                     <hr className="mt-4" />
-                    <p className="text-[#111111] text-base mt-4 ">Quantity</p>
+                 {/*    <p className="text-[#111111] text-base mt-4 ">Quantity</p>
 
                     <div className="flex items-center mt-2">
                       <button
@@ -525,7 +600,7 @@ const handlePageClick = (pageNumber: number) => {
                       >
                         +
                       </button>
-                    </div>
+                    </div> */}
 
                     <p className="text-[#111111] text-base mt-4 ">Weight</p>
 
@@ -535,7 +610,14 @@ const handlePageClick = (pageNumber: number) => {
 
                     <hr className="mt-4" />
 
-                    <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
+
+
+
+                      <div className="bg-[#f6f6f6] mt-4 ">
+                      <CountdownTimer startsIn={productdata?.data?.starts_in} />
+                    </div>
+
+                      <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
                       Delivery Estimation
                     </p>
 
@@ -543,15 +625,35 @@ const handlePageClick = (pageNumber: number) => {
                       {productdata?.data?.delivery_estimation || "NA"}
                     </h1>
 
+
+
+                   {
+                    productdata?.data?.starts_in === "Raffle Ended" ?
+
+
+
                     <div className="flex justify-center items-center mt-4">
                       <button
                         onClick={notify}
                         /* className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded" */
                         className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                       >
-                        Add to Cart
+                        Watch Live Raffle
+                      </button>
+                    </div> :
+
+
+                    <div className="flex justify-center items-center mt-4">
+                      <button
+                        onClick={notify}
+                        /* className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded" */
+                        className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                      >
+                        Bid
                       </button>
                     </div>
+
+                    }
                   </div>
                 </div>
               )}

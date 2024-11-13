@@ -19,7 +19,6 @@ import ModalComponent from "./ModalComponent";
 // import { useMutateData } from "@/hooks/useMutateDataBid";
 import Cookies from "js-cookie";
 import { Axios } from "axios";
-import axios from "axios";
 import { toast } from "react-toastify";
 import rice from "../asset/image/rice2.jpeg";
 import { DefaultButton } from "./Button";
@@ -32,6 +31,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import Input from "../component/Input";
 import InputAction from "./InputAction";
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 interface cardDetails {
   cardInfo: Array<{
@@ -45,6 +45,17 @@ interface cardDetails {
   }>;
   currentPage: number;
   cardsNum: number;
+}
+
+interface BidInfoResponse {
+  // Define the structure based on the response you expect from the API.
+  data: any;
+  category: any;
+  name: any;
+  ticket_price: any
+  id: any;
+  images: any;
+  subcategory: any
 }
 
 // Utility function to parse time remaining from a string
@@ -118,7 +129,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
   const [bidopen, setbidopen] = useState(false);
 
-  const [bidData, setBidData] = useState(null);
+ const [bidData, setBidData] = useState<BidInfoResponse | null>(null);
   const [viewticket, setViewTicket] = useState(false);
 
   const [makepayment, setmakepayment] = useState(false);
@@ -135,9 +146,10 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
   // Handle API success
   const handleSuccess = (data?: any) => {
-    console.log(data)
+    // console.log(data)
     if (data.status === 200 || data.status === 201) {
       setBidData(data?.data); // Store the API response in bidData for modal usage
+
       setbidopen(true); // Open modal after successful API response
     } else {
       // Handle other statuses if needed
@@ -149,79 +161,25 @@ export const AuctionComp = ({ cardInfo }: any) => {
   const handleError = (error?: any) => {
     console.log(error, "Error occurred during bid");
     setbidopen(false);
+
+        toast.error("Failed to retrieve bid info. Please try again later.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
   };
 
   // Initialize the mutation hook
   const { mutate } = useMutateData("bidinfo", handleSuccess, handleError);
 
   // Function to handle bid button click
-  //   const handleBidClick = async (productId: any) => {
 
-  // try {
-  //    /*  const response = await axios.get('https://ajiroba.onrender.com/v1/auction/bid_info/', {
-  //         headers: {
-  //             Authorization: `token ${userToken}`,
-  //         },
-  //         params: JSON.stringify({
-  //             auction_id: productId
-  //         })
-  //     }); */
 
-  //     const axios = require('axios');
-  // let data = JSON.stringify({
-  //   "auction_id": productId
-  // });
-
-  // let config = {
-  //   method: 'get',
-  //   maxBodyLength: Infinity,
-  //   url: 'https://ajiroba.onrender.com/v1/auction/bid_info/',
-  //   headers: {
-  //     'Authorization': `token ${userToken}`,
-  //     'Content-Type': 'application/json'
-  //   },
-  //   data : data
-  // };
-
-  // axios.request(config)
-  // .then((response: { data: any; }) => {
-  //   console.log(JSON.stringify(response.data));
-
-  //       // Handle success
-  //     if (response.status === 200 || response.status === 201) {
-  //         console.log('Data retrieved successfully:', response.data);
-  //             setBidData(response?.data);
-
-  //     } else {
-  //         console.error('Unexpected response status:', response.status);
-  //     }
-  // })
-  // .catch((error) => {
-  //   console.log(error);
-
-  //    if (axios.isAxiosError(error)) {
-  //           setbidopen(false);
-  //         const errorMessage = error.response?.data?.message || "Error!.";
-  //     toast.error(`${errorMessage}`, {
-  //         position: 'top-right',
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: 'light'
-  //       })
-
-  //     } else {
-  //         // Handle other types of errors that may not be Axios-specific
-  //         console.error('An unexpected error occurred:', error);
-  //     }
-  // });
-
-  // }
-
-  //   };
 
   const schema = yup.object().shape({
     password: yup
@@ -244,58 +202,79 @@ export const AuctionComp = ({ cardInfo }: any) => {
     resolver: yupResolver(schema),
   });
 
-  const handleBidClick = async (productId: any) => {
-    const myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      "token f6264d7fad27137261803f6b4ab85df2701d1e5ea3049d433409958f6da044f2",
-    );
-    myHeaders.append("Content-Type", "application/json");
 
-    // Construct the URL with query parameters
-    const url = new URL("https://ajiroba.onrender.com/v1/auction/bid_info/");
-    url.searchParams.append("auction_id", productId); // Add auction_id as a URL parameter
 
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow" as RequestRedirect,
-    };
+
+const handleBidClick = async (productId: any) => {
+    if (!userToken) {
+        console.error("Token is undefined");
+        return;
+    }
 
     try {
-      const response = await fetch(url, requestOptions);
+        const response = await fetch('/api/bidinfo', {
+            method: "GET",
+            headers: {
+                Authorization: `${userToken}`,
+                Params: productId
+            },
+            cache: 'no-cache'
+        });
 
-      // Check if the response is ok (status in the range 200-299)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+        if (!response.ok) {
+            console.error("Error in the request:", response);
+            return;
+        }
 
-      const result = await response.json(); // Parse the JSON response
-      console.log(result); // Handle the result as needed
+        const data = await response.json();
 
-      // You can set the bid data or handle success here
-      setBidData(result); // Assuming setBidData is a function to store the result
+        if (data.data.status === "failed") {
+            console.log("Failed:", data.data);
+            toast.error(`${data.data.message}`, {
+                position: "top-right",
+                progress: 4
+            });
+            setTimeout(() => {
+                // Optionally navigate back if needed
+                // router.back();
+            }, 2000);
+        } else if (data.data.status === "success") {
+           setbidopen(true);
+            console.log("Success:", data.data);
+            setBidData(data?.data?.data);
+            setTicketPrice(Number(data?.data?.data?.ticket_price))
+
+            // Display a success toast message if needed
+        /*     toast.success("Bid information retrieved successfully!", {
+                position: "top-right",
+                progress: 4
+            }); */
+        } else {
+            console.warn("Unknown status:", data.data.status);
+        }
+
+        return data;
     } catch (error) {
-      console.error("Error fetching bid info:", error);
-      // Handle error (e.g., show a toast notification)
-      setbidopen(true);
-      toast.error("Failed to retrieve bid info. Please try again later.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+        console.error("Error during fetch:", error);
+        toast.error("An unexpected error occurred. Please try again.", {
+            position: "top-right",
+            progress: 4
+        });
     }
-  };
+};
 
-  const initialTicketPrice = 200;
+
+
+  const initialTicketPrice = Number(bidData?.ticket_price);
+  // console.log(initialTicketPrice, 'initialTicketPrice')
+  // const [ticketCount, setTicketCount] = useState(1);
+  // const [ticketPrice, setTicketPrice] = useState(Number(bidData?.ticket_price));
+  // const [totalAmount, setTotalAmount] = useState(ticketCount * ticketPrice);
   const [ticketCount, setTicketCount] = useState(1);
-  const [ticketPrice, setTicketPrice] = useState(initialTicketPrice);
-  const [totalAmount, setTotalAmount] = useState(ticketCount * ticketPrice);
+const [ticketPrice, setTicketPrice] = useState(0); // Default to 0 initially
+const [totalAmount, setTotalAmount] = useState(0);
+
+  // console.log(totalAmount, 'totalamount')
 
   // Handler to increase ticket count
   const handleIncrease = () => {
@@ -326,7 +305,13 @@ export const AuctionComp = ({ cardInfo }: any) => {
   } = useMutateData("verifywalletpin", handleSuccess, handleError);
 
 
-
+useEffect(() => {
+  if (bidData && bidData.ticket_price) {
+    const initialPrice = Number(bidData.ticket_price);
+    setTicketPrice(initialPrice);
+    setTotalAmount(initialPrice * ticketCount);
+  }
+}, [bidData, ticketCount]);
 
   const submitForm = (data: any) => {
     console.log(data, 'dddd', paymentMethod, 'paymmm');
@@ -491,9 +476,9 @@ export const AuctionComp = ({ cardInfo }: any) => {
                 <div className="flex justify-between flex-wrap py-2">
                   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-                      <span className="font-Poppins">Foodstuffs</span>
+                      <span className="font-Poppins">{bidData?.category}</span>
                       <span>|</span>
-                      <span className="font-Poppins font-medium">Rice</span>
+                      <span className="font-Poppins font-medium">{bidData?.name}</span>
                     </div>
                   </div>
 
@@ -508,19 +493,21 @@ export const AuctionComp = ({ cardInfo }: any) => {
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
                     <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
                       <Image
-                        src={rice}
-                        width={100}
-                        height={100}
+                        src={`https://ajiroba.onrender.com${bidData?.images[0]}`}
+                        width={200}
+                        height={200}
                         alt="human hair"
                         className=""
                       />
+
+
                       <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
 
-                      <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+ <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
                         <div className="bg-orange-500 p-3 rounded-lg text-center">
                           <span className="text-sm block">Raffle Ticket</span>
                           <span className="text-sm font-bold">
-                            ₦ {ticketPrice}
+                            ₦    {ticketPrice}
                           </span>
                         </div>
                       </div>
@@ -534,7 +521,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                       </label>
                       <input
                         type="text"
-                        value="Rice"
+                        value={bidData?.name}
                         readOnly
                         className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
                       />
@@ -548,7 +535,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                         <div className="flex items-center">
                           <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                            onClick={handleDecrease}
+                         /*    onClick={handleDecrease} */
                             disabled={ticketCount <= 1}
                           >
                             -
@@ -559,7 +546,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                           </span>
                           <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                            onClick={handleIncrease}
+                           /*  onClick={handleIncrease} */
                           >
                             +
                           </button>
@@ -647,6 +634,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
                       <span className="font-Poppins">Foodstuffs</span>
+
                       <span>|</span>
                       <span className="font-Poppins font-medium">Rice</span>
                     </div>
