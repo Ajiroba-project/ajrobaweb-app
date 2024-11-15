@@ -96,6 +96,7 @@ const Page = ({ params }: any) => {
     );
 
     const product_id = params.slug;
+     const cacheBuster = `cache=${Date.now()}`;
 
     const {
         data: productdata,
@@ -103,13 +104,66 @@ const Page = ({ params }: any) => {
         isFetching: productdatafetching,
         error,
         status,
+       refetch: viewauctionrefetch,
     } = useQueryData<AuctionResponse>(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/?${cacheBuster}`,
         ["product_details", product_id],
         true,
+
     );
 
+
+
+const [productdatanew, setProductDataNew] = useState(null);
+const [loadingdata, setLoadingData] = useState(false);
+
+const fetchWithAuth = async (url: string) => {
+  setLoadingData(true); // Indicate loading start
+
+  const requestOptions: RequestInit = {
+    method: "GET",
+    headers: {
+      Authorization: `token ${userToken}`, // Simplified header creation
+    },
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json(); // Parse JSON response
+    setProductDataNew(result); // Update state with result
+    return result; // Return result for external use
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Re-throw for the caller to handle
+  } finally {
+    setLoadingData(false); // Ensure loading is stopped
+  }
+};
+
+
+
+const fetchData = async () => {
+  try {
+    const data = await fetchWithAuth(`https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`);
+    // console.log("Fetched data:", data);
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
+};
+
+useEffect(() => {
+  fetchData();
+  viewauctionrefetch()
+}, [product_id]); // Refetch whenever product_id changes
+
     console.log(productdata, "productdata");
+      console.log(productdatanew, 'productdatanew')
 
 useEffect(() => {
     if (paths.length > 0) {
