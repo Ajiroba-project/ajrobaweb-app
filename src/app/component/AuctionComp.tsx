@@ -26,12 +26,13 @@ import { useGetPointData } from "@/hooks/useGetData";
 import { SetStateAction } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
- import { useMutateData } from '@/hooks/useMutateNewData'
+import { useMutateData } from "@/hooks/useMutateNewData";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import Input from "../component/Input";
 import InputAction from "./InputAction";
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import verify from "../asset/verify.svg";
 
 interface cardDetails {
   cardInfo: Array<{
@@ -52,10 +53,22 @@ interface BidInfoResponse {
   data: any;
   category: any;
   name: any;
-  ticket_price: any
+  ticket_price: any;
   id: any;
   images: any;
-  subcategory: any
+  subcategory: any;
+}
+
+interface TicketInfoResponse {
+  // Define the structure based on the response you expect from the API.
+  data?: any;
+  category?: any;
+  name?: any;
+  ticket_price?: any;
+  id?: any;
+  images?: any;
+  subcategory?: any;
+  ticket_name?: any;
 }
 
 // Utility function to parse time remaining from a string
@@ -129,10 +142,12 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
   const [bidopen, setbidopen] = useState(false);
 
- const [bidData, setBidData] = useState<BidInfoResponse | null>(null);
+  const [bidData, setBidData] = useState<BidInfoResponse | null>(null);
   const [viewticket, setViewTicket] = useState(false);
+  const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null);
 
   const [makepayment, setmakepayment] = useState(false);
+  const [successbid, setSuccessbid] = useState(false);
 
   const tkn_: string = Cookies.get("token") as string;
 
@@ -141,6 +156,126 @@ export const AuctionComp = ({ cardInfo }: any) => {
     isLoading: pointsLoading,
     error: pointerror,
   } = useGetPointData("/api/getpoints", "get_point_details", userToken);
+
+  const handleSuccessbidpayment = (data: any) => {
+    console.log(data, "datatatat");
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      setTicketData(data?.data);
+      setSuccessbid(!successbid);
+      toast.success(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+
+        /*    onClose: () => {
+                        if (
+                            data?.data?.message &&
+                            data.data.message.includes(
+                                "Order placed successfully. Order Code",
+                            )
+                        ) {
+                            router.push("/profile");
+                        } else {
+                            router.push("/paymentpage");
+                        }
+                    }, */
+      });
+      reset();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleErrorbidpayment = (error: any) => {
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+  const {
+    data: bidpaymentdata,
+    error: bidpaymenterror,
+    error: bidpaymentterror,
+    isError: bidpaymentiserror,
+    isSuccess: bidpaymentsuccess,
+    mutate: bidpaymentmutate,
+    status: bidpaymentstatus,
+  } = useMutateData(
+    "bidpayment",
+    handleSuccessbidpayment,
+    handleErrorbidpayment,
+  );
+
+  // console.log(pointinfo, 'pointinfoooooo')
 
   const [paymentMethod, setPaymentMethod] = useState("");
 
@@ -162,7 +297,85 @@ export const AuctionComp = ({ cardInfo }: any) => {
     console.log(error, "Error occurred during bid");
     setbidopen(false);
 
-        toast.error("Failed to retrieve bid info. Please try again later.", {
+    toast.error("Failed to retrieve bid info. Please try again later.", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  // Handle API success
+  const handleSuccesspayment = (data?: any) => {
+    //  console.log(data)
+
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      setBidData(data?.data); // Store the API response in bidData for modal usage
+
+      setbidopen(false); // Open modal after successful API response
+      setmakepayment(false);
+      /*   console.log(data?.data, 'auctionidddd') */
+
+      /*    console.log(paymentMethod, 'paymentmeethodddd')
+      console.log(auctionId, 'auctioniddddd')
+      console.log(ticketCount, 'ticketCount')
+      console.log(totalAmount, 'total amount')
+      console.log(userToken, 'tokennnn') */
+
+      toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        /*  onClose: () => {
+          if (
+            data?.data?.message &&
+            data.data.message.includes("Order placed successfully. Order Code")
+          ) {
+            router.push("/profile");
+          } else {
+            router.push("/paymentpage");
+          }
+        }, */
+      });
+
+      const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
+
+const payload = {
+  auction: auctionId,
+  ticket_quantity: ticketCount,
+  total_amount: Number(totalAmount),
+  pay_with: payWithMethod,
+};
+
+bidpaymentmutate({
+  url: "/api/bidpayment",
+  payload: { payload: payload, token: userToken },
+  token: userToken,
+});
+      resetpayment();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -172,14 +385,74 @@ export const AuctionComp = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
+      resetpayment();
+    } else if (data.status === 401) {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    } else if (data.status === 500) {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    } else {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    }
+  };
+
+  // Handle API error
+  const handleErrorpayment = (error?: any) => {
+    console.log(error, "Error occurred during bid");
+    setbidopen(false);
+
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    resetpayment();
   };
 
   // Initialize the mutation hook
   const { mutate } = useMutateData("bidinfo", handleSuccess, handleError);
 
   // Function to handle bid button click
-
-
 
   const schema = yup.object().shape({
     password: yup
@@ -202,68 +475,67 @@ export const AuctionComp = ({ cardInfo }: any) => {
     resolver: yupResolver(schema),
   });
 
-
-
-
-const handleBidClick = async (productId: any) => {
+  const handleBidClick = async (productId: any) => {
     if (!userToken) {
-        console.error("Token is undefined");
-        return;
+      console.error("Token is undefined");
+      toast.error("Please Signin", {
+        position: "top-right",
+        progress: 4,
+      });
+      return;
     }
 
     try {
-        const response = await fetch('/api/bidinfo', {
-            method: "GET",
-            headers: {
-                Authorization: `${userToken}`,
-                Params: productId
-            },
-            cache: 'no-cache'
+      const response = await fetch("/api/bidinfo", {
+        method: "GET",
+        headers: {
+          Authorization: `${userToken}`,
+          Params: productId,
+        },
+        cache: "no-cache",
+      });
+
+      if (!response.ok) {
+        console.error("Error in the request:", response);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.data.status === "failed") {
+        console.log("Failed:", data.data);
+        toast.error(`${data.data.message}`, {
+          position: "top-right",
+          progress: 4,
         });
+        setTimeout(() => {
+          // Optionally navigate back if needed
+          // router.back();
+        }, 2000);
+      } else if (data.data.status === "success") {
+        setbidopen(true);
+        /*    console.log("Success:", data?.data?.data); */
+        setBidData(data?.data?.data);
+        setTicketPrice(Number(data?.data?.data?.ticket_price));
 
-        if (!response.ok) {
-            console.error("Error in the request:", response);
-            return;
-        }
-
-        const data = await response.json();
-
-        if (data.data.status === "failed") {
-            console.log("Failed:", data.data);
-            toast.error(`${data.data.message}`, {
-                position: "top-right",
-                progress: 4
-            });
-            setTimeout(() => {
-                // Optionally navigate back if needed
-                // router.back();
-            }, 2000);
-        } else if (data.data.status === "success") {
-           setbidopen(true);
-            console.log("Success:", data.data);
-            setBidData(data?.data?.data);
-            setTicketPrice(Number(data?.data?.data?.ticket_price))
-
-            // Display a success toast message if needed
+        // Display a success toast message if needed
         /*     toast.success("Bid information retrieved successfully!", {
                 position: "top-right",
                 progress: 4
             }); */
-        } else {
-            console.warn("Unknown status:", data.data.status);
-        }
+      } else {
+        console.warn("Unknown status:", data.data.status);
+      }
 
-        return data;
+      return data;
     } catch (error) {
-        console.error("Error during fetch:", error);
-        toast.error("An unexpected error occurred. Please try again.", {
-            position: "top-right",
-            progress: 4
-        });
+      console.error("Error during fetch:", error);
+      toast.error("An unexpected error occurred. Please try again.", {
+        position: "top-right",
+        progress: 4,
+      });
     }
-};
-
-
+  };
 
   const initialTicketPrice = Number(bidData?.ticket_price);
   // console.log(initialTicketPrice, 'initialTicketPrice')
@@ -271,8 +543,9 @@ const handleBidClick = async (productId: any) => {
   // const [ticketPrice, setTicketPrice] = useState(Number(bidData?.ticket_price));
   // const [totalAmount, setTotalAmount] = useState(ticketCount * ticketPrice);
   const [ticketCount, setTicketCount] = useState(1);
-const [ticketPrice, setTicketPrice] = useState(0); // Default to 0 initially
-const [totalAmount, setTotalAmount] = useState(0);
+  const [ticketPrice, setTicketPrice] = useState(0); // Default to 0 initially
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [auctionId, setAuctionId] = useState("");
 
   // console.log(totalAmount, 'totalamount')
 
@@ -294,30 +567,33 @@ const [totalAmount, setTotalAmount] = useState(0);
     setPaymentMethod(method);
   };
 
-
-    const {
+  const {
     data,
     error: walleterror,
     isError,
     isSuccess,
     mutate: mutatev,
     status,
-  } = useMutateData("verifywalletpin", handleSuccess, handleError);
+    reset: resetpayment,
+  } = useMutateData(
+    "verifywalletpin",
+    handleSuccesspayment,
+    handleErrorpayment,
+  );
 
-
-useEffect(() => {
-  if (bidData && bidData.ticket_price) {
-    const initialPrice = Number(bidData.ticket_price);
-    setTicketPrice(initialPrice);
-    setTotalAmount(initialPrice * ticketCount);
-  }
-}, [bidData, ticketCount]);
+  useEffect(() => {
+    if (bidData && bidData.ticket_price) {
+      const initialPrice = Number(bidData.ticket_price);
+      setTicketPrice(initialPrice);
+      setTotalAmount(initialPrice * ticketCount);
+      setAuctionId(bidData.id);
+    }
+  }, [bidData, ticketCount]);
 
   const submitForm = (data: any) => {
-    console.log(data, 'dddd', paymentMethod, 'paymmm');
+    /*   console.log(data, 'dddd', paymentMethod, 'paymmm'); */
 
     // mutate(data)
-
 
     Cookies.set("pvd", data?.password, { expires: 1 });
     const payload = {
@@ -329,7 +605,6 @@ useEffect(() => {
       payload: { payload: payload, token: userToken },
       token: userToken,
     });
-
   };
 
   const handlePay = () => {};
@@ -478,7 +753,9 @@ useEffect(() => {
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
                       <span className="font-Poppins">{bidData?.category}</span>
                       <span>|</span>
-                      <span className="font-Poppins font-medium">{bidData?.name}</span>
+                      <span className="font-Poppins font-medium">
+                        {bidData?.name}
+                      </span>
                     </div>
                   </div>
 
@@ -492,22 +769,22 @@ useEffect(() => {
                 <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
                     <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-                      <Image
+                      {/*    {console.log(bidData, 'bidDatabidDatabidDatabidData')} */}
+                      {/*  <Image
                         src={`https://ajiroba.onrender.com${bidData?.images[0]}`}
                         width={200}
                         height={200}
                         alt="human hair"
                         className=""
-                      />
-
+                      /> */}
 
                       <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
 
- <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+                      <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
                         <div className="bg-orange-500 p-3 rounded-lg text-center">
                           <span className="text-sm block">Raffle Ticket</span>
                           <span className="text-sm font-bold">
-                            ₦    {ticketPrice}
+                            ₦ {ticketPrice}
                           </span>
                         </div>
                       </div>
@@ -535,7 +812,7 @@ useEffect(() => {
                         <div className="flex items-center">
                           <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                         /*    onClick={handleDecrease} */
+                            /*    onClick={handleDecrease} */
                             disabled={ticketCount <= 1}
                           >
                             -
@@ -546,7 +823,7 @@ useEffect(() => {
                           </span>
                           <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                           /*  onClick={handleIncrease} */
+                            /*  onClick={handleIncrease} */
                           >
                             +
                           </button>
@@ -656,18 +933,17 @@ useEffect(() => {
                       <div className="flex items-center">
                         <button
                           className="px-2 py-1 bg-gray-200 rounded"
-                          onClick={handleDecrease}
-                          disabled={ticketCount <= 1}
+                          /*     onClick={handleDecrease} */
+                          /*   disabled={ticketCount <= 1} */
+                          disabled={true}
                         >
                           -
                         </button>
-                        <span className="mx-4 font-bold text-sm">
-                          {" "}
-                          {ticketPrice}
-                        </span>
+                        <span className="mx-4 font-bold text-sm"> {20000}</span>
                         <button
                           className="px-2 py-1 bg-gray-200 rounded"
-                          onClick={handleIncrease}
+                          /*      onClick={handleIncrease} */
+                          disabled={true}
                         >
                           +
                         </button>
@@ -681,17 +957,16 @@ useEffect(() => {
                       <div className="flex items-center">
                         <button
                           className="px-2 py-1 bg-gray-200 rounded"
-                          onClick={handleDecrease}
-                          disabled={ticketCount <= 1}
+                          /*   onClick={handleDecrease} */
+                          disabled={true}
                         >
                           -
                         </button>
-                        <span className="mx-4 font-bold text-sm">
-                          {ticketCount}
-                        </span>
+                        <span className="mx-4 font-bold text-sm">{30}</span>
                         <button
                           className="px-2 py-1 bg-orange-500 text-white rounded"
-                          onClick={handleIncrease}
+                          /*  onClick={handleIncrease} */
+                          disabled={true}
                         >
                           +
                         </button>
@@ -705,7 +980,8 @@ useEffect(() => {
                     </label>
                     <input
                       type="text"
-                      value={`₦ ${totalAmount.toLocaleString()}`}
+                      /*  value={`₦ ${totalAmount.toLocaleString()}`} */
+                      value={120982}
                       readOnly
                       className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
                     />
@@ -728,8 +1004,8 @@ useEffect(() => {
                       </tr>
                     </thead>
                     <tbody className="mt-8">
-                      {pointinfo?.data?.data?.map(
-                        (referral: any, index: number) => (
+                      {/*    {pointinfo?.data?.data?.map(
+                       (referral: any, index: number) => (
                           <tr key={index}>
                             <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
                               {index + 1}
@@ -742,7 +1018,19 @@ useEffect(() => {
                             </td>
                           </tr>
                         ),
-                      )}
+                      )} */}
+
+                      <tr>
+                        <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                          {1}
+                        </td>
+                        <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                          {ticketData?.ticket_name}
+                        </td>
+                        <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                          {ticketData?.id}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -778,19 +1066,20 @@ useEffect(() => {
                       <div>
                         <input
                           type="radio"
-                          id="wallet"
-                          name="wallet"
-                          value="wallet"
-                          onChange={() => handlePaymentSelection("wallet")}
+                          id="wallet_balance"
+                          name="payment_method"
+                          value="wallet_balance"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_balance")
+                          }
                         />
-                        <label className="ml-2" htmlFor="wallet">
+                        <label className="ml-2" htmlFor="wallet_balance">
                           Wallet
                         </label>
                       </div>
-
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          pay with the money in your wallet
+                          #230000
                         </small>
                       </div>
                     </div>
@@ -799,19 +1088,20 @@ useEffect(() => {
                       <div>
                         <input
                           type="radio"
-                          id="card"
-                          name="wallet"
-                          value="card"
-                          onChange={() => handlePaymentSelection("card")}
+                          id="wallet_point"
+                          name="payment_method"
+                          value="wallet_point"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_point")
+                          }
                         />
-                        <label className="ml-2" htmlFor="card">
-                          Pay with Cards, USSD or bank transfer
+                        <label className="ml-2" htmlFor="wallet_point">
+                          Pay With Wallet And Ajiroba Point
                         </label>
                       </div>
-
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          pay with the money in your wallet
+                          #23,000 (Wallet) And #200 (Ajiroba Points)
                         </small>
                       </div>
                     </div>
@@ -852,6 +1142,50 @@ useEffect(() => {
             showModal={() => setmakepayment(!makepayment)}
             handleOk={() => setmakepayment(false)}
             handleCancel={() => setmakepayment(false)}
+          />
+
+          <ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="py-2 flex justify-center items-center">
+                  <Image src={verify} width={60} height={60} alt="icon" />
+                </div>
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Successfully
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    You have entered into raffle draw for this product. Good
+                    luck
+                  </p>
+                </div>
+
+                <div className="flex flex-col justify-center items-center">
+                  <DefaultButton
+                    text="Proceed"
+                    /*  text={status === 'pending' ? 'loading...' : "Save"} */
+                    className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
+                    type="submit"
+                  />
+                  <button
+                    onClick={() => {
+                      return (
+                        setbidopen(false),
+                        setViewTicket(!viewticket),
+                        setSuccessbid(!successbid)
+                      );
+                    }}
+                    className="text-orange-500 font-Poppins text-xs mt-1"
+                  >
+                    View Ticket
+                  </button>
+                </div>
+              </div>
+            }
+            isModalOpen={successbid}
+            showModal={() => setSuccessbid(!successbid)}
+            handleOk={() => setSuccessbid(false)}
+            handleCancel={() => setSuccessbid(false)}
           />
         </section>
       )}

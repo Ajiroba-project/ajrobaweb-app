@@ -1,26 +1,54 @@
+// import React from 'react';
+// import { Button, Modal } from 'antd'
+
+// interface ModalComponentProps {
+//     content?: React.ReactNode;
+//     isModalOpen?: boolean;
+//     showModal?: () => void;
+//     handleOk?: () => void;
+//     handleCancel?: () => void;
+// }
+
+// const ModalComponent: React.FC<ModalComponentProps> = ({ content, handleOk, handleCancel, isModalOpen }) => {
+//     return (
+//         <>
+
+//             <Modal footer={null} title="" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+//                 <div>
+//                     {content}
+//                 </div>
+//             </Modal>
+//         </>
+//     );
+// };
+
+// export default ModalComponent;
+
+
 import React from 'react';
-import { Button, Modal } from 'antd'
+import { Modal } from 'antd';
 
 interface ModalComponentProps {
-    content: React.ReactNode;
-    isModalOpen: boolean;
-    showModal: () => void;
-    handleOk: () => void;
-    handleCancel: () => void;
+    content?: React.ReactNode;
+    isModalOpen?: boolean;
+    handleOk?: () => void;
+    handleCancel?: () => void;
+     showModal?: () => void;
 }
 
-const ModalComponent: React.FC<ModalComponentProps> = ({ content, showModal, handleOk, handleCancel, isModalOpen }) => {
+const ModalComponent: React.FC<ModalComponentProps> = ({ content, handleOk, handleCancel, isModalOpen }) => {
     return (
-        <>
-            {/* <Button type="primary" onClick={showModal}>
-                Open Modal
-            </Button> */}
-            <Modal footer={null} title="" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <div>
-                    {content}
-                </div>
-            </Modal>
-        </>
+        <Modal
+            footer={null}
+            title=""
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+        >
+            <div>
+                {content}
+            </div>
+        </Modal>
     );
 };
 

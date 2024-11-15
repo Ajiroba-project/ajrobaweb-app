@@ -26,6 +26,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Input from "@/app/component/Input";
 import { useMutateData } from "@/hooks/useMutateNewData";
+import axios from 'axios'
 
 interface CardInfoItem {
     weight: string;
@@ -46,6 +47,8 @@ interface CardInfoItem {
     ticket_price?: string;
     auction_reviews?: any;
     starts_in?: any;
+    category_name?: any;
+    subcategory_name?: any;
 }
 
 interface AuctionResponse {
@@ -64,6 +67,13 @@ const Page = ({ params }: any) => {
     const selectedBrands = searchParams.get("selectedBrands");
     const min_max = searchParams.get("min_max");
     const [successModal, setSuccessModal] = useState(false);
+      const [makepayment, setmakepayment] = useState(false);
+        const [paymentMethod, setPaymentMethod] = useState("");
+
+        const handlePaymentSelection = (method: SetStateAction<string>) => {
+    setPaymentMethod(method);
+  };
+
 
     const router = useRouter();
 
@@ -99,11 +109,20 @@ const Page = ({ params }: any) => {
         true,
     );
 
-    useEffect(() => {
-        if (paths.length > 0) {
-            setPath(paths[paths.length - 1]);
+    console.log(productdata, "productdata");
+
+useEffect(() => {
+    if (paths.length > 0) {
+        const newPath = paths[paths.length - 1];
+        if (newPath !== path) {
+            setPath(newPath);
         }
-    }, [paths]);
+    } else if (path !== null) {
+        setPath(null);
+    }
+}, [paths, path]);  // Notice the added dependency on `path`
+
+
 
     const [selectedImage, setSelectedImage] = useState(0);
     const images = [image4, image2];
@@ -644,7 +663,7 @@ const Page = ({ params }: any) => {
         <main>
             <Header />
             <ProductBreadcrumb
-                paths={["Categories", productdata?.category, null]}
+                paths={["Auction", productdata?.data?.category_name, null]}
                 text={undefined}
             />
 
@@ -671,7 +690,7 @@ const Page = ({ params }: any) => {
                 }}
                 className="text-[#363636] font-Poppins text-sm font-semibold"
             >
-                {productdata?.category} | {productdata?.subcategory}
+                {productdata?.data?.category_name} | {productdata?.data?.subcategory_name}
             </div>
 
             <section
@@ -739,7 +758,7 @@ const Page = ({ params }: any) => {
                                             {productdata?.data?.name}
                                         </h1>
                                         <p className="flex mt-4 items-center text-[#111111] font-Poppins font-normal text-sm gap-1">
-                                            {star.map((val, index) => (
+                                         {/*    {star.map((val, index) => (
                                                 <span key={index}>
                                                     <span key={index}>
                                                         <FaStar
@@ -762,7 +781,7 @@ const Page = ({ params }: any) => {
                                                     ?.auction_reviews
                                                     ?.total_reviews
                                             }
-                                            ) Review(s)
+                                            ) Review(s) */}
                                         </p>
 
                                         <div className="flex items-center gap-2 flex-wrap mt-2">
@@ -820,13 +839,24 @@ const Page = ({ params }: any) => {
                                         ) : (
                                             <div className="flex justify-center items-center mt-4">
                                                 <button
+
+
                                                     onClick={
+                                                        () => {
+                        return (
+                          setmakepayment(!makepayment)
+                        );
+                      }
+                                                    }
+
+                                                   /*   onClick={
                                                         localStorage.getItem(
                                                             "pin_id",
                                                         ) === "yes"
                                                             ? handleOrderbutton
                                                             : showConfirmOrder
                                                     }
+ */
                                                     className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                                                 >
                                                     Bid
@@ -937,6 +967,82 @@ const Page = ({ params }: any) => {
             </section>
             {productdatafetching && <Loading />}
 
+
+
+
+            <ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Make Payment
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    Kindly select your payment option
+                  </p>
+                </div>
+
+                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+                  <div>
+                    <p className="text-[#111111] text-base mb-4  ">
+                      Payment Method
+                    </p>
+                  </div>
+
+                  <form action="">
+                    <div className="mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet"
+                          name="wallet"
+                          value="wallet"
+                          onChange={() => handlePaymentSelection("wallet")}
+                        />
+                        <label className="ml-2" htmlFor="wallet">
+                          Wallet
+                        </label>
+                      </div>
+
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          pay with the money in your wallet
+                        </small>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="card"
+                          name="wallet"
+                          value="card"
+                          onChange={() => handlePaymentSelection("card")}
+                        />
+                        <label className="ml-2" htmlFor="card">
+                          Pay with Cards, USSD or bank transfer
+                        </label>
+                      </div>
+
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          pay with the money in your wallet
+                        </small>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+
+              </div>
+            }
+            isModalOpen={makepayment}
+            showModal={() => setmakepayment(!makepayment)}
+            handleOk={() => setmakepayment(false)}
+            handleCancel={() => setmakepayment(false)}
+          />
+
             <ModalComponent
                 content={
                     <div className="flex flex-col justify-center">
@@ -990,3 +1096,4 @@ const Page = ({ params }: any) => {
     );
 };
 export default Page;
+

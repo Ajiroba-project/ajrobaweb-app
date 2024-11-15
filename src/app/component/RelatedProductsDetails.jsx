@@ -57,8 +57,9 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
                                     </div>
 
                                      <div className='justify-start'>
-                                        <p  className=' font-Poppins text-[13px] font-semibold '>
-                                            ₦&nbsp;{value.price}
+                                        <p className="text-sm" >Ticket Price:</p>
+                                        <p  className=' font-Poppins text-[13px] font-semibold flex justify-end '>
+                                            ₦&nbsp;{value.ticket_price}
                                             <span className='font-semibold '></span>
                                         </p>
                                     </div>
@@ -75,14 +76,14 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
 
 
                                       <div className='justify-start'>
-                                        <p className='w-max text-[10px] font-normal font-Poppins  text-[#242423]'>
+                                       {/*  <p className='w-max text-[10px] font-normal font-Poppins  text-[#242423]'>
                                            ({value?.product_reviews?.total_reviews})
                                             <span className='font-semibold '></span>
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                                 <p className='text-[13px] font-Poppins  text-[#2A2A2A] '>
-                                   w - {value?.weight}
+                                   w - {value?.weight || 'NA'}
                                 </p>
                             </div>
                         </div>
