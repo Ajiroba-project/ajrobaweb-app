@@ -950,18 +950,21 @@ export const raffleWinner = [
     product: "50kg Bag of Rice",
     winner: "09023233443",
     ticket: "500",
+    number: 1
   },
   {
     sn: 1,
     product: "50kg Bag of Semo",
     winner: "09023233443",
     ticket: "500",
+     number: 2
   },
   {
     sn: 2,
     product: "50kg Bag of Rice",
     winner: "09023233443",
     ticket: "500",
+     number: 3
   }
 ]
 

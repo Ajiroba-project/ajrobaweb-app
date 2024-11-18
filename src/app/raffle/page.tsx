@@ -8,6 +8,7 @@ import Image from 'next/image'
 import raf from '../asset/image/raf.png'
 import useAuthMiddleware from '@/hooks/useAuth'
 import { Header } from '../component/Header'
+import { Footer } from '../component/Footer'
 
 const RafflePage = () => {
   const router = useRouter()

@@ -1,0 +1,42 @@
+.p-rd::after {
+  font: 800 40px system-ui;
+  content: counter(count);
+  animation: counter 1s linear infinite alternate;
+  counter-reset: count 0;
+}
+
+@keyframes counter {
+  0% {
+    counter-increment: count 0123450;
+  }
+  10% {
+    counter-increment: count 0123451;
+  }
+  20% {
+    counter-increment: count 0123452;
+  }
+  30% {
+    counter-increment: count 0123453;
+  }
+  40% {
+    counter-increment: count 0123454;
+  }
+  50% {
+    counter-increment: count 0123455;
+  }
+  60% {
+    counter-increment: count 0123456;
+  }
+  70% {
+    counter-increment: count 0123457;
+  }
+  80% {
+    counter-increment: count 0123458;
+  }
+  90% {
+    counter-increment: count 0123459;
+  }
+  100% {
+    counter-increment: count 0123460;
+  }
+}

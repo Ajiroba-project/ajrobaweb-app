@@ -1153,6 +1153,8 @@ const Page = ({ params }: any) => {
         handleOk={() => {}}
         handleCancel={handlecloseOrder}
       />
+
+            <Footer />
     </main>
   );
 };

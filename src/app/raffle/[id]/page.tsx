@@ -101,6 +101,8 @@ import { HeadingText } from "../../component/Heading";
 import { DefaultButton } from "../../component/Button";
 import Cookies from "js-cookie";
 import ModalComponent from "@/app/component/ModalComponent";
+import { Footer } from "@/app/component/Footer";
+import { Header } from "@/app/component/Header";
 
 
 interface ProductData {
@@ -126,7 +128,7 @@ const Page = ({ params }: any) => {
 
   const product_id = params?.id
 
-  console.log(product_id, "product_id")
+  // console.log(product_id, "product_id")
 
   const [productdatanew, setProductDataNew] = useState<ProductData | null>(
     null,
@@ -283,7 +285,10 @@ const Page = ({ params }: any) => {
 
   return (
     <section className="z-auto">
-      <div className="w-full bg-[#F6F6F6] pt-[13vh]">
+     <header className='fixed z-50 w-full'>
+        <Header />
+      </header>
+      <div className="w-full bg-[#F6F6F6] pt-[20vh]">
         <div className="container flex flex-col">
           <p
             onClick={() => router.back()}
@@ -312,12 +317,35 @@ const Page = ({ params }: any) => {
           </div>
         </div>
 
-        <DefaultButton
+      {/*   <DefaultButton
           text={playState ? "Stop Video" : "Play Video"}
           className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
           type="button"
           handleClick={handleVideoControl}
         />
+ */}
+
+        {
+productdatanew?.starts_in == "Raffle Ended" ?
+
+
+ <DefaultButton
+     /*      text={playState ? "Stop Video" : "Play Video"} */
+     text='Watch Live Raffle'
+          className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+          type="button"
+          handleClick={()=>{router.push(`/raffle/${product_id}/winners`)}}
+        />
+
+        :  <DefaultButton
+          text={playState ? "Stop Video" : "Play Video"}
+          className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+          type="button"
+          handleClick={handleVideoControl}
+        />
+
+
+        }
       </section>
 
 
@@ -361,6 +389,7 @@ const Page = ({ params }: any) => {
             handleOk={() => setViewCountdown(false)}
             handleCancel={() => setViewCountdown(false)}
           />
+               <Footer />
     </section>
   );
 };
