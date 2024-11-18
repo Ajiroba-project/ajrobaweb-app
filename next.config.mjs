@@ -21,6 +21,14 @@ const nextConfig = {
                 port: '',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'youtu.be',
+                port: '',
+                /*        pathname: '/A50B4AwxwsU', */
+                pathname: '/**',
+                search: '?si=bnq1wFc_kMH4Swzm',
+            }
 
 
         ],

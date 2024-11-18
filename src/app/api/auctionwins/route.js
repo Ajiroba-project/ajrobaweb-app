@@ -36,11 +36,13 @@ export async function GET(request) {
             return NextResponse.json({ error: errorData.message || 'An error occurred' }, { status: res.status });
         }
 
+        console.log(res, 'res')
+
         // Parse response body as JSON
         const data = await res.json();
         const status = res.status;
 
-        // console.log(data, 'data')
+        console.log(data, 'data', status)
 
         // Return JSON response with data and status
         return NextResponse.json({ data, status });

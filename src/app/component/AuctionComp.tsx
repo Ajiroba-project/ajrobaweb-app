@@ -769,14 +769,7 @@ bidpaymentmutate({
                 <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
                     <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-                      {/*    {console.log(bidData, 'bidDatabidDatabidDatabidData')} */}
-                      {/*  <Image
-                        src={`https://ajiroba.onrender.com${bidData?.images[0]}`}
-                        width={200}
-                        height={200}
-                        alt="human hair"
-                        className=""
-                      /> */}
+
 
                       <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
 
@@ -910,10 +903,10 @@ bidpaymentmutate({
                 <div className="flex justify-between flex-wrap py-2">
                   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-                      <span className="font-Poppins">Foodstuffs</span>
+                      <span className="font-Poppins">{ticketData?.data?.category}</span>
 
                       <span>|</span>
-                      <span className="font-Poppins font-medium">Rice</span>
+                      <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
                     </div>
                   </div>
 
@@ -939,7 +932,7 @@ bidpaymentmutate({
                         >
                           -
                         </button>
-                        <span className="mx-4 font-bold text-sm"> {20000}</span>
+                        <span className="mx-4 font-bold text-sm"> {ticketData?.data?.ticket_price}</span>
                         <button
                           className="px-2 py-1 bg-gray-200 rounded"
                           /*      onClick={handleIncrease} */
@@ -962,7 +955,7 @@ bidpaymentmutate({
                         >
                           -
                         </button>
-                        <span className="mx-4 font-bold text-sm">{30}</span>
+                        <span className="mx-4 font-bold text-sm">{ticketData?.data?.ticket_quantity}</span>
                         <button
                           className="px-2 py-1 bg-orange-500 text-white rounded"
                           /*  onClick={handleIncrease} */
@@ -981,14 +974,18 @@ bidpaymentmutate({
                     <input
                       type="text"
                       /*  value={`₦ ${totalAmount.toLocaleString()}`} */
-                      value={120982}
+                      value={ticketData?.data?.ticket_amount}
                       readOnly
                       className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6">
+
+{
+
+
+                <div  className="mt-6">
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
                       <tr className="bg-[#FCDFD4] text-left">
@@ -1004,36 +1001,44 @@ bidpaymentmutate({
                       </tr>
                     </thead>
                     <tbody className="mt-8">
-                      {/*    {pointinfo?.data?.data?.map(
-                       (referral: any, index: number) => (
-                          <tr key={index}>
-                            <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                              {index + 1}
-                            </td>
-                            <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                              {referral.description}
-                            </td>
-                            <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                              {referral.point}
-                            </td>
-                          </tr>
-                        ),
-                      )} */}
+{
+ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; ticket_number: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }, index: number)=>{
+  return (
+    <tr key={index + 1}>
+    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+      {index + 1}
+    </td>
+    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+      {item?.ticket_type}
+    </td>
+    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+      {item?.ticket_number}
+    </td>
+  </tr>
+  )
+})
+}
 
-                      <tr>
+                      {/* <tr>
                         <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                          {1}
+                          {index + 1}
                         </td>
                         <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                          {ticketData?.ticket_name}
+                          {item?.ticket_type}
                         </td>
                         <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                          {ticketData?.id}
+                          {item?.ticket_number}
                         </td>
-                      </tr>
+                      </tr> */}
+
+
                     </tbody>
                   </table>
                 </div>
+
+
+}
+
               </div>
             }
             isModalOpen={viewticket}
