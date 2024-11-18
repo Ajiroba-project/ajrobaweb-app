@@ -27,7 +27,7 @@ const nextConfig = {
                 port: '',
                 /*        pathname: '/A50B4AwxwsU', */
                 pathname: '/**',
-                search: '?si=bnq1wFc_kMH4Swzm',
+                /*          search: '?si=bnq1wFc_kMH4Swzm', */
             }
 
 
