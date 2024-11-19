@@ -10,7 +10,7 @@ import { Modal } from '@/app/component/Modal'
 import verify from '../../asset/verify.svg'
 import { useMutateData } from '@/hooks/useMutateNewData'
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie'
 

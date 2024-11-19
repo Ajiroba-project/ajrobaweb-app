@@ -13,7 +13,7 @@ import { state_and_LGA } from '../../../app/static-data'
 import { useForm, Controller } from "react-hook-form";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/store'
 import Cookies from 'js-cookie';

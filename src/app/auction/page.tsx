@@ -43,7 +43,7 @@ const AuctionPage = () => {
     true
   );
 
-  console.log(auctionInfo?.data);
+  // console.log(auctionInfo?.data);
 
   // Extract and set auction dates
   const auctionDates = useMemo(() => {
@@ -117,7 +117,7 @@ const AuctionPage = () => {
         </section>
 
         <section className='my-4'>
-          <h1>Auction</h1>
+    {/*       <h1>Auction</h1> */}
           <AuctionComp
             cardInfo={filteredData}
             currentPage={0}

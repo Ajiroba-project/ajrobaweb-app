@@ -4,7 +4,9 @@ import './globals.css'
 import RQProviders from '@/utils/provider'
 import { Providers } from './providers'
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import '~react-toastify/dist/ReactToastify.min.css';
+ import "react-toastify/dist/ReactToastify.css";
+// import 'react-toastify/ReactToastify.min.css'
 // import { useExcludeHeader } from '@/hooks/useExcludeHeader'
 // import { Header } from './component/Header'
 // import { Footer } from './component/Footer'

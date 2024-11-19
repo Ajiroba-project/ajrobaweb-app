@@ -165,6 +165,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onOptionClick, value, transaction }
   const router = useRouter();
 
   const handleOptionClick = (option: string) => {
+    console.log(transaction, 'transactionnnnn')
     switch (option) {
       case 'Purchase order':
         router.push(`/purchaseorder?orderId=${transaction.order_id}`);

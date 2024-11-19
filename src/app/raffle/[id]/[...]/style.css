@@ -1,0 +1,52 @@
+.p-rd::after {
+  font: 800 40px system-ui;
+  content: counter(count);
+  animation: counter 1s linear infinite alternate;
+  counter-reset: count 0;
+}
+
+@keyframes counter {
+  0% {
+    counter-increment: count 012345012;
+  }
+  10% {
+    counter-increment: count 012345113;
+  }
+  20% {
+    counter-increment: count 012345214;
+  }
+  30% {
+    counter-increment: count 012345315;
+  }
+  40% {
+    counter-increment: count 012345416;
+  }
+  50% {
+    counter-increment: count 012345517;
+  }
+  60% {
+    counter-increment: count 012345618;
+  }
+  70% {
+    counter-increment: count 012345719;
+  }
+  80% {
+    counter-increment: count 012345820;
+  }
+  90% {
+    counter-increment: count 012345921;
+  }
+  100% {
+    counter-increment: count 012346022;
+  }
+}
+
+.table-body,
+tr {
+  margin-bottom: 10px !important ;
+  padding-bottom: 20px !important ;
+}
+
+.table-body tr {
+  border-bottom: 1px solid #ccc;
+}

@@ -11,7 +11,7 @@ import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import { Input } from "@nextui-org/react";
 

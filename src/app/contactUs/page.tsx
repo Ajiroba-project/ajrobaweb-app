@@ -18,7 +18,7 @@ import { DefaultButton } from '../component/Button'
 import { useForm } from 'react-hook-form'
 import { useMutateData } from '@/hooks/useMutateData'
 import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+// import 'react-toastify/dist/ReactToastify.css'
 
 type dataProps = {
   name: string

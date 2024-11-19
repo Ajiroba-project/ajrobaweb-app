@@ -13,11 +13,22 @@ type BreadcrubProps = {
 export const Breadcrumb = ({ paths, text }: BreadcrubProps) => {
   const [Category, setCategory] = useState();
 
-  useEffect(() => {
-    if (paths.length > 0) {
-      setCategory(paths[paths.length - 2]);
+  // useEffect(() => {
+  //   if (paths.length > 0) {
+  //     setCategory(paths[paths.length - 2]);
+  //   }
+  // }, [paths]);
+
+    useEffect(() => {
+    // Filter out any null or undefined values in paths
+    const filteredPaths = paths.filter(Boolean);
+
+    // Set category only if filtered paths has more than one item
+    if (filteredPaths.length > 1) {
+      setCategory(filteredPaths[filteredPaths.length - 2]);
     }
   }, [paths]);
+
 
 
 
@@ -98,12 +109,79 @@ export const DefaultBreadCrumb = ({ paths }: BreadcrubProps) => {
 }
 
 
+// export const ProductBreadcrumb = ({ paths, text }: BreadcrubProps) => {
+//   const [Category, setCategory] = useState();
+
+//   useEffect(() => {
+//     if (paths.length > 0) {
+//       setCategory(paths[paths.length - 2]);
+//     }
+//   }, [paths]);
+
+//   return (
+//     <div className="bg-[#F6F6F6]">
+//       <section
+//         style={{
+//           margin: "0 auto",
+//           width: "90%",
+//           maxWidth: "100%",
+//           zIndex: 51,
+//         }}
+//         className={` flex flex-col bg-[#F6F6F6] `}
+//       >
+//         <div className=" flex gap-2 text-sm  py-4  flex-wrap">
+//           <Link href="/" className="underline hover:text-[#F25E26]">
+//             Home{" "}
+//           </Link>
+
+//           {paths?.map((path: string, index: number) => (
+//             <Fragment key={index}>
+//               {index < paths.length - 1 && <span>&gt; </span>}
+
+//               {index < paths.length - 2 ? (
+//                 <Link
+
+//                   href={`/${paths
+//                     .slice(0, index + 1)
+//                     .map((p) => p.toLowerCase())
+//                     .join("/")}`}
+//                   className="underline hover:text-[#F25E26]"
+//                 >
+//                   {path}
+//                 </Link>
+//               ) : (
+//                 <span className="text-[#F25E26]">{path}</span>
+//               )}
+//             </Fragment>
+//           ))}
+//         </div>
+//         <div className="">
+//        {/*    <p className={` capitalize text-xl pb-4`}>{Category}</p> */}
+//         </div>
+
+
+
+//          <div className="bg-[#F6F6F6] flex py-4  justify-center items-center" >
+//             <h1 className="text-center text-base 2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px] font-semibold font-Poppins" >
+//                 Product Details
+//             </h1>
+//         </div>
+//       </section>
+//     </div>
+//   );
+// };
+
+
 export const ProductBreadcrumb = ({ paths, text }: BreadcrubProps) => {
-  const [Category, setCategory] = useState();
+  const [Category, setCategory] = useState<string | undefined>("");
 
   useEffect(() => {
-    if (paths.length > 0) {
-      setCategory(paths[paths.length - 2]);
+    // Filter out any null or undefined values in paths
+    const filteredPaths = paths.filter(Boolean);
+
+    // Set category only if filtered paths has more than one item
+    if (filteredPaths.length > 1) {
+      setCategory(filteredPaths[filteredPaths.length - 2]);
     }
   }, [paths]);
 
@@ -123,15 +201,15 @@ export const ProductBreadcrumb = ({ paths, text }: BreadcrubProps) => {
             Home{" "}
           </Link>
 
-          {paths?.map((path: string, index: number) => (
+          {paths?.filter(Boolean).map((path: string, index: number) => (
             <Fragment key={index}>
               {index < paths.length - 1 && <span>&gt; </span>}
 
               {index < paths.length - 2 ? (
                 <Link
-
                   href={`/${paths
                     .slice(0, index + 1)
+                    .filter(Boolean) // filter null/undefined in URLs
                     .map((p) => p.toLowerCase())
                     .join("/")}`}
                   className="underline hover:text-[#F25E26]"
@@ -145,17 +223,16 @@ export const ProductBreadcrumb = ({ paths, text }: BreadcrubProps) => {
           ))}
         </div>
         <div className="">
-       {/*    <p className={` capitalize text-xl pb-4`}>{Category}</p> */}
+          <p className={` capitalize text-xl pb-4`}>{Category}</p>
         </div>
 
-
-
-         <div className="bg-[#F6F6F6] flex py-4  justify-center items-center" >
-            <h1 className="text-center text-base 2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px] font-semibold font-Poppins" >
-                Product Details
-            </h1>
+        <div className="bg-[#F6F6F6] flex py-4 justify-center items-center">
+          <h1 className="text-center text-base 2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px] font-semibold font-Poppins">
+            Product Details
+          </h1>
         </div>
       </section>
     </div>
   );
 };
+

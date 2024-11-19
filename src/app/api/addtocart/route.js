@@ -5,13 +5,6 @@ export async function POST(request) {
         const body = await request.json();
         const cacheBuster = `cache=${Date.now()}`;
 
-        /*     console.log(body, 'bodyyy');
-            console.log(body.payload);
-            console.log(body.tkn); */
-
-        // Create headers object dynamically
-
-        // console.log(body, 'bodyyy');
         const headers = {
             "Content-Type": "application/json",
         };

@@ -205,24 +205,28 @@ export const WalletBalance = () => {
     token: state.token,
   }));
 
+
+
   const [userData, setUserData] = useState<any>(null);
   const [isTokenReady, setIsTokenReady] = useState(false);
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const tkn_: string = Cookies.get('token') as string;
 
   const {
     data: userInfo,
     isLoading: userLoading,
     refetch,
-  } = useGetDatanew(url, "get_user_details", token, {
+  } = useGetDatanew(url, "get_user_details", tkn_, {
     cacheTime: 0,
     staleTime: 0,
   });
 
   useEffect(() => {
-    if (token) {
+    if (tkn_) {
       setIsTokenReady(true);
     }
-  }, [token]);
+  }, [tkn_]);
 
   useEffect(() => {
     if (isTokenReady) {

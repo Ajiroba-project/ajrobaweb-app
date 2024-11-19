@@ -13,7 +13,7 @@ import "./style.css";
 import { FaStar } from "react-icons/fa6";
 import { RelatedProducts } from "@/app/component/RelatedProducts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
@@ -517,7 +517,7 @@ const handlePageClick = (pageNumber: number) => {
     );
   };
 
-  console.log(productdata)
+  console.log(productdata, 'datatatat')
 
 
 

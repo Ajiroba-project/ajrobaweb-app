@@ -4,7 +4,7 @@ import { CustomModal } from '@/app/component/Modal';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { IoClose } from 'react-icons/io5';
 import { useDropzone } from 'react-dropzone';
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
 
 interface FileProps {

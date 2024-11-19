@@ -1,14 +1,15 @@
 import React from 'react'
-import {AuctionWinCard} from "./AuctionWinCard" 
+import {AuctionWinCard} from "./AuctionWinCard"
+import { AuctionWinCardClosed, AuctionWinCardNew } from './AuctionCard'
 
 type AuctionProps = {
-  product: any[] 
+  product: any[]
 }
 
 export const CloseAuction = ({ product }: AuctionProps) => {
 
   return (
-    <div><AuctionWinCard product={product}/></div>
-  
+    <div><AuctionWinCardClosed product={product}/></div>
+
   )
 }
