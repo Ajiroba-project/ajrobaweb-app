@@ -168,8 +168,8 @@ const Page = ({ params }: any) => {
     viewauctionrefetch();
   }, [product_id]); // Refetch whenever product_id changes
 
-//   console.log(productdata, "productdata");
-//   console.log(productdatanew, "productdatanew");
+  //   console.log(productdata, "productdata");
+  //   console.log(productdatanew, "productdatanew");
 
   useEffect(() => {
     if (paths.length > 0) {
@@ -818,7 +818,7 @@ const Page = ({ params }: any) => {
                       {productdatanew?.data?.delivery_estimation || "NA"}
                     </h1>
 
-                   {/*  {productdatanew?.data?.starts_in === "Raffle Ended" ? (
+                    {/*  {productdatanew?.data?.starts_in === "Raffle Ended" ? (
                       <div className="flex justify-center items-center mt-4">
                         <button
                           onClick={notify}
@@ -850,41 +850,44 @@ const Page = ({ params }: any) => {
                       </div>
                     )} */}
                     {productdatanew?.data?.starts_in === "Raffle Ended" ? (
-  <div className="flex justify-center items-center mt-4">
-    <button
-     /*  onClick={notify} */
+                      <div className="flex justify-center items-center mt-4">
+                        <button
+                          /*  onClick={notify} */
 
-     onClick={()=> router.push(`/raffle/${product_id}/winners`)}
-      className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-    >
-      Watch Live Raffle
-    </button>
-  </div>
-) : (
-  <div className="flex justify-center items-center mt-4">
-    {productdatanew?.data?.starts_in ? (
-      <button
-        onClick={() => setmakepayment(!makepayment)}
-        className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-      >
-        Bid
-      </button>
-    ) :  productdatanew?.data?.bidded ? (
-      <button
-        disabled
-        className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-      >
-        Bidded
-      </button>
-    ) :  <button
-        disabled
-        className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-      >
-        Bidded
-      </button>}
-  </div>
-)}
-
+                          onClick={() =>
+                            router.push(`/raffle/${product_id}/winners`)
+                          }
+                          className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                        >
+                          Watch Live Raffle
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center mt-4">
+                        {productdatanew?.data?.starts_in !==  "Raffle Ended" && !productdatanew?.data?.bidded ? (
+                          <button
+                            onClick={() => setmakepayment(!makepayment)}
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                          >
+                            Bid
+                          </button>
+                        ) : productdatanew?.data?.bidded ? (
+                          <button
+                            disabled
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                          >
+                            Bidded
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                          >
+                            Bidded
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1160,7 +1163,7 @@ const Page = ({ params }: any) => {
         handleCancel={handlecloseOrder}
       />
 
-            <Footer />
+      <Footer />
     </main>
   );
 };
