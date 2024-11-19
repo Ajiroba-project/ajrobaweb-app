@@ -849,11 +849,12 @@ const Page = ({ params }: any) => {
                         )}
                       </div>
                     )} */}
-                    {productdatanew?.data?.starts_in === "Raffle Ended" || productdatanew?.data?.bidded ? (
+                    {productdatanew?.data?.starts_in === "Raffle Ended" ? (
   <div className="flex justify-center items-center mt-4">
     <button
      /*  onClick={notify} */
-     onClick={()=> router.push(`/raffle/${product_id}`)}
+
+     onClick={()=> router.push(`/raffle/${product_id}/winners`)}
       className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
     >
       Watch Live Raffle
@@ -868,14 +869,19 @@ const Page = ({ params }: any) => {
       >
         Bid
       </button>
-    ) : (
+    ) :  productdatanew?.data?.bidded ? (
       <button
         disabled
         className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
       >
         Bidded
       </button>
-    )}
+    ) :  <button
+        disabled
+        className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+      >
+        Bidded
+      </button>}
   </div>
 )}
 

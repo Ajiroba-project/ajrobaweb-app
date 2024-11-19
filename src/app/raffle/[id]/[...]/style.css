@@ -7,36 +7,46 @@
 
 @keyframes counter {
   0% {
-    counter-increment: count 0123450;
+    counter-increment: count 012345012;
   }
   10% {
-    counter-increment: count 0123451;
+    counter-increment: count 012345113;
   }
   20% {
-    counter-increment: count 0123452;
+    counter-increment: count 012345214;
   }
   30% {
-    counter-increment: count 0123453;
+    counter-increment: count 012345315;
   }
   40% {
-    counter-increment: count 0123454;
+    counter-increment: count 012345416;
   }
   50% {
-    counter-increment: count 0123455;
+    counter-increment: count 012345517;
   }
   60% {
-    counter-increment: count 0123456;
+    counter-increment: count 012345618;
   }
   70% {
-    counter-increment: count 0123457;
+    counter-increment: count 012345719;
   }
   80% {
-    counter-increment: count 0123458;
+    counter-increment: count 012345820;
   }
   90% {
-    counter-increment: count 0123459;
+    counter-increment: count 012345921;
   }
   100% {
-    counter-increment: count 0123460;
+    counter-increment: count 012346022;
   }
+}
+
+.table-body,
+tr {
+  margin-bottom: 10px !important ;
+  padding-bottom: 20px !important ;
+}
+
+.table-body tr {
+  border-bottom: 1px solid #ccc;
 }
