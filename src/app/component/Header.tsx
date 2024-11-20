@@ -313,10 +313,10 @@ useEffect(() => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data?.data?.[0]?.cart_items_count, "cart_items_count");
+ /*        console.log(response.data?.data?.[0]?.cart_items_count, "cart_items_count"); */
         setcartCount(Number(response.data?.data?.[0]?.cart_items_count));
         setCartItemsn(response.data?.data[0]?.items);
-        console.log(response.data?.data[0]?.items, "cart items");
+ /*        console.log(response.data?.data[0]?.items, "cart items"); */
  /*   localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items)); */
 
       })
