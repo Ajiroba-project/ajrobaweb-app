@@ -4,7 +4,7 @@ import { raffleWinner } from "@/app/static-data";
 import { DefaultButton } from "@/app/component/Button";
 import { useRouter } from "next/navigation";
 import { HeadingText } from "@/app/component/Heading";
-import useAuthMiddleware from "@/hooks/useAuth";
+import useAuthMiddleware from '@/hooks/useAuthRaffle'
 import "./style.css";
 import Cookies from "js-cookie";
 import { Header } from "@/app/component/Header";
