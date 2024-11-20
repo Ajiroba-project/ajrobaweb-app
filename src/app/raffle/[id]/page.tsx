@@ -104,6 +104,8 @@ import ModalComponent from "@/app/component/ModalComponent";
 import { Footer } from "@/app/component/Footer";
 import { Header } from "@/app/component/Header";
 
+import AuthMiddleware from '@/hooks/useAuth'
+
 
 interface ProductData {
   id?: string;
@@ -116,6 +118,10 @@ interface ProductData {
 
 const Page = ({ params }: any) => {
   const router = useRouter();
+  /*  useAuthMiddleware(router) */
+  AuthMiddleware(router)
+
+
   const [data, setData] = useState<any>(
     raffle.filter((val) => val.host === params.id),
   );

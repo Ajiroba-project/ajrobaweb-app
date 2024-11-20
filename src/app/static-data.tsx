@@ -66,8 +66,8 @@ export const headerMenu = [
     path: '/help',
     submenu: [
       { name: 'FAQ', path: '/faq' },
-      { name: 'About Us', path: '/aboutUs' },
-      { name: 'Contact Us', path: '/contactUs' },
+      { name: 'About Us', path: '/aboutus' },
+      { name: 'Contact Us', path: '/contactus' },
       { name: 'Live Chat', path: '/#' },
       { name: 'Privacy Policy', path: '/privacy-policy' }
     ]
