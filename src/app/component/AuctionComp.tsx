@@ -151,11 +151,11 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
   const tkn_: string = Cookies.get("token") as string;
 
-  const {
+ /*  const {
     data: pointinfo,
     isLoading: pointsLoading,
     error: pointerror,
-  } = useGetPointData("/api/getpoints", "get_point_details", userToken);
+  } = useGetPointData("/api/getpoints", "get_point_details", userToken); */
 
   const handleSuccessbidpayment = (data: any) => {
   /*   console.log(data, "datatatat"); */
