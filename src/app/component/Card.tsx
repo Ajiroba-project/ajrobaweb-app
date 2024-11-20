@@ -220,7 +220,7 @@ export const ProductCard = ({ cardInfo }: any) => {
     console.log(payload, 'payload')
  */
 
-        console.log(payload, 'payload')
+     /*    console.log(payload, 'payload') */
      mutate({
        url: "/api/addtocart/",
        payload: { payload: payload, tkn: userToken },
@@ -469,7 +469,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
     console.log(payload, 'payload')
  */
 
-        console.log(payload, 'payload')
+        // console.log(payload, 'payload')
      mutate({
        url: "/api/addtocart/",
        payload: { payload: payload, tkn: userToken },
@@ -713,7 +713,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
     console.log(payload, 'payload')
  */
 
-        console.log(payload, 'payload')
+   /*      console.log(payload, 'payload') */
      mutate({
        url: "/api/addtocart/",
        payload: { payload: payload, tkn: userToken },
@@ -1440,6 +1440,8 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     console.log(payload, 'payload')
  */
 
+    console.log(userToken, 'userToken')
+
     /*     console.log(payload, 'payload') */
      mutate({
        url: "/api/addtocart/",
@@ -1563,10 +1565,6 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
     isLoggedIn: state.isLoggedIn,
   }));
 
-
-
-
-
   const getSessionKey = () => {
     let sessionKey = Cookies.get('session_key');
 
@@ -1673,7 +1671,11 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
     };
 
 
-        console.log(payload, 'payload')
+      /*   console.log(payload, 'payload') */
+
+     /*  console.log(userToken, 'userToken') */
+
+
      mutate({
        url: "/api/addtocart/",
        payload: { payload: payload, tkn: userToken },

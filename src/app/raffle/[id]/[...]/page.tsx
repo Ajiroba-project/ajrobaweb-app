@@ -23,7 +23,7 @@ const Page = ({ params }: any) => {
   const userToken = (Cookies.get("token") as string) || "";
 
   const router = useRouter();
-  // useAuthMiddleware(router)
+   useAuthMiddleware(router)
 
   const [productdatanew, setProductDataNew] = useState<ProductData | null>(
     null,
