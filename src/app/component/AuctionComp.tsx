@@ -158,7 +158,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
   } = useGetPointData("/api/getpoints", "get_point_details", userToken);
 
   const handleSuccessbidpayment = (data: any) => {
-    console.log(data, "datatatat");
+  /*   console.log(data, "datatatat"); */
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||

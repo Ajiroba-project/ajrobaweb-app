@@ -466,11 +466,11 @@ export const quickLinks = [
 export const ourCompany = [
   {
     name: 'Contact us',
-    links: '/contactUs'
+    links: '/contactus'
   },
   {
     name: 'About Us',
-    links: '/aboutUs'
+    links: '/aboutus'
   },
   {
     name: 'FAQ',

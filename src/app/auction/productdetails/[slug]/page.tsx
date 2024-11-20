@@ -27,6 +27,7 @@ import * as yup from "yup";
 import Input from "@/app/component/Input";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import axios from "axios";
+import AuthMiddleware from '@/hooks/useAuth'
 
 interface CardInfoItem {
   weight: string;
@@ -78,11 +79,17 @@ const Page = ({ params }: any) => {
   const [makepayment, setmakepayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
 
+
+
+
   const handlePaymentSelection = (method: SetStateAction<string>) => {
     setPaymentMethod(method);
   };
 
   const router = useRouter();
+
+    /*  useAuthMiddleware(router) */
+//   AuthMiddleware(router)
 
   const star = [1, 2, 3, 4, 5];
   const rating = 4;
@@ -123,41 +130,72 @@ const Page = ({ params }: any) => {
   );
   const [loadingdata, setLoadingData] = useState(false);
 
-  const fetchWithAuth = async (url: string) => {
-    setLoadingData(true); // Indicate loading start
+//   const fetchWithAuth = async (url: string) => {
+//     setLoadingData(true); // Indicate loading start
 
-    const requestOptions: RequestInit = {
-      method: "GET",
-      headers: {
-        Authorization: `token ${userToken}`, // Simplified header creation
-      },
-      redirect: "follow",
-    };
+//     const requestOptions: RequestInit = {
+//       method: "GET",
+//       headers: {
+//         Authorization: `token ${userToken}`, // Simplified header creation
+//       },
+//       redirect: "follow",
+//     };
 
-    try {
-      const response = await fetch(url, requestOptions);
+//     try {
+//       const response = await fetch(url, requestOptions);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
 
-      const result = await response.json(); // Parse JSON response
-      setProductDataNew(result); // Update state with result
-      return result; // Return result for external use
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error; // Re-throw for the caller to handle
-    } finally {
-      setLoadingData(false); // Ensure loading is stopped
-    }
+//       const result = await response.json(); // Parse JSON response
+//       console.log(result, 'resulttt')
+//       setProductDataNew(result); // Update state with result
+//       return result; // Return result for external use
+//     } catch (error) {
+//       console.error("Error fetching data:", error);
+//       throw error; // Re-throw for the caller to handle
+//     } finally {
+//       setLoadingData(false); // Ensure loading is stopped
+//     }
+//   };
+
+
+const fetchWithAuth = async (url: string) => {
+  setLoadingData(true); // Indicate loading start
+
+  const requestOptions: RequestInit = {
+    method: "GET",
+    headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
+    redirect: "follow",
   };
 
-  const fetchData = async () => {
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json(); // Parse JSON response
+    // console.log(result, "resulttt");
+    setProductDataNew(result); // Update state with result
+    return result; // Return result for external use
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Re-throw for the caller to handle
+  } finally {
+    setLoadingData(false); // Ensure loading is stopped
+  }
+};
+
+
+const fetchData = async () => {
     try {
       const data = await fetchWithAuth(
         `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
       );
-      // console.log("Fetched data:", data);
+    /*    console.log("Fetched data:", data); */
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }

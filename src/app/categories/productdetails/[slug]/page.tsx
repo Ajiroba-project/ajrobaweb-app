@@ -18,6 +18,9 @@ import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
 import Loading from "@/app/component/Loading";
+import { useAuthStore } from "@/store/store";
+import Cookies from "js-cookie";
+import { useMutateData } from "@/hooks/useMutateData";
 
 
 interface CardInfoItem {
@@ -36,6 +39,8 @@ interface CardInfoItem {
   category?: string;
   delivery_estimation: string;
   related_products: [];
+  category_name?: string;
+  subcategory_name?: string;
 }
 
 interface AuctionResponse {
@@ -45,6 +50,15 @@ interface AuctionResponse {
   subcategory?: any;
 }
 
+
+type CommentFormValues = {
+  id: any
+  comment: string;
+  commentImage?: string;
+  post_id?: string;
+};
+
+
 const Page = ({ params }: any) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -53,6 +67,26 @@ const Page = ({ params }: any) => {
   const query = searchParams.get("query");
   const selectedBrands = searchParams.get("selectedBrands");
   const min_max = searchParams.get("min_max");
+
+   const [cardCartState, setCardCartState] = useState<boolean>(false);
+  const [cardAddCartState, setCardAddCartState] = useState<any>();
+  const { isLoggedIn } = useAuthStore((state) => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
+
+  const getSessionKey = () => {
+    let sessionKey = Cookies.get('session_key');
+
+    if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
+    }
+
+    return sessionKey;
+  };
+
+
+    const userToken = Cookies.get("token") as string || ''
 
   const router = useRouter();
 
@@ -88,11 +122,25 @@ const Page = ({ params }: any) => {
     true,
   );
 
-  useEffect(() => {
+ /*  console.log(productdata, 'productdata') */
+
+  // useEffect(() => {
+  //   if (paths.length > 0) {
+  //     setPath(paths[paths.length - 1]);
+  //   }
+  // }, [paths]);
+
+
+    useEffect(() => {
     if (paths.length > 0) {
-      setPath(paths[paths.length - 1]);
+      const newPath = paths[paths.length - 1];
+      if (newPath !== path) {
+        setPath(newPath);
+      }
+    } else if (path !== null) {
+      setPath(null);
     }
-  }, [paths]);
+  }, [paths, path]);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const images = [image4, image2];
@@ -104,6 +152,121 @@ const Page = ({ params }: any) => {
     setSelectedImage(index);
      setSelectedImageIndex(index);
   };
+
+
+
+  const handleSuccess = (data?: any) => {
+
+    if (data.status === 200 || data.status === 201) {
+
+      const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+
+      console.log(result, 'result')
+
+       toast(`${result} Has been added to cart`, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce,
+      style: {
+        backgroundColor: "#08B504",
+        color: "#FFFFFF",
+      },
+    });
+
+          setCardAddCartState(result);
+    setCardCartState(!cardCartState);
+    const timeoutID = setTimeout(() => {
+      setCardCartState(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutID);
+     /*  refetch(); */
+    } else if (
+      data.status === 403 ||
+      data.status === 404 ||
+      data.status === 401 ||
+      data.status === 409 ||
+      data.status === 500
+    ) {
+
+      toast.error(`${data?.data?.message || data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    /*   refetch(); */
+    } else {
+
+      toast.error(`${ data?.data?.detail}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+     /*  refetch(); */
+    }
+  };
+
+  const handleError = (error?: any) => {
+    console.log(error, "errr",  "daaaattt");
+
+    toast.error(`${  error || "An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+   /*  refetch(); */
+  };
+
+
+
+  const { mutate: mutate, status: likedstatus } = useMutateData(
+    "addtocart",
+    handleSuccess,
+    handleError,
+  );
+
+  const AddToCart = () => {
+      const sessionKey = getSessionKey();
+    const payload = {
+      product_id: product_id,
+      quantity: Number(1),
+   session_key: sessionKey,
+    };
+
+
+      /*   console.log(payload, 'payload') */
+     mutate({
+       url: "/api/addtocart/",
+       payload: { payload: payload, tkn: userToken },
+       token: userToken,
+     });
+
+
+    // reset();
+  };
+
 
   const notify = () => {
     toast("🦄 ‘Mama Gold Rice’ has been added to cart", {
@@ -517,7 +680,7 @@ const handlePageClick = (pageNumber: number) => {
     );
   };
 
-  console.log(productdata, 'datatatat')
+  // console.log(productdata, 'datatatat')
 
 
 
@@ -552,7 +715,7 @@ const handlePageClick = (pageNumber: number) => {
         }}
         className="text-[#363636] font-Poppins text-sm font-semibold"
       >
-        {productdata?.category } | {productdata?.subcategory }
+        {productdata?.data?.category_name } | {productdata?.data?.subcategory_name }
       </div>
 
       <section
@@ -684,7 +847,7 @@ const handlePageClick = (pageNumber: number) => {
 
                     <div className="flex justify-center items-center mt-4">
                       <button
-                        onClick={notify}
+                        onClick={AddToCart}
                         /* className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded" */
                         className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                       >
