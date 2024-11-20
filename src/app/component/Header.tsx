@@ -313,8 +313,8 @@ useEffect(() => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data?.data?.length, "cart items");
-        setcartCount(Number(response.data?.data?.length));
+        console.log(response.data?.data?.[0]?.cart_items_count, "cart_items_count");
+        setcartCount(Number(response.data?.data?.[0]?.cart_items_count));
         setCartItemsn(response.data?.data[0]?.items);
         console.log(response.data?.data[0]?.items, "cart items");
  /*   localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items)); */
@@ -328,7 +328,7 @@ useEffect(() => {
 
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, [isRootPath]);
 
 
 
