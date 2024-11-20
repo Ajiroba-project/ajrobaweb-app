@@ -16,8 +16,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryData } from '@/hooks/useQueryData';
 import { AuctionMarquee } from './Auction-Marquee';
 import React from 'react';
-
-
+import Cookies from "js-cookie";
+import axios from "axios";
 
 interface HeaderProps {
   onSearch?: React.Dispatch<React.SetStateAction<string>>;
@@ -275,15 +275,72 @@ useEffect(() => {
 }, [headerNav, menuRef]); // Add relevant dependencies here
 
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-useEffect(() => {
-  // Retrieve the cart number from localStorage and parse it
-  const cartnumber = JSON.parse(localStorage.getItem('cnt') || '3'); // Use '0' as a fallback if null
 
-  // console.log(cartnumber, 'cccc');
 
-  setcartCount(Number(cartnumber?.length));
-}, []);
+
+  const [cartItemsn, setCartItemsn] = useState<any[]>([]);
+
+  const tkn_: string = Cookies.get("token") as string;
+
+  const fetchCartItems = async () => {
+    setLoading(true);
+
+    let sessionKey = Cookies.get("session_key");
+
+       if (!sessionKey) {
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
+      Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
+    }
+
+    let headers: { [key: string]: string } = {
+      "Content-Type": "application/json",
+    };
+
+    if (tkn_) {
+      headers["Authorization"] = `token ${tkn_}`;
+    }
+
+    let config = {
+      method: "GET",
+      maxBodyLength: Infinity,
+      url: `https://ajiroba.onrender.com/v1/commerce/cart/?session_key=${sessionKey}`,
+      headers: headers,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data?.data?.length, "cart items");
+        setcartCount(Number(response.data?.data?.length));
+        setCartItemsn(response.data?.data[0]?.items);
+        console.log(response.data?.data[0]?.items, "cart items");
+ /*   localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items)); */
+
+      })
+      .catch((error) => {
+        setError("Error loading cart items");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+
+
+
+// useEffect(() => {
+//   // Retrieve the cart number from localStorage and parse it
+//   const cartnumber = JSON.parse(localStorage.getItem('cnt') || '3'); // Use '0' as a fallback if null
+
+//   // console.log(cartnumber, 'cccc');
+
+//   setcartCount(Number(cartnumber?.length));
+// }, []);
 
 
   return (
@@ -448,11 +505,11 @@ useEffect(() => {
         <IoCartOutline className='text-xl text-[#000000]' color='black' />
 
 
-        {/*  {cartCount > 0 && (
+        {cartCount > 0 && (
           <span className='absolute -top-1 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center md:w-5 md:h-5 md:text-sm'>
             {cartCount}
           </span>
-        )} */}
+        )}
 
       </div>
 

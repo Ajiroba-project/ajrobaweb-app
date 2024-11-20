@@ -50,7 +50,8 @@ const Page = () => {
       .request(config)
       .then((response) => {
         setCartItemsn(response.data?.data[0]?.items);
-   localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items));
+        console.log(response.data?.data[0]?.items, "cart items");
+  //  localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items));
 
       })
       .catch((error) => {
