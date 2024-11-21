@@ -28,6 +28,9 @@ import Input from "@/app/component/Input";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import axios from "axios";
 import AuthMiddleware from '@/hooks/useAuth'
+import { DefaultButton } from "@/app/component/Button";
+import InputAction from "@/app/component/InputAction";
+import verify from "@/app/asset/verify.svg";
 
 interface CardInfoItem {
   weight: string;
@@ -66,6 +69,32 @@ interface ProductData {
   data?: any;
   // Add other properties as needed
 }
+
+
+interface BidInfoResponse {
+  // Define the structure based on the response you expect from the API.
+  data: any;
+  category: any;
+  name: any;
+  ticket_price: any;
+  id: any;
+  images: any;
+  subcategory: any;
+}
+
+interface TicketInfoResponse {
+  // Define the structure based on the response you expect from the API.
+  data?: any;
+  category?: any;
+  name?: any;
+  ticket_price?: any;
+  id?: any;
+  images?: any;
+  subcategory?: any;
+  ticket_name?: any;
+}
+
+
 
 const Page = ({ params }: any) => {
   const pathname = usePathname();
@@ -207,7 +236,7 @@ const fetchData = async () => {
   }, [product_id]); // Refetch whenever product_id changes
 
   //   console.log(productdata, "productdata");
-  //   console.log(productdatanew, "productdatanew");
+     console.log(productdatanew, "productdatanew");
 
   useEffect(() => {
     if (paths.length > 0) {
@@ -416,6 +445,170 @@ const fetchData = async () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
+
+
+  const [bidopen, setbidopen] = useState(false);
+
+  const [bidData, setBidData] = useState<BidInfoResponse | null>(null);
+  const [viewticket, setViewTicket] = useState(false);
+  const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null);
+  const [ticketPrice, setTicketPrice] = useState(0);
+
+  const [successbid, setSuccessbid] = useState(false);
+
+
+    const [ticketCount, setTicketCount] = useState(1);
+
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [auctionId, setAuctionId] = useState("");
+
+  // console.log(totalAmount, 'totalamount')
+
+
+  const handleSuccessbidpayment = (data: any) => {
+  /*   console.log(data, "datatatat"); */
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      setTicketData(data?.data);
+      setSuccessbid(!successbid);
+      toast.success(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+
+        /*    onClose: () => {
+                        if (
+                            data?.data?.message &&
+                            data.data.message.includes(
+                                "Order placed successfully. Order Code",
+                            )
+                        ) {
+                            router.push("/profile");
+                        } else {
+                            router.push("/paymentpage");
+                        }
+                    }, */
+      });
+      reset();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleErrorbidpayment = (error: any) => {
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+
+    const {
+    data: bidpaymentdata,
+    error: bidpaymenterror,
+    error: bidpaymentterror,
+    isError: bidpaymentiserror,
+    isSuccess: bidpaymentsuccess,
+    mutate: bidpaymentmutate,
+    status: bidpaymentstatus,
+  } = useMutateData(
+    "bidpayment",
+    handleSuccessbidpayment,
+    handleErrorbidpayment,
+  );
+
+  // Handler to increase ticket count
+  const handleIncrease = () => {
+    setTicketCount((prevCount) => prevCount + 1);
+    setTotalAmount((prevTotal) => prevTotal + ticketPrice);
+  };
+
+  // Handler to decrease ticket count, ensuring count doesn’t go below 1
+  const handleDecrease = () => {
+    if (ticketCount > 1) {
+      setTicketCount((prevCount) => prevCount - 1);
+      setTotalAmount((prevTotal) => prevTotal - ticketPrice);
+    }
+  };
+
+
+    useEffect(() => {
+    if (bidData && bidData.ticket_price) {
+      const initialPrice = Number(bidData.ticket_price);
+      setTicketPrice(initialPrice);
+      setTotalAmount(initialPrice * ticketCount);
+      setAuctionId(bidData.id);
+    }
+  }, [bidData, ticketCount]);
+
+
   const {
     data,
     error: walleterror,
@@ -424,6 +617,162 @@ const fetchData = async () => {
     mutate,
     status: verifystatus,
   } = useMutateData("verifywalletpin", handleSuccess, handleError);
+
+
+    // Handle API success
+  const handleSuccesspayment = (data?: any) => {
+    //  console.log(data)
+
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      setBidData(data?.data); // Store the API response in bidData for modal usage
+
+      setbidopen(false); // Open modal after successful API response
+      setmakepayment(false);
+      /*   console.log(data?.data, 'auctionidddd') */
+
+      /*    console.log(paymentMethod, 'paymentmeethodddd')
+      console.log(auctionId, 'auctioniddddd')
+      console.log(ticketCount, 'ticketCount')
+      console.log(totalAmount, 'total amount')
+      console.log(userToken, 'tokennnn') */
+
+      toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        /*  onClose: () => {
+          if (
+            data?.data?.message &&
+            data.data.message.includes("Order placed successfully. Order Code")
+          ) {
+            router.push("/profile");
+          } else {
+            router.push("/paymentpage");
+          }
+        }, */
+      });
+
+      const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
+
+const payload = {
+  auction: auctionId,
+  ticket_quantity: ticketCount,
+  total_amount: Number(totalAmount),
+  pay_with: payWithMethod,
+};
+
+bidpaymentmutate({
+  url: "/api/bidpayment",
+  payload: { payload: payload, token: userToken },
+  token: userToken,
+});
+      resetpayment();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    } else if (data.status === 401) {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    } else if (data.status === 500) {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    } else {
+      setbidopen(false);
+      setmakepayment(false);
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      resetpayment();
+    }
+  };
+
+  // Handle API error
+  const handleErrorpayment = (error?: any) => {
+    console.log(error, "Error occurred during bid");
+    setbidopen(false);
+
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    resetpayment();
+  };
+
+
+    const {
+    data: paymentdata,
+    error: paymenterror,
+    isError: paymentisError,
+    isSuccess: paymentisSuccess,
+    mutate: mutatev,
+    status: paymentstatus,
+    reset: resetpayment,
+  } = useMutateData(
+    "verifywalletpin",
+    handleSuccesspayment,
+    handleErrorpayment,
+  );
 
   const submitForm = (data: any) => {
     Cookies.set("nvd", data?.password, { expires: 1 });
@@ -437,6 +786,28 @@ const fetchData = async () => {
       token: userToken,
     });
   };
+
+
+
+
+ const submitFormf = (data: any) => {
+    /*   console.log(data, 'dddd', paymentMethod, 'paymmm'); */
+
+    // mutate(data)
+
+    Cookies.set("pvd", data?.password, { expires: 1 });
+    const payload = {
+      wallet_pin: data?.password,
+    };
+
+    mutatev({
+      url: "/api/verifywalletpin",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });
+  };
+
+
 
   const handleOrderbutton = () => {
     let pin = Cookies.get("nvd");
@@ -472,6 +843,8 @@ const fetchData = async () => {
     const handlePageClick = (pageNumber: number) => {
       setCurrentPage(pageNumber);
     };
+
+
 
     return (
       <div className="container py-4">
@@ -706,6 +1079,71 @@ const fetchData = async () => {
     );
   };
 
+
+
+    const handleBidClick = async (productId: any) => {
+    if (!userToken) {
+      console.error("Token is undefined");
+      toast.error("Please Signin", {
+        position: "top-right",
+        progress: 4,
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/bidinfo", {
+        method: "GET",
+        headers: {
+          Authorization: `${userToken}`,
+          Params: productId,
+        },
+        cache: "no-cache",
+      });
+
+      if (!response.ok) {
+        console.error("Error in the request:", response);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.data.status === "failed") {
+        console.log("Failed:", data.data);
+        toast.error(`${data.data.message}`, {
+          position: "top-right",
+          progress: 4,
+        });
+        setTimeout(() => {
+          // Optionally navigate back if needed
+          // router.back();
+        }, 2000);
+      } else if (data.data.status === "success") {
+        setbidopen(true);
+        /*    console.log("Success:", data?.data?.data); */
+        setBidData(data?.data?.data);
+        setTicketPrice(Number(data?.data?.data?.ticket_price));
+
+        // Display a success toast message if needed
+        /*     toast.success("Bid information retrieved successfully!", {
+                position: "top-right",
+                progress: 4
+            }); */
+      } else {
+        console.warn("Unknown status:", data.data.status);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error during fetch:", error);
+      toast.error("An unexpected error occurred. Please try again.", {
+        position: "top-right",
+        progress: 4,
+      });
+    }
+  };
+
+
   return (
     <main>
       <Header />
@@ -902,28 +1340,31 @@ const fetchData = async () => {
                       </div>
                     ) : (
                       <div className="flex justify-center items-center mt-4">
-                        {productdatanew?.data?.starts_in !==  "Raffle Ended" && !productdatanew?.data?.bidded ? (
-                          <button
-                            onClick={() => setmakepayment(!makepayment)}
-                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                          >
-                            Bid
-                          </button>
-                        ) : productdatanew?.data?.bidded ? (
-                          <button
-                            disabled
-                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                          >
-                            Bidded
-                          </button>
-                        ) : (
-                          <button
-                            disabled
-                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                          >
-                            Bidded
-                          </button>
-                        )}
+                      {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
+                       {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
+                              <button
+                        /*         onClick={() => setmakepayment(!makepayment)} */
+                          onClick={() => handleBidClick(product_id)}
+                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                              >
+                                Bid
+                              </button>
+                            ) : productdatanew?.data?.bidded === "true" ? (
+                              <button
+                                disabled
+                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                              >
+                                Bidded
+                              </button>
+                            ) : (
+                              <button
+                                disabled
+                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                              >
+                                Bidded
+                              </button>
+)}
+
                       </div>
                     )}
                   </div>
@@ -1200,6 +1641,310 @@ const fetchData = async () => {
         handleOk={() => {}}
         handleCancel={handlecloseOrder}
       />
+
+
+
+          <ModalComponent
+            content={
+              <div className="flex flex-col  px-6 py-4">
+                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                  Back
+                </div>
+
+                <div className="flex justify-between flex-wrap py-2">
+                  <div>
+                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                      <span className="font-Poppins">{bidData?.category}</span>
+                      <span>|</span>
+                      <span className="font-Poppins font-medium">
+                        {bidData?.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="font-Poppins font-medium">
+                      Raffle Draw
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
+                  <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                    <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
+
+
+                      <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
+
+                      <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+                        <div className="bg-orange-500 p-3 rounded-lg text-center">
+                          <span className="text-sm block">Raffle Ticket</span>
+                          <span className="text-sm font-bold">
+                            ₦ {ticketPrice}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-full lg:w-1/2 flex flex-col space-y-4">
+                    <div>
+                      <label className="font-Poppins text-gray-700">
+                        Product
+                      </label>
+                      <input
+                        type="text"
+                        value={bidData?.name}
+                        readOnly
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
+                      />
+                    </div>
+
+                    <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                      <div className="flex flex-col items-center w-full sm:w-1/2">
+                        <label className="font-Poppins text-gray-700 mb-4">
+                          Ticket Price (₦)
+                        </label>
+                        <div className="flex items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            /*    onClick={handleDecrease} */
+                            disabled={ticketCount <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="mx-4 font-bold text-sm">
+                            {" "}
+                            {ticketPrice}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            /*  onClick={handleIncrease} */
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center w-full sm:w-1/2">
+                        <label className="font-Poppins text-gray-700 mb-4">
+                          No of Ticket
+                        </label>
+                        <div className="flex items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            onClick={handleDecrease}
+                            disabled={ticketCount <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="mx-4 font-bold text-sm">
+                            {ticketCount}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-orange-500 text-white rounded"
+                            onClick={handleIncrease}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => {
+                          return (
+                            setbidopen(!bidopen), setViewTicket(!viewticket)
+                          );
+                        }}
+                        className="text-orange-500 font-Poppins text-xs mt-1"
+                      >
+                        View Ticket
+                      </button>
+                    </div>
+
+                    <div>
+                      <label className="font-Poppins text-gray-700">
+                        Amount (₦)
+                      </label>
+                      <input
+                        type="text"
+                        value={`₦ ${totalAmount.toLocaleString()}`}
+                        readOnly
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                      />
+                    </div>
+
+                    <DefaultButton
+                      text="Proceed"
+                      type="submit"
+                      handleClick={() => {
+                        return (
+                          setmakepayment(!makepayment), setbidopen(!bidopen)
+                        );
+                      }}
+                      className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            }
+            isModalOpen={bidopen}
+            showModal={() => setbidopen(!bidopen)}
+            handleOk={() => setbidopen(false)}
+            handleCancel={() => setbidopen(false)}
+          />
+
+
+
+               <ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Make Payment
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    Kindly select your payment option
+                  </p>
+                </div>
+
+                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+                  <div>
+                    <p className="text-[#111111] text-base mb-4  ">
+                      Payment Method
+                    </p>
+                  </div>
+
+                  <form action="">
+                    <div className="mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_balance"
+                          name="payment_method"
+                          value="wallet_balance"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_balance")
+                          }
+                        />
+                        <label className="ml-2" htmlFor="wallet_balance">
+                          Wallet
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          #230000
+                        </small>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_point"
+                          name="payment_method"
+                          value="wallet_point"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_point")
+                          }
+                        />
+                        <label className="ml-2" htmlFor="wallet_point">
+                          Pay With Wallet And Ajiroba Point
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          #23,000 (Wallet) And #200 (Ajiroba Points)
+                        </small>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <form
+                  action=""
+                  className="flex  flex-col mt-8 mb-4"
+                  onSubmit={handleSubmit(submitFormf)}
+                >
+                  <div className="flex flex-col">
+                    <InputAction
+                      label="Enter Pin"
+                      type="password"
+                      name="password"
+                      placeholder="****"
+                      register={register}
+                      errors={errors.password}
+                      HiEyeSlash={<FaRegEyeSlash />}
+                      HiEye={<FaRegEye />}
+                    />
+                    <div className="text-xs text-red-700">
+                      {errors?.password?.message}
+                    </div>
+
+                    <button
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+                    >
+                      {paymentstatus === "pending" ? "..." : "Pay"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            }
+            isModalOpen={makepayment}
+            showModal={() => setmakepayment(!makepayment)}
+            handleOk={() => setmakepayment(false)}
+            handleCancel={() => setmakepayment(false)}
+          />
+
+
+
+            <ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="py-2 flex justify-center items-center">
+                  <Image src={verify} width={60} height={60} alt="icon" />
+                </div>
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Successfully
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    You have entered into raffle draw for this product. Good
+                    luck
+                  </p>
+                </div>
+
+                <div className="flex flex-col justify-center items-center">
+                  <DefaultButton
+                    text="Proceed"
+                    /*  text={status === 'pending' ? 'loading...' : "Save"} */
+                    className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
+                    type="submit"
+                  />
+                  <button
+                    onClick={() => {
+                      return (
+                        setbidopen(false),
+                        setViewTicket(!viewticket),
+                        setSuccessbid(!successbid)
+                      );
+                    }}
+                    className="text-orange-500 font-Poppins text-xs mt-1"
+                  >
+                    View Ticket
+                  </button>
+                </div>
+              </div>
+            }
+            isModalOpen={successbid}
+            showModal={() => setSuccessbid(!successbid)}
+            handleOk={() => setSuccessbid(false)}
+            handleCancel={() => setSuccessbid(false)}
+          />
 
       <Footer />
     </main>
