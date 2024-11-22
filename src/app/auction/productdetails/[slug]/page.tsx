@@ -193,6 +193,8 @@ const Page = ({ params }: any) => {
 const fetchWithAuth = async (url: string) => {
   setLoadingData(true); // Indicate loading start
 
+ /*  console.log(userToken, 'usertokennn') */
+
   const requestOptions: RequestInit = {
     method: "GET",
     headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
@@ -207,7 +209,7 @@ const fetchWithAuth = async (url: string) => {
     }
 
     const result = await response.json(); // Parse JSON response
-    // console.log(result, "resulttt");
+    /*  console.log(result, "resulttt"); */
     setProductDataNew(result); // Update state with result
     return result; // Return result for external use
   } catch (error) {
@@ -236,7 +238,7 @@ const fetchData = async () => {
   }, [product_id]); // Refetch whenever product_id changes
 
   //   console.log(productdata, "productdata");
-     console.log(productdatanew, "productdatanew");
+   /*   console.log(productdatanew, "productdatanew"); */
 
   useEffect(() => {
     if (paths.length > 0) {
@@ -662,7 +664,7 @@ const fetchData = async () => {
         }, */
       });
 
-      const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
+const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
 
 const payload = {
   auction: auctionId,
@@ -1275,7 +1277,7 @@ bidpaymentmutate({
                     <p className="text-[#111111] text-base mt-4 ">Weight</p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
-                      {productdatanew?.data?.weight || "NA"}
+                      {`${productdatanew?.data?.weight} KG` || "NA"}
                     </h1>
 
                     <hr className="mt-4" />
