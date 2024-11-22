@@ -849,7 +849,7 @@ bidpaymentmutate({
                     </div>
 
                     <div className="flex justify-end">
-                      <button
+                     {/*  <button
                         onClick={() => {
                           return (
                             setbidopen(!bidopen), setViewTicket(!viewticket)
@@ -858,7 +858,7 @@ bidpaymentmutate({
                         className="text-orange-500 font-Poppins text-xs mt-1"
                       >
                         View Ticket
-                      </button>
+                      </button> */}
                     </div>
 
                     <div>

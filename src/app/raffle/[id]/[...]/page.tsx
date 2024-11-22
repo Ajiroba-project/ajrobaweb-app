@@ -4,7 +4,7 @@ import { raffleWinner } from "@/app/static-data";
 import { DefaultButton } from "@/app/component/Button";
 import { useRouter } from "next/navigation";
 import { HeadingText } from "@/app/component/Heading";
-import useAuthMiddleware from '@/hooks/useAuthRaffle'
+import useAuthMiddleware from "@/hooks/useAuthRaffle";
 import "./style.css";
 import Cookies from "js-cookie";
 import { Header } from "@/app/component/Header";
@@ -23,7 +23,7 @@ const Page = ({ params }: any) => {
   const userToken = (Cookies.get("token") as string) || "";
 
   const router = useRouter();
-   useAuthMiddleware(router)
+  useAuthMiddleware(router);
 
   const [productdatanew, setProductDataNew] = useState<ProductData | null>(
     null,
@@ -84,132 +84,209 @@ const Page = ({ params }: any) => {
 
   const thead = ["S/N", "Product", `Ticket Number`, "Phone Number"];
 
+
+  const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 5; // Set the number of items per page
+
+const indexOfLastItem = currentPage * itemsPerPage;
+const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+// Calculate current items to display
+const currentItems = productdatanew?.data?.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+
+const totalPages = Math.ceil((productdatanew?.data?.length || 0) / itemsPerPage);
+
+  // Handle pagination clicks
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+
+  const handlePrevPage = () => {
+  if (currentPage > 1) {
+    setCurrentPage(currentPage - 1);
+  }
+};
+
+const handleNextPage = () => {
+  if (currentPage < totalPages) {
+    setCurrentPage(currentPage + 1);
+  }
+};
+
+
+
+
+
   const renderRows = () => {
     if (!showWinners) {
       return (
         <>
           {
+            <table className="w-full border-separate border-spacing-y-4">
+              <thead className="bg-white text-[#F25E26]">
+                <tr className="tracking-wide">
+                  {thead.map((header) => (
+                    <th
+                      className={`${
+                        header === "S/N"
+                          ? "rounded-bl-3xl"
+                          : header === "Ticket Price"
+                            ? "rounded-br-3xl"
+                            : header === `Phone Number`
+                              ? "rounded-br-3xl  text-left"
+                              : "text-center"
+                      } p-3 text-2xl font-semibold capitalize lg:w-max`}
+                      key={header}
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentItems?.map((val: any, index: number) => (
+                  <tr className="text-white h-1" key={index}>
+                    <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
+                      <p className="text-lg font-semibold">{indexOfFirstItem + index + 1}</p>
+                    </td>
 
-         /*  productdatanew?.data?.map((val: any, index: number) => ( */
+                    <td className=" text-center h-[16px]">
+                      <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
+                        {productdatanew?.data?.[index]?.product || "Loading..."}
+                      </p>
+                    </td>
+                    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
+                      <p className="p-rd  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black"></p>
+                    </td>
+                    <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                      <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
+                        {showWinners
+                          ? productdatanew?.data?.[index]?.phone_number || "N/A"
+                          : "*********"}
+                      </p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
 
+          }
+<div className="flex justify-center mt-4">
+  <button
+    onClick={handlePrevPage}
+    disabled={currentPage === 1}
+    className={`px-4 py-2 mx-2 rounded-lg ${
+      currentPage === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
+    } text-white`}
+  >
+    Previous
+  </button>
 
+  <span className="mx-4 text-lg text-white">
+    Page {currentPage} of {totalPages}
+  </span>
 
- <table className="w-full border-separate border-spacing-y-4">
-    <thead className="bg-white text-[#F25E26]">
-      <tr className="tracking-wide">
-        {thead.map((header) => (
-          <th
-            className={`${
-              header === "S/N"
-                ? "rounded-bl-3xl"
-                : header === "Ticket Price"
-                ? "rounded-br-3xl"
-                : header === `Phone Number`
-                ? "rounded-br-3xl  text-left"
-                : "text-center"
-            } p-3 text-2xl font-semibold capitalize lg:w-max`}
-            key={header}
-          >
-            {header}
-          </th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {productdatanew?.data?.map((val: any, index: number) => (
-        <tr
-          className="text-white h-1"
-          key={index}
-        >
+  <button
+    onClick={handleNextPage}
+    disabled={currentPage === totalPages}
+    className={`px-4 py-2 mx-2 rounded-lg ${
+      currentPage === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
+    } text-white`}
+  >
+    Next
+  </button>
+</div>
 
-          <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-            <p className="text-lg font-semibold">{index + 1}</p>
-          </td>
-
-
-          <td className=" text-center h-[16px]">
-            <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-               {productdatanew?.data?.[index]?.product || "Loading..."}
-            </p>
-          </td>
-          <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
-            <p className="p-rd  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
-
-            </p>
-          </td>
-          <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-            <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-              {showWinners
-                    ? productdatanew?.data?.[index]?.phone_number || "N/A"
-                    : "*********"}
-            </p>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-       /*    ))} */
-    }
         </>
       );
     } else {
       return (
         <>
           {
-           <table className="w-full border-separate border-spacing-y-4">
-    <thead className="bg-white text-[#F25E26]">
-      <tr className="tracking-wide">
-        {thead.map((header) => (
-          <th
-            className={`${
-              header === "S/N"
-                ? "rounded-bl-3xl"
-                : header === "Ticket Price"
-                ? "rounded-br-3xl"
-                : header === `Phone Number`
-                ? "rounded-br-3xl  text-left"
-                : "text-center"
-            } p-3 text-2xl font-semibold capitalize lg:w-max`}
-            key={header}
-          >
-            {header}
-          </th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {productdatanew?.data?.map((val: any, index: number) => (
-        <tr
-          className="text-white h-1"
-          key={index}
-        >
+            <table className="w-full border-separate border-spacing-y-4">
+              <thead className="bg-white text-[#F25E26]">
+                <tr className="tracking-wide">
+                  {thead.map((header) => (
+                    <th
+                      className={`${
+                        header === "S/N"
+                          ? "rounded-bl-3xl"
+                          : header === "Ticket Price"
+                            ? "rounded-br-3xl"
+                            : header === `Phone Number`
+                              ? "rounded-br-3xl  text-left"
+                              : "text-center"
+                      } p-3 text-2xl font-semibold capitalize lg:w-max`}
+                      key={header}
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentItems?.map((val: any, index: number) => (
+                  <tr className="text-white h-1" key={index}>
+                    <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
+                      <p className="text-lg font-semibold">{indexOfFirstItem + index + 1}</p>
+                    </td>
 
-          <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-            <p className="text-lg font-semibold">{index + 1}</p>
-          </td>
-
-
-          <td className=" text-center h-[16px]">
-            <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-              {val.product}
-            </p>
-          </td>
-          <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
-            <p className="  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
-              {val.ticket_number}
-            </p>
-          </td>
-          <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-            <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-              {val.phone_number}
-            </p>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+                    <td className=" text-center h-[16px]">
+                      <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
+                        {val.product}
+                      </p>
+                    </td>
+                    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
+                      <p className="  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
+                        {val.ticket_number}
+                      </p>
+                    </td>
+                    <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                      <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
+                        {val.phone_number}
+                      </p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           }
+
+
+      <div className="flex justify-center mt-4">
+  <button
+    onClick={handlePrevPage}
+    disabled={currentPage === 1}
+    className={`px-4 py-2 mx-2 rounded-lg ${
+      currentPage === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
+    } text-white`}
+  >
+    Previous
+  </button>
+
+  <span className="mx-4 text-lg text-white">
+    Page {currentPage} of {totalPages}
+  </span>
+
+  <button
+    onClick={handleNextPage}
+    disabled={currentPage === totalPages}
+    className={`px-4 py-2 mx-2 rounded-lg ${
+      currentPage === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
+    } text-white`}
+  >
+    Next
+  </button>
+</div>
+
         </>
       );
     }
@@ -234,72 +311,9 @@ const Page = ({ params }: any) => {
             </div>
           </div>
         </div>
-        {/* <div className="my-8 flex flex-col items-center justify-center overflow-x-auto rounded-2xl p-4 bg-black"> */}
-        <div className="my-8  rounded-2xl 2xl:w-auto xl:w-auto lg:w-auto md:w-auto w-full overflow-y-scroll  p-4 bg-black" >
 
-
-
-<div className="">
-  {/* <table className="w-full border-separate border-spacing-y-4">
-    <thead className="bg-white text-[#F25E26]">
-      <tr className="tracking-wide">
-        {thead.map((header) => (
-          <th
-            className={`${
-              header === "S/N"
-                ? "rounded-bl-3xl"
-                : header === "Ticket Price"
-                ? "rounded-br-3xl"
-                : header === `Phone Number`
-                ? "rounded-br-3xl  text-left"
-                : "text-center"
-            } p-3 text-2xl font-semibold capitalize lg:w-max`}
-            key={header}
-          >
-            {header}
-          </th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {productdatanew?.data?.map((val: any, index: number) => (
-        <tr
-          className="text-white h-1"
-          key={index}
-        >
-
-          <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-            <p className="text-lg font-semibold">{index + 1}</p>
-          </td>
-
-
-          <td className=" text-center h-[16px]">
-            <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-              {val.product}
-            </p>
-          </td>
-          <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
-            <p className="  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
-              {val.ticket_number}
-            </p>
-          </td>
-          <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-            <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-              {val.phone_number}
-            </p>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table> */}
-  {renderRows()}
-</div>
-
-
-
-
-
-
+        <div className="my-8  rounded-2xl 2xl:w-auto xl:w-auto lg:w-auto md:w-auto w-full overflow-y-scroll  p-4 bg-black">
+          <div className="">{renderRows()}</div>
         </div>
         <div className="flex flex-col justify-center mb-8">
           <DefaultButton

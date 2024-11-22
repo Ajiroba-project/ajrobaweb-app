@@ -9,7 +9,11 @@ export async function GET(request) {
 
         const token_ = request.headers.get('authorization')?.replace('Token ', '');
         const id = request.headers.get('order_id');
+
+        console.log(id, 'id')
         /*     console.log(request.headers, 'id')
+
+        console.log
 
             console.log(token_, 'token_')
             console.log(id, 'id')

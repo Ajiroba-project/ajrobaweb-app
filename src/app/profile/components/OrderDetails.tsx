@@ -481,7 +481,7 @@ export const OrderDetails = () => {
             {
              pipeline === orderSwitch[0] ? (
 
-<AllOrder transac={paginatedTransactions} />
+            <AllOrder transac={paginatedTransactions} />
 
             ) : pipeline === orderSwitch[1] ? (
               <CompletedOrder transac={paginatedTransactions} />
