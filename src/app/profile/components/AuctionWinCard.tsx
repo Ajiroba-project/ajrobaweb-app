@@ -39,6 +39,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const { data: auctioninfo, isLoading: auctionLoading, error: ordererror } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken_);
 
+  console.log(auctioninfo, 'datatta')
+
 const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
 
   const isOpen = auctioninfo?.data?.data?.open?.some((openItem: { id: any }) => openItem.id === item.id);
@@ -51,6 +53,8 @@ const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
 
   return { ...item, tag: [tag] };
 });
+
+console.log(productMain, 'productmainnnn')
 
 
 
@@ -289,15 +293,20 @@ const Closefuncdelete = () => {
         <p className="text-center text-gray-500 py-8">No data available</p>
       ) : (
         productMain?.map((val: any, index: number) => (
-          <div   onClick={() =>
+          <div
+
+       /*    onClick={() =>
                         router.push(`/auction/productdetails/${val?.id}`)
-                      } key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
+                      }  */
+
+                      key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
 
             <Image
               src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
               alt={val?.auction[0]?.name}
               width={50}
               height={50}
+               quality={100}
               layout='intrinsic'
               className='object-cover w-full cursor-pointer rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
             />
