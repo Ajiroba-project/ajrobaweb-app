@@ -270,7 +270,9 @@ const Page = () => {
     token: state.token,
   }));
 
-  const userToken = token;
+  // const userToken = token;
+
+      const userToken = Cookies.get("token") as string || ''
 
   const {
     data,
