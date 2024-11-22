@@ -241,7 +241,7 @@ const Page = ({ params }: any) => {
                   Raffle Draw
                 </h3>
 
-                <p className="mt-1 text-sm text-gray-500">starts in</p>
+                <p className="mt-1 text-sm text-gray-500">    starts in</p>
 
                 <CountdownTimer startsIn={productdatanew?.starts_in} />
               </div>

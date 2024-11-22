@@ -77,7 +77,7 @@ const Page = ({ params }: any) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowWinners(true);
-    }, 60000);
+    }, 20000);
 
     return () => clearTimeout(timer);
   }, []);
