@@ -16,7 +16,7 @@ import { useGetProductData } from '@/hooks/useGetData'
 import { error } from 'console'
 import { ModalProfile } from '../profile/components/ModalProfile'
 import verify from '@/app/asset/verify.svg'
-
+import Cookies from 'js-cookie'
 
 
 // const Page = () => {
@@ -167,7 +167,9 @@ const WrappedPage = () => {
     token: state.token,
   }));
 
-  const userToken = token;
+  // const userToken = token;
+
+   const userToken = (Cookies.get("token") as string) || "";
 
   const {
     data: productinfo,

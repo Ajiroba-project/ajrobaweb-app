@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { CreateNewPin } from './YupValidation'
 import { useAuthStore, userProfile } from '@/store/store'
 import { toast } from 'react-toastify'
+import Cookies from 'js-cookie'
 
 export const ChangePin = ({ changePin, setChangePin }: any) => {
   const { successModal, setSuccessModal } = userProfile(state => ({
@@ -140,7 +141,9 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
   }))
 
 
-  const userToken = token;
+ /*  const userToken = token; */
+
+   const userToken = (Cookies.get("token") as string) || "";
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
     'changewalletpin',

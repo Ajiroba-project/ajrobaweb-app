@@ -52,6 +52,7 @@ import { useAuthStore } from "@/store/store";
 import * as yup from "yup";
 import { FaStar } from "react-icons/fa";
 import { useMutateData } from "@/hooks/useMutateNewData";
+import Cookies from "js-cookie";
 
 type Product = {
   name: string;
@@ -195,7 +196,9 @@ const Closefuncdelete = () => {
     token: state.token,
   }));
 
-  const userToken = token;
+  // const userToken = token;
+
+   const userToken = (Cookies.get("token") as string) || "";
 
   const handleSuccess = (data: any) => {
     Setreviewerror('')

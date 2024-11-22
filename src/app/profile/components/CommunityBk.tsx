@@ -15,6 +15,7 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { AiOutlinePicture } from "react-icons/ai";
 import Loading from "@/app/component/Loading";
 import { formatDistanceToNow } from "date-fns";
+import Cookies from 'js-cookie'
 
 type CommentFormValues = {
   comment: string;
@@ -146,7 +147,8 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     token: state.token,
   }));
 
-  const userToken = token;
+  // const userToken = token;
+   const userToken = (Cookies.get("token") as string) || "";
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
     "comment_on_post",
@@ -795,7 +797,9 @@ const NotificationSidebar = () => {
     token: state.token,
   }));
 
-  const userToken = token;
+ const userToken = (Cookies.get("token") as string) || "";
+
+
 
   const {
     data: notinfo,
