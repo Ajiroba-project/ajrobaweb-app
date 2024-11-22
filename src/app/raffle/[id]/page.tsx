@@ -10,6 +10,7 @@ import { Footer } from "@/app/component/Footer";
 import { Header } from "@/app/component/Header";
 
 import AuthMiddleware from "@/hooks/useAuth";
+import useAuthMiddleware from "@/hooks/useAuthRaffle"
 
 interface ProductData {
   id?: string;
@@ -21,7 +22,8 @@ interface ProductData {
 
 const Page = ({ params }: any) => {
   const router = useRouter();
-  AuthMiddleware(router);
+  // AuthMiddleware(router);
+    useAuthMiddleware(router);
 
   const [data, setData] = useState<any>(
     raffle.filter((val) => val.host === params.id),

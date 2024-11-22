@@ -1333,7 +1333,8 @@ bidpaymentmutate({
                           /*  onClick={notify} */
 
                           onClick={() =>
-                            router.push(`/raffle/${product_id}/winners`)
+                    /*         router.push(`/raffle/${product_id}/winners`) */
+                            router.push(`/raffle/${product_id}`)
                           }
                           className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                         >
