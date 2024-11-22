@@ -9,6 +9,7 @@ import { CreateNewPin } from "./YupValidation";
 import { useAuthStore, userProfile } from "@/store/store";
 import { toast } from "react-toastify";
 import * as yup from 'yup'
+import Cookies from 'js-cookie'
 
 export const CreatePin = ({ createPin, setCreatePin }: any) => {
   const { successModal, setSuccessModal } = userProfile((state) => ({
@@ -137,7 +138,9 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
     token: state.token,
   }));
 
-  const userToken = token;
+  // const userToken = token;
+
+    const userToken = (Cookies.get("token") as string) || "";
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
     "createwalletpin",
