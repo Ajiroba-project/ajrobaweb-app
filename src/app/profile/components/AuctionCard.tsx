@@ -102,7 +102,9 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     token: state.token,
   }));
 
-  const userToken = token;
+   const userToken = (Cookies.get("token") as string) || "";
+
+ /*  const userToken = token; */
 
   const handleSuccess = (data: any) => {
     Setreviewerror("");
@@ -435,8 +437,10 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     user: state.user,
     token: state.token,
   }));
+ const userToken = (Cookies.get("token") as string) || "";
 
-  const userToken = token;
+
+  // const userToken = token;
 
   const handleSuccess = (data: any) => {
     Setreviewerror("");

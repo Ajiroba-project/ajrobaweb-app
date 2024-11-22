@@ -130,7 +130,8 @@ console.log(productMain, 'productmainnnn')
     token: state.token,
   }));
 
-  const userToken = token;
+   const userToken = (Cookies.get("token") as string) || "";
+  // const userToken = token;
 
   const handleSuccess = (data: any) => {
     Setreviewerror('')
