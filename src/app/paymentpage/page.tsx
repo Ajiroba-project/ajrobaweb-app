@@ -314,6 +314,29 @@ const Page = () => {
     });
   };
 
+   const [ModalUp, setShowModalUp] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState('');
+
+  const Modal = ({ url, onClose }: { url: string; onClose: () => void }) => {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white p-4 rounded-lg w-full max-w-3xl relative">
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+          onClick={onClose}
+        >
+          ✕
+        </button>
+        <iframe
+          src={url}
+          className="w-full h-[100vh] "
+          title="Payment"
+        />
+      </div>
+    </div>
+  );
+};
+
 
 
 const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
@@ -333,8 +356,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       // const payload = { amount: Number(amount) };
 
 
-           const payload = {
-
+      const payload = {
       shipping_address: cartItemsn?.["Delivery Details"],
       shipping_method: "standard",
       payment_method: "Electronic",
@@ -358,16 +380,29 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       );
 
       if (response.status === 200) {
-        const { payment_url, reference } = response.data;
+        const { payment_url, reference, status, message,  } = response.data;
 
         localStorage.setItem("paymentReference", reference);
         Cookies.set("paymentReference", reference, { expires: 1 });
 
-        startVerificationLoop(reference);
+       /*  ; */
 
-        window.open(payment_url, "_blank");
+     /*    window.open(payment_url, "_blank"); */
+        console.log(message, 'message')
+        console.log(status, 'status')
+        console.log(reference, 'reference')
+        console.log(payment_url, 'payment_url')
 
-        toast.success("Payment initiated successfully.");
+      startVerificationLoop(reference)
+
+        if (status === "success") {
+            setPaymentUrl(payment_url); // Store the URL in state
+           setShowModalUp(true);
+             toast.success("Payment initiated successfully.");
+
+        }
+
+
       } else {
         toast.error("An unexpected status was returned.");
       }
@@ -451,34 +486,104 @@ if (axios.isAxiosError(error)) {
 
 
 
-  const startVerificationLoop = (reference: string) => {
+//   const startVerificationLoop = (reference: string) => {
+//   const intervalTime = 2000; // 2 seconds
+//   const totalDuration = 60 * 1000; // 60 seconds
+//   const maxAttempts = totalDuration / intervalTime;
+//   let attempts = 0;
+
+//   let intervalId: NodeJS.Timeout;
+
+//   const stopLoop = () => {
+//     clearInterval(intervalId);
+//   };
+
+//   // Start the interval after 15 seconds
+//   setTimeout(() => {
+//     intervalId = setInterval(async () => {
+//       attempts++;
+
+//       // Call verifyWalletPayment and stop loop if successful
+//       const success = await verifyWalletPayment(reference);
+//       if (success || attempts >= maxAttempts) {
+//         stopLoop();
+//       }
+//     }, intervalTime);
+//   }, 20 * 1000); // 15 seconds delay
+// };
+
+// const verifyWalletPayment = async (reference: any): Promise<boolean> => {
+//  setShowModalUp(false)
+//   console.log(reference, 'reference---insideverify')
+//   setloadingverify(true);
+
+//   try {
+//     const tkn_: string = Cookies.get("token") as string;
+//     const response = await axios.get(
+//       `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
+//       {
+//         headers: { Authorization: `token ${tkn_}` },
+//       }
+//     );
+
+//     if (response.status === 200 || response.status === 201) {
+//       setloadingverify(false);
+//       setShowModalUp(false)
+//       toast.success(`${response?.data?.message}`);
+//      /*  router.push('/cart'); */
+
+//       return true; // Indicates success, stops loop
+//     } else {
+//       setloadingverify(false);
+//         setShowModalUp(false)
+//       toast.error("Unexpected status during verification.");
+//       return false; // Indicates unsuccessful but keeps loop
+//     }
+//   } catch (error) {
+//     setloadingverify(false);
+//     console.error(error);
+
+//   if (axios.isAxiosError(error) && error.response) {
+//       toast.error(error.response.data.message || 'Error occurred during payment verification.');
+//     } else {
+//       toast.error("An unexpected error occurred.");
+//     }
+//     return false; // Indicates error, keeps loop
+//   }
+// };
+
+
+
+const startVerificationLoop = (reference: string) => {
   const intervalTime = 2000; // 2 seconds
-  const totalDuration = 60 * 1000; // 60 seconds
-  const maxAttempts = totalDuration / intervalTime;
+  const maxAttempts = 5; // Limit to 5 attempts
   let attempts = 0;
 
-  let intervalId: NodeJS.Timeout;
+
+let intervalId: NodeJS.Timeout;
 
   const stopLoop = () => {
     clearInterval(intervalId);
+    console.log("Verification loop stopped after", attempts, "attempts.");
   };
 
-  // Start the interval after 15 seconds
+  // Start the loop after a delay (optional)
   setTimeout(() => {
-    intervalId = setInterval(async () => {
+    const intervalId = setInterval(async () => {
       attempts++;
 
-      // Call verifyWalletPayment and stop loop if successful
       const success = await verifyWalletPayment(reference);
-      if (success || attempts >= maxAttempts) {
-        stopLoop();
+      if (success) {
+        stopLoop();  // Stop if successful
+      } else if (attempts >= maxAttempts) {
+        stopLoop();  // Stop after 5 attempts
+        toast.error("Verification failed after 5 attempts. Please try again later.");
       }
     }, intervalTime);
-  }, 15 * 1000); // 15 seconds delay
+  }, 5000); // 5 seconds delay (adjust as needed)
 };
 
 const verifyWalletPayment = async (reference: any): Promise<boolean> => {
-  setloadingverify(true);
   try {
     const tkn_: string = Cookies.get("token") as string;
     const response = await axios.get(
@@ -489,22 +594,24 @@ const verifyWalletPayment = async (reference: any): Promise<boolean> => {
     );
 
     if (response.status === 200 || response.status === 201) {
-      setloadingverify(false);
       toast.success(`${response?.data?.message}`);
-     /*  router.push('/cart'); */
-      return true; // Indicates success, stops loop
+      return true;  // Success, stop the loop
     } else {
-      setloadingverify(false);
-      toast.error("Unexpected status during verification.");
-      return false; // Indicates unsuccessful but keeps loop
+      toast.error("Unexpected verification status.");
+      return false; // Keep trying
     }
   } catch (error) {
-    setloadingverify(false);
-    console.error(error);
-    toast.error("Error occurred during payment verification.");
-    return false; // Indicates error, keeps loop
+    console.error("Verification error:", error);
+      if (axios.isAxiosError(error) && error.response) {
+      toast.error(error.response.data.message || 'Error occurred during payment verification.');
+    } else {
+      toast.error("An unexpected error occurred.");
+    }
+
+    return false; // Error, keep trying
   }
 };
+
 
   const router = useRouter();
 
@@ -1074,6 +1181,14 @@ const verifyWalletPayment = async (reference: any): Promise<boolean> => {
           handleOk={handleConfirmOrder}
           handleCancel={handlecloseOrder}
         />
+
+
+        {ModalUp && (
+        <Modal
+          url={paymentUrl}
+          onClose={() => setShowModalUp(false)} // Close the modal
+        />
+      )}
       </main>
     </Suspense>
   );

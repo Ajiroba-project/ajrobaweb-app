@@ -273,6 +273,27 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     },
   );
 
+
+
+    const itemsPerPage = 5; // Number of items per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(openProducts?.length / itemsPerPage);
+
+  // Slice data based on the current page
+  const currentData = openProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // Handle page navigation
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+
+
+
   return (
     <div>
       <div className="">
@@ -282,7 +303,7 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
           ) : openProducts?.length === 0 ? (
             <p className="text-center text-gray-500 py-8">No data available</p>
           ) : (
-            openProducts?.map((val: any, index: number) => (
+            currentData?.map((val: any, index: number) => (
               <div
                 key={index}
                 className="relative my-2 flex gap-4 border p-3 flex-wrap"
@@ -328,6 +349,29 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
             ))
           )}
         </div>
+
+
+         {openProducts?.length > itemsPerPage && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+          >
+            Previous
+          </button>
+          <span className="mx-2">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+          >
+            Next
+          </button>
+        </div>
+      )}
       </div>
 
       {isdeleteModalOpen && (
@@ -758,6 +802,25 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     }
   };
 
+
+
+    const itemsPerPage = 5; // Number of items per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(closedProducts?.length / itemsPerPage);
+
+  // Slice data based on the current page
+  const currentData =closedProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // Handle page navigation
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+
   return (
     <div>
       <div className="">
@@ -767,7 +830,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
           ) : closedProducts?.length === 0 ? (
             <p className="text-center text-gray-500 py-8">No data available</p>
           ) : (
-            closedProducts?.map((val: any, index: number) => (
+            currentData?.map((val: any, index: number) => (
               <div
                 key={index}
                 className="relative my-2 flex gap-4 border p-3 flex-wrap"
@@ -814,6 +877,29 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
             ))
           )}
         </div>
+
+
+        {closedProducts?.length > itemsPerPage && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+          >
+            Previous
+          </button>
+          <span className="mx-2">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+          >
+            Next
+          </button>
+        </div>
+      )}
       </div>
 
       {isdeleteModalOpen && (

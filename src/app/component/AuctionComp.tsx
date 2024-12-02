@@ -803,23 +803,23 @@ bidpaymentmutate({
                           Ticket Price (₦)
                         </label>
                         <div className="flex items-center">
-                          <button
+                         {/*  <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                            /*    onClick={handleDecrease} */
+
                             disabled={ticketCount <= 1}
                           >
                             -
-                          </button>
+                          </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
                             {ticketPrice}
                           </span>
-                          <button
+                        {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                            /*  onClick={handleIncrease} */
+
                           >
                             +
-                          </button>
+                          </button> */}
                         </div>
                       </div>
 
@@ -912,7 +912,7 @@ bidpaymentmutate({
 
                   <div>
                     <span className="font-Poppins font-medium">
-                      Raffle Draw
+                      Raffle Drawww
                     </span>
                   </div>
                 </div>
@@ -924,22 +924,21 @@ bidpaymentmutate({
                         Ticket Price (₦)
                       </label>
                       <div className="flex items-center">
-                        <button
+                       {/*  <button
                           className="px-2 py-1 bg-gray-200 rounded"
-                          /*     onClick={handleDecrease} */
-                          /*   disabled={ticketCount <= 1} */
+
                           disabled={true}
                         >
                           -
-                        </button>
+                        </button> */}
                         <span className="mx-4 font-bold text-sm"> {ticketData?.data?.ticket_price}</span>
-                        <button
+                       {/*  <button
                           className="px-2 py-1 bg-gray-200 rounded"
-                          /*      onClick={handleIncrease} */
+
                           disabled={true}
                         >
                           +
-                        </button>
+                        </button> */}
                       </div>
                     </div>
 
