@@ -28,6 +28,7 @@ type Order = {
   total_price: string;
   order_date: string;
   delivery_status: string;
+  id?: string;
 };
 
 export const AuctionWinCard = ({ product }: AuctionProps) => {
@@ -98,7 +99,7 @@ const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
 
        if (option === "Purchase Order") {
       setSelectedTransactiondelete(transaction);
-   console.log(transaction, 'transaction', 'Purchhhh')
+       console.log(transaction, 'transaction', 'Purchhhh')
     }
 
   };
@@ -251,8 +252,9 @@ const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
 const submitFormdelete = async (data: any, event: any) => {
   event.preventDefault();
 
-  console.log(errors)
-  console.log(data, 'datata')
+  // console.log(errors)
+  // console.log(data, 'datata')
+  // console.log(selectedTransactiondelete, 'selectedTransactiondelete')
 
 //  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
 
@@ -262,7 +264,7 @@ const submitFormdelete = async (data: any, event: any) => {
   }
 
   const payload = {
-    order_Id: selectedTransactiondelete.order_id,
+    order_Id: selectedTransactiondelete.id,
   };
 
     mutated({

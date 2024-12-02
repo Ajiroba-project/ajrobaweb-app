@@ -19,6 +19,7 @@ import Barcode from "@/app/asset/image/barcode.svg";
 import Link from "next/link";
 import Brand from "@/app/asset/logo.svg";
 import bikecode from '@/app/asset/image/bikecode.svg'
+import DropDownAuctionWin from "./DropDownAuctionWin";
 
 type AuctionProps = {
   product: any[];
@@ -803,10 +804,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   </div>
                 </div>
                 <span className="absolute right-3 top-2 rounded-md border p-2 cursor-pointer">
-                  <DropDownAuction
-                    onOptionClick={(option) => handleOptionClick(option, val)}
-                    transaction={val}
-                  />
+                   <DropDownAuctionWin
+
+                onOptionClick={(option) => handleOptionClick(option, val)}
+                transaction={val}
+              />
                 </span>
               </div>
             ))

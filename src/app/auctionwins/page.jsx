@@ -32,16 +32,16 @@ const WrappedPage = () => {
 
 
 
-  const {
-    data: productinfo,
-    isLoading: productLoading,
-    error: producterror,
-  } = useGetProductData(
-    "/api/productdetailsbyid",
-    userToken,
-    order_id,
-    "get_product_details"
-  );
+//   const {
+//     data: productinfo,
+//     isLoading: productLoading,
+//     error: producterror,
+//   } = useGetProductData(
+//     "/api/productdetailsbyid",
+//     userToken,
+//     order_id,
+//     "get_product_details"
+//   );
 
 
 
@@ -61,17 +61,17 @@ const WrappedPage = () => {
 
   const filteredItems = auctioninfo?.data?.data?.all?.filter(item => item.id === order_id);
 
-    console.log(filteredItems, "filteredItems")
+    // console.log(filteredItems, "filteredItems")
 
   /*  console.log(productinfo?.data?.data, "productinfo") */
 
   // console.log(producterror, "producterror")
 
 
-  console.log(auctioninfo?.data?.data?.all, 'auctioninfo')
+//   console.log(auctioninfo?.data?.data?.all, 'auctioninfo')
 
     // Display loading spinner or text while fetching data
-  if (productLoading) {
+  if (auctionLoading) {
     return (
       <section className="min-h-screen flex justify-center items-center">
         <p className="text-gray-700 text-lg font-semibold">Loading...</p>
@@ -107,7 +107,7 @@ const WrappedPage = () => {
       <section className="bg-[#F6F6F6] container">
         <div className="">
           <div onClick={() => router.back()}>
-            <div className="cursor-pointer container flex justify-start">
+            <div className="cursor-pointer container flex justify-start mt-8">
               <p className="text-[#E84526] text-base">Back</p>
             </div>
           </div>
@@ -169,12 +169,12 @@ const WrappedPage = () => {
             <div className="flex items-center gap-2 flex-wrap">
               <div>
                 <p className="font-Poppins text-sm text-[#6E6E6E] font-medium">
-                  Order Code:
+                  Ticket Number:
                 </p>
               </div>
               <div>
                 <p className="font-Inter text-base text-[#111111] font-bold">
-                  {productinfo?.data?.data?.[1].order_id}
+                  {filteredItems[0]?.ticket_number}
                 </p>
               </div>
             </div>
@@ -265,7 +265,7 @@ const WrappedPage = () => {
 
         </section>
 
-    {/*     <section
+         <section
           style={{
             margin: "0 auto",
             width: "95%",
@@ -292,7 +292,7 @@ const WrappedPage = () => {
                 </div>
                 <div>
                   <p className="font-Poppins text-sm text-[#2A2A2A] font-normal">
-                    {productinfo?.data?.data[1]?.payment_method}
+                    {'N/A'}
                   </p>
                 </div>
               </div>
@@ -309,7 +309,7 @@ const WrappedPage = () => {
 
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N {productinfo?.data?.data[1]?.cost_price}
+                    N  {filteredItems[0]?.ticket_price}
                   </p>
                 </div>
               </div>
@@ -325,7 +325,7 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N {productinfo?.data?.data[1]?.discount_amount}
+                    N  {0}
                   </p>
                 </div>
               </div>
@@ -341,13 +341,13 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N {productinfo?.data?.data[1]?.total}
+                    N  {filteredItems[0]?.ticket_price}
                   </p>
                 </div>
               </div>
             </div>
           </div>
-        </section> */}
+        </section>
       </main>
 
       <Footer />

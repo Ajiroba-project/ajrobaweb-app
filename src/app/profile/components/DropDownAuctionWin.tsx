@@ -50,7 +50,7 @@ const DropDownAuctionWin: React.FC<DropdownProps> = ({ onOptionClick, value, tra
         setModalOpen(true);
         break;
       case 'Delete':
-        console.log('Delete selected');
+    /*     console.log('Delete selected'); */
         break;
       default:
         console.log('Unknown option selected');
