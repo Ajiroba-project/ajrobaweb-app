@@ -31,7 +31,7 @@ export const RelatedProductsAuction = ({ cardInfo }) => {
     return (
         <>
             <div
-                className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF]  `}
+                className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF] cursor-pointer  `}
             >
                 {paginatedCardInfo?.map((value, index) => (
                     <div onClick={() => router.push(`/auction/productdetails/${value.id}`)} className='w-[25%] border border-white shadow-sm ' key={index}>

@@ -123,11 +123,15 @@ const AuctionPage = () => {
 
         <section className='my-4'>
     {/*       <h1>Auction</h1> */}
-          <AuctionComp
-            cardInfo={filteredData}
-            currentPage={0}
-            cardsNum={0}
-          />
+        {
+          auctionfetching ? <Loading /> : (
+            <AuctionComp
+              cardInfo={filteredData}
+              currentPage={currentPage}
+              cardsNum={itemsPerPage}
+            />
+          )
+        }
           <Pagination
             pageCount={pageCount}
             onPageChange={({ selected }) => handlePageChange(selected)}

@@ -72,7 +72,7 @@ const WrappedPage = () => {
     doc.text("Transaction Receipt", 20, 20);
     doc.setFontSize(12);
 
-    console.log(productinfo)
+
 
     // Add transaction details
     doc.text(`Beneficiary: ${productinfo?.data?.data[0]?.beneficiary || ''}`, 20, 40);

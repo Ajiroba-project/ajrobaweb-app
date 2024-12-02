@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useMutateData } from '@/hooks/useMutateNewData'
 import Cookies from 'js-cookie'
 import { useGetOrderWinsData } from '@/hooks/useGetData'
+import DropDownAuctionWin from './DropDownAuctionWin'
 
 type AuctionProps = {
   product: any[]
@@ -39,7 +40,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const { data: auctioninfo, isLoading: auctionLoading, error: ordererror } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken_);
 
-  console.log(auctioninfo, 'datatta')
+  // console.log(auctioninfo, 'datatta')
 
 const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
 
@@ -54,7 +55,7 @@ const productMain = auctioninfo?.data?.data?.all.map((item: { id: any }) => {
   return { ...item, tag: [tag] };
 });
 
-console.log(productMain, 'productmainnnn')
+// console.log(productMain, 'productmainnnn')
 
 
 
@@ -296,26 +297,28 @@ const Closefuncdelete = () => {
         productMain?.map((val: any, index: number) => (
           <div
 
-       /*    onClick={() =>
-                        router.push(`/auction/productdetails/${val?.id}`)
-                      }  */
 
-                      key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
 
-            <Image
-              src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
-              alt={val?.auction[0]?.name}
-              width={50}
-              height={50}
-               quality={100}
-              layout='intrinsic'
-              className='object-cover w-full cursor-pointer rounded-md h-72 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
-            />
+            key={index} className='relative my-2 flex gap-4 border p-3 flex-wrap'>
+
+
+
+            <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
+  <Image
+    src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
+    alt={val?.auction[0]?.name}
+    layout="fixed"
+    width={100}
+    height={80}
+    objectFit="cover"
+    className="rounded-lg"
+  />
+</div>
+
 
             <div className='flex flex-col gap-3 capitalize'>
               <p className=' font-semibold'>{val?.auction[0]?.name}</p>
-              <p>ID: {val?.id} </p>
-              <p>Bid Number: {val?.bid_number}</p>
+              <p>Ticket Number: {val?.ticket_number} </p>
               <p>Ticket Price: ₦{val?.ticket_price}</p>
               <div className='mt-5 flex gap-3 flex-wrap'>
                 {val.tag &&
@@ -330,7 +333,10 @@ const Closefuncdelete = () => {
               </div>
             </div>
             <span className='absolute right-3 top-2 rounded-md border p-2 cursor-pointer'>
-              <DropDownAuction
+
+
+              <DropDownAuctionWin
+
                 onOptionClick={(option) => handleOptionClick(option, val)}
                 transaction={val}
               />
