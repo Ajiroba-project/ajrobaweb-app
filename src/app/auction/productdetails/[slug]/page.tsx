@@ -16,6 +16,7 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
+import {RelatedProductsAuction} from '@/app/component/RelatedProductsAuction'
 import Loading from "@/app/component/Loading";
 import Cookies from "js-cookie";
 import ModalComponent from "@/app/component/ModalComponent";
@@ -1014,7 +1015,7 @@ bidpaymentmutate({
         </div>
 
         <div>
-          <RelatedProductsDetails cardInfo={data} />
+          <RelatedProductsAuction cardInfo={data} />
         </div>
       </div>
     );
