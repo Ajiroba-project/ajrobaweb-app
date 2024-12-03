@@ -16,7 +16,7 @@ export const Heading = ({ title }: titleProp) => {
 export const HeadingText =({title}:titleProp)=>{
     return (
         <>
-        <h1 className="font-semibold text-2xl font-Poppins">{title}</h1>
+        <h1 className="font-semibold text-2xl font-Poppins ">{title}</h1>
 
         </>
     )

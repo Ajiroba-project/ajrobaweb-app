@@ -1440,7 +1440,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
     console.log(payload, 'payload')
  */
 
-    console.log(userToken, 'userToken')
+    // console.log(userToken, 'userToken')
 
     /*     console.log(payload, 'payload') */
      mutate({

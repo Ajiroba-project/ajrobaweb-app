@@ -9,6 +9,8 @@ import "./style.css";
 import Cookies from "js-cookie";
 import { Header } from "@/app/component/Header";
 import { Footer } from "@/app/component/Footer";
+import { useQueryData } from "@/hooks/useQueryData";
+import { useGetDatanew } from "@/hooks/useGetData";
 
 interface ProductData {
   id?: string;
@@ -16,6 +18,36 @@ interface ProductData {
   price?: number;
   data?: any;
   starts_in?: any;
+}
+
+interface CardInfoItem {
+  weight: string;
+  id: number;
+  title: string;
+  description?: string;
+  imageUrl: string;
+  name?: string;
+  image?: string;
+  price?: string;
+  images?: { id: string; product: string; image: string }[];
+  discount?: string;
+  reviews?: string;
+  message?: string;
+  category?: string;
+  delivery_estimation: string;
+  related_products: [];
+  ticket_price?: string;
+  auction_reviews?: any;
+  starts_in?: any;
+  category_name?: any;
+  subcategory_name?: any;
+}
+
+interface AuctionResponse {
+  message: any;
+  data: CardInfoItem;
+  category?: any;
+  subcategory?: any;
 }
 
 const Page = ({ params }: any) => {
@@ -30,6 +62,19 @@ const Page = ({ params }: any) => {
   );
   const [loadingdata, setLoadingData] = useState(false);
   const [showWinners, setShowWinners] = useState(false);
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auction_tickets/?auction_id=${product_id}`;
+
+  const {
+    data: ticketInfo,
+    isLoading: ticketLoading,
+    error: ticketError,
+  } = useGetDatanew(url, "ticket_details", userToken, {
+    cacheTime: 0,
+    staleTime: 0,
+  });
+
+
 
   const fetchWithAuth = async (url: string) => {
     setLoadingData(true);
@@ -50,6 +95,7 @@ const Page = ({ params }: any) => {
       }
 
       const result = await response.json();
+            console.log(result, "result");
       setProductDataNew(result);
       return result;
     } catch (error) {
@@ -62,9 +108,14 @@ const Page = ({ params }: any) => {
 
   const fetchData = async () => {
     try {
-      const data = await fetchWithAuth(
+       const data = await fetchWithAuth(
         `https://ajiroba.onrender.com/v1/auction/auction_tickets/?auction_id=${product_id}`,
-      );
+      ).then((data) => {
+       /*  setProductDataNew(data); */
+       console.log(data, "data");
+      })
+
+      console.log(data, "data");
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -84,43 +135,32 @@ const Page = ({ params }: any) => {
 
   const thead = ["S/N", "Product", `Ticket Number`, "Phone Number"];
 
-
   const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 5; // Set the number of items per page
+  const itemsPerPage = 5; // Set the number of items per page
 
-const indexOfLastItem = currentPage * itemsPerPage;
-const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-// Calculate current items to display
-const currentItems = productdatanew?.data?.slice(
-  (currentPage - 1) * itemsPerPage,
-  currentPage * itemsPerPage
-);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // Calculate current items to display
+  const currentItems = productdatanew?.data?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
-const totalPages = Math.ceil((productdatanew?.data?.length || 0) / itemsPerPage);
-
-  // Handle pagination clicks
-  const goToNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-
+  const totalPages = Math.ceil(
+    (productdatanew?.data?.length || 0) / itemsPerPage,
+  );
 
   const handlePrevPage = () => {
-  if (currentPage > 1) {
-    setCurrentPage(currentPage - 1);
-  }
-};
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-const handleNextPage = () => {
-  if (currentPage < totalPages) {
-    setCurrentPage(currentPage + 1);
-  }
-};
-
-
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
 
 
@@ -129,6 +169,8 @@ const handleNextPage = () => {
       return (
         <>
           {
+
+
             <table className="w-full border-separate border-spacing-y-4">
               <thead className="bg-white text-[#F25E26]">
                 <tr className="tracking-wide">
@@ -154,7 +196,9 @@ const handleNextPage = () => {
                 {currentItems?.map((val: any, index: number) => (
                   <tr className="text-white h-1" key={index}>
                     <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-                      <p className="text-lg font-semibold">{indexOfFirstItem + index + 1}</p>
+                      <p className="text-lg font-semibold">
+                        {indexOfFirstItem + index + 1}
+                      </p>
                     </td>
 
                     <td className=" text-center h-[16px]">
@@ -162,8 +206,13 @@ const handleNextPage = () => {
                         {productdatanew?.data?.[index]?.product || "Loading..."}
                       </p>
                     </td>
-                    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
+                    {/*    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
                       <p className="p-rd  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black"></p>
+                    </td> */}
+                    <td className="pl-6 p-0 h-[16px] w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold">
+                      <p className="p-rd mx-2 flex w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2 text-center text-lg tracking-[0.5em] text-black">
+                        {/* Counter animation */}
+                      </p>
                     </td>
                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
@@ -176,35 +225,36 @@ const handleNextPage = () => {
                 ))}
               </tbody>
             </table>
-
-
           }
-<div className="flex justify-center mt-4">
-  <button
-    onClick={handlePrevPage}
-    disabled={currentPage === 1}
-    className={`px-4 py-2 mx-2 rounded-lg ${
-      currentPage === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
-    } text-white`}
-  >
-    Previous
-  </button>
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 mx-2 rounded-lg ${
+                currentPage === 1
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white`}
+            >
+              Previous
+            </button>
 
-  <span className="mx-4 text-lg text-white">
-    Page {currentPage} of {totalPages}
-  </span>
+            <span className="mx-4 text-lg text-white">
+              Page {currentPage} of {totalPages}
+            </span>
 
-  <button
-    onClick={handleNextPage}
-    disabled={currentPage === totalPages}
-    className={`px-4 py-2 mx-2 rounded-lg ${
-      currentPage === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
-    } text-white`}
-  >
-    Next
-  </button>
-</div>
-
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 mx-2 rounded-lg ${
+                currentPage === totalPages
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white`}
+            >
+              Next
+            </button>
+          </div>
         </>
       );
     } else {
@@ -236,7 +286,9 @@ const handleNextPage = () => {
                 {currentItems?.map((val: any, index: number) => (
                   <tr className="text-white h-1" key={index}>
                     <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-                      <p className="text-lg font-semibold">{indexOfFirstItem + index + 1}</p>
+                      <p className="text-lg font-semibold">
+                        {indexOfFirstItem + index + 1}
+                      </p>
                     </td>
 
                     <td className=" text-center h-[16px]">
@@ -260,37 +312,47 @@ const handleNextPage = () => {
             </table>
           }
 
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 mx-2 rounded-lg ${
+                currentPage === 1
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white`}
+            >
+              Previous
+            </button>
 
-      <div className="flex justify-center mt-4">
-  <button
-    onClick={handlePrevPage}
-    disabled={currentPage === 1}
-    className={`px-4 py-2 mx-2 rounded-lg ${
-      currentPage === 1 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
-    } text-white`}
-  >
-    Previous
-  </button>
+            <span className="mx-4 text-lg text-white">
+              Page {currentPage} of {totalPages}
+            </span>
 
-  <span className="mx-4 text-lg text-white">
-    Page {currentPage} of {totalPages}
-  </span>
-
-  <button
-    onClick={handleNextPage}
-    disabled={currentPage === totalPages}
-    className={`px-4 py-2 mx-2 rounded-lg ${
-      currentPage === totalPages ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000]'
-    } text-white`}
-  >
-    Next
-  </button>
-</div>
-
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 mx-2 rounded-lg ${
+                currentPage === totalPages
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white`}
+            >
+              Next
+            </button>
+          </div>
         </>
       );
     }
   };
+
+
+
+
+
+  if (ticketError) {
+    return <><p className="flex justify-center items-center text-center text-red-500 font-bold py-40">{'Auction bid tickets not ready.'}</p></>
+  }
 
   return (
     <>
@@ -312,9 +374,12 @@ const handleNextPage = () => {
           </div>
         </div>
 
+
+
         <div className="my-8  rounded-2xl 2xl:w-auto xl:w-auto lg:w-auto md:w-auto w-full overflow-y-scroll  p-4 bg-black">
-          <div className="">{renderRows()}</div>
-        </div>
+            {renderRows()}
+          </div>
+
         <div className="flex flex-col justify-center mb-8">
           <DefaultButton
             handleClick={() => router.push("/auction")}

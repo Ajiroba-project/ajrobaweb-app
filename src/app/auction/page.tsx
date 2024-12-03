@@ -11,6 +11,7 @@ import { useQueryData } from '@/hooks/useQueryData'
 import { userNavStore } from '@/store/store'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import Loading from '../component/Loading'
 
 // Add this helper function to get auction dates from the data
 const extractAuctionDates = (data: any[]) => {
@@ -37,7 +38,7 @@ const AuctionPage = () => {
   const [itemsPerPage] = useState<number>(12);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const { data: auctionInfo, isLoading: auctionLoading } = useQueryData<AuctionResponse>(
+  const { data: auctionInfo, isLoading: auctionLoading,    isFetching: auctionfetching, } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`,
     ['get auctiondetails'],
     true
@@ -89,6 +90,10 @@ const AuctionPage = () => {
     return date < today; // Example: Exclude past dates
   });
 
+
+      {auctionfetching && <Loading />}
+
+
   return (
     <Fragment>
       <header className='fixed z-50 w-full'>
@@ -118,11 +123,15 @@ const AuctionPage = () => {
 
         <section className='my-4'>
     {/*       <h1>Auction</h1> */}
-          <AuctionComp
-            cardInfo={filteredData}
-            currentPage={0}
-            cardsNum={0}
-          />
+        {
+          auctionfetching ? <Loading /> : (
+            <AuctionComp
+              cardInfo={filteredData}
+              currentPage={currentPage}
+              cardsNum={itemsPerPage}
+            />
+          )
+        }
           <Pagination
             pageCount={pageCount}
             onPageChange={({ selected }) => handlePageChange(selected)}

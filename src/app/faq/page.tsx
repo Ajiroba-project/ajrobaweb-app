@@ -14,8 +14,8 @@ const FAQPage = () => {
   return (
     <Fragment>
       <Header />
-      <main className='container mb-[5rem] mt-8'>
-        <div className='flex items-center justify-center'>
+      <main className='container mb-[5rem] mt-8 '>
+        <div className='flex items-center justify-center my-12 mt-12'>
           <HeadingText title='Frequently Asked Questions' />
         </div>
 
@@ -40,12 +40,20 @@ const FAQPage = () => {
                       <FaPlus className='cursor-pointer' />
                     )}
                   </div>
-                  {/* answer */}
-                  {active === index ? (
-                    <div className='py-5'>
-                      <p className='p-5'>{val.answer}</p>
-                    </div>
-                  ) : null}
+
+                  {active === index && (
+          <div className='py-5'>
+          <ul>
+              {Array.isArray(val.answer) ? (
+                val.answer.map((item, i) => (
+                  <li key={i} className='p-2 ml-4'>{item}</li>
+                ))
+              ) : (
+                <li className='p-2 ml-4'>{val.answer}</li>
+              )}
+            </ul>
+          </div>
+        )}
                 </div>
               </div>
             ))}

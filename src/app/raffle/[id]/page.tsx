@@ -9,6 +9,7 @@ import ModalComponent from "@/app/component/ModalComponent";
 import { Footer } from "@/app/component/Footer";
 import { Header } from "@/app/component/Header";
 
+
 import AuthMiddleware from "@/hooks/useAuth";
 import useAuthMiddleware from "@/hooks/useAuthRaffle"
 
@@ -191,7 +192,7 @@ const Page = ({ params }: any) => {
       <section className="relative mb-[5rem] mt-7 flex flex-col items-center justify-center">
         <div className="relative z-auto mb-4 w-full">
           <div className="flex justify-center items-center">
-            <iframe
+           {/*  <iframe
               ref={iframeRef}
               src="https://www.youtube.com/embed/A50B4AwxwsU?autoplay=1&enablejsapi=1"
               width="800"
@@ -199,7 +200,19 @@ const Page = ({ params }: any) => {
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-            ></iframe>
+            ></iframe> */}
+            <video
+   /*      ref={iframeRef} */
+        width="800"
+        height="306"
+        controls
+        autoPlay
+
+        className="rounded-lg shadow-md"
+      >
+        <source src="/ajirobaadvideo.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
           </div>
         </div>
 

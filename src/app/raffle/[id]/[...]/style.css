@@ -1,10 +1,18 @@
+.p-rd {
+  position: relative;
+  width: 100%; /* Fixed width */
+  text-align: center;
+}
+
 .p-rd::after {
+  position: absolute; /* Remove from layout flow */
   font: 800 40px system-ui;
   content: counter(count);
   animation: counter 1s linear infinite alternate;
   counter-reset: count 0;
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%);
 }
-
 @keyframes counter {
   0% {
     counter-increment: count 012345012;
