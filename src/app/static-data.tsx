@@ -739,41 +739,56 @@ export const RelatedData = [
 ]
 
 export const faq = [
+
   {
     question: 'How does raffle draw work on your platform?',
-    answer:
-      ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque dolores, ex, labore dignissimos laudantium vero similique vitae architecto numquam magni a blanditiis quod accusantium temporibus modi magnam quo, eum officiis?'
+    answer: [
+        "1. Create a profile and provide the basic KYC.",
+        "2. Fund your wallet.",
+        "3. Check the list of items we have on sale by raffle.",
+        "4. Select your item of choice",
+        "5. Make payment through your wallet for ticket for the item (s) you have selected",
+        "6. You confirm your order",
+        "7. Then you submit",
+        "8. You are immidiately in the raffle draw pool",
+        "9. At the specified time for the item you selected, a raffle draw will take place",
+        "10. You get a prompt to watch the raffle draw life",
+        "11. If your ticket wins, you will get a winning confirmation advice/letter sent to your registered email and also to your dashboard on the platform",
+        "12. You can specify your preferred mode of redeeming your winning"
+    ]
   },
   {
     question: 'Are the raffle draw conducted fairly?',
-    answer: ''
+    answer: ["Yes, the raffle draw process is absolutely conducted digitally without any form of human involvement. Every one has an equal chance of being a winner"]
   },
   {
     question: 'What kind of price can I expect to win?',
-    answer: ''
+    answer: ["The prize you will win is the product you have selected on the platform. It is either we deliver the actual product to you or we give you a gift voucher equal to the prevailing face value of the product of the product which you can now use to redeem the product at any of our nominated redemption stores."]
   },
   {
     question: 'How do I know if I have won?',
-    answer: ''
+    answer: ["The moment you win, a winning confirmation advice/letter will be sent to your registered email and your customer dashboard on the platform."]
   },
   {
     question: 'Is there a limit to the number of ticket i can buy?',
-    answer: ''
+    answer: ["There is no limit to the number of tickets you can buy for a product. You can buy as many tickets as possible in order for you to increase your chances of winning."]
   },
   {
     question:
       'What measure do you take to protect user privacy and data security?',
-    answer: ''
+    answer: ["We take maximum care to ensure your data is not abused. Your data with us is used only for the purpose for which it is gathered and intended."]
   },
   {
     question:
       'Can I participate in the raffle draw from anywhere in the world?',
-    answer: ''
+    answer: [" Yes, your location is not a barrier. You can participate in our raffle draws from anywhere in the world "]
   },
   {
     question:
       'How can I contact customer support if I have further questions or concerns?',
-    answer: ''
+    answer: ["You can reach our customer support through",
+      "+234-9169-881-005",
+       "support@ajiroba.com"]
   }
 ]
 
