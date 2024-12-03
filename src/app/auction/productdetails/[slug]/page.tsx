@@ -1237,30 +1237,7 @@ bidpaymentmutate({
                       {productdatanew?.data?.name}
                     </h1>
                     <p className="flex mt-4 items-center text-[#111111] font-Poppins font-normal text-sm gap-1">
-                      {/*    {star.map((val, index) => (
-                                                <span key={index}>
-                                                    <span key={index}>
-                                                        <FaStar
-                                                            className={
-                                                                index <
-                                                                productdata
-                                                                    ?.data
-                                                                    ?.auction_reviews
-                                                                    ?.average_ratings
-                                                                    ? "text-[#FFD60A]"
-                                                                    : "text-[#A09F9F]"
-                                                            }
-                                                        />
-                                                    </span>
-                                                </span>
-                                            ))}
-                                            (
-                                            {
-                                                productdatanew?.data
-                                                    ?.auction_reviews
-                                                    ?.total_reviews
-                                            }
-                                            ) Review(s) */}
+
                     </p>
 
                     <div className="flex items-center gap-2 flex-wrap mt-2">
