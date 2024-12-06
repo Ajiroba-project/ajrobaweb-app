@@ -21,7 +21,7 @@ import { ToastContainer, toast } from 'react-toastify'
 // import 'react-toastify/dist/ReactToastify.css'
 
 type dataProps = {
-  name: string
+  full_name: string
   phone: string
   subject: string
   email: string
@@ -33,7 +33,7 @@ const ContactUsPage = () => {
   const decodedPaths = usePathName()
 
   const schema = yup.object().shape({
-    name: yup.string().required('Name is required'),
+    full_name: yup.string().required('Name is required'),
     phone: yup.string().required('Phone Number is required'),
     subject: yup.string().required('Subject is required'),
     message: yup.string().required('Message is required'),
@@ -61,7 +61,8 @@ const ContactUsPage = () => {
   })
 
   const handleSuccess = (data: any) => {
-    if (data.status === 200) {
+  /*   console.log(data, 'datattt') */
+    if (data.status === 200 || data.status === 201) {
       toast.success(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -74,7 +75,8 @@ const ContactUsPage = () => {
         onClose: () => router.push('/')
       })
       reset()
-    } else if (data.status === 403 || data.status === 404) {
+    } else if (data.status === 403 || data.status === 404 || data.status === 400) {
+      //  console.log(data, 'datattt---')
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -87,7 +89,9 @@ const ContactUsPage = () => {
       })
       reset()
     } else {
-      toast.error(`${'An Error Occured'}`, {
+     /*  console.log(data, 'datattt---1111') */
+      toast.error(`${data?.data?.message}`, {
+
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -102,6 +106,7 @@ const ContactUsPage = () => {
   }
 
   const handleError = (error: any) => {
+    console.log(error, 'error')
     toast.error(`${'An Error Occured'}`, {
       position: 'top-right',
       autoClose: 2000,
@@ -122,7 +127,8 @@ const ContactUsPage = () => {
   )
 
   const sumbitForm = async (data: dataProps) => {
-    mutate({
+ /*    console.log(data, 'datatat') */
+     mutate({
       url: '/api/contact',
       payload: data
     })
@@ -173,15 +179,21 @@ const ContactUsPage = () => {
             className='my-[4rem] grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2 lg:grid-cols-2'
             onSubmit={handleSubmit(sumbitForm)}
           >
-            <Input
-              name='name'
+           <div className='flex flex-col'>
+             <Input
+              name='full_name'
               placeholder='Your Name'
               register={register}
-              errors={errors.name}
+              errors={errors.full_name}
               type='text'
               className='bg-[#F6F6F6] text-[#504D4D]'
             />
-            <Input
+               <div className='text-xs text-red-700'>
+                {errors?.['full_name']?.message}
+              </div>
+           </div>
+        <div className='flex flex-col'>
+             <Input
               name='email'
               placeholder='Your Email'
               register={register}
@@ -189,7 +201,12 @@ const ContactUsPage = () => {
               type='email'
               className='bg-[#F6F6F6] text-[#504D4D]'
             />
-            <Input
+             <div className='text-xs text-red-700'>
+                {errors?.['email']?.message}
+              </div>
+           </div>
+        <div className='flex flex-col'>
+              <Input
               name='phone'
               placeholder='Phone number'
               register={register}
@@ -197,7 +214,13 @@ const ContactUsPage = () => {
               type='text'
               className='bg-[#F6F6F6] text-[#504D4D]'
             />
-            <Input
+              <div className='text-xs text-red-700'>
+                {errors?.['phone']?.message}
+              </div>
+
+            </div>
+          <div>
+              <Input
               name='subject'
               placeholder='Subject'
               register={register}
@@ -205,6 +228,10 @@ const ContactUsPage = () => {
               type='text'
               className='bg-[#F6F6F6] text-[#504D4D]'
             />
+  <div className='text-xs text-red-700'>
+                {errors?.['subject']?.message}
+              </div>
+          </div>
 
             <div className='md:col-span-2 lg:col-span-2'>
               <textarea
