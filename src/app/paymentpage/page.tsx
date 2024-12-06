@@ -363,11 +363,6 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       amount: Number(amount)
     };
 
- /*    mutate({
-      url: "/api/orderpayment",
-      payload: { payload: payload, token: userToken },
-      token: userToken,
-    });  */
 
       const response = await axios.post(
         "https://ajiroba.onrender.com/v1/commerce/order/",
@@ -393,12 +388,13 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         console.log(reference, 'reference')
         console.log(payment_url, 'payment_url')
 
-      startVerificationLoop(reference)
+
 
         if (status === "success") {
             setPaymentUrl(payment_url); // Store the URL in state
            setShowModalUp(true);
-             toast.success("Payment initiated successfully.");
+           toast.success("Payment initiated successfully.");
+            startVerificationLoop(reference)
 
         }
 
@@ -421,167 +417,40 @@ if (axios.isAxiosError(error)) {
     }
   };
 
-  // const startVerificationLoop = (reference: string) => {
-  //   const intervalTime = 2000;
-  //   const totalDuration = 60 * 1000;
-  //   const maxAttempts = totalDuration / intervalTime;
-  //   let attempts = 0;
-
-  //   const stopLoop = () => {
-  //     clearInterval(intervalId);
-  //   /*   console.log("Verification loop stopped."); */
-  //   };
-
-  //   let intervalId: NodeJS.Timeout;
-
-  //   setTimeout(() => {
-  //     intervalId = setInterval(async () => {
-  //       attempts++;
-
-  //       await verifyWalletPayment(reference, stopLoop);
-
-  //       if (attempts >= maxAttempts) {
-  //         clearInterval(intervalId);
-  //       /*   console.log("Verification loop stopped after max attempts."); */
-  //       }
-  //     }, intervalTime);
-
-  //     setTimeout(() => clearInterval(intervalId), totalDuration);
-  //   }, 1 * 15 * 1000);
-  // };
-
-  // const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
-  //   setloadingverify(true); // Set loading to true when verification starts
-  //   try {
-  //     const tkn_: string = Cookies.get("token") as string;
-
-  //     const response = await axios.get(
-  //       `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
-  //       {
-  //         headers: {
-  //           Authorization: `token ${tkn_}`,
-  //         },
-  //       }
-  //     );
-
-  //    /*  console.log(response, "response"); */
-  //     if (response.status === 200 || response.status === 201) {
-  //      stopLoop();
-  //       setloadingverify(false); // Stop loading when verification is successful
-  //       toast.success(`${response?.data?.message}`);
-  //        // Stop the loop after success
-  //        router.push('/cart')
-  //     } else {
-  //       stopLoop();
-  //       setloadingverify(false); // Stop loading even for unsuccessful responses
-  //       toast.error("Unexpected status during verification.");
-  //     }
-  //   } catch (error) {
-  //     stopLoop();
-  //     setloadingverify(false); // Ensure loading stops on error
-  //     console.error(error);
-  //     toast.error("Error occurred during payment verification.");
-  //   }
-  // };
-
-
-
-//   const startVerificationLoop = (reference: string) => {
-//   const intervalTime = 2000; // 2 seconds
-//   const totalDuration = 60 * 1000; // 60 seconds
-//   const maxAttempts = totalDuration / intervalTime;
-//   let attempts = 0;
-
-//   let intervalId: NodeJS.Timeout;
-
-//   const stopLoop = () => {
-//     clearInterval(intervalId);
-//   };
-
-//   // Start the interval after 15 seconds
-//   setTimeout(() => {
-//     intervalId = setInterval(async () => {
-//       attempts++;
-
-//       // Call verifyWalletPayment and stop loop if successful
-//       const success = await verifyWalletPayment(reference);
-//       if (success || attempts >= maxAttempts) {
-//         stopLoop();
-//       }
-//     }, intervalTime);
-//   }, 20 * 1000); // 15 seconds delay
-// };
-
-// const verifyWalletPayment = async (reference: any): Promise<boolean> => {
-//  setShowModalUp(false)
-//   console.log(reference, 'reference---insideverify')
-//   setloadingverify(true);
-
-//   try {
-//     const tkn_: string = Cookies.get("token") as string;
-//     const response = await axios.get(
-//       `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
-//       {
-//         headers: { Authorization: `token ${tkn_}` },
-//       }
-//     );
-
-//     if (response.status === 200 || response.status === 201) {
-//       setloadingverify(false);
-//       setShowModalUp(false)
-//       toast.success(`${response?.data?.message}`);
-//      /*  router.push('/cart'); */
-
-//       return true; // Indicates success, stops loop
-//     } else {
-//       setloadingverify(false);
-//         setShowModalUp(false)
-//       toast.error("Unexpected status during verification.");
-//       return false; // Indicates unsuccessful but keeps loop
-//     }
-//   } catch (error) {
-//     setloadingverify(false);
-//     console.error(error);
-
-//   if (axios.isAxiosError(error) && error.response) {
-//       toast.error(error.response.data.message || 'Error occurred during payment verification.');
-//     } else {
-//       toast.error("An unexpected error occurred.");
-//     }
-//     return false; // Indicates error, keeps loop
-//   }
-// };
 
 
 
 const startVerificationLoop = (reference: string) => {
-  const intervalTime = 2000; // 2 seconds
+  //
+  const intervalTime = 3000; // 2 seconds
   const maxAttempts = 5; // Limit to 5 attempts
   let attempts = 0;
 
-
-let intervalId: NodeJS.Timeout;
+  let intervalId: NodeJS.Timeout; // Declare once and reuse
 
   const stopLoop = () => {
-    clearInterval(intervalId);
+    clearInterval(intervalId); // This will now correctly stop the loop
     console.log("Verification loop stopped after", attempts, "attempts.");
   };
 
   // Start the loop after a delay (optional)
   setTimeout(() => {
-    const intervalId = setInterval(async () => {
+    // Use the outer `intervalId` variable
+    intervalId = setInterval(async () => {
       attempts++;
 
       const success = await verifyWalletPayment(reference);
       if (success) {
-        stopLoop();  // Stop if successful
+        stopLoop(); // Stop if successful
+
       } else if (attempts >= maxAttempts) {
-        stopLoop();  // Stop after 5 attempts
+        stopLoop(); // Stop after 5 attempts
         toast.error("Verification failed after 5 attempts. Please try again later.");
       }
     }, intervalTime);
   }, 5000); // 5 seconds delay (adjust as needed)
 };
+
 
 const verifyWalletPayment = async (reference: any): Promise<boolean> => {
   try {
@@ -595,9 +464,11 @@ const verifyWalletPayment = async (reference: any): Promise<boolean> => {
 
     if (response.status === 200 || response.status === 201) {
       toast.success(`${response?.data?.message}`);
+      setShowModalUp(false);
       return true;  // Success, stop the loop
     } else {
       toast.error("Unexpected verification status.");
+      setShowModalUp(false);
       return false; // Keep trying
     }
   } catch (error) {

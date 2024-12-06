@@ -26,7 +26,9 @@ const Page = () => {
 
     let sessionKey = Cookies.get("session_key");
 
-       if (!sessionKey) {
+    console.log(sessionKey, "session key")
+
+      if (!sessionKey) {
       sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
       Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
     }

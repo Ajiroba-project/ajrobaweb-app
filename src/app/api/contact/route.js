@@ -14,9 +14,6 @@ export async function POST(request) {
         "Content-Type": "application/json",
     };
 
-
-
-
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/contact_us/?${cacheBuster}`, {
         method: 'POST',
         maxBodyLength: Infinity,
