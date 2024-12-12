@@ -11,7 +11,6 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
-
 const Page = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
