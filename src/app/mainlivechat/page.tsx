@@ -74,7 +74,7 @@ const LiveChatPage = () => {
 
           {/* Buttons */}
           <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-            <button onClick={() =>{router.push("/mainlivechat")}}
+             <button
             className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
           >
             Chat Now
@@ -138,43 +138,3 @@ export default function Searchbar() {
 }
 
 
-
-
-//    <section
-//   className="container "
-//   style={{
-//     margin: "0 auto",
-//     width: "94%",
-//     maxWidth: "100%",
-//   }}
-// >
-//   <div className="mt-4 flex flex-col md:flex-row items-center p-8 w-full max-w-6xl ">
-//     <div  className='flex flex-col ' >
-//       <div>
-//         <h1>We &apos; re Here to Help: </h1>
-//         <p>Ajiroba Technologies Live Chat</p>
-
-//         <small>
-//           For immediate assistance, click the &#34;Chat Now&#34; button below to
-//           connect with one of our support representatives or check out our
-//           comprehensive self-help resources. We &#34;re here to help with any
-//           questions or issues you may have.
-//         </small>
-//       </div>
-
-//       <div className='flex gap-4' >
-//         <div>
-
-//         </div>
-
-//         <div>
-
-//         </div>
-//       </div>
-//     </div>
-
-//     <div  className=''>
-//       <Image src={livechathome} alt="livechathome" className="livechathome" />
-//     </div>
-//   </div>
-// </section>

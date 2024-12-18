@@ -26,6 +26,10 @@ const LiveChatPage = () => {
        const [isModalOpentic, setModalOpentic] = useState(false);
    const [isModalOpence, setModalOpence] = useState(false);
      const [isModalOpendc, setModalOpendc] = useState(false);
+     const [isModalOpenit, setModalOpenit] = useState(false);
+     const [isModalOpenun, setModalOpenun] = useState(false);
+
+
     const router = useRouter();
 
 
@@ -41,6 +45,10 @@ if (data === 'tickets') {
     setModalOpence(!isModalOpence)
   }else if (data === 'discrepancy') {
     setModalOpendc(!isModalOpendc)
+  }else if (data === 'item') {
+    setModalOpenit(!isModalOpenit)
+  }else if (data === 'unable') {
+    setModalOpenun(!isModalOpenun)
   }
 
 
@@ -59,6 +67,16 @@ if (data === 'tickets') {
 
   const handleClsoeModaldc = () => {
     setModalOpendc(false);
+  };
+
+  const handleCloseModalit = () => {
+    setModalOpenit(false);
+  };
+
+
+
+    const handleCloseModalun = () => {
+    setModalOpenun(false);
   };
 
 
@@ -488,6 +506,178 @@ const SelfHelpOption = ({ text, onClick }: {
     </LivechatModal>
   )
 }
+
+
+{
+  isModalOpenit && (
+    <LivechatModal
+      icon={""}
+      isOpen={isModalOpenit}
+      onClose={handleCloseModalit}
+      title=""
+      handleEvent={handleCloseModalit}
+    >
+      <div
+        className=" cursor-pointer"
+        onClick={handleCloseModalit}
+        style={{
+          backgroundImage: "url('/ajirobabg.svg')", // Add your image path here
+          backgroundSize: "33.33%",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat-x",
+          /*       backgroundPosition: "top", */
+        }}
+      >
+        <div className="bg-[#F6F6F6] items-center cursor-pointer p-8">
+          <div className="flex justify-between items-center">
+            <div className="">
+              <Link href={"/"}>
+                <Image src={Brand} alt="" />
+              </Link>
+            </div>
+
+            <div>
+              <IoIosClose size={32} />
+            </div>
+          </div>
+
+          <h1 className="flex text-[#111111] font-semibold text-base font-Poppins justify-center items-center">
+        Item not received or damaged
+          </h1>
+          <p className="flex justify-center font-Poppins font-normal text-[#2A2A2A] text-base items-center">
+       Published by Ajiroba Techologies - 30 days ago
+          </p>
+        </div>
+
+        <div className="p-8 flex flex-col gap-5">
+          <div>
+            <div>
+              <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+    Check the shipping status and estimated delivery date.
+    If the item is damaged or not received, please contact our
+    support team with your order number and details of the issue.
+     We will assist you in getting a replacement or refund.
+              </p>
+            </div>
+
+
+          </div>
+
+          <div className="mt-4 flex gap-2 items-center">
+            <div>
+              <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+                Was this helpful?
+              </p>
+            </div>
+
+            <div className="flex gap-1">
+              <FaRegThumbsUp /> <span>0</span>
+            </div>
+            <div className="flex gap-1">
+              <FaRegThumbsDown className="mt-1" /> <span>0</span>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={() => router.push("/livechat")}
+              className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
+            >
+              Chat Now
+            </button>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </LivechatModal>
+  )
+}
+
+
+{
+  isModalOpenun && (
+    <LivechatModal
+      icon={""}
+      isOpen={isModalOpenun}
+      onClose={handleCloseModalun}
+      title=""
+      handleEvent={handleCloseModalun}
+    >
+      <div
+        className=" cursor-pointer"
+        onClick={handleCloseModalun}
+        style={{
+          backgroundImage: "url('/ajirobabg.svg')", // Add your image path here
+          backgroundSize: "33.33%",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat-x",
+          /*       backgroundPosition: "top", */
+        }}
+      >
+        <div className="bg-[#F6F6F6] items-center cursor-pointer p-8">
+          <div className="flex justify-between items-center">
+            <div className="">
+              <Link href={"/"}>
+                <Image src={Brand} alt="" />
+              </Link>
+            </div>
+
+            <div>
+              <IoIosClose size={32} />
+            </div>
+          </div>
+
+          <h1 className="flex text-[#111111] font-semibold text-base font-Poppins justify-center items-center">
+        Unable to complete ticket purchase
+          </h1>
+          <p className="flex justify-center font-Poppins font-normal text-[#2A2A2A] text-base items-center">
+       Published by Ajiroba Techologies - 30 days ago
+          </p>
+        </div>
+
+        <div className="p-8 flex flex-col gap-5">
+          <div>
+            <div>
+              <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+Ensure that your payment information is correct and that there are no issues with your payment method.
+If the problem persists, clear your browser cache or try using a different browser.
+ For further assistance, please chat with a support representative.
+              </p>
+            </div>
+
+
+          </div>
+
+          <div className="mt-4 flex gap-2 items-center">
+            <div>
+              <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+                Was this helpful?
+              </p>
+            </div>
+
+            <div className="flex gap-1">
+              <FaRegThumbsUp /> <span>0</span>
+            </div>
+            <div className="flex gap-1">
+              <FaRegThumbsDown className="mt-1" /> <span>0</span>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={() => router.push("/livechat")}
+              className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
+            >
+              Chat Now
+            </button>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </LivechatModal>
+  )
+}
+
 
 
 
