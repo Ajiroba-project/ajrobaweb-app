@@ -55,7 +55,7 @@ export const ModalProfile: React.FC<ModalProfileProps> = ({
 
 
 
-export const ModalTerms: React.FC<ModalProfileProps> = ({
+export const LivechatModal: React.FC<ModalProfileProps> = ({
   isOpen,
   title,
   icon,
@@ -82,7 +82,7 @@ export const ModalTerms: React.FC<ModalProfileProps> = ({
         </section> */
 
         <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-black bg-opacity-50">
-  <div className="relative    flex flex-col items-center justify-center rounded-md bg-white max-h-[90vh] overflow-y-auto mb-8 w-full mx-4 sm:mx-8">
+  <div className="relative  max-w-4xl  flex flex-col items-center justify-center rounded-md bg-white max-h-[90vh] overflow-y-auto mb-8 w-full mx-4 sm:mx-8">
     {/* Optional: Add a close button */}
     <button
       className="absolute top-2 right-2 text-gray-500"

@@ -68,7 +68,7 @@ export const headerMenu = [
       { name: 'FAQ', path: '/faq' },
       { name: 'About Us', path: '/aboutUs' },
       { name: 'Contact Us', path: '/contactUs' },
-      { name: 'Live Chat', path: '/#' },
+      { name: 'Live Chat', path: '/livechat' },
       { name: 'Privacy Policy', path: '/privacy-policy' }
     ]
   }
