@@ -3,7 +3,7 @@ import React, { Fragment, Suspense, useState } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
-import { FaPlus, FaMinus, FaInstagram, FaRegMessage, FaWhatsapp } from 'react-icons/fa6'
+import { FaPlus, FaMinus, FaInstagram, FaRegMessage, FaWhatsapp, FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa6'
 import { faq } from '@/app/static-data'
 import {ChatBox} from "../component/ChatBox"
 import { useRouter } from "next/navigation";
@@ -15,11 +15,15 @@ import { SiGmail } from "react-icons/si";
 import mesager from '@/app/asset/image/messager.png'
 import ing from '@/app/asset/image/instagram.png'
 import gmail from '@/app/asset/image/gmail.png'
+import Link from 'next/link'
+import { LivechatModal } from '../profile/components/livechatModal'
+import { IoIosClose } from 'react-icons/io'
+import Brand from '@/app/asset/logo.svg'
 
 const LiveChatPage = () => {
   const [active, setActive] = useState<number | null>(null)
   const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [isModalOpenget, setModalOpenget] = useState(false);
+       const [isModalOpentic, setModalOpentic] = useState(false);
 
     const router = useRouter();
 
@@ -30,12 +34,18 @@ console.log(data, 'data')
 
 
 
-if (data === 'contactus') {
-    router.push('/contactushelp')
+if (data === 'tickets') {
+   setModalOpentic(!isModalOpentic)
   }
 
 
 }
+
+
+      const handleCloseModaltic = () => {
+    setModalOpentic(false);
+  };
+
 
 
   const helpOptions = [
@@ -198,10 +208,101 @@ const SelfHelpOption = ({ text, onClick }: {
 
     </div>
   </div>
-</div>;
+</div>
 
       </div>
     </div>
+
+
+
+
+{
+  isModalOpentic && (
+    <LivechatModal
+      icon={""}
+      isOpen={isModalOpentic}
+      onClose={handleCloseModaltic}
+      title=""
+      handleEvent={handleCloseModaltic}
+    >
+      <div
+        className=" cursor-pointer"
+        onClick={handleCloseModaltic}
+        style={{
+          backgroundImage: "url('/ajirobabg.svg')", // Add your image path here
+          backgroundSize: "33.33%",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat-x",
+          /*       backgroundPosition: "top", */
+        }}
+      >
+        <div className="bg-[#F6F6F6] items-center cursor-pointer p-8">
+          <div className="flex justify-between items-center">
+            <div className="">
+              <Link href={"/"}>
+                <Image src={Brand} alt="" />
+              </Link>
+            </div>
+
+            <div>
+              <IoIosClose size={32} />
+            </div>
+          </div>
+
+          <h1 className="flex text-[#111111] font-semibold text-base font-Poppins justify-center items-center">
+            Ticket Purchasing Error
+          </h1>
+          <p className="flex justify-center font-Poppins font-normal text-[#2A2A2A] text-base items-center">
+       Published by Ajiroba Techologies - 30 days ago
+          </p>
+        </div>
+
+        <div className="p-8 flex flex-col gap-5">
+          <div>
+            <div>
+              <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+              Ensure that your payment information is correct and that there are no issues with your payment method.
+               If the problem persists, clear your browser cache or try using a different browser.
+                For further assistance, please chat with a support representative.
+                 Ensure that your payment information
+              is correct and that there are no issues with your payment method.
+               If the problem persists, clear your browser cache or try using a different browser.
+               For further assistance, please chat with a support representative.
+              </p>
+            </div>
+
+
+          </div>
+
+          <div className="mt-4 flex gap-2 items-center">
+            <div>
+              <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+                Was this helpful?
+              </p>
+            </div>
+
+            <div className="flex gap-1">
+              <FaRegThumbsUp /> <span>0</span>
+            </div>
+            <div className="flex gap-1">
+              <FaRegThumbsDown className="mt-1" /> <span>0</span>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={() => router.push("/livechat")}
+              className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
+            >
+              Chat Now
+            </button>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </LivechatModal>
+  )
+}
 
 
       </main>
