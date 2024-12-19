@@ -28,6 +28,11 @@ const nextConfig = {
                 /*        pathname: '/A50B4AwxwsU', */
                 pathname: '/**',
                 /*          search: '?si=bnq1wFc_kMH4Swzm', */
+            }, {
+                protocol: 'https',
+                hostname: 'via.placeholder.com',
+                port: '',
+                pathname: '/**',
             }
 
 
