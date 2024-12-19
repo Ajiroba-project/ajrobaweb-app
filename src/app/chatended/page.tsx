@@ -20,6 +20,7 @@ import { useMutateData } from "@/hooks/useMutateData";
 import axios, { AxiosError } from "axios";
 import { profilePhoto, useAuthStore, userProfile } from "@/store/store";
 import { useGetDatanew } from "@/hooks/useGetData";
+import chatended from '@/app/asset/image/chatendedicon.png'
 
 
 
@@ -373,9 +374,9 @@ const submitForm = async (data: ChatFormValues) => {
 
               <div className="flex justify-center md:justify-start flex-wrap space-x-4">
                 <button onClick={() => {
-                    router.back();
+                    router.push('/mainlivechat');
                   }} className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded">
-                  Go Back
+                  Chat Now
                 </button>
                 <button
                   onClick={() => {
@@ -439,7 +440,7 @@ const submitForm = async (data: ChatFormValues) => {
                         </div>
 
                         <div>
-                          <button onClick={()=> router.push('/chatended')} className="bg-[#EF5E4A] text-white text-sm px-4 py-2 rounded-lg hover:bg-red-500">
+                          <button disabled={true} className="bg-[#D2D2D2] text-white text-sm px-4 py-2 rounded-lg hover:bg-red-500">
                             End Chat
                           </button>
                         </div>
@@ -519,120 +520,45 @@ const submitForm = async (data: ChatFormValues) => {
         ))}
       </div>
 
-                      <form
-                     onSubmit={handleSubmit(submitForm
-                      )}>
-
-                        <div
-                        className="flex flex-col"
-                        style={{
-                          marginTop: "3rem",
-                        }}
-                      >
-                        {selectedImage && (
-                          <div className="mb-2 flex justify-end">
-                            <img
-                              src={selectedImage}
-                              alt="Selected"
-                              className="w-24 h-24 object-cover rounded-md border"
-                            />
-                          </div>
-                        )}
-
-                        <div className="flex items-center border-t border-gray-300 p-3 bg-white sm:space-x-2 space-x-1">
-                          <button  type="button"
-                            className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 15v2m0 4h.01M4 12h16M4 6h16m-6 12h6m-6-6h6"
-                              />
-                            </svg>
-                          </button>
-
-                          <label
-                            htmlFor="image-upload"
-                            className="text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 12v6m0 0v2m6-6v6m0 0h-6"
-                              />
-                            </svg>
-                            <input
-                              id="image-upload"
-                              type="file"
-                              accept="image/* "
-                              className="hidden"
-                               {...register("image")}
-                              onChange={handlePhotoUpload}
-                            />
-                          </label>
-
-                          <input
-                            type="text"
-                            placeholder="Send a message"
-
-                             {...register("text")}
-
-                            className="flex-1 mx-3 px-4 py-2 border rounded-full text-gray-700 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500"
-                          />
 
 
-                          <button
-                            className="bg-orange-500 text-white p-2 rounded-full hover:bg-orange-600 focus:outline-none"
-                             type="submit"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M20 12H4m8 0l6 6m-6-6l6-6"
-                              />
-                            </svg>
-                          </button>
-                        </div>
 
-                           {errors.text && (
-                  <small className="text-[#F56630] text-sm items-center flex justify-center">
-                    {errors.text.message}
-                  </small>
-                )}
+        <div className="flex justify-center items-center text-center" style={{marginBottom: '3rem'}}>
+            <h1 className="text-sm text-[#434343] font-Poppins" >You ended the chat!</h1>
 
-                        {showEmojiPicker && (
-                          <div className="">
-                            <EmojiPicker onEmojiClick={onEmojiClick} />
-                          </div>
-                        )}
-                      </div>
+        </div>
 
-                      </form>
+
+     <div className="bg-[#FFFFFF] shadow-lg px-12 py-12 " >
+  <div className="flex justify-center items-center text-center flex-col gap-4" >
+    <div>
+      <Image src={chatended} alt="chaticon" />
+    </div>
+
+    <div>
+      {" "}
+      <p>Sorry about that</p>
+    </div>
+
+    <div className=" max-w-[18rem]">
+      <small>
+        Your question has been added to our email queue and we will get back to
+        you shortly.{" "}
+      </small>
+    </div>
+
+    <div>
+      <button
+        onClick={() => router.back()}
+        className="bg-[#EF5E4A] text-white text-sm px-8 py-2 rounded-lg hover:bg-red-500"
+      >
+        Go Back
+      </button>
+    </div>
+  </div>
+</div>
+
+
 
 
                     </div>
