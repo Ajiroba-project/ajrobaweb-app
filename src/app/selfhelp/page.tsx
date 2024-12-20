@@ -299,7 +299,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+           onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
@@ -387,7 +389,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+           onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
@@ -477,7 +481,9 @@ By following these steps, you can easily register, purchase products and tickets
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+            onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now

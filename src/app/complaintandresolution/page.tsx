@@ -158,7 +158,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           {/* Buttons */}
           <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-             <button
+             <button onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
             className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
           >
             Chat Now
@@ -325,7 +327,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+            onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
@@ -410,7 +414,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+             onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
@@ -494,7 +500,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+         onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
@@ -580,7 +588,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+            onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
@@ -665,7 +675,9 @@ If the problem persists, clear your browser cache or try using a different brows
 
           <div className="flex justify-end">
             <button
-              onClick={() => router.push("/livechat")}
+             onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now

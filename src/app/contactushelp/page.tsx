@@ -149,7 +149,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
           {/* Buttons */}
           <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-             <button onClick={()=> router.push('/livechat')}
+             <button onClick={() => {
+                    router.push("/mainlivechat");
+                  }}
             className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
           >
             Chat Now
