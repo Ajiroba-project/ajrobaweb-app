@@ -13,12 +13,12 @@ export const Hero = () => {
   const [active, setActive] = useState<menuprops>(false)
   return (
     <>
-      <section className='flex flex-col '>
+      <section className='flex flex-col mt-4 md:mt-0 2xl:mt-0 lg:mt-0 xl:mt-0   '>
         <div className=''>
           <div className='flex flex-col md:grid-cols-3 lg:grid lg:grid-cols-3'>
             <div className='flex flex-col items-center bg-[#F6F6F6] lg:hidden '>
               <div style={{
-                zIndex: 51
+                zIndex: 21
               }} className='container relative py-4'>
                 <div
                   className='z-40 flex items-center gap-4'

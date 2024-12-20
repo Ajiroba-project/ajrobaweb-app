@@ -76,11 +76,7 @@ const LiveChatPage = () => {
   }));
 
 
-    // const [userToken, setUserToken] = useState(Cookies.get('token'))
 
-//   useEffect(() => {
-//     setUserToken(userToken);
-//   }, [userToken]);
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 
@@ -90,7 +86,7 @@ const LiveChatPage = () => {
 
  const tkn_: string = Cookies.get("token") as string;
 
-    if (!userToken || !tkn_ || !isLoggedIn) {
+    if (!userToken) {
       toast.error("Please log in to continue.");
       router.push("/livechat");
       return;
@@ -100,7 +96,7 @@ const LiveChatPage = () => {
     if (isLoggedIn && userInfo?.profile_image_url) {
       setProfileurl(userInfo.profile_image_url);
     }
-  }, [isLoggedIn, userInfo, setProfileurl]);
+  }, [isLoggedIn, userInfo, setProfileurl, userToken, router ]);
 
   const userData = isLoggedIn ? userInfo?.data : userDetails;
   const userphoto = profileurl || userDetails?.profile_image_url || '';
@@ -138,92 +134,6 @@ const onEmojiClick = (emojiObject: any) => {
       reader.readAsDataURL(file);
     }
   };
-
-  const handleSuccess = (data?: any) => {
-    setSelectedImage(null);
-    if (data.status === 200 || data.status === 201) {
-      toast.success(`${data?.data?.message || data?.data?.detail}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => router.push("/profile"),
-      });
-    } else if (
-      data.status === 403 ||
-      data.status === 404 ||
-      data.status === 401 ||
-      data.status === 409 ||
-      data.status === 500
-    ) {
-    setSelectedImage(null);
-      setSelectedImage(null);
-      toast.error(`${data?.data?.message || data?.data?.detail}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } else {
-    setSelectedImage(null);
-      toast.error(`${data?.data?.detail}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
-
-  const handleError = (error?: any) => {
-    console.log(error, "errr", data, "daaaattt");
-    setSelectedImage(null);
-    toast.error(`${data?.data?.detail || error || "An Error Occured"}`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-
-  const { data, error, isError, isSuccess, mutate, status,  } = useMutateData(
-    "comment_on_post",
-    handleSuccess,
-    handleError,
-  );
-
-//     const submitForm = (data: any) => {
-//      console.log("Message:", message);
-//     console.log("Image URL:", selectedImage);
-//     setSelectedImage(null);
-//     setValue("text", "");
-//     console.log(data, 'data')
-//      const payload = {
-//       wallet_pin: data?.password,
-//     };
-
-//     mutate({
-//       url: "/api/verifywalletpin",
-//       payload: { payload: payload, token: userToken },
-//       token: userToken,
-//     });
-//   };
 
 
 
@@ -331,19 +241,7 @@ const submitForm = async (data: ChatFormValues) => {
         theme: "light",
       });
 
-    /*   setMessages((prevMessages) => [...prevMessages, newMessage]);
-      setSelectedImage(null);
-      setValue("text", "");
 
-
-      setTimeout(() => {
-        const adminResponse: Message = {
-          type: "admin",
-          text: "Thank you for your message. We'll respond shortly.", // Example response
-        };
-        setMessages((prevMessages) => [...prevMessages, adminResponse]);
-      }, 1000);
- */
       setSelectedImage(null);
       reset();
     } else {
@@ -376,12 +274,12 @@ const submitForm = async (data: ChatFormValues) => {
   }
 };
 
-
-
-
-
   useEffect(() => {
-    ChatData();
+
+    if (userToken) {
+          ChatData();
+    }
+
   }, []);
 
 
@@ -510,46 +408,6 @@ const submitForm = async (data: ChatFormValues) => {
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
 
-
-{/*
-                      <div
-                        className="bubbleright bubbleright-bottom-right mb-8"
-                        contentEditable
-                      >
-                        Type any text here and the bubble will grow to fit the
-                        text no matter how many lines. Isn't that nifty?
-                        {selectedImage && (
-                          <div className="mb-2 flex justify-end">
-                            <img
-                              src={selectedImage}
-                              alt="Selected"
-                              className="w-24 h-24 object-cover rounded-md border"
-                            />
-                          </div>
-                        )}
-                      </div>
-
-
-                      <div className="chat chat-start mb-12">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <img
-                              alt="Tailwind CSS chat bubble component"
-                              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                            />
-                          </div>
-                        </div>
-                        <div
-                          className="bubble bubble-bottom-left"
-                          contentEditable
-                        >
-                          Type any text here and the bubble will grow to fit the
-                          text no matter how many lines. Isn't that nifty?
-                        </div>
-                      </div> */}
-
-
-
                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
                         {messages.map((message, index) => (
                           <div
@@ -561,9 +419,7 @@ const submitForm = async (data: ChatFormValues) => {
                                 <div className="w-10 rounded-full">
                                   <Image
                                     alt="Admin Avatar"
-                                  /*   src={
-                                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                    } */
+
                                       src={message?.image?  `https://ajiroba.onrender.com${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
                                  }
                                     width={24}
@@ -608,9 +464,7 @@ const submitForm = async (data: ChatFormValues) => {
 
                               <Image
                                     alt="selected Image"
-                                  /*   src={
-                                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                    } */
+
                                     src={selectedImage}
                                       className="w-24 h-24 object-cover rounded-md border"
 
