@@ -320,7 +320,8 @@ const SelfHelpOption = ({ text, onClick }: {
                  <button
             className=" mt-4 px-12 w-full py-2 text-sm bg-[#E84526] hover:[#FCDFD4] text-[#ffffff] font-semibold font-Poppins rounded"
           >
-           {status === 'pending' ? 'Sending...' : 'Send Message'}
+ {/*           {status === 'pending' ? 'Sending...' : 'Send Message'} */}
+           Send Message
           </button>
             </div>
 
