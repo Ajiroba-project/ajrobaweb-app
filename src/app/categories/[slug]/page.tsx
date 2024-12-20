@@ -135,7 +135,7 @@ const CategoryPage = () => {
         setPath(newPath);
       }
     }
-  }, [paths, path]);
+  }, [paths, path, headerNav, setHeaderNav]);
 
   const {
     data: filtercat,

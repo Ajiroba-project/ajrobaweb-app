@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { Fragment, Suspense, useEffect, useState } from "react";
 import { Header } from "../component/Header";
@@ -78,7 +79,7 @@ const LiveChatPage = () => {
     if (isLoggedIn && userInfo?.profile_image_url) {
       setProfileurl(userInfo.profile_image_url);
     }
-  }, [isLoggedIn, userInfo, setProfileurl]);
+  }, [isLoggedIn, userInfo, setProfileurl, userToken, router]);
 
   const userData = isLoggedIn ? userInfo?.data : userDetails;
   const userphoto = profileurl || userDetails?.profile_image_url || "";

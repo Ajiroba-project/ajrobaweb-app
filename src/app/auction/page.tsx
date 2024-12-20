@@ -79,7 +79,7 @@ const AuctionPage = () => {
     if (headerNav !== 'auction') {
       setHeaderNav('Auction Deals');
     }
-  }, []);  // Add `path` as a dependency to avoid unnecessary updates
+  }, [headerNav, setHeaderNav]);  // Add `path` as a dependency to avoid unnecessary updates
 
   // Check if there are active auctions based on current data
   const isAuctionActive = auctionInfo?.data.some(item => item.starts_in !== "Raffle Ended");

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { useEffect, useState } from "react";
 import { raffleWinner } from "@/app/static-data";
@@ -123,7 +124,7 @@ const Page = ({ params }: any) => {
 
   useEffect(() => {
     fetchData();
-  }, [product_id]);
+  }, [ product_id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
