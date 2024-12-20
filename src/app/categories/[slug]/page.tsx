@@ -526,7 +526,7 @@ const CategoryPage = () => {
           </div>
         </div>
 
-        <div className="w-9/12 h-full pr-8">
+        <div className="w-9/12 h-full lg:pr-8 2xl:pr-8 pr-0 xl:pr-8 md:pr-0">
           {filteredProducts.length > 0 ? (
 
             <ProductCategoryCard cardInfo={filteredProducts} />
@@ -556,7 +556,13 @@ const CategoryPage = () => {
           )}
         </div>
 
-        <div className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8">
+     {/*    <div className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8" style={{
+          height: '80vh',
+          overflow: 'scroll',
+        }} > */}
+        <div
+  className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8 h-[80vh] overflow-scroll"
+>
           <SearchFilter />
         </div>
 

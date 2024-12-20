@@ -1,5 +1,5 @@
  'use client';
-import { useState, SetStateAction, Suspense, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { socialIcon, headerMenu, marqueeInfo } from '../static-data';
 import { IoCartOutline } from 'react-icons/io5';
 import { BiBell } from 'react-icons/bi';
@@ -21,10 +21,7 @@ import axios from "axios";
 
 interface HeaderProps {
   onSearch?: React.Dispatch<React.SetStateAction<string>>;
-  // other props can be added here
 }
-
-type MenuState = number | null
 
 interface Subcategory {
   toLowerCase: any;
@@ -39,8 +36,6 @@ interface CategoryResponse {
   data: Category[];
 }
 
-
-
 interface Category {
   [x: string]: any
   category: string;
@@ -53,14 +48,10 @@ interface CategoryResponse {
 }
 
 
-
-
 function Search() {
   const [searchInput, setSearchInput] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // const [searchResults, setSearchResults] = useState<string[]>([]);
   const [searchResults, setSearchResults] = useState<{ id: string; name: string }[]>([]);
-
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
@@ -141,7 +132,6 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           className='bg-[#F5F5F5] p-2'
           value={searchInput}
           onChange={handleSearchChange}
-         /*  placeholder="Search products..." */
           onClick={toggleDropdown}
         />
         <button type="button" onClick={toggleDropdown}>
@@ -205,21 +195,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   }));
 
 
-  const searchParams = useSearchParams()
-
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
-
-      return params.toString()
-    },
-    [searchParams]
-  )
-
-
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
 
@@ -230,7 +205,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const handleSuccess = () => {
     clearAuthCookies();
        localStorage.clear();
-      //  Cookies.clear()
     router.push('/signin');
   };
 
@@ -238,7 +212,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     console.log('Something went wrong...');
     clearAuthCookies();
     localStorage.clear();
-    //  Cookies.clear()
     router.push('/signin');
   };
 
@@ -255,11 +228,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     });
   };
 
-    const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // Handle clicks outside the menu
 useEffect(() => {
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -272,15 +240,10 @@ useEffect(() => {
   return () => {
     document.removeEventListener('mousedown', handleClickOutside);
   };
-}, [headerNav, menuRef]); // Add relevant dependencies here
-
+}, [headerNav, menuRef]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-
-
-
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
 
   const tkn_: string = Cookies.get("token") as string;
@@ -291,8 +254,8 @@ useEffect(() => {
     let sessionKey = Cookies.get("session_key");
 
        if (!sessionKey) {
-      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
-      Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
+      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+      Cookies.set('session_key', sessionKey, { expires: 7 });
     }
 
     let headers: { [key: string]: string } = {
@@ -313,12 +276,8 @@ useEffect(() => {
     axios
       .request(config)
       .then((response) => {
- /*        console.log(response.data?.data?.[0]?.cart_items_count, "cart_items_count"); */
         setcartCount(Number(response.data?.data?.[0]?.cart_items_count));
         setCartItemsn(response.data?.data[0]?.items);
- /*        console.log(response.data?.data[0]?.items, "cart items"); */
- /*   localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items)); */
-
       })
       .catch((error) => {
         setError("Error loading cart items");
@@ -329,19 +288,6 @@ useEffect(() => {
   useEffect(() => {
     fetchCartItems();
   }, [isRootPath]);
-
-
-
-
-// useEffect(() => {
-//   // Retrieve the cart number from localStorage and parse it
-//   const cartnumber = JSON.parse(localStorage.getItem('cnt') || '3'); // Use '0' as a fallback if null
-
-//   // console.log(cartnumber, 'cccc');
-
-//   setcartCount(Number(cartnumber?.length));
-// }, []);
-
 
   return (
     <>
@@ -413,15 +359,16 @@ useEffect(() => {
                       <li
                         key={index}
                         className={` font-Poppins cursor-pointer px-4  ${val.name === headerNav   ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
-                     /*    onClick={() => {
-                          setActiveMenu(activeMenu === index ? null : index);
-                          setHeaderNav(val.name);
-                        }} */
-                           onClick={() => {
+                      /*   onClick={() => {
+                        setActiveMenu(activeMenu === index ? null : index);
+                      }} */
+                   onClick={(e) => {
+                        e.stopPropagation(); // Prevent interference from child elements
                         setActiveMenu(activeMenu === index ? null : index);
                       }}
-                      onMouseEnter={() => setHoveredMenu(index)} // Open on hover
-                      onMouseLeave={() => setHoveredMenu(null)} // Close when hover ends
+
+                      onMouseEnter={() => setHoveredMenu(index)}
+                      onMouseLeave={() => setHoveredMenu(null)}
                       >
                         {val.submenu ? (
                           <div className='relative'>
@@ -445,7 +392,6 @@ useEffect(() => {
                                         subItem.name === 'Sign Out'
                                           ? SignoutFunc()
                                            : router.push(`${subItem.path}`)
-                                        //  :  router.push(`${subItem.path}` + '?' + createQueryString('q', `${subItem.name}`))
                                       }
                                     >
                                       <span className='' > {subItem.name} </span>
@@ -478,29 +424,9 @@ useEffect(() => {
                 </div>
               </div>
 
-           {/*    <div className='flex gap-4'>
-                <BiBell className='cursor-pointer text-xl text-[#000000]' color='black'/>
-                <IoCartOutline
-                  onClick={() => router.push('/cart')}
-                  className='cursor-pointer text-xl text-[#000000]' color='black'
-                />
-                {isOpen ? (
-                  <IoClose
-                    onClick={hamburgerfunc}
-                    className='text-xl text-[#A09F9F] lg:hidden'
-                  />
-                ) : (
-                  <FiMenu
-                    onClick={hamburgerfunc}
-                    className='text-xl text-[#A09F9F] lg:hidden'
-                  />
-                )}
-              </div> */}
-
               <div className='flex gap-4'>
       <BiBell className='cursor-pointer text-xl text-[#000000]' color='black' />
 
-      {/* Cart icon with cart count */}
       <div className='relative cursor-pointer' onClick={() => router.push('/cart')}>
         <IoCartOutline className='text-xl text-[#000000]' color='black' />
 
@@ -513,7 +439,6 @@ useEffect(() => {
 
       </div>
 
-      {/* Menu or Close button for mobile */}
       {isOpen ? (
         <IoClose
           onClick={hamburgerfunc}
@@ -534,8 +459,4 @@ useEffect(() => {
   );
 };
 
-
-function replace(arg0: string) {
-  throw new Error('Function not implemented.');
-}
 
