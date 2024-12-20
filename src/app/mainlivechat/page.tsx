@@ -202,17 +202,11 @@ const onEmojiClick = (emojiObject: any) => {
     });
   };
 
-
-
-
   const { data, error, isError, isSuccess, mutate, status,  } = useMutateData(
     "comment_on_post",
     handleSuccess,
     handleError,
   );
-
-
-
 
 //     const submitForm = (data: any) => {
 //      console.log("Message:", message);
@@ -232,20 +226,83 @@ const onEmojiClick = (emojiObject: any) => {
 //   };
 
 
+
+  const ChatData = async () => {
+    try {
+      const headers = {
+        Authorization: `token ${userToken}`,
+      };
+
+      const response = await axios.get(
+        "https://ajiroba.onrender.com/v1/admin/messages/",
+        { headers },
+      );
+
+      if (response.data.status === "success") {
+        const NewMessage: Message[] = response.data.data.map(
+          (item: { text: any; image: any; sender_role: any }) => {
+            return {
+              type: item.sender_role === "client" ? "client" : "admin",
+              text: item.text,
+              image: item.image,
+            };
+          },
+        );
+
+        setMessages([...NewMessage]);
+
+        toast.success(`${response.data.message || "Success"}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        reset();
+      } else {
+        alert("Failed to send message: " + response.data.message);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error("Error sending message:", error);
+        toast.error(`${error.response?.data?.message || "An Error Occured"}`, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        console.log("An unexpected error occurred:", error);
+      }
+    }
+  };
+
+
+
 const submitForm = async (data: ChatFormValues) => {
   try {
-    // Construct the payload
-    const payload = {
+   /*  const payload = {
       text: data.text,
-      image: selectedImage, // Use base64 image if provided
+      image: selectedImage,
+    }; */
+
+       const payload: { text: string; image?: string } = {
+      text: data.text,
+      ...(selectedImage && { image: selectedImage }), // Include 'image' only if 'selectedImage' exists
     };
 
-    // Set headers
     const headers = {
-      Authorization: `token ${userToken}`, // Replace with the actual token
+      Authorization: `token ${userToken}`,
     };
 
-    // Make the API request
     const response = await axios.post(
       "https://ajiroba.onrender.com/v1/admin/send_message/",
       payload,
@@ -261,6 +318,8 @@ const submitForm = async (data: ChatFormValues) => {
         image: response.data.data.image,
       };
 
+      ChatData()
+
        toast.success(`${response.data.message || 'Success'}`, {
         position: "top-right",
         autoClose: 2000,
@@ -270,15 +329,13 @@ const submitForm = async (data: ChatFormValues) => {
         draggable: true,
         progress: undefined,
         theme: "light",
-       /*  onClose: () => router.push("/profile"), */
       });
 
-      // Update messages with the new client message
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-           setSelectedImage(null);
-             setValue("text", "");
+    /*   setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setSelectedImage(null);
+      setValue("text", "");
 
-      // Simulate admin response for testing/demo purposes (remove this when real admin responses are handled)
+
       setTimeout(() => {
         const adminResponse: Message = {
           type: "admin",
@@ -286,26 +343,21 @@ const submitForm = async (data: ChatFormValues) => {
         };
         setMessages((prevMessages) => [...prevMessages, adminResponse]);
       }, 1000);
-
-      // Clear the form
+ */
       setSelectedImage(null);
       reset();
     } else {
       alert("Failed to send message: " + response.data.message);
+      ChatData()
     }
   } catch (error) {
 
-
-
-
-
-              if (error instanceof AxiosError) {
+ if (error instanceof AxiosError) {
     console.log(error.response?.data?.message, "errr");
       setSelectedImage(null);
-             setValue("text", "");
-
-              console.error("Error sending message:", error);
-                toast.error(`${error.response?.data?.message  || "An Error Occured"}`, {
+      setValue("text", "");
+      console.error("Error sending message:", error);
+      toast.error(`${error.response?.data?.message  || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 4000,
       hideProgressBar: false,
@@ -315,12 +367,22 @@ const submitForm = async (data: ChatFormValues) => {
       progress: undefined,
       theme: "light",
     });
+    ChatData()
 
   } else {
     console.log("An unexpected error occurred:", error);
+    ChatData()
   }
   }
 };
+
+
+
+
+
+  useEffect(() => {
+    ChatData();
+  }, []);
 
 
 
@@ -488,36 +550,47 @@ const submitForm = async (data: ChatFormValues) => {
 
 
 
-                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message, index) => (
-          <div key={index} className={`chat ${message.type === "admin" ? "chat-start" : "chat-end"} mb-12`}>
-            {message.type === "admin" && (
-              <div className="chat-image avatar">
-                <div className="w-10 rounded-full">
-                  <img
-                    alt="Admin Avatar"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  />
-                </div>
-              </div>
-            )}
-            <div
-              className={`bubble ${message.type === "admin" ? "bubble-bottom-left" : "bubbleright bubbleright-bottom-right"} mb-4`}
-            >
-              {message.text}
-              {message.image && (
-                <div className="mt-2 flex justify-end">
-                  <img
-                    src={message.image}
-                    alt="Uploaded"
-                    className="w-24 h-24 object-cover rounded-md border"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {messages.map((message, index) => (
+                          <div
+                            key={index}
+                            className={`chat ${message.type === "admin" ? "chat-start" : "chat-end"} mb-4 `}
+                          >
+                            {message.type === "admin" && (
+                              <div className="chat-image avatar">
+                                <div className="w-10 rounded-full">
+                                  <Image
+                                    alt="Admin Avatar"
+                                  /*   src={
+                                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                    } */
+                                      src={message?.image?  `https://ajiroba.onrender.com${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                                 }
+                                    width={24}
+                                    height={24}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            <div
+                              className={`bubble ${message.type === "admin" ? "bubble-bottom-left" : "bubbleright bubbleright-bottom-right"} mb-2 `}
+                            >
+                              {message.text}
+                            {/*   {message.image && (
+                                <div className="mt-2 flex justify-end">
+                                  <Image
+                                    alt="Admin Avatar"
+                                    src={`https://ajiroba.onrender.com${message?.image}`}
+                                    width={24}
+                                    height={24}
+                                    className="w-24 h-24 object-cover rounded-md border"
+                                  />
+                                </div>
+                              )} */}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
 
                       <form
                      onSubmit={handleSubmit(submitForm
@@ -531,11 +604,19 @@ const submitForm = async (data: ChatFormValues) => {
                       >
                         {selectedImage && (
                           <div className="mb-2 flex justify-end">
-                            <img
-                              src={selectedImage}
-                              alt="Selected"
-                              className="w-24 h-24 object-cover rounded-md border"
-                            />
+
+
+                              <Image
+                                    alt="selected Image"
+                                  /*   src={
+                                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                    } */
+                                    src={selectedImage}
+                                      className="w-24 h-24 object-cover rounded-md border"
+
+                                    width={24}
+                                    height={24}
+                                  />
                           </div>
                         )}
 
