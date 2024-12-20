@@ -157,7 +157,7 @@ const LiveChatPage = () => {
     submitForm();
   }, []);
 
-  console.log(messages, "messages");
+  // console.log(messages, "messages");
 
   return (
     <Fragment>

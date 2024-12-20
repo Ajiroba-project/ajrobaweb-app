@@ -858,7 +858,7 @@ bidpaymentmutate({
         </div>
 
         <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
-          <div className="w-1/2">
+     <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
             <p className="flex mt-4 items-center text-[#111111] text-sm gap-1">
               {Array.from(
                 {
@@ -936,7 +936,7 @@ bidpaymentmutate({
             </div>
           </div>
 
-          <div className="w-1/2">
+         <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
             {currentReviews.map((item: any, key: number) => {
               const date = item?.date_created
                 ? parseISO(item.date_created)
@@ -1195,7 +1195,7 @@ bidpaymentmutate({
                 <div className=" flex gap-8 flex-col ">
                   {productdatanew?.data?.images?.map(
                     (image: any, index: number) => (
-                      <div key={index} className="thumbnail-image ">
+                      <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
                         <Image
                           className=" images-map w-32 h-32 object-cover"
                           src={`https://ajiroba.onrender.com/media/${image.image}`}
@@ -1211,7 +1211,7 @@ bidpaymentmutate({
                 </div>
               </div>
 
-              <div className="  flex  justify-center items-center px-12 ">
+              <div className="  flex  justify-center items-center px-12 2xl:mt-4 xl:mt-4 lg:mt-4 md:mt-4 mt-6 ">
                 <div className="thumbnail-images w-auto     ">
                   <div className="main-image ">
                     {productdatanew?.data?.images?.[selectedImageIndex] ? (
@@ -1231,7 +1231,7 @@ bidpaymentmutate({
               </div>
 
               {productdata && (
-                <div className=" w-2/5 mt-8 xl:mt-0 lg:mt-0 md:mt-0 2xl:mt-0 container justify-center flex flex-wrap xl:block md:block lg:block 2xl:block">
+                <div className=" 2xl:w-2/5 lg:w-2/5 xl:w-2/5 md:w-2/5  w-auto mt-8 xl:mt-0 lg:mt-0 md:mt-0 2xl:mt-0 container justify-center flex flex-wrap xl:block md:block lg:block 2xl:block">
                   <div className="">
                     <h1 className="text-[#111111] text-[20px]  font-Poppins font-medium ">
                       {productdatanew?.data?.name}
@@ -1376,7 +1376,7 @@ bidpaymentmutate({
             </div>
 
             <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center gap-12 mt-8">
-              <div className=" w-1/2">
+              <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
                 <h1 className="text-[#363636] font-Poppins font-normal leading-[29px]">
                   {productdatanew?.data?.description}
                 </h1>

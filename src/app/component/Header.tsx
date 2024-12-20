@@ -359,9 +359,14 @@ useEffect(() => {
                       <li
                         key={index}
                         className={` font-Poppins cursor-pointer px-4  ${val.name === headerNav   ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
-                           onClick={() => {
+                      /*   onClick={() => {
+                        setActiveMenu(activeMenu === index ? null : index);
+                      }} */
+                   onClick={(e) => {
+                        e.stopPropagation(); // Prevent interference from child elements
                         setActiveMenu(activeMenu === index ? null : index);
                       }}
+
                       onMouseEnter={() => setHoveredMenu(index)}
                       onMouseLeave={() => setHoveredMenu(null)}
                       >
