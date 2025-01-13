@@ -19,6 +19,7 @@ export const DefaultButton = ({ text, type, handleClick, className }: ButtonProp
         </>
     )
 }
+
 export const PrimaryButton = ({ text, handleClick }: ButtonProps) => {
     return (
         <>

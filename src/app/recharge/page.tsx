@@ -11,6 +11,7 @@ import { SideMenu } from './components/SideMenu'
 import { DataContent } from './components/DataContent'
 import { LuMenuSquare } from 'react-icons/lu'
 import banner from '../asset/image/recharge-banner.png'
+import TitleText from '../component/TitleText'
 
 
 const Reroute =()=>{
@@ -38,7 +39,30 @@ const RechargePage = () => {
         <Header />
       </header>
 
-      {userNavMenu === '' ? (
+
+       <main className='container '>
+         <section className='pt-[20vh]'>
+            <TitleText text='Ajiroba Recharge'  />
+          </section>
+
+          <section className='py-8'>
+            <AuctionBanner text='Ajiroba Recharge' banner={banner} />
+          </section>
+
+           <section className=''>
+            <RechargeCategory />
+          </section>
+
+         {/*
+          <section className='mt-4'>
+            <RechargeCategory />
+          </section>
+          <section>
+            <RecentTransaction />
+          </section> */}
+        </main>
+
+    {/*   {userNavMenu === '' ? (
         <main className='container'>
           <section className=''>
             <AuctionBanner text='Ajiroba Recharge' banner={banner} />
@@ -52,7 +76,7 @@ const RechargePage = () => {
         </main>
       ) : (
         <main className='relative flex pt-[23vh]'>
-          {/* sidemenu */}
+
           <section
             className={`${sidebar ? 'absolute h-screen bg-[#F6F6F6]' : 'absolute'} z-20 -mt-8  lg:relative`}
           >
@@ -72,8 +96,8 @@ const RechargePage = () => {
             {userNavMenu === 'Dashboard' && !isLoggedIn ?  <Reroute/> : <DataContent />}
           </section>
         </main>
-      )}
-      <Footer />
+      )} */}
+      {/* <Footer /> */}
     </Fragment>
   )
 }

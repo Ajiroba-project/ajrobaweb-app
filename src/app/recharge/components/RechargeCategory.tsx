@@ -12,7 +12,7 @@ import Image from 'next/image'
 
 export const RechargeCategory = () => {
 const setUserNav = userNavStore(state => state.setUserNav)
-  
+
   const category = [
     {
       name: 'Airtime',
@@ -35,17 +35,17 @@ const setUserNav = userNavStore(state => state.setUserNav)
       icon: <RiLightbulbFlashFill className='text-3xl' />
     }
   ]
-  
+
 
 
   return (
     <Fragment>
-      <section className='my-10 flex flex-col gap-4'>
+      <section className='my-4 flex flex-col gap-4'>
         <div className='flex justify-center lg:justify-start'>
-          <p className='font-semibold'>
+          <p className='font-semibold font-Poppins'>
             {' '}
             Welcome lets get you{' '}
-            <span className='text-[#F25E26]'>connected</span> today.
+            <span className='text-[#E84526]'>connected</span> today.
           </p>
         </div>
         <div
