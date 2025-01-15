@@ -41,12 +41,13 @@ export const AirtimeDetails = () => {
   }
 
   return (
-    <div className='container mt-[2rem] flex flex-col items-center justify-center gap-4 bg-[#F6F6F6]'>
+    <div className=' flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12'>
       <Formtitle
         title='Buy Airtime'
         subtitle='Top up your airtime on our platform'
+
       />
-      <div>
+      <div className=''>
         <form
           className='flex flex-col gap-3'
           onSubmit={handleSubmit(sumbitForm)}
@@ -58,6 +59,9 @@ export const AirtimeDetails = () => {
             options={network}
             label='Network Provider'
             showlabel={false}
+             className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]  "
+
+
           />
 
           <InputField
@@ -75,14 +79,14 @@ export const AirtimeDetails = () => {
             placeholder='Amount'
 
           />
-          <p className='text-end text-[#f25e26] underline cursor-pointer'>Beneficiaries</p>
+          <p className='text-end text-[#f25e26] underline cursor-pointer text-sm font-Poppins'>Beneficiaries</p>
 
           <div className='mb-6'>
             <DefaultButton
               text='Proceed'
               type='submit'
               handleClick={() => { }}
-              className='my-10 w-full bg-[#FCDFD4] p-3'
+              className='my-10 w-full bg-[#FCDFD4] p-3 rounded-lg '
             />
           </div>
         </form>

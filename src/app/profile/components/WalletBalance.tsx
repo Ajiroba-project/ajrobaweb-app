@@ -56,6 +56,8 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         }
       );
 
+      console.log(response, "response")
+
       if (response.status === 200) {
         const { payment_url, reference } = response.data;
         // console.log("Payment initiated, redirecting to:", payment_url);

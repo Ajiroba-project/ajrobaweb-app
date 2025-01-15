@@ -88,10 +88,12 @@ const Page = () => {
     axios
       .request(config)
       .then((response) => {
+      /*   console.log(response.data, "response"); */
         setCartItemsn(response.data?.data);
         setLoading(false);
       })
       .catch((error) => {
+       /*  console.log(error, 'error'); */
         setError("Error loading cart items");
         setLoading(false);
       })

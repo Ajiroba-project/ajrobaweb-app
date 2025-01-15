@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from "zustand/middleware";
 import Cookies from 'js-cookie'
 import { useGetDatanew } from '@/hooks/useGetData'
 // import { cookies } from 'next/headers'
@@ -162,18 +163,40 @@ export const DataPurchase = create(set => ({
   setDataDetails: text => set({ dataDetails: text })
 }))
 
-export const AirtimePurchase = create(set => ({
-  AirtimeStepper: 0,
-  AirtimeDetails: {
-    network: '',
-    phone: '',
-    amount: ''
-  },
-  walletModal: false,
+// export const AirtimePurchase = create(set => ({
+//   AirtimeStepper: 0,
+//   AirtimeDetails: {
+//     network: '',
+//     phone: '',
+//     amount: ''
+//   },
+//   walletModal: false,
 
-  setAirtimeStepper: text => set({ AirtimeStepper: text }),
-  setAirtimeDetails: text => set({ AirtimeDetails: text })
-}))
+//   setAirtimeStepper: text => set({ AirtimeStepper: text }),
+//   setAirtimeDetails: text => set({ AirtimeDetails: text })
+// }))
+
+
+export const AirtimePurchase = create(
+  persist(
+    (set) => ({
+      AirtimeStepper: 0,
+      AirtimeDetails: {
+        network: '',
+        phone: '',
+        amount: ''
+      },
+      walletModal: false,
+
+      setAirtimeStepper: (text) => set({ AirtimeStepper: text }),
+      setAirtimeDetails: (text) => set({ AirtimeDetails: text })
+    }),
+    {
+      name: "airtime-storage", // Name of the key in localStorage
+      getStorage: () => localStorage, // Use localStorage (can be sessionStorage too)
+    }
+  )
+);
 
 export const CablePurchase = create(set => ({
   CableStepper: 0,

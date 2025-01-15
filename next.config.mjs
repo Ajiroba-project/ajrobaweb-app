@@ -48,6 +48,14 @@ const nextConfig = {
                 pathname: '/**'
             }
 
+            ,
+            {
+                protocol: 'https',
+                hostname: "ajiroba.onrender.com",
+                port: '',
+                pathname: '/**'
+            }
+
 
         ],
     }

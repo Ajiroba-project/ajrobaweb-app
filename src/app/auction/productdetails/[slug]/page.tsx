@@ -161,6 +161,9 @@ const Page = ({ params }: any) => {
   );
   const [loadingdata, setLoadingData] = useState(false);
 
+
+  console.log(productdatanew?.data?.related_products,   'relatedproducts')
+
 //   const fetchWithAuth = async (url: string) => {
 //     setLoadingData(true); // Indicate loading start
 
@@ -1498,7 +1501,7 @@ bidpaymentmutate({
           </h1>
         </div>
 
-        {productdatanew?.data?.related_products && (
+         {productdatanew?.data?.related_products && (
           <RelatedProductsDetails
             cardInfo={productdatanew?.data?.related_products}
           />

@@ -800,23 +800,28 @@ import { RxDashboard } from 'react-icons/rx'
 export const UserMenu = [
   {
     name: 'Dashboard',
-    icon: <RxDashboard />
+    icon: <RxDashboard />,
+    path: '/recharge'
   },
   {
     name: 'Airtime',
-    icon: <FaSquarePhone />
+    icon: <FaSquarePhone />,
+    path: '/recharge/airtime'
   },
   {
     name: 'Data',
-    icon: <CgData />
+    icon: <CgData />,
+    path: '/recharge/data'
   },
   {
     name: 'Cable Subscription',
-    icon: <PiTelevisionSimple />
+    icon: <PiTelevisionSimple />,
+    path: '/recharge/cable'
   },
   {
     name: 'Electricity',
-    icon: <RiLightbulbFlashFill />
+    icon: <RiLightbulbFlashFill />,
+    path: '/recharge/electricity'
   }
 ]
 import { RxFileText } from 'react-icons/rx'
