@@ -1,9 +1,21 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import { Formtitle } from './Formtitle'
 import { AirtimePurchase, userNavStore, useAuthStore } from '@/store/store'
 import { DefaultButton } from '../../component/Button'
 import { WalletPin } from './WalletPin'
 import { useRouter } from 'next/navigation'
+import ModalComponent from '@/app/component/ModalComponent'
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import Input from './Input'
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6'
+import { useMutateData } from '@/hooks/useMutateNewData'
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import { usePathname} from "next/navigation";
+import Cookies from "js-cookie";
+
 export const AirtimePayment = () => {
 
   const { AirtimeDetails, setAirtimeStepper, walletModal, setWalletModal } =
@@ -14,9 +26,18 @@ export const AirtimePayment = () => {
       setWalletModal: state.setWalletModal
     }))
 
+
+
     const { isLoggedIn } = useAuthStore(state => ({
       isLoggedIn: state.isLoggedIn
     }))
+
+const router = useRouter()
+
+
+      const [successModal, setSuccessModal] = useState(false);
+  const [makepayment, setmakepayment] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   const Reroute =()=>{
     const router = useRouter()
@@ -25,12 +46,180 @@ export const AirtimePayment = () => {
    return null
 }
 
+  const userToken = (Cookies.get("token") as string) || "";
+
+const [paywithwallet, setPaywithWallet] = useState(false);
+
+  const showWalletPayment = () => {
+    setPaywithWallet(true);
+  };
+
+   const handlecloseOrder = () => {
+ setPaywithWallet(false);
+  };
+
+
+   const submitForm = (data: any) => {
+    Cookies.set("nvd", data?.password, { expires: 1 });
+    const payload = {
+      wallet_pin: data?.password,
+    };
+
+    mutate({
+      url: "/api/verifywalletpin",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });
+  };
+
+
+
+  const schema = yup.object().shape({
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Can't be lesser than 6 digits"),
+  });
+
+  const {
+    reset,
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    watch,
+    setValue,
+  } = useForm({
+    mode: "all",
+    resolver: yupResolver(schema),
+  });
+
+
+  const handleSuccess = (data: any) => {
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      localStorage.setItem("pin_id", "yes");
+      setSuccessModal(!successModal);
+      toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+              setAirtimeStepper(3)
+               router.push("/recharge/airtime");
+        /*   if (
+            data?.data?.message &&
+            data.data.message.includes("Order placed successfully. Order Code")
+          ) {
+             router.push("/profile");
+            setAirtimeStepper(3)
+          } else {
+             router.push("/paymentpage");
+            router.push("/recharge/airtime");
+          } */
+        },
+      });
+      reset();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleError = (error: any) => {
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+
+   const {
+    data,
+    error: walleterror,
+    isError,
+    isSuccess,
+    mutate,
+    status: verifystatus,
+  } = useMutateData("verifywalletpin", handleSuccess, handleError);
 
   return (
-    <div className='my-5 mt-[4rem] flex  flex-col gap-4 rounded'>
-      <p className='brand1 cursor-pointer' onClick={() => setAirtimeStepper(0)}>
+
+      <section className='bg-[#F6F6F6] py-12 w-9/12' style={{
+        margin: '0 auto'
+      }}>
+         <p className='brand1 cursor-pointer flex items-start px-8' onClick={() => setAirtimeStepper(0)}>
         Back
       </p>
+   <div className='  '>
+
       <div className='flex items-center justify-center '>
         <Formtitle
           title='Payment'
@@ -38,7 +227,9 @@ export const AirtimePayment = () => {
         />
       </div>
 
-      <div className='flex'>
+
+
+ <div className='flex px-8'>
         <form className='flex w-full flex-col items-start justify-start gap-4 py-10 '>
           <div>
             <h3 className='text-[#6E6E6E]'>Network Provider</h3>
@@ -56,12 +247,13 @@ export const AirtimePayment = () => {
             <h3 className='text-[#6E6E6E]'>Tranction ID</h3>
             <p className='font-semibold'>1234567</p>
           </div>
-          <div className='my-5 flex w-full items-center justify-center gap-8'>
+          <div className='my-5 flex flex-wrap w-full items-center justify-center gap-8'>
             <DefaultButton
               type='button'
               text='Pay with Wallet'
               className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-              handleClick={isLoggedIn ? setWalletModal:Reroute}
+           /*    handleClick={isLoggedIn ? setWalletModal:Reroute} */
+              handleClick={() => setPaywithWallet(true)}
             />
             <DefaultButton
               type='button'
@@ -72,11 +264,61 @@ export const AirtimePayment = () => {
           </div>
         </form>
       </div>
-      <div
-        className={`${walletModal ? 'absolute left-0 top-0 z-50 -mt-[9rem] h-screen w-full' : 'hidden'}`}
-      >
-        <WalletPin />
-      </div>
+
+
+
     </div>
+
+
+      <ModalComponent
+        content={
+          <div className="flex flex-col justify-center">
+            <div className="flex justify-center items-center flex-col">
+              <p className="text-[#2A2A2A] font-bold text-xl font-Poppins">
+                Wallet Pin
+              </p>
+              <small className="text-[#504D4D] text-lg font-Poppins">
+                Kindly enter your wallet pin
+              </small>
+            </div>
+
+            <form
+              action=""
+              className="flex justify-center items-center flex-col mt-8 mb-4"
+              onSubmit={handleSubmit(submitForm)}
+            >
+              <div className="flex flex-col">
+                <Input
+                  label="Enter Pin"
+                  type="password"
+                  name="password"
+                  placeholder="****"
+                  register={register}
+                  errors={errors.password}
+                  HiEyeSlash={<FaRegEyeSlash />}
+                  HiEye={<FaRegEye />}
+                />
+                <div className="text-xs text-red-700">
+                  {errors?.password?.message}
+                </div>
+
+                <button
+                  className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+                >
+                  {verifystatus === "pending" ? "..." : "Pay"}
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+        isModalOpen={paywithwallet}
+        showModal={showWalletPayment}
+        handleOk={() => {}}
+        handleCancel={handlecloseOrder}
+      />
+
+      </section>
+
   )
 }

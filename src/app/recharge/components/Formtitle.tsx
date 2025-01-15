@@ -3,14 +3,15 @@ import React from 'react'
 type FormtitleProps ={
     title:string
     subtitle:string
+    className?:string
 }
 
 
-export const Formtitle = ({title, subtitle}:FormtitleProps) => {
+export const Formtitle = ({title, subtitle, className}:FormtitleProps) => {
   return (
-    <div className='flex flex-col items-center justify-center gap-2 text-center  py-5'>
-      <h3 className='text-2xl leading-5 font-bold'>{title}</h3>
-      <p>{subtitle}</p>
+    <div className={className ? className : 'flex flex-col items-center justify-center gap-2 text-center   py-5'}  >
+      <h3 className='leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base '>{title}</h3>
+      <small className=' font-Poppins text-[#504D4D] text-sm' >{subtitle}</small>
     </div>
   )
 }

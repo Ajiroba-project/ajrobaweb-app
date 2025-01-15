@@ -23,6 +23,7 @@ type selectProps = {
   multiple?: boolean
   isdisabled?: boolean
   showlabel?: boolean
+  className?: string
 }
 type textareaProps = {
   name: inputProps['name']
@@ -66,7 +67,7 @@ export const InputField = ({
           type={toggle ? 'text' : type}
           placeholder={placeholder}
             placeholder-gray-500
-          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] border border-[#A09F9F]  text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
           {...register(name, { required: true })}
           disabled={isdisabled}
         />
@@ -147,7 +148,8 @@ export const SelectField = ({
   register,
   errors,
   options,
-  multiple
+  multiple,
+  className
 }: selectProps) => {
   return (
     <div className='relative flex flex-col'>
@@ -155,10 +157,11 @@ export const SelectField = ({
       <select
         {...register(name, { required: true })}
         name={name}
-        className={`xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
+
+        className={className ? className : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
       >
         <option value='' className='text-wdc-textbody'>
-          {label ? ` Select  ${label}` : ''}
+          {label ? ` ${label}` : ''}
         </option>
         {options.map((val: string, key: number) => (
           <option key={key} className='text-wdc-textbody' value={val}>

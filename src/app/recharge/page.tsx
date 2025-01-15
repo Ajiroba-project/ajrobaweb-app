@@ -53,13 +53,13 @@ const RechargePage = () => {
             <RechargeCategory />
           </section>
 
-         {/*
-          <section className='mt-4'>
+
+        {/*   <section className='mt-4'>
             <RechargeCategory />
-          </section>
+          </section> */}
           <section>
             <RecentTransaction />
-          </section> */}
+          </section>
         </main>
 
     {/*   {userNavMenu === '' ? (
@@ -97,16 +97,20 @@ const RechargePage = () => {
           </section>
         </main>
       )} */}
-      {/* <Footer /> */}
+       <Footer />
     </Fragment>
   )
 }
 
 export default function Searchbar() {
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn
+  }))
+
   return (
     // You could have a loading skeleton as the `fallback` too
     <Suspense>
-      <RechargePage />
+  { !isLoggedIn ?  <Reroute/> : <RechargePage />}
     </Suspense>
   )
 }

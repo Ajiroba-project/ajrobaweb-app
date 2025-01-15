@@ -9,30 +9,38 @@ import { CgData } from 'react-icons/cg'
 import { PiTelevisionSimple } from 'react-icons/pi'
 import { RiLightbulbFlashFill } from 'react-icons/ri'
 import Image from 'next/image'
+import { useRouter } from "next/navigation";
+
 
 export const RechargeCategory = () => {
 const setUserNav = userNavStore(state => state.setUserNav)
+
+const router = useRouter();
 
   const category = [
     {
       name: 'Airtime',
       image: airtime,
-      icon: <FaSquarePhone className='text-3xl' />
+      icon: <FaSquarePhone className='text-3xl' />,
+      path: '/airtime'
     },
     {
       name: 'Data',
       image: data,
-      icon: <CgData className='text-3xl' />
+      icon: <CgData className='text-3xl' />,
+      path: '/data'
     },
     {
       name: 'Cable Subscription',
       image: cable,
-      icon: <PiTelevisionSimple className='text-3xl' />
+      icon: <PiTelevisionSimple className='text-3xl' />,
+      path: '/cable'
     },
     {
       name: 'Electricity',
       image: electricity,
-      icon: <RiLightbulbFlashFill className='text-3xl' />
+      icon: <RiLightbulbFlashFill className='text-3xl' />,
+      path: '/electricity'
     }
   ]
 
@@ -55,7 +63,8 @@ const setUserNav = userNavStore(state => state.setUserNav)
             <div
               className='cursor-pointer '
               key={index}
-              onClick={() => setUserNav(value.name)}
+          /*     onClick={() => setUserNav(value.name)} */
+          onClick={()=> router.push(`/recharge${value.path}`)}
             >
               <div className='relative flex w-fit items-center  hover:shadow-2xl'>
                 <Image
@@ -73,7 +82,8 @@ const setUserNav = userNavStore(state => state.setUserNav)
               <div className='flex flex-col gap-2 p-2'>
                 <div
                   className='text-center capitalize'
-                  onClick={() => setUserNav(value.name)}
+             /*      onClick={() => setUserNav(value.name)} */
+             onClick={()=> router.push(`/recharge${value.path}`)}
                 >
                   <p className='text-lg '>{value.name}</p>{' '}
                 </div>
