@@ -4,7 +4,7 @@ import Brand from '../../../../asset/ajirobalogo.png'
 import klausdwork from '../../../../asset/klausdwork@2x.png'
 
 
-const Receipt = () => {
+const Receipt = ({data}) => {
 
 const styles = StyleSheet.create({
 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     },
     logo: {
       width: 120,
-      height: 120
+
     },
     reportTitle: {
       fontSize: 14,
@@ -82,6 +82,60 @@ const styles = StyleSheet.create({
     },
     invoiceNumber: {
       fontSize: 11,
+    },
+
+
+
+
+     table: {
+     /*  marginBottom: 20,
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5, */
+      padding: 10,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      borderBottomWidth: 1,
+      borderBottomColor: '#ccc',
+  padding: 10,
+
+    },
+    label: {
+      fontSize: 10,
+      color: '#FF5722',
+    },
+    value: {
+      fontSize: 10,
+      fontWeight: 'bold',
+      color: '#000',
+    },
+
+
+
+    footer: {
+      marginTop: 30,
+      textAlign: 'center',
+    },
+    appButtonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 20,
+    },
+    appButton: {
+      margin: 5,
+      padding: 10,
+      backgroundColor: '#000',
+      borderRadius: 5,
+      textAlign: 'center',
+      color: '#fff',
+      fontSize: 10,
+    },
+    footerText: {
+      fontSize: 8,
+      color: '#aaa',
+      marginTop: 10,
     },
 
 
@@ -101,14 +155,14 @@ const styles = StyleSheet.create({
       <View style={styles.spaceBetween}>
         <View>
 
-        <Image style={styles.logo} src={Brand} />
+       {/*  <Image style={styles.logo} src={Brand} /> */}
 
-
+    <Text style={styles.reportTitle}>Ajiroba</Text>
             <Text style={styles.backbutton} >Back </Text>
         </View>
 
         <View>
-          <Text style={styles.reportTitle}>Airtime Recharge</Text>
+          <Text style={styles.reportTitle}>{data?.message}</Text>
 
         </View>
       </View>
@@ -121,15 +175,69 @@ const styles = StyleSheet.create({
         </View>
 
         <View>
-          <Text style={styles.boldtext}>N 700.00</Text>
+          <Text style={styles.boldtext}>N {data?.data?.amount}</Text>
 
         </View>
       </View>
     </View>
 
 
+{/* Table Section */}
+      <View style={styles.table}>
+        <View style={styles.row}>
+          <Text style={styles.label}>Payment Method</Text>
+          <Text style={styles.value}>{data?.data?.payment_method || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Customer Name</Text>
+          <Text style={styles.value}>{data?.data?.customer_name || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Address</Text>
+          <Text style={styles.value}>{data?.data?.address || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Phone Number</Text>
+          <Text style={styles.value}>{data?.data?.phone_number || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Network Provider</Text>
+          <Text style={styles.value}>{data?.data?.network || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Amount</Text>
+          <Text style={styles.value}>₦ {data?.data?.amount}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Transaction ID</Text>
+          <Text style={styles.value}>{data?.data?.id || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Date of Transaction</Text>
+          <Text style={styles.value}>{data?.data?.date || 'NA'}</Text>
+        </View>
+
+         <View style={styles.row}>
+          <Text style={styles.label}>Reference</Text>
+          <Text style={styles.value}>{data?.data?.reference|| 'NA'}</Text>
+        </View>
+      </View>
 
 
+
+
+
+{/* Footer */}
+      <View style={styles.footer}>
+        <Text>Download our mobile App on:</Text>
+        <View style={styles.appButtonContainer}>
+          <Text style={styles.appButton}>Google Play Store</Text>
+          <Text style={styles.appButton}>Apple Store</Text>
+        </View>
+        <Text style={styles.footerText}>
+          This electronically generated receipt is provided for informational purposes only and is not a legally binding document.
+        </Text>
+      </View>
     </Page>
   </View>
 

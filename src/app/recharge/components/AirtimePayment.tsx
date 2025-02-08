@@ -254,7 +254,7 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      console.log(data, 'aitimeeeedatatat')
+      // console.log(data, 'aitimeeeedatatat')
 
  /*    Cookies.set("atd", data?.data, { expires: 1 }); */
     Cookies.set("atd", JSON.stringify(data?.data));

@@ -51,7 +51,7 @@ const WrappedPage = () => {
     // console.log(purchasedetails, 'purchasedetails')
 
     const parsedDetails = JSON?.parse(purchasedetails);
-    // console.log(parsedDetails, 'purchasedetails');
+     console.log(parsedDetails, 'purchasedetails');
 
   const {
     data: productinfo,
@@ -136,14 +136,14 @@ const WrappedPage = () => {
         </h2> */}
         <div className="space-y-4">
           {[
-            { label: "Payment Method", value: "USSD" },
-            { label: "Customer Name", value: "Alex Ayodele Malik" },
-            { label: "Address", value: "123, Aboderin Street, Ikeja Lagos State" },
-            { label: "Phone Number", value: "08143646426" },
-            { label: "Network Provider", value: "MTN" },
-            { label: "Amount", value: "₦ 700" },
-            { label: "Transaction I.D", value: "3256256282" },
-            { label: "Date of Transaction", value: "12th March, 2024. 11:00AM" },
+            { label: "Payment Method", value: parsedDetails?.data?.payment_method || 'NA' },
+            { label: "Customer Name", value: parsedDetails?.data?.customer_name || 'NA' },
+            { label: "Address", value: parsedDetails?.data?.address || 'NA' },
+            { label: "Phone Number", value: parsedDetails?.data?.phone_number || 'NA' },
+            { label: "Network Provider", value: parsedDetails?.data?.network || 'NA'},
+            { label: "Amount", value:  `₦ ${parsedDetails?.data?.amount || 0}` },
+            { label: "Transaction I.D", value: parsedDetails?.data?.id || 'NA' },
+            { label: "Date of Transaction", value: parsedDetails?.data?.date || 'NA' },
           ].map((item, index) => (
           /*  <div
               key={index}
@@ -206,7 +206,7 @@ const WrappedPage = () => {
         </div>
 
 
-           <PDFDownloadLink document={<ReceiptPDF  />} fileName={`receipt`}>
+           <PDFDownloadLink document={<ReceiptPDF data={parsedDetails} />} fileName={`receipt`}>
           {({ blob, url, loading, error }) =>
             loading ?
               'Loading...' :
