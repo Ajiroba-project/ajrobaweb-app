@@ -26,7 +26,17 @@ const Reroute = () => {
   return null;
 };
 
+
 const Airtime = () => {
+
+  const {setAirtimeStepper } =
+    AirtimePurchase(state => ({
+
+      setAirtimeStepper: state.setAirtimeStepper,
+
+    }))
+
+
   const [isClient, setIsClient] = useState(false);
   const { userNavMenu, sidebar, toggleSidebar } = userNavStore((state) => ({
     userNavMenu: state.userNav,
@@ -52,6 +62,9 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
     return <Loading/>
   }
 
+
+
+
   const Step = ({ props }: any) => {
     return (
 
@@ -62,7 +75,7 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
             className={`flex items-center gap-2 rounded-md border p-4 px-6 text-[#A09F9F] font-Poppins ${index === props || index <= props ? "cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#E84526]" : "border-2 opacity-50"} border-[#A09F9F] `}
           >
             <div>{val.icons}</div>
-            <p className="w-max text-sm font-Poppins">{val.name}</p>
+            <p className="w-max text-sm font-Poppins" onClick={() => setAirtimeStepper(val.step)}>{val.name}</p>
           </div>
         ))}
       </div>

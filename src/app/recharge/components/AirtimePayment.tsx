@@ -15,6 +15,7 @@ import { useMutateData } from '@/hooks/useMutateNewData'
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { usePathname} from "next/navigation";
 import Cookies from "js-cookie";
+import { useGetDatanew } from '@/hooks/useGetData'
 
 export const AirtimePayment = () => {
 
@@ -49,6 +50,8 @@ const router = useRouter()
   const userToken = (Cookies.get("token") as string) || "";
 
 const [paywithwallet, setPaywithWallet] = useState(false);
+const [showpaymentbutton, setShowpaymentbutton] = useState(false);
+
 
   const showWalletPayment = () => {
     setPaywithWallet(true);
@@ -56,6 +59,45 @@ const [paywithwallet, setPaywithWallet] = useState(false);
 
    const handlecloseOrder = () => {
  setPaywithWallet(false);
+  };
+
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(
+    url,
+    "get_user_details",
+    userToken || " ",
+  );
+
+
+
+    const handleOrderbutton = () => {
+
+    const payload = {
+
+      amount: Number(AirtimeDetails.amount),
+    phoneNumber: AirtimeDetails.phone,
+    network: AirtimeDetails.network,
+    senderName: userInfo?.data?.first_name,
+    };
+
+// console.log(payload, 'payload')
+
+
+    airtimemutate({
+      url: "/api/purchaseairtime",
+       payload: { payload: payload },
+     /*  payload: { payload: payload, token: userToken }, */
+   /*    token: userToken, */
+    });
+  };
+
+
+
+      const MakePurchase = () => {
+    let pin = Cookies.get("nvd");
+    console.log('Make purchase')
   };
 
 
@@ -105,7 +147,10 @@ const [paywithwallet, setPaywithWallet] = useState(false);
     ) {
       localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
-      toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+    setShowpaymentbutton(prevState => !prevState);
+
+      setPaywithWallet(false)
+      toast.success(`${data?.data?.message } `, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -115,18 +160,7 @@ const [paywithwallet, setPaywithWallet] = useState(false);
         progress: undefined,
         theme: "light",
         onClose: () => {
-              setAirtimeStepper(3)
-               router.push("/recharge/airtime");
-        /*   if (
-            data?.data?.message &&
-            data.data.message.includes("Order placed successfully. Order Code")
-          ) {
-             router.push("/profile");
-            setAirtimeStepper(3)
-          } else {
-             router.push("/paymentpage");
-            router.push("/recharge/airtime");
-          } */
+
         },
       });
       reset();
@@ -187,6 +221,7 @@ const [paywithwallet, setPaywithWallet] = useState(false);
   };
 
   const handleError = (error: any) => {
+     setShowpaymentbutton(false)
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
@@ -209,6 +244,121 @@ const [paywithwallet, setPaywithWallet] = useState(false);
     mutate,
     status: verifystatus,
   } = useMutateData("verifywalletpin", handleSuccess, handleError);
+
+
+
+    const handleSuccessAirtime = (data: any) => {
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      console.log(data, 'aitimeeeedatatat')
+
+ /*    Cookies.set("atd", data?.data, { expires: 1 }); */
+    Cookies.set("atd", JSON.stringify(data?.data));
+      localStorage.setItem("pin_id", "yes");
+      setSuccessModal(!successModal);
+      setShowpaymentbutton(prevState => !prevState);
+
+      setPaywithWallet(false)
+      toast.success(`${data?.data?.message } `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+        setAirtimeStepper(3)
+        },
+      });
+      reset();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+
+
+    const handleErrorAirtime = (error: any) => {
+     setShowpaymentbutton(false)
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+
+    const {
+    data: airtimedata,
+    error: airtimerror,
+    isError: airtimeisError,
+    isSuccess: airtimeisSuccess,
+    mutate: airtimemutate,
+    status: airtimestatus,
+  } = useMutateData("purchaseairtime", handleSuccessAirtime, handleErrorAirtime);
 
   return (
 
@@ -248,13 +398,27 @@ const [paywithwallet, setPaywithWallet] = useState(false);
             <p className='font-semibold'>1234567</p>
           </div>
           <div className='my-5 flex flex-wrap w-full items-center justify-center gap-8'>
-            <DefaultButton
-              type='button'
-              text='Pay with Wallet'
-              className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-           /*    handleClick={isLoggedIn ? setWalletModal:Reroute} */
-              handleClick={() => setPaywithWallet(true)}
-            />
+
+         {!showpaymentbutton ? (
+  <DefaultButton
+    type="button"
+    text="Verify Wallet Pin"
+    className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
+    handleClick={() => setPaywithWallet(true)}
+  />
+) : (
+  <DefaultButton
+    type="button"
+    text="Pay with Wallet"
+    className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
+    handleClick={
+      localStorage.getItem("pin_id") === "yes"
+        ? handleOrderbutton
+        : MakePurchase
+    }
+  />
+)}
+
             <DefaultButton
               type='button'
               text='Pay Online'

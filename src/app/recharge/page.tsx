@@ -2,10 +2,10 @@
 import { AuctionBanner } from '../component/AuctionBanner'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
-import { Fragment, Suspense } from 'react'
+import { Fragment, Suspense, useEffect } from 'react'
 import { RechargeCategory } from './components/RechargeCategory'
 import { RecentTransaction } from './components/RecentTransaction'
-import { userNavStore, useAuthStore } from '@/store/store'
+import { userNavStore, useAuthStore, AirtimePurchase } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import { SideMenu } from './components/SideMenu'
 import { DataContent } from './components/DataContent'
@@ -23,6 +23,8 @@ const Reroute =()=>{
 
 const RechargePage = () => {
 
+    const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
+
   const { userNavMenu, sidebar, toggleSidebar } = userNavStore(state => ({
     userNavMenu: state.userNav,
     sidebar: state.sidebar,
@@ -32,6 +34,13 @@ const RechargePage = () => {
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn
   }))
+
+
+
+  useEffect(() => {
+
+       setAirtimeStepper(0)
+  }, []);
 
   return (
     <Fragment>

@@ -831,17 +831,23 @@ import { BsCreditCard2Back } from 'react-icons/bs'
 export const stepperList = [
   {
     name: 'Enter Details',
-    icons: <RxFileText />
+    icons: <RxFileText />,
+    step: 0
   },
   {
     name: 'Payment',
-    icons: <BsCreditCard2Back />
+    icons: <BsCreditCard2Back />,
+     step: 1
   },
   {
     name: 'Receipts',
-    icons: <IoReceiptOutline />
+    icons: <IoReceiptOutline />,
+     step: 2
   }
 ]
+
+
+
 
 export const transactions = [
   {
