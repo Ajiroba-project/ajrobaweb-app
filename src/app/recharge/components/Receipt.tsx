@@ -24,7 +24,8 @@ export const Receipt = () => {
             text='View Reciept'
             type='button'
             className=' my-5 w-full rounded-lg bg-[#FCDFD4] py-2 hover:bg-[#F25E26] hover:text-white'
-            handleClick={() => router.push('/transaction-receipt')}
+            handleClick={() => router.push(`/recharge/airtime/receipt`)}
+
           />
         </div>
       </div>
