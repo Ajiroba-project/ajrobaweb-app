@@ -95,7 +95,7 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
 
 
 
-      const MakePurchase = () => {
+const MakePurchase = () => {
     let pin = Cookies.get("nvd");
     console.log('Make purchase')
   };
@@ -248,13 +248,16 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
 
 
     const handleSuccessAirtime = (data: any) => {
+
+     /*  console.log(data, 'aitimeeeedatatat') */
+
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      // console.log(data, 'aitimeeeedatatat')
+     /*   console.log(data, 'aitimeeeedatatat') */
 
  /*    Cookies.set("atd", data?.data, { expires: 1 }); */
     Cookies.set("atd", JSON.stringify(data?.data));
@@ -263,7 +266,11 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
       setShowpaymentbutton(prevState => !prevState);
 
       setPaywithWallet(false)
-      toast.success(`${data?.data?.message } `, {
+
+     /*  console.log(data?.data?.status, 'data?.data?.status', data?.data) */
+
+      if (data?.data?.status === 'success') {
+              toast.success(`${data?.data?.message } `, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -277,6 +284,26 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
         },
       });
       reset();
+      }else{
+ toast.error(`${data?.data?.message } `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+        setAirtimeStepper(1)
+        },
+      });
+      reset();
+
+      }
+
+
+
     } else if (
       data?.data?.status === 400 ||
       data?.data?.status === 409 ||
@@ -421,9 +448,10 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
 
             <DefaultButton
               type='button'
-              text='Pay Online'
+              text='Fund Wallet'
               className='rounded-lg border-2 border-[#f25e26] px-8 py-3 text-[#f25e26]'
-              handleClick={() => setAirtimeStepper(2)}
+        /*       handleClick={() => setAirtimeStepper(2)} */
+              handleClick={() => router.push('/profile')}
             />
           </div>
         </form>
