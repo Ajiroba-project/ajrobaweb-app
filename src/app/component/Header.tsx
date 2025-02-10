@@ -291,7 +291,7 @@ useEffect(() => {
 
   return (
     <>
-      <header className='' >
+      <section className='' >
         <div className='bg-[#2A2A2A] p-3 text-sm text-white'>
             <div className='flex items-center justify-between gap-3 px-7'>
               <div className='w-full'>
@@ -454,7 +454,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </header>
+      </section>
     </>
   );
 };

@@ -19,6 +19,8 @@ import { StaticImageData } from 'next/image'
 import mtnicon from '../../asset/mtnicon.svg'
 import ninemobileicon from '../../asset/ninemobileicon.png'
 import gloicon from '../../asset/gloicon.png'
+import { set } from 'date-fns'
+import { Item } from '@radix-ui/react-select'
 
 
 type AirtimeProps = {
@@ -27,17 +29,12 @@ type AirtimeProps = {
   phone: string
 }
 
-
-
-
    interface TransformedDataItem {
           id: number;
           number: string;
           type: string;
           icon: string | null;
         }
-
-
 
 
 export const AirtimeDetails = () => {
@@ -56,17 +53,17 @@ export const AirtimeDetails = () => {
   );
 
 
-   console.log(bensdata?.data, 'benedata')
 
 
   const iconMap: { [key: string]: StaticImageData | null } = {
   MTN: mtnicon,
-  Airtel: airtelicon,
-  '9mobile': ninemobileicon,
-  Glo: gloicon
+  AIRTEL: airtelicon,
+  Smile: airtelicon,
+  Virgin: airtelicon,
+  Etisalat: airtelicon,
+  ninemobile: ninemobileicon,
+  GLO: gloicon
 }
-
-
 
 const transformedData = bensdata?.data?.map((item: { biller: string; number: any }, index: number) => {
   const billerUpper = item.biller.trim().toUpperCase(); // Trim whitespace & ensure uppercase
@@ -78,9 +75,6 @@ const transformedData = bensdata?.data?.map((item: { biller: string; number: any
   };
 });
 
-
-
-console.log(transformedData, 'transformedData')
 
 
 
@@ -101,7 +95,7 @@ console.log(transformedData, 'transformedData')
 
 
 
-  const network = ['MTN', 'Airtel', 'Glo', '9mobile', 'Etisalat', 'Smile', 'Virgin' ,  ]
+  const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE'  ]
 
 
   const sumbitForm = (data: AirtimeProps) => {
@@ -113,8 +107,9 @@ console.log(transformedData, 'transformedData')
   const router =useRouter()
 
 
-  const handleUseClick = (number: string) => {
+  const handleUseClick = (number: string, type: string) => {
     setValue('phone', number)
+    setValue('network', type)
     setprintreceipt(false)
   }
 
@@ -130,17 +125,20 @@ console.log(transformedData, 'transformedData')
           className='flex flex-col gap-3'
           onSubmit={handleSubmit(sumbitForm)}
         >
+
+
           <SelectField
-            name='network'
-            register={register}
-            errors='errors'
-            options={network}
-            label='Network Provider'
-            showlabel={false}
-             className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]  "
+  name="network"
+  register={register}
+  errors={errors}
+  options={network}
+  label="Network Provider"
+  showlabel={false}
+  value={watch("network")} // Ensure value updates
+  onChange={(e) => setValue("network", e.target.value)} // Update manually
+  className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+/>
 
-
-          />
 
           <InputField
             name='phone'
@@ -209,7 +207,7 @@ console.log(transformedData, 'transformedData')
             </div>
 
             {/* Action button */}
-            <button onClick={() => handleUseClick(item.number)} className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]">
+            <button onClick={() => handleUseClick(item.number, item.type)} className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]">
               Use
             </button>
           </div>

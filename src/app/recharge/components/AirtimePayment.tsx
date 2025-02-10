@@ -420,10 +420,10 @@ const MakePurchase = () => {
             <h3 className='text-[#6E6E6E]'>Amount</h3>
             <p>{AirtimeDetails?.amount}</p>
           </div>
-          <div>
+         {/*  <div>
             <h3 className='text-[#6E6E6E]'>Tranction ID</h3>
             <p className='font-semibold'>1234567</p>
-          </div>
+          </div> */}
           <div className='my-5 flex flex-wrap w-full items-center justify-center gap-8'>
 
          {!showpaymentbutton ? (

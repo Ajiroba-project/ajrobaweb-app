@@ -141,6 +141,47 @@ export const InputFieldRounded = ({
   )
 }
 
+
+
+
+
+// export const SelectField = ({
+//   showlabel,
+//   label,
+//   name,
+//   register,
+//   errors,
+//   options,
+//   multiple,
+//   className,
+// }: selectProps) => {
+//   return (
+//     <div className='relative flex flex-col'>
+//       {showlabel && <label className='py-2 text-sm'>{label} </label>}
+//       <select
+//         {...register(name, { required: true })}
+//         name={name}
+
+//         className={className ? className : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
+//       >
+//         <option value='' className='text-wdc-textbody'>
+//           {label ? ` ${label}` : ''}
+//         </option>
+//         {options.map((val: string, key: number) => (
+//           <option key={key} className='text-wdc-textbody' value={val}>
+//             {val}
+//           </option>
+//         ))}
+//       </select>
+//       <div className='pt-1 text-xs text-rose-500'>
+//         {errors?.[name]?.message}
+//       </div>
+//     </div>
+//   )
+// }
+
+
+
 export const SelectField = ({
   showlabel,
   label,
@@ -149,16 +190,23 @@ export const SelectField = ({
   errors,
   options,
   multiple,
-  className
-}: selectProps) => {
+  className,
+  value, // Accept value prop
+  onChange, // Accept onChange handler
+}: selectProps & { value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) => {
   return (
     <div className='relative flex flex-col'>
       {showlabel && <label className='py-2 text-sm'>{label} </label>}
       <select
         {...register(name, { required: true })}
         name={name}
-
-        className={className ? className : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`}
+        value={value} // Bind value prop
+        onChange={onChange} // Bind onChange prop
+        className={
+          className
+            ? className
+            : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`
+        }
       >
         <option value='' className='text-wdc-textbody'>
           {label ? ` ${label}` : ''}
@@ -169,12 +217,17 @@ export const SelectField = ({
           </option>
         ))}
       </select>
-      <div className='pt-1 text-xs text-rose-500'>
-        {errors?.[name]?.message}
-      </div>
+      <div className='pt-1 text-xs text-rose-500'>{errors?.[name]?.message}</div>
     </div>
   )
 }
+
+
+
+
+
+
+
 export const TextAreaField = ({
   label,
   name,
