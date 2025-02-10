@@ -286,21 +286,39 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
 
   // Set default content as trending posts
   let posts = trendingrinfo?.data?.data?.posts || [];
+
   //  console.log(trendingrinfo?.data?.data?.liked_posts, 'trendinggn')
   //  console.log(posts?.length)
 
   // Conditionally render posts based on active tab
 
-  console.log(trendingrinfo?.data?.data?.bookmarked_posts);
+
   if (activeTab === "Liked") {
     posts = trendingrinfo?.data?.data?.liked_posts || [];
   } else if (activeTab === "Bookmarked") {
     posts = trendingrinfo?.data?.data?.bookmarked_posts || [];
   }
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   if (trendingLoading) {
     return <Loading />;
   }
+
+    // Ensure posts array exists
+  if (!posts || posts.length === 0) {
+    return <p>No posts available</p>;
+  }
+
+const ITEMS_PER_PAGE = 5; // Adjust based on your needs
+
+  // Calculate total pages
+  const totalPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
+
+  // Get paginated data
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedData = posts?.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
 
   return (
     <>
@@ -311,6 +329,20 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
             liked: item.is_liked_by_current_user,
           };
           /*   console.log( posts?.length) */
+
+          // Get the total number of comments from the right source
+const totalComments = item?.comments?.length > 0
+  ? item.comments.length
+  : item?.post?.comments?.length || 0;
+
+// Calculate total pages
+const totalPages = Math.ceil(totalComments / ITEMS_PER_PAGE);
+
+// Get paginated comments from the correct source
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const paginatedComments = item?.comments?.length > 0
+  ? item.comments.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+  : item?.post?.comments?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
 
           return activeTab === "Trending" ? (
             <div
@@ -439,7 +471,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 </div>
               </form>
 
-              {item?.comments?.map(
+              {paginatedComments?.map(
                 (
                   item: {
                     comment: string;
@@ -497,7 +529,29 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   );
                 },
               )}
-            </div>
+
+
+     {/* Pagination Controls */}
+      <div className="mt-4 flex justify-center gap-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
+
+        <button
+          onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+       </div>
           ) : activeTab === "Liked" ? (
             <div
               key={key}
@@ -632,7 +686,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   </div>
                 </form>
 
-                {item?.post?.comments?.map(
+                {paginatedComments?.map(
                   (
                     item: {
                       post: any;
@@ -691,6 +745,27 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                     );
                   },
                 )}
+
+                  {/* Pagination Controls */}
+      <div className="mt-4 flex justify-center gap-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
+
+        <button
+          onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
               </>
             </div>
           ) : activeTab === "Bookmarked" ? (
@@ -806,7 +881,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 </div>
               </form>
 
-              {item?.post?.comments?.map(
+              {paginatedComments?.map(
                 (
                   item: {
                     post: any;
@@ -865,11 +940,35 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   );
                 },
               )}
+
+                {/* Pagination Controls */}
+      <div className="mt-4 flex justify-center gap-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
+
+        <button
+          onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
             </div>
           ) : (
             <p>No data Available</p>
           );
         })}
+
+
+
       </div>
     </>
   );
@@ -896,7 +995,22 @@ const NotificationSidebar = () => {
     userToken,
   );
 
-  console.log(notinfo, "notinfoooo");
+  const ITEMS_PER_PAGE = 10;
+
+    // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Extract notifications array
+  const notifications = notinfo?.data?.data || [];
+
+  // Calculate total pages
+  const totalPages = Math.ceil(notifications.length / ITEMS_PER_PAGE);
+
+  // Get paginated notifications
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedNotifications = notifications.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+
 
   return (
     <div className="w-[250px] p-4 bg-white border rounded-lg shadow-md">
@@ -905,7 +1019,7 @@ const NotificationSidebar = () => {
       {notinfo?.data?.data?.length === 0 ? (
         <h1>No Data Available</h1>
       ) : (
-        notinfo?.data?.data?.map(
+        paginatedNotifications?.map(
           (item: any, key: React.Key | null | undefined) => {
             const timeAgo = formatDistanceToNow(new Date(item?.date_created), {
               addSuffix: true,
@@ -921,6 +1035,33 @@ const NotificationSidebar = () => {
             );
           },
         )
+      )}
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 border rounded-md ${
+              currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+            }`}
+          >
+            Prev
+          </button>
+          <span className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 border rounded-md ${
+              currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );
