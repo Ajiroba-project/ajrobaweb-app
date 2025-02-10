@@ -16,6 +16,9 @@ import mtnicon from '../../asset/mtnicon.svg'
 import airtelicon from '../../asset/airtelicon.png'
 import gloicon from '../../asset/gloicon.png'
 import ninemobileicon from '../../asset/ninemobileicon.png'
+import { useGetDatanew } from '@/hooks/useGetData'
+import Cookies from 'js-cookie'
+
 
 type AirtimeProps = {
   network: string
@@ -27,6 +30,22 @@ export const AirtimeDetails = () => {
   const setAirtimeDetails = AirtimePurchase(state => state.setAirtimeDetails)
   const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
    const [printreceipt, setprintreceipt] = useState<boolean>(false);
+
+  const userToken = (Cookies.get("token") as string) || "";
+
+     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/recent_transactions/`;
+
+  const { data: recenttransdata, isLoading: recenttransLoading } = useGetDatanew(
+    url,
+    "get_recent_transactions",
+    userToken || " ",
+  );
+
+
+  console.log(recenttransdata, 'benedata')
+
+
+
 
 
    const mobiledata = [

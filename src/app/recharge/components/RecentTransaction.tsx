@@ -1,10 +1,30 @@
 'use client'
 import React,{Fragment, useState} from 'react'
 import {transactions} from '@/app/static-data'
+import Cookies from 'js-cookie'
+import { useGetDatanew } from '@/hooks/useGetData'
 
 export const RecentTransaction = () => {
 
-  const [allTransaction, setAllTransaction]=useState(transactions.slice(0,2))
+
+
+
+    const userToken = (Cookies.get("token") as string) || "";
+
+     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/recent_transactions/`;
+
+  const { data: recenttransdata, isLoading: recenttransLoading } = useGetDatanew(
+    url,
+    "get_recent_transactions",
+    userToken || " ",
+  );
+
+   const [allTransaction, setAllTransaction]=useState(recenttransdata?.results?.data?.slice(0,5) || [])
+
+  // console.log(recenttransdata?.results?.data, 'benedata')
+
+
+
 
 
   return (
@@ -13,23 +33,23 @@ export const RecentTransaction = () => {
         <div className='flex justify-between'>
           <h3 className='text-xl font-semibold'> Recent Transaction</h3>
           <p
-            className={`'text-[#F25E26] cursor-pointer '${allTransaction.length === transactions.length ? 'pointer-events-none opacity-50 hidden' : ''}`}
+            className={`'text-[#F25E26] cursor-pointer '${allTransaction?.length === recenttransdata?.results?.data ? 'pointer-events-none opacity-50 hidden' : ''}`}
             onClick={() => {
-              setAllTransaction(transactions)
+              setAllTransaction(recenttransdata?.results?.data)
             }}
           >
             View all
           </p>
         </div>
         <div className='my-4 flex flex-col  gap-4'>
-          {allTransaction.map((val, index) => (
+          {allTransaction?.map((val: { description: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; time: any; amount: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined }, index: React.Key | null | undefined) => (
             <Fragment key={index}>
               <div className=' mr-4 flex cursor-pointer items-center justify-between rounded bg-[#FCDFD480] p-4 hover:shadow-md'>
                 <div className='flex '>
                   <div>{/* logo */}</div>
                   <div className='flex flex-col'>
-                    <p className='font-semibold'>{val.title}</p>
-                    <p>{val.time}</p>
+                    <p className='font-semibold'>{val?.description}</p>
+                    <p>{val.time || 'NA'}</p>
                   </div>
                 </div>
                 <div>

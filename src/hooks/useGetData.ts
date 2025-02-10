@@ -60,6 +60,7 @@ interface ApiResponse {
   filter?: any
   slice?: any
   length?: any
+  results?: any
 }
 
 // Define the fetch function with type annotations
