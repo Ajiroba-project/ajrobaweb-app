@@ -14,6 +14,7 @@ import ricesample from "@/app/asset/image/rice_sample.jpg";
 import payment_method from "@/app/asset/image/payment_method.svg";
 import { useGetOrderData, useGetProductData } from "@/hooks/useGetData";
 import { useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 
 const WrappedPage = () => {
@@ -27,7 +28,11 @@ const WrappedPage = () => {
     user: state.user,
     token: state.token,
   }));
-  const userToken = token;
+
+
+    const userToken = Cookies.get('token')
+
+
 
 
 
@@ -42,7 +47,6 @@ const WrappedPage = () => {
     "get_product_details"
   );
 
-  /*  console.log(productinfo?.data?.data, "productinfo") */
 
   // console.log(producterror, "producterror")
 
