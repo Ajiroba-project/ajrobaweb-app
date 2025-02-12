@@ -218,11 +218,12 @@ export const CablePurchase = create(
     (set) => ({
       CableStepper: 0,
       CableDetails: {
-        dataname: '',
-        datadata: '',
-        datanetwork: '',
-        dataphone: '',
+        iucnumber: '',
+        decoder: '',
+        bundle: '',
+
       },
+
 
       walletModal: false,
 

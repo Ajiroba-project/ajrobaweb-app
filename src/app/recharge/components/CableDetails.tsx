@@ -107,7 +107,7 @@ import React, { useState } from "react";
 import { useMutateData } from "@/hooks/useMutateData";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Airtimeschema, Rechargeschema } from "./YupValidations";
+import { Airtimeschema, Cableschema, Rechargeschema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
 import { InputField, SelectField } from "./FormField";
 import { AirtimePurchase, CablePurchase } from "@/store/store";
@@ -127,11 +127,10 @@ import gloicon from "../../asset/gloicon.png";
 import { set } from "date-fns";
 import { Item } from "@radix-ui/react-select";
 
-type AirtimeProps = {
-  datanetwork: string;
-  dataamount: string;
-  dataphone: string;
-  datadata: string;
+type DataProps = {
+  decoder: string;
+  bundle: string;
+  iucnumber: string;
 };
 
 interface TransformedDataItem {
@@ -194,7 +193,7 @@ export const CableDetails = () => {
     setValue,
   } = useForm({
     mode: "all",
-    resolver: yupResolver(Rechargeschema),
+    resolver: yupResolver(Cableschema),
   });
 
 
@@ -215,7 +214,7 @@ export const CableDetails = () => {
 
 
   // Watch selected network
-  const selectedNetwork = watch("datanetwork");
+  const selectedNetwork = watch("decoder");
 
 
 
@@ -227,9 +226,10 @@ export const CableDetails = () => {
 
 
 
-  const dataplanurl = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/data_plans/${selectedNetwork}/`;
+  const dataplanurl = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/cable_tv_packages?cableTvType=${selectedNetwork}/`;
 
-    const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(dataplanurl, "get_data_plans", userToken);
+
+  const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(dataplanurl, "get_data_plans", userToken);
 
   // Transform API response into data plan format
 
@@ -240,10 +240,10 @@ export const CableDetails = () => {
 
   // console.log(dataPlan, 'dataPlannew')
   // const network = providersList
-   const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE'  ]
+   const network = ['GOTV', 'DSTV', 'STARTIME', 'CONSAT TV'  ]
   // const dataPlan = ["1day 100MB -₦100", "60dayS 1TB -₦20,000"];
 
-  const sumbitForm = (data: AirtimeProps) => {
+  const sumbitForm = (data: DataProps) => {
     console.log("data=>", data);
     setCableDetails(data);
 
@@ -253,16 +253,16 @@ export const CableDetails = () => {
   const router = useRouter();
 
   const handleUseClick = (number: string, type: string) => {
-    setValue("dataphone", number);
-    setValue("datanetwork", type);
+    setValue("iucnumber", number);
+    setValue("decoder", type);
     setprintreceipt(false);
   };
 
   return (
     <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
-      <Formtitle
-        title="Buy Airtime"
-        subtitle="Top up your airtime on our platform"
+      <Formtitle className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
+        title="Buy Cable Subscription"
+        subtitle="Enjoy your best  TV programs by purchasing your subscription on our platform"
       />
       <div className="">
         <form
@@ -271,26 +271,38 @@ export const CableDetails = () => {
         >
           <div className="w-full max-w-[350px]">
       <SelectField
-            name="datanetwork"
+            name="decoder"
             register={register}
             errors={errors}
             options={network}
-            label="Network Provider"
+            label="Select Operator"
             showlabel={false}
-            value={watch("datanetwork")} // Ensure value updates
-            onChange={(e) => setValue("datanetwork", e.target.value)} // Update manually
+            value={watch("decoder")} // Ensure value updates
+            onChange={(e) => setValue("decoder", e.target.value)} // Update manually
             className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
           />
           </div>
 
 
+             <div className="w-full max-w-[350px]">
+ <InputField
+            name="iucnumber"
+            register={register}
+            errors={errors}
+            type="text"
+            placeholder="input smart card/iuc number"
+
+          />
+   </div>
+
+
 <div className="w-full max-w-[350px]">
 <SelectField
-           name="datadata"
+           name="bundle"
             register={register}
             errors="errors"
             options={dataPlan}
-            label="Data Bundle"
+            label="Select Package/Bundle"
             showlabel={false}
             className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
           />
@@ -298,29 +310,11 @@ export const CableDetails = () => {
 
 
 
-   <div className="w-full max-w-[350px]">
- <InputField
-            name="dataphone"
-            register={register}
-            errors={errors}
-            type="text"
-            placeholder="Phone Number"
-
-          />
-   </div>
 
 
 
- <div className="w-full max-w-[350px]">
- <InputField
-            name="dataamount"
-            register={register}
-            errors={errors}
-            type="text"
-            placeholder="Amount"
-          />
 
-   </div>
+
 
 
           <p
