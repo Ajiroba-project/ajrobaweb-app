@@ -24,6 +24,7 @@ type selectProps = {
   isdisabled?: boolean
   showlabel?: boolean
   className?: string
+  stye?: any
 }
 type textareaProps = {
   name: inputProps['name']
@@ -190,14 +191,15 @@ export const SelectField = ({
   errors,
   options,
   multiple,
+  style,
   className,
   value, // Accept value prop
   onChange, // Accept onChange handler
-}: selectProps & { value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) => {
+}: selectProps & { style?: React.CSSProperties; value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) => {
   return (
     <div className='relative flex flex-col'>
       {showlabel && <label className='py-2 text-sm'>{label} </label>}
-      <select
+      <select style={style}
         {...register(name, { required: true })}
         name={name}
         value={value} // Bind value prop
