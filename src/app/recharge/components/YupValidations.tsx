@@ -12,9 +12,11 @@ export const Rechargeschema = yup.object().shape({
 export const Dataschema = yup.object().shape({
   datanetwork: yup.string().required('Network Provider is required'),
   datadata: yup.string().required('Data Plan is required'),
-  iucnumber: yup.string().required('IUC Number is required'),
+  // iucnumber: yup.string().required('IUC Number is required'),
   dataamount: yup.string().required('Amount is required'),
   dataphone: yup.string().required('Mobile Number is required'),
+
+
 
 })
 
