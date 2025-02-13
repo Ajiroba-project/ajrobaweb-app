@@ -21,7 +21,7 @@ import Cookies from 'js-cookie'
 import { DefaultButton } from '@/app/component/Button'
 import jsPDF from "jspdf";
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import Receipt from './receiptpdf/Receipt'
+
 import ReceiptPDF from './receiptpdf/Receipt'
 
 const WrappedPage = () => {

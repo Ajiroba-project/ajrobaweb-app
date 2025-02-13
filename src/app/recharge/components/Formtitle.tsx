@@ -10,7 +10,7 @@ type FormtitleProps ={
 export const Formtitle = ({title, subtitle, className}:FormtitleProps) => {
   return (
     <div className={className ? className : 'flex flex-col items-center justify-center gap-2 text-center   py-5'}  >
-      <h3 className='leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base '>{title}</h3>
+      <h3 className='leading-5 font-semibold text-[#504D4D] font-Poppins text-base '>{title}</h3>
       <small className=' font-Poppins text-[#504D4D] text-sm' >{subtitle}</small>
     </div>
   )

@@ -837,12 +837,12 @@ export const stepperList = [
   {
     name: 'Payment',
     icons: <BsCreditCard2Back />,
-     step: 1
+     step: 0
   },
   {
     name: 'Receipts',
     icons: <IoReceiptOutline />,
-     step: 2
+     step: 0
   }
 ]
 

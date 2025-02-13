@@ -18,6 +18,10 @@ import { AirtimeDetails } from "../components/AirtimeDetails";
 import { AirtimePayment } from "../components/AirtimePayment";
 import { Receipt } from "../components/Receipt";
 import Loading from "@/app/component/Loading";
+import { DataDetails } from "../components/DataDetails";
+import { CablePayment } from "../components/CablePayment";
+import { DataPayment } from "../components/DataPayment";
+import { DataReceipt } from "../components/DataReceipt";
 
 const Reroute = () => {
   const router = useRouter();
@@ -27,14 +31,20 @@ const Reroute = () => {
 };
 
 
-const Airtime = () => {
+const DataPage = () => {
 
-  const {setAirtimeStepper } =
-    AirtimePurchase(state => ({
+//   const {setCableStepper } =
+//     CablePurchase(state => ({
 
-      setAirtimeStepper: state.setAirtimeStepper,
+//       setCableStepper: state.CableStepper,
 
-    }))
+//     }))
+
+
+const { setDataStepper } =
+    DataPurchase(state => ({
+      setDataStepper: state.setDataStepper,  // ✅ This correctly references the function
+    }));
 
 
   const [isClient, setIsClient] = useState(false);
@@ -48,7 +58,10 @@ const Airtime = () => {
     isLoggedIn: state.isLoggedIn,
   }));
 
-const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
+
+  const stepper = DataPurchase((state) => state.stepper);
+const DataStepper = DataPurchase((state) => state.DataStepper);
+
 
   useEffect(() => {
     setIsClient(true);
@@ -71,7 +84,7 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
             className={`flex items-center gap-2 rounded-md border p-4 px-6 text-[#A09F9F] font-Poppins ${index === props || index <= props ? "cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#E84526]" : "border-2 opacity-50"} border-[#A09F9F] `}
           >
             <div>{val.icons}</div>
-            <p className="w-max text-sm font-Poppins" onClick={() => setAirtimeStepper(val.step)}>{val.name}</p>
+            <p className="w-max text-sm font-Poppins" onClick={() => setDataStepper(val.step)}>{val.name}</p>
           </div>
         ))}
       </div>
@@ -85,15 +98,15 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
       <Suspense fallback={<div>Loading...</div>}>
         <section className="flex flex-col gap-4 2xl:flex-col  md:flex-col lg:flex-row  ">
 
-            <Step props={AirtimeStepper} />
+            <Step props={DataStepper} />
 
           <div className="w-full">
-              {AirtimeStepper === 0 ? (
-                <AirtimeDetails />
-              ) : AirtimeStepper === 1 ? (
-                <AirtimePayment />
+              {DataStepper === 0 ? (
+                <DataDetails />
+              ) : DataStepper === 1 ? (
+                <DataPayment />
               ) : (
-                <Receipt />
+                <DataReceipt />
               )}
             </div>
         </section>
@@ -141,7 +154,7 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
 export default function Searchbar() {
   return (
     <Suspense>
-      <Airtime />
+      <DataPage />
     </Suspense>
   );
 }

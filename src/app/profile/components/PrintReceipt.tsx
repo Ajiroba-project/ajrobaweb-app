@@ -37,7 +37,7 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [receipt]);
+  }, [receipt, setreceipt]);
 
   // State for start date, end date, and format
   const [startDate, setStartDate] = useState<string>('');

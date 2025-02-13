@@ -150,31 +150,45 @@ export const userProfile = create(set => ({
   setSuccessModal: () => set(state => ({ successModal: !state.successModal }))
 }))
 
-export const DataPurchase = create(set => ({
-  stepper: 0,
-  dataDetails: {
-    network: '',
-    data: '',
-    phone: '',
-    amount: ''
-  },
-
-  setStepper: text => set({ stepper: text }),
-  setDataDetails: text => set({ dataDetails: text })
-}))
-
-// export const AirtimePurchase = create(set => ({
-//   AirtimeStepper: 0,
-//   AirtimeDetails: {
+// export const DataPurchase = create(set => ({
+//   stepper: 0,
+//   dataDetails: {
 //     network: '',
+//     data: '',
 //     phone: '',
 //     amount: ''
 //   },
-//   walletModal: false,
 
-//   setAirtimeStepper: text => set({ AirtimeStepper: text }),
-//   setAirtimeDetails: text => set({ AirtimeDetails: text })
+//   setStepper: text => set({ stepper: text }),
+//   setDataDetails: text => set({ dataDetails: text })
 // }))
+
+
+
+export const DataPurchase = create(
+  persist(
+    (set) => ({
+      stepper: 0,
+      DataStepper: 0,
+      dataDetails: {
+        datanetwork: '',
+        datadata: '',
+        dataphone: '',
+        dataamount: ''
+      },
+
+      walletModal: false,
+
+      setStepper: text => set({ stepper: text }),
+      setDataStepper: text => set({ DataStepper: text }),
+      setDataDetails: (text) => set({ dataDetails: text })
+    }),
+    {
+      name: "data-storage",
+      getStorage: () => localStorage,
+    }
+  )
+);
 
 
 export const AirtimePurchase = create(
@@ -192,25 +206,36 @@ export const AirtimePurchase = create(
       setAirtimeDetails: (text) => set({ AirtimeDetails: text })
     }),
     {
-      name: "airtime-storage", // Name of the key in localStorage
-      getStorage: () => localStorage, // Use localStorage (can be sessionStorage too)
+      name: "airtime-storage",
+      getStorage: () => localStorage,
     }
   )
 );
 
-export const CablePurchase = create(set => ({
-  CableStepper: 0,
-  CableDetails: {
-    name: 'Testing',
-    network: '',
-    smartcard: '',
-    netpackage: '',
-    amount: '--'
-  },
+export const CablePurchase = create(
 
-  setCableStepper: text => set({ CableStepper: text }),
-  setCableDetails: text => set({ CableDetails: text })
-}))
+  persist(
+    (set) => ({
+      CableStepper: 0,
+      CableDetails: {
+        iucnumber: '',
+        decoder: '',
+        bundle: '',
+
+      },
+
+
+      walletModal: false,
+
+      setCableStepper: text => set({ CableStepper: text }),
+      setCableDetails: text => set({ CableDetails: text })
+    }),
+    {
+      name: "cable-storage",
+      getStorage: () => localStorage,
+    }
+  )
+)
 
 export const ElectricityPurchase = create(set => ({
   ElectricityStepper: 0,

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { raffle } from "@/app/static-data";
 import { useRouter } from "next/navigation";
 import { HeadingText } from "../../component/Heading";
@@ -43,57 +43,57 @@ const Page = ({ params }: any) => {
   );
   const [loadingdata, setLoadingData] = useState(false);
 
-  const fetchWithAuth = async (url: string) => {
-    setLoadingData(true);
+  const fetchWithAuth = useCallback(async (url: string) => {
+      setLoadingData(true);
 
-    const requestOptions: RequestInit = {
-      method: "GET",
-      headers: {
-        Authorization: `token ${userToken}`,
-      },
-      redirect: "follow",
-    };
+      const requestOptions: RequestInit = {
+        method: "GET",
+        headers: {
+          Authorization: `token ${userToken}`,
+        },
+        redirect: "follow",
+      };
 
-    try {
-      const response = await fetch(url, requestOptions);
+      try {
+        const response = await fetch(url, requestOptions);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        setProductDataNew(result?.data);
+        setViewCountdown(true);
+
+        if (result?.data?.starts_in === "Raffle Ended") {
+          setraffleended(true);
+        }
+        setLoadingData(false);
+        if (result?.data) {
+        }
+        return result;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      } finally {
+        setLoadingData(false);
       }
+    }, [userToken]);
 
-      const result = await response.json();
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchWithAuth(
+            `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
+          );
+        } catch (error) {
+          console.error("Failed to fetch data:", error);
+        }
+      };
 
-      setProductDataNew(result?.data);
-      setViewCountdown(true);
-
-      if (result?.data?.starts_in === "Raffle Ended") {
-        setraffleended(true);
-      }
-      setLoadingData(false);
-      if (result?.data) {
-      }
-      return result;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    } finally {
-      setLoadingData(false);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const data = await fetchWithAuth(
-        `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
-      );
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [product_id]);
+      fetchData();
+    }, [product_id, fetchWithAuth]);
 
   useEffect(() => {
     const filtered = raffle.filter((val) => val.host === params.id);
