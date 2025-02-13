@@ -23,7 +23,7 @@ import gloicon from "../../asset/gloicon.png";
 import { set } from "date-fns";
 import { Item } from "@radix-ui/react-select";
 
-type AirtimeProps = {
+type DataProps = {
   datanetwork: string;
   dataamount: string;
   dataphone: string;
@@ -139,7 +139,8 @@ export const DataDetails = () => {
    const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE'  ]
   // const dataPlan = ["1day 100MB -₦100", "60dayS 1TB -₦20,000"];
 
-  const sumbitForm = (data: AirtimeProps) => {
+  const sumbitForm = (data: DataProps) => {
+    console.log(errors, 'err')
     console.log("data=>", data);
     setDataDetails(data);
 
