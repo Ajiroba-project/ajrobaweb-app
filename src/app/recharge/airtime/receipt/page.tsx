@@ -53,17 +53,17 @@ const WrappedPage = () => {
     const parsedDetails = JSON?.parse(purchasedetails);
      console.log(parsedDetails, 'purchasedetails');
 
-  const {
-    data: productinfo,
-    isLoading: productLoading,
-    error: producterror,
-    refetch
-  } = useGetProductData(
-    "/api/productreceiptbyid",
-    userToken,
-    order_id,
-    "get_product_details"
-  );
+  // const {
+  //   data: productinfo,
+  //   isLoading: productLoading,
+  //   error: producterror,
+  //   refetch
+  // } = useGetProductData(
+  //   "/api/productreceiptbyid",
+  //   userToken,
+  //   order_id,
+  //   "get_product_details"
+  // );
 
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -75,9 +75,9 @@ const WrappedPage = () => {
     setModalOpen(false);
   };
 
-  useEffect(() => {
-    refetch();
-  }, [order_id, refetch]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [order_id, refetch]);
 
 
   // Function to generate PDF
@@ -91,14 +91,14 @@ const WrappedPage = () => {
 
 
     // Add transaction details
-    doc.text(`Beneficiary: ${productinfo?.data?.data[0]?.beneficiary || ''}`, 20, 40);
-    doc.text(`Sender: ₦${productinfo?.data?.data[1]?.sender || ''}`, 20, 50);
-    doc.text(`Transaction Type: ${productinfo?.data?.data[0]?.channel || ''}`, 20, 60);
-    doc.text(`Transaction Date: ${productinfo?.data?.data[0]?.date_created || ''}`, 20, 70);
-    doc.text(`Transaction Status: ${productinfo?.data?.data[0]?.status || ''}`, 20, 80);
-    doc.text(`Description: ${productinfo?.data?.data[0]?.description || ''}`, 20, 90);
-    doc.text(`Transaction Reference: ${productinfo?.data?.data[0]?.reference || ''}`, 20, 100);
-    doc.text(`Transaction Amount: ${productinfo?.data?.data[0]?.amount || ''}`, 20, 110);
+    // doc.text(`Beneficiary: ${productinfo?.data?.data[0]?.beneficiary || ''}`, 20, 40);
+    // doc.text(`Sender: ₦${productinfo?.data?.data[1]?.sender || ''}`, 20, 50);
+    // doc.text(`Transaction Type: ${productinfo?.data?.data[0]?.channel || ''}`, 20, 60);
+    // doc.text(`Transaction Date: ${productinfo?.data?.data[0]?.date_created || ''}`, 20, 70);
+    // doc.text(`Transaction Status: ${productinfo?.data?.data[0]?.status || ''}`, 20, 80);
+    // doc.text(`Description: ${productinfo?.data?.data[0]?.description || ''}`, 20, 90);
+    // doc.text(`Transaction Reference: ${productinfo?.data?.data[0]?.reference || ''}`, 20, 100);
+    // doc.text(`Transaction Amount: ${productinfo?.data?.data[0]?.amount || ''}`, 20, 110);
     // Save the generated PDF
     doc.save('transaction_receipt.pdf');
   };
