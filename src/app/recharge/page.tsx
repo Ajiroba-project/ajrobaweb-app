@@ -39,24 +39,18 @@ const router = useRouter()
     const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true) // Ensure component is mounted before rendering
+    setMounted(true)
       setAirtimeStepper(0)
     if (!isLoggedIn) {
-      router.push('/signin') // Redirect after mount
+      router.push('/signin')
     }
-  }, [isLoggedIn, router])
+  }, [isLoggedIn, router, setAirtimeStepper])
 
-  // ✅ Prevent rendering before hydration
+
   if (!mounted) {
     return <div>Loading...</div>
   }
 
-
-
-  // useEffect(() => {
-
-  //      setAirtimeStepper(0)
-  // }, []);
 
   return (
     <Fragment>
@@ -94,10 +88,10 @@ export default function Searchbar() {
     isLoggedIn: state.isLoggedIn
   }))
 
-  /* return (
+   return (
     <Suspense fallback={<div>Loading...</div>}>
   { !isLoggedIn ?  <Reroute/> : <RechargePage />}
     </Suspense>
-  ) */
-  return isLoggedIn ? <RechargePage /> : null
+  )
+  // return isLoggedIn ? <RechargePage /> : null
 }
