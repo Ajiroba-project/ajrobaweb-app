@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useMutateData } from "@/hooks/useMutateData";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Airtimeschema, Rechargeschema } from "./YupValidations";
+import { Airtimeschema, Dataschema, Rechargeschema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
 import { InputField, SelectField } from "./FormField";
 import { AirtimePurchase, CablePurchase, DataPurchase } from "@/store/store";
@@ -90,7 +90,7 @@ export const DataDetails = () => {
     setValue,
   } = useForm({
     mode: "all",
-    resolver: yupResolver(Rechargeschema),
+    resolver: yupResolver(Dataschema),
   });
 
 

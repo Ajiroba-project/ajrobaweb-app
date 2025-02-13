@@ -248,46 +248,46 @@ useEffect(() => {
 
   const tkn_: string = Cookies.get("token") as string;
 
-  const fetchCartItems = async () => {
-    setLoading(true);
-
-    let sessionKey = Cookies.get("session_key");
-
-       if (!sessionKey) {
-      sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
-      Cookies.set('session_key', sessionKey, { expires: 7 });
-    }
-
-    let headers: { [key: string]: string } = {
-      "Content-Type": "application/json",
-    };
-
-    if (tkn_) {
-      headers["Authorization"] = `token ${tkn_}`;
-    }
-
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: `https://ajiroba.onrender.com/v1/commerce/cart/?session_key=${sessionKey}`,
-      headers: headers,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        setcartCount(Number(response.data?.data?.[0]?.cart_items_count));
-        setCartItemsn(response.data?.data[0]?.items);
-      })
-      .catch((error) => {
-        setError("Error loading cart items");
-      })
-      .finally(() => setLoading(false));
-  };
-
   useEffect(() => {
+    const fetchCartItems = async () => {
+      setLoading(true);
+
+      let sessionKey = Cookies.get("session_key");
+
+      if (!sessionKey) {
+        sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`;
+        Cookies.set('session_key', sessionKey, { expires: 7 });
+      }
+
+      let headers: { [key: string]: string } = {
+        "Content-Type": "application/json",
+      };
+
+      if (tkn_) {
+        headers["Authorization"] = `token ${tkn_}`;
+      }
+
+      let config = {
+        method: "GET",
+        maxBodyLength: Infinity,
+        url: `https://ajiroba.onrender.com/v1/commerce/cart/?session_key=${sessionKey}`,
+        headers: headers,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          setcartCount(Number(response.data?.data?.[0]?.cart_items_count));
+          setCartItemsn(response.data?.data[0]?.items);
+        })
+        .catch((error) => {
+          setError("Error loading cart items");
+        })
+        .finally(() => setLoading(false));
+    };
+
     fetchCartItems();
-  }, [isRootPath]);
+  }, [isRootPath, tkn_]);
 
   return (
     <>

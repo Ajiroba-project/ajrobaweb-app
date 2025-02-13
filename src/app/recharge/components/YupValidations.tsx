@@ -7,6 +7,19 @@ export const Rechargeschema = yup.object().shape({
   dataamount: yup.string().required('Amount is required'),
 
 })
+
+
+export const Dataschema = yup.object().shape({
+  datanetwork: yup.string().required('Network Provider is required'),
+  datadata: yup.string().required('Data Plan is required'),
+  iucnumber: yup.string().required('IUC Number is required'),
+  dataamount: yup.string().required('Amount is required'),
+  dataphone: yup.string().required('Mobile Number is required'),
+
+})
+
+
+
 export const Airtimeschema = yup.object().shape({
   network: yup.string().required('Network Provider is required'),
   amount: yup.string().required('Amount is required'),
