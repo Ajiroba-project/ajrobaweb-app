@@ -69,7 +69,10 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
         window.open(payment_url, "_blank");
 
-        toast.success("Payment initiated successfully.");
+          toast.success(`Payment initiated successfully`, {
+          closeButton: false,
+
+        });
       } else {
         toast.error("An unexpected status was returned.");
       }
@@ -126,7 +129,11 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
      /*  console.log(response, "response"); */
       if (response.status === 200 || response.status === 201) {
         setloadingverify(false); // Stop loading when verification is successful
-        toast.success(`${response?.data?.message}`);
+       /*  toast.success(`${response?.data?.message}`); */
+       toast.success(`${response?.data?.message}`, {
+          closeButton: false,
+
+        });
         stopLoop(); // Stop the loop after success
       } else {
         setloadingverify(false); // Stop loading even for unsuccessful responses
