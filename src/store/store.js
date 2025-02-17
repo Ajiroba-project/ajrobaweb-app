@@ -224,11 +224,16 @@ export const CablePurchase = create(
 
       },
 
+      customerCabledetails: {
+        data: '',
+      }
+      ,
 
       walletModal: false,
 
       setCableStepper: text => set({ CableStepper: text }),
-      setCableDetails: text => set({ CableDetails: text })
+      setCableDetails: text => set({ CableDetails: text }),
+      setCableCustomerDetails: text => set({ customerCabledetails: text })
     }),
     {
       name: "cable-storage",
@@ -237,18 +242,37 @@ export const CablePurchase = create(
   )
 )
 
-export const ElectricityPurchase = create(set => ({
-  ElectricityStepper: 0,
-  ElectricityDetails: {
-    disco: '',
-    meter: '',
-    phone: '',
-    package: '',
-    meter_no: '',
-    amount: ''
-  },
-  walletModal: false,
+export const ElectricityPurchase = create(
 
-  setElectricityStepper: text => set({ ElectricityStepper: text }),
-  setElectricityDetails: text => set({ ElectricityDetails: text })
-}))
+  persist(
+
+    (set) => ({
+      ElectricityStepper: 0,
+      ElectricityDetails: {
+        decoder: '',
+        meter: '',
+        iucnumber: '',
+        elecamount: '',
+        elecphone: '',
+        amount: ''
+      },
+      walletModal: false,
+
+
+      customerElectricitydetails: {
+        data: '',
+        name: ''
+      }
+      ,
+
+      setElectricityStepper: text => set({ ElectricityStepper: text }),
+      setElectricityDetails: text => set({ ElectricityDetails: text }),
+      setElectricityCustomerDetails: text => set({ customerElectricitydetails: text })
+    }),
+    {
+      name: "electicity-storage",
+      getStorage: () => localStorage,
+    }
+
+  )
+)

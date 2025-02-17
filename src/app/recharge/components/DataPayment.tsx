@@ -407,7 +407,7 @@ export const DataPayment = () => {
               ) : (
                 <DefaultButton
                   type="button"
-                  text="Pay with Wallet"
+                   text={airtimestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
                   className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
                   handleClick={
                     localStorage.getItem("pin_id") === "yes"

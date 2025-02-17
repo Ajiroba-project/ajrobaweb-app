@@ -213,7 +213,7 @@ export const SelectField = ({
         <option value='' className='text-wdc-textbody'>
           {label ? ` ${label}` : ''}
         </option>
-        {options.map((val: string, key: number) => (
+        {options?.map((val: string, key: number) => (
           <option key={key} className='text-wdc-textbody' value={val}>
             {val}
           </option>

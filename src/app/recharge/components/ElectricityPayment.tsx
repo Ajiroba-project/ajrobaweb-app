@@ -1,80 +1,507 @@
-import React from 'react'
-import { Formtitle } from './Formtitle'
-import { ElectricityPurchase, userNavStore } from '@/store/store'
-import { DefaultButton } from '../../component/Button'
-import { WalletPin } from './WalletPin'
+"use client";
+import React, { useEffect, useState } from "react";
+import { Formtitle } from "./Formtitle";
+import {
+  ElectricityPurchase,
+  useAuthStore,
+  userNavStore,
+} from "@/store/store";
+import { DefaultButton } from "../../component/Button";
+import { WalletPin } from "./WalletPin";
+import ModalComponent from "@/app/component/ModalComponent";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { useGetDatanew } from "@/hooks/useGetData";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutateData } from '@/hooks/useMutateNewData'
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import Input from "./Input";
+import * as yup from "yup";
 
 export const ElectricityPayment = () => {
-  const ElectricityDetails = ElectricityPurchase(state => state.ElectricityDetails)
-  const setElectricityStepper = ElectricityPurchase(state => state.setElectricityStepper)
-  const walletModal = userNavStore(state => state.walletModal)
-  const setWalletModal = userNavStore(state => state.setWalletModal)
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  const { setElectricityStepper, ElectricityDetails, customerElectricityDetails } = ElectricityPurchase((state) => ({
+    setElectricityStepper: state.setElectricityStepper,
+        ElectricityDetails: state.ElectricityDetails,
+        customerElectricityDetails: state.customerElectricityDetails,
+
+  }));
+
+  const bundleString = ElectricityDetails?.bundle || ""; // Ensure it's a string
+const amountMatch = bundleString.match(/-₦(\d+)/); // Match the number after "-₦"
+
+const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
+
+  const extractedContent = ElectricityDetails?.decoder?.match(/\((.*?)\)/)?.[1] || '';
+
+//  console.log(customerElectricityDetails, 'cabbbbbb---cvvv')
+
+    const router = useRouter();
+
+  const [successModal, setSuccessModal] = useState(false);
+
+  const Reroute = () => {
+    const router = useRouter();
+    router.push("/signin");
+
+    return null;
+  };
+
+  const userToken = (Cookies.get("token") as string) || "";
+
+  const [paywithwallet, setPaywithWallet] = useState(false);
+  const [showpaymentbutton, setShowpaymentbutton] = useState(false);
+
+  const showWalletPayment = () => {
+    setPaywithWallet(true);
+  };
+
+  const handlecloseOrder = () => {
+    setPaywithWallet(false);
+  };
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(
+    url,
+    "get_user_details",
+    userToken || " ",
+  );
+
+  const handleOrderbutton = () => {
+
+
+    // console.log(ElectricityDetails, 'cabbbbbb')
+
+    const payload = {
+
+      disco: extractedContent,
+       payerName: userInfo?.data?.first_name,
+      amount: Number(ElectricityDetails?.elecamount),
+      customerId: ElectricityDetails?.iucnumber,
+      meterType: ElectricityDetails?.meter,
+      phoneNumber: ElectricityDetails?.elecphone,
+    }
+
+        Cookies.set("atdnew", JSON.stringify(payload));
+
+
+
+     electricitymutate({
+       url: "/api/purchaseelectricity",
+       payload: { payload: payload },
+
+     });
+  };
+
+  const MakePurchase = () => {
+    let pin = Cookies.get("nvd");
+    console.log("Make purchase");
+  };
+
+  const submitForm = (data: any) => {
+    Cookies.set("nvd", data?.password, { expires: 1 });
+    const payload = {
+      wallet_pin: data?.password,
+    };
+
+    mutate({
+      url: "/api/verifywalletpin",
+      payload: { payload: payload, token: userToken },
+      token: userToken,
+    });
+  };
+
+  const schema = yup.object().shape({
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Can't be lesser than 6 digits"),
+  });
+
+  const {
+    reset,
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    watch,
+    setValue,
+  } = useForm({
+    mode: "all",
+    resolver: yupResolver(schema),
+  });
+
+  const handleSuccess = (data: any) => {
+
+
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      localStorage.setItem("pin_id", "yes");
+      setSuccessModal(!successModal);
+      setShowpaymentbutton((prevState) => !prevState);
+
+      setPaywithWallet(false);
+      toast.success(`${data?.data?.message} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {},
+      });
+      reset();
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message || "An Error Occured"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleError = (error: any) => {
+    setShowpaymentbutton(false);
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+  const {
+    data,
+    error: walleterror,
+    isError,
+    isSuccess,
+    mutate,
+    status: verifystatus,
+  } = useMutateData("verifywalletpin", handleSuccess, handleError);
+
+  const handleSuccessElectricity = (data: any) => {
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      Cookies.set("atd", JSON.stringify(data?.data));
+      localStorage.setItem("pin_id", "yes");
+      setSuccessModal(!successModal);
+      setShowpaymentbutton((prevState) => !prevState);
+
+      setPaywithWallet(false);
+
+      if (data?.data?.status === "success") {
+        toast.success(`${data?.data?.message} `, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onClose: () => {
+            setElectricityStepper(3);
+          },
+        });
+        reset();
+      } else {
+        toast.error(`${data?.data?.message} `, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onClose: () => {
+            setElectricityStepper(1);
+          },
+        });
+        reset();
+      }
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleErrorElectricity = (error: any) => {
+    setShowpaymentbutton(false);
+    toast.error(`${"An Error Occured"}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    reset();
+  };
+
+  const {
+    data: electricitydata,
+    error: cablerror,
+    isError: cableisError,
+    isSuccess: cableisSuccess,
+    mutate: electricitymutate,
+    status: cablestatus,
+  } = useMutateData(
+    "purchaseelectricity",
+    handleSuccessElectricity,
+    handleErrorElectricity,
+  );
 
   return (
-    <div className='container my-5 mt-[4rem]  flex flex-col gap-4 rounded bg-[#F6F6F6]'>
+    <section
+      className="bg-[#F6F6F6] py-12 w-9/12"
+      style={{
+        margin: "0 auto",
+      }}
+    >
       <p
-        className='brand1 cursor-pointer'
+        className="brand1 cursor-pointer flex items-start px-8"
         onClick={() => setElectricityStepper(0)}
       >
         Back
       </p>
-      <div className='flex items-center justify-center '>
-        <Formtitle
-          title='Payment'
-          subtitle='you can make your payment with any of the payment option below '
-        />
+      <div className="  ">
+        <div className="flex items-center justify-center ">
+          <Formtitle
+            title="Payment"
+            subtitle="Please confirm your transactions details and make payment "
+          />
+        </div>
+
+        <div className="flex px-8">
+          <form className="flex w-full flex-col items-start justify-start gap-4 py-10 ">
+
+            <div>
+              <h3 className="text-[#6E6E6E]">Name: </h3>
+              <p>{customerElectricityDetails ? customerElectricityDetails : 'NA'}</p>
+            </div>
+            <div>
+              <h3 className="text-[#6E6E6E]">Meter Number: </h3>
+              <p>{ElectricityDetails?.iucnumber ? ElectricityDetails?.iucnumber : 'NA'}</p>
+            </div>
+            <div>
+              <h3 className="text-[#6E6E6E]">Disco: </h3>
+              <p>{ElectricityDetails?.decoder ? ElectricityDetails?.decoder : 'NA'}</p>
+            </div>
+
+              <div>
+              <h3 className="text-[#6E6E6E]">Address: </h3>
+              <p>{ElectricityDetails?.elecphone ? ElectricityDetails?.elecphone : 'NA'}</p>
+            </div>
+            <div>
+              <h3 className="text-[#6E6E6E]">Amount:</h3>
+              <p>{ElectricityDetails?.elecamount ? ElectricityDetails?.elecamount : 'NA'}</p>
+            </div>
+
+               <div>
+              <h3 className="text-[#6E6E6E]">Phone Number:</h3>
+              <p>{ElectricityDetails?.elecphone ? ElectricityDetails?.elecphone : 'NA'}</p>
+            </div>
+
+            <div className="my-5 flex flex-wrap w-full items-center justify-center gap-8">
+              {!showpaymentbutton ? (
+                <DefaultButton
+                  type="button"
+                  text="Verify Wallet Pin"
+                  className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
+                  handleClick={() => setPaywithWallet(true)}
+                />
+              ) : (
+                <DefaultButton
+                  type="button"
+
+                   text={cablestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
+                  className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
+                  handleClick={
+                    localStorage.getItem("pin_id") === "yes"
+                      ? handleOrderbutton
+                      : MakePurchase
+                  }
+                />
+              )}
+
+              <DefaultButton
+                type="button"
+                text="Fund Wallet"
+                className="rounded-lg border-2 border-[#f25e26] px-8 py-3 text-[#f25e26]"
+                handleClick={() => router.push("/profile")}
+              />
+            </div>
+          </form>
+        </div>
       </div>
 
-      <div className='flex'>
-        <form className='flex w-full flex-col items-start justify-start gap-4 py-10 '>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Name</h3>
-            <p>{ElectricityDetails?.name}</p>
-            <p className='brand1 text-sm italic'>
-              (Please make sure the name on the display matches the actual name
-              on your meter.)
-            </p>
-          </div>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Meter No</h3>
-            <p>{ElectricityDetails?.meter_no}</p>
-          </div>
+      <ModalComponent
+        content={
+          <div className="flex flex-col justify-center">
+            <div className="flex justify-center items-center flex-col">
+              <p className="text-[#2A2A2A] font-bold text-xl font-Poppins">
+                Wallet Pin
+              </p>
+              <small className="text-[#504D4D] text-lg font-Poppins">
+                Kindly enter your wallet pin
+              </small>
+            </div>
 
-          <div>
-            <h3 className='text-[#6E6E6E]'>Disco</h3>
-            <p>{ElectricityDetails?.disco}</p>
+            <form
+              action=""
+              className="flex justify-center items-center flex-col mt-8 mb-4"
+              onSubmit={handleSubmit(submitForm)}
+            >
+              <div className="flex flex-col">
+                <Input
+                  label="Enter Pin"
+                  type="password"
+                  name="password"
+                  placeholder="****"
+                  register={register}
+                  errors={errors.password}
+                  HiEyeSlash={<FaRegEyeSlash />}
+                  HiEye={<FaRegEye />}
+                />
+                <div className="text-xs text-red-700">
+                  {errors?.password?.message}
+                </div>
+
+                <button
+                  className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+                >
+                  {verifystatus === "pending" ? "..." : "Pay"}
+                </button>
+              </div>
+            </form>
           </div>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Address</h3>
-            <p className='font-semibold'>tesing....</p>
-          </div>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Amount</h3>
-            <p className='font-semibold'>{ElectricityDetails?.amount}</p>
-          </div>
-          <div className='my-5 flex w-full items-center justify-center gap-8'>
-            <DefaultButton
-              type='button'
-              text='Pay with Wallet'
-              className='rounded-lg bg-[#f25e26] px-8 py-3 text-white '
-              handleClick={
-                setWalletModal
-              }
-            />
-            <DefaultButton
-              type='button'
-              text='Pay Online'
-              className='rounded-lg border-2 border-[#f25e26] px-8 py-3 text-[#f25e26]'
-              handleClick={() => setElectricityStepper(2)}
-            />
-          </div>
-        </form>
-      </div>
-      <div
-        className={`${walletModal ? 'absolute left-0 top-0 z-50 -mt-[9rem] h-screen w-full' : 'hidden'}`}
-      >
-        <WalletPin />
-      </div>
-    </div>
-  )
-}
+        }
+        isModalOpen={paywithwallet}
+        showModal={showWalletPayment}
+        handleOk={() => {}}
+        handleCancel={handlecloseOrder}
+      />
+    </section>
+  );
+};

@@ -6,7 +6,7 @@ import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
 import {FaToggleOn, FaToggleOff} from 'react-icons/fa'
 
-export const CableReceipt = () => {
+export const ElectricityReceipt = () => {
   const router = useRouter()
   const [toggle, setToggle]=useState(false)
   return (
@@ -24,7 +24,7 @@ export const CableReceipt = () => {
             text='View Reciept'
             type='button'
             className=' my-5 w-full rounded-lg bg-[#FCDFD4] py-2 hover:bg-[#F25E26] hover:text-white'
-            handleClick={() => router.push(`/recharge/cable/receipt`)}
+            handleClick={() => router.push(`/recharge/electricity/receipt`)}
 
           />
         </div>
