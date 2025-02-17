@@ -37,9 +37,9 @@ export const Cableschema = yup.object().shape({
 })
 
 export const Electricitychema = yup.object().shape({
-  disco: yup.string().required('Disco Provider is required'),
-  amount: yup.string().required('Amount is required'),
-  meter: yup.string().required('Meter Type is required'),
-  phone: yup.string().required('Mobile Number is required'),
-  meter_no: yup.string().required('Meter Number is required')
+    decoder: yup.string().required('Decoder is required'),
+    meter: yup.string().required('Meter Number is required'),
+    iucnumber: yup.string().required('IUC Number is required'),
+    elecamount: yup.string().required('Amount is required'),
+    elecphone: yup.string().required('Mobile Number is required'),
 })
