@@ -5,10 +5,15 @@ import { Formtitle } from './Formtitle'
 import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
 import {FaToggleOn, FaToggleOff} from 'react-icons/fa'
+import Cookies from 'js-cookie'
 
 export const DataReceipt = () => {
   const router = useRouter()
   const [toggle, setToggle]=useState(false)
+
+  const usertoken = Cookies.get('atd')
+
+const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
   return (
     <section className='p-5 '>
       <div className='my-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
@@ -24,7 +29,7 @@ export const DataReceipt = () => {
             text='View Reciept'
             type='button'
             className=' my-5 w-full rounded-lg bg-[#FCDFD4] py-2 hover:bg-[#F25E26] hover:text-white'
-            handleClick={() => router.push(`/recharge/data/receipt`)}
+            handleClick={() => router.push(`/recharge/data/receipt?ref=${parsedUserToken?.data?.reference}`)}
 
           />
         </div>

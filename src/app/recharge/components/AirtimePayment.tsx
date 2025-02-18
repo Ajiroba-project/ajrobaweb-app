@@ -261,6 +261,7 @@ const MakePurchase = () => {
 
  /*    Cookies.set("atd", data?.data, { expires: 1 }); */
     Cookies.set("atd", JSON.stringify(data?.data));
+
       localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
       setShowpaymentbutton(prevState => !prevState);
