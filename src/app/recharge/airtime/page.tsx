@@ -78,8 +78,6 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
     );
   };
 
-
-
   const DataContentNew = () => {
     return (
       <Suspense fallback={<div>Loading...</div>}>

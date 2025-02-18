@@ -36,6 +36,16 @@ interface UserData {
   amount?: any
   map?: any
   length?: any
+  biller?: any
+  customer_id?: any
+  date_created?: any
+  date_updated?: any
+  name?: any
+  number?: any
+  package?: any
+  payment_method?: any
+  phoneNumber?: any
+  reference?: any
 }
 
 // Define the interface for the expected response data structure

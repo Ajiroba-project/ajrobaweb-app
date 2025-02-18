@@ -4,7 +4,7 @@ import Brand from '../../../../asset/ajirobalogo.png'
 import klausdwork from '../../../../asset/klausdwork@2x.png'
 
 
-const Receipt = ({dataone, datatwo}) => {
+const Receipt = ({data, message}) => {
 
 const styles = StyleSheet.create({
 
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         </View>
 
         <View>
-          <Text style={styles.reportTitle}>{dataone?.data?.message}</Text>
+          <Text style={styles.reportTitle}>{message}</Text>
 
         </View>
       </View>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         </View>
 
         <View>
-          <Text style={styles.boldtext}>N {datatwo?.amount}</Text>
+          <Text style={styles.boldtext}> ₦ {data?.amount}</Text>
 
         </View>
       </View>
@@ -185,70 +185,48 @@ const styles = StyleSheet.create({
 {/* Table Section */}
       <View style={styles.table}>
         <View style={styles.row}>
-          <Text style={styles.label}>Payment Method</Text>
-          <Text style={styles.value}>{dataone?.data?.payment_method || 'NA'}</Text>
+          <Text style={styles.label}>Customer Id</Text>
+          <Text style={styles.value}>{data?.customer_id || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Date of Transaction</Text>
+          <Text style={styles.value}>{data?.date_created || 'NA'}</Text>
+        </View>
+         <View style={styles.row}>
+          <Text style={styles.label}>Biller</Text>
+          <Text style={styles.value}>{data?.biller || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Transaction I.D</Text>
+          <Text style={styles.value}>{data?.id || 'NA'}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Customer Name</Text>
-          <Text style={styles.value}>{datatwo?.payerName || 'NA'}</Text>
+          <Text style={styles.value}>{data?.name || 'NA'}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Address</Text>
-          <Text style={styles.value}>{dataone?.data?.address || 'NA'}</Text>
+          <Text style={styles.label}>Number</Text>
+          <Text style={styles.value}>{data?.number || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Package</Text>
+          <Text style={styles.value}>₦ {data?.package}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Payment Method</Text>
+          <Text style={styles.value}>{data?.payment_method || 'NA'}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Phone Number</Text>
-          <Text style={styles.value}>{datatwo?.phoneNumber || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Disco</Text>
-          <Text style={styles.value}>{datatwo?.disco || 'NA'}</Text>
+          <Text style={styles.value}>{data?.phoneNumber || 'NA'}</Text>
         </View>
 
          <View style={styles.row}>
           <Text style={styles.label}>Reference</Text>
-          <Text style={styles.value}>{dataone?.data?.reference || 'NA'}</Text>
+          <Text style={styles.value}>{data?.reference || 'NA'}</Text>
         </View>
-
-
-          <View style={styles.row}>
-          <Text style={styles.label}>Meter Number</Text>
-          <Text style={styles.value}>{datatwo?.customerId || 'NA'}</Text>
-        </View>
-
-
- <View style={styles.row}>
-          <Text style={styles.label}>Units</Text>
-          <Text style={styles.value}>{dataone?.data?.disco_token || 'NA'}</Text>
-        </View>
-
-
-         <View style={styles.row}>
-          <Text style={styles.label}>Amount</Text>
-          <Text style={styles.value}>{datatwo?.amount || 'NA'}</Text>
-        </View>
-
-           <View style={styles.row}>
-          <Text style={styles.label}>Tax Amount</Text>
-          <Text style={styles.value}>{datatwo?.tax_amount || 'NA'}</Text>
-        </View>
-
-          <View style={styles.row}>
-          <Text style={styles.label}>Total Payable</Text>
-          <Text style={styles.value}>{datatwo?.total_payable || 'NA'}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Transaction ID</Text>
-          <Text style={styles.value}>{dataone?.data?.id || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Date of Transaction</Text>
-          <Text style={styles.value}>{dataone?.data?.date || 'NA'}</Text>
-        </View>
-
-
       </View>
+
 
 {/* Footer */}
       <View style={styles.footer}>

@@ -99,7 +99,7 @@ const transformedData = bensdata?.data?.map((item: { biller: string; number: any
 
 
   const sumbitForm = (data: AirtimeProps) => {
-     console.log('data=>', data)
+    //  console.log('data=>', data)
     setAirtimeDetails(data)
     setAirtimeStepper(1)
   }

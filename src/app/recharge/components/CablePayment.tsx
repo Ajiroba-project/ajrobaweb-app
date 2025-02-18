@@ -134,7 +134,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
   const handleSuccess = (data: any) => {
 
-    console.log(data, 'datata')
+
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||

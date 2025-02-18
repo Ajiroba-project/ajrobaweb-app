@@ -57,7 +57,7 @@ export const ElectricityDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Airtime`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Electricity`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -119,7 +119,7 @@ export const ElectricityDetails = () => {
 
   const extractedContent = selectedNetwork?.match(/\((.*?)\)/)?.[1] || '';
 
-console.log(extractedContent, 'extractedContent');
+// console.log(extractedContent, 'extractedContent');
 
 
   // console.log(selectedNetwork, 'selectedNetwork')
