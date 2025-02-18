@@ -4,7 +4,7 @@ import Brand from '../../../../asset/ajirobalogo.png'
 import klausdwork from '../../../../asset/klausdwork@2x.png'
 
 
-const Receipt = ({data}) => {
+const Receipt = ({data, message}) => {
 
 const styles = StyleSheet.create({
 
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         </View>
 
         <View>
-          <Text style={styles.reportTitle}>{data?.message}</Text>
+          <Text style={styles.reportTitle}>{message}</Text>
 
         </View>
       </View>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         </View>
 
         <View>
-          <Text style={styles.boldtext}>N {data?.data?.amount}</Text>
+          <Text style={styles.boldtext}> ₦ {data?.amount}</Text>
 
         </View>
       </View>
@@ -185,41 +185,45 @@ const styles = StyleSheet.create({
 {/* Table Section */}
       <View style={styles.table}>
         <View style={styles.row}>
-          <Text style={styles.label}>Payment Method</Text>
-          <Text style={styles.value}>{data?.data?.payment_method || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Customer Name</Text>
-          <Text style={styles.value}>{data?.data?.customer_name || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Address</Text>
-          <Text style={styles.value}>{data?.data?.address || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Phone Number</Text>
-          <Text style={styles.value}>{data?.data?.phone_number || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Network Provider</Text>
-          <Text style={styles.value}>{data?.data?.network || 'NA'}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Amount</Text>
-          <Text style={styles.value}>₦ {data?.data?.amount}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Transaction ID</Text>
-          <Text style={styles.value}>{data?.data?.id || 'NA'}</Text>
+          <Text style={styles.label}>Customer Id</Text>
+          <Text style={styles.value}>{data?.customer_id || 'NA'}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Date of Transaction</Text>
-          <Text style={styles.value}>{data?.data?.date || 'NA'}</Text>
+          <Text style={styles.value}>{data?.date_created || 'NA'}</Text>
+        </View>
+         <View style={styles.row}>
+          <Text style={styles.label}>Biller</Text>
+          <Text style={styles.value}>{data?.biller || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Transaction I.D</Text>
+          <Text style={styles.value}>{data?.id || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Customer Name</Text>
+          <Text style={styles.value}>{data?.name || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Number</Text>
+          <Text style={styles.value}>{data?.number || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Package</Text>
+          <Text style={styles.value}>₦ {data?.package}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Payment Method</Text>
+          <Text style={styles.value}>{data?.payment_method || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Phone Number</Text>
+          <Text style={styles.value}>{data?.phoneNumber || 'NA'}</Text>
         </View>
 
          <View style={styles.row}>
           <Text style={styles.label}>Reference</Text>
-          <Text style={styles.value}>{data?.data?.reference|| 'NA'}</Text>
+          <Text style={styles.value}>{data?.reference || 'NA'}</Text>
         </View>
       </View>
 

@@ -171,11 +171,11 @@ const styles = StyleSheet.create({
     <View style={styles.contentcenter}>
       <View style={styles.flexcol}>
         <View>
-          <Text style={styles.smalltext}>Biller </Text>
+          <Text style={styles.smalltext}>Transaction Amount </Text>
         </View>
 
         <View>
-          <Text style={styles.boldtext}>{data?.biller}</Text>
+          <Text style={styles.boldtext}> ₦ {data?.amount}</Text>
 
         </View>
       </View>
@@ -191,6 +191,10 @@ const styles = StyleSheet.create({
         <View style={styles.row}>
           <Text style={styles.label}>Date of Transaction</Text>
           <Text style={styles.value}>{data?.date_created || 'NA'}</Text>
+        </View>
+         <View style={styles.row}>
+          <Text style={styles.label}>Biller</Text>
+          <Text style={styles.value}>{data?.biller || 'NA'}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Transaction I.D</Text>
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
 
          <View style={styles.row}>
           <Text style={styles.label}>Reference</Text>
-          <Text style={styles.value}>{data?.Reference || 'NA'}</Text>
+          <Text style={styles.value}>{data?.reference || 'NA'}</Text>
         </View>
       </View>
 
