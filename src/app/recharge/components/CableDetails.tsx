@@ -53,7 +53,7 @@ export const CableDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Airtime`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Cable`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,

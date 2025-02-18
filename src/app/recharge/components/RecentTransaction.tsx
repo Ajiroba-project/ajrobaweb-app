@@ -69,9 +69,12 @@ import React, { Fragment, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useGetDatanew } from "@/hooks/useGetData";
 import Loading from "@/app/component/Loading";
+import { useRouter } from 'next/navigation'
 
 export const RecentTransaction = () => {
   const userToken = Cookies.get("token") || "";
+
+   const router = useRouter()
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/recent_transactions/`;
 
@@ -81,10 +84,14 @@ export const RecentTransaction = () => {
     userToken || " ",
   );
 
+
+  // console.log(recenttransdata, "recenttransdata")
+
   interface Transaction {
     description: string;
     time: string;
     amount: number;
+    reference?: string;
   }
 
   const [allTransaction, setAllTransaction] = useState<Transaction[]>([]);
@@ -125,11 +132,11 @@ export const RecentTransaction = () => {
             {allTransaction.length === 0 ? (
               <p className="text-gray-500 text-center">No transactions available.</p>
             ) : (
-              allTransaction.map((val, index) => (
+             /*  allTransaction.map((val, index) => (
                 <Fragment key={index}>
-                  <div className="mr-4 flex cursor-pointer items-center justify-between rounded bg-[#FCDFD480] p-4 hover:shadow-md">
+                 <div onClick={() => router.push(`/recharge/airtime/receipt?ref=${val.ref}`)} className="mr-4 flex cursor-pointer items-center justify-between rounded bg-[#FCDFD480] p-4 hover:shadow-md">
                     <div className="flex">
-                      <div>{/* logo */}</div>
+                      <div>logo</div>
                       <div className="flex flex-col">
                         <p className="font-semibold">{val?.description}</p>
                         <p>{val.time || "NA"}</p>
@@ -140,7 +147,35 @@ export const RecentTransaction = () => {
                     </div>
                   </div>
                 </Fragment>
-              ))
+              )) */
+
+                allTransaction.map((val, index) => {
+  // Extract the first word from the reference
+  const transactionType = val.reference?.split("_")[0] || "unknown";
+
+  // Construct the URL dynamically
+  const url = `/recharge/${transactionType}/receipt?ref=${val.reference}`;
+// /recharge/airtime/receipt
+  return (
+    <Fragment key={index}>
+      <div
+        onClick={() => router.push(url)}
+        className="mr-4 flex cursor-pointer items-center justify-between rounded bg-[#FCDFD480] p-4 hover:shadow-md"
+      >
+        <div className="flex">
+          <div>{/* logo */}</div>
+          <div className="flex flex-col">
+            <p className="font-semibold">{val?.description}</p>
+            <p>{val.time || "NA"}</p>
+          </div>
+        </div>
+        <div>
+          <p className="text-xl font-semibold">₦{val.amount}</p>
+        </div>
+      </div>
+    </Fragment>
+  );
+})
             )}
           </div>
         )}

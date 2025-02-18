@@ -43,9 +43,18 @@ const WrappedPage = () => {
 
 
 
+// Safe JSON parsing function
+const safeJSONParse = (data: string) => {
+  try {
+    return data ? JSON.parse(data) : {}; // Return empty object if data is empty
+  } catch (error) {
+    console.error("Error parsing JSON:", error, "Raw data:", data);
+    return {}; // Return empty object if parsing fails
+  }
+};
 
-    const parsedDetails = JSON?.parse(purchasedetails);
-     const parsedDetailsnew = JSON?.parse(purchasedetailsnew);
+const parsedDetails = safeJSONParse(purchasedetails);
+const parsedDetailsnew = safeJSONParse(purchasedetailsnew);
 
     //  console.log(parsedDetails, 'cabbbbbb')
     //  console.log(parsedDetailsnew, 'cckkkk')
