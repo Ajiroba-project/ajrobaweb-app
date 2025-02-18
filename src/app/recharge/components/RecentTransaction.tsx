@@ -92,6 +92,7 @@ export const RecentTransaction = () => {
     time: string;
     amount: number;
     reference?: string;
+    date_created?: any
   }
 
   const [allTransaction, setAllTransaction] = useState<Transaction[]>([]);
@@ -166,7 +167,17 @@ export const RecentTransaction = () => {
           <div>{/* logo */}</div>
           <div className="flex flex-col">
             <p className="font-semibold">{val?.description}</p>
-            <p>{val.time || "NA"}</p>
+            <p>{val.date_created
+    ? new Date(val.date_created).toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      })
+    : "NA"}</p>
           </div>
         </div>
         <div>
