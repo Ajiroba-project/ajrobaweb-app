@@ -205,6 +205,10 @@ const styles = StyleSheet.create({
           <Text style={styles.value}>{data?.name || 'NA'}</Text>
         </View>
         <View style={styles.row}>
+          <Text style={styles.label}>Token</Text>
+          <Text style={styles.value}>{data?.token || 'NA'}</Text>
+        </View>
+        <View style={styles.row}>
           <Text style={styles.label}>Number</Text>
           <Text style={styles.value}>{data?.number || 'NA'}</Text>
         </View>
