@@ -80,6 +80,10 @@ const WrappedPage = () => {
                   label: "Transaction I.D",
                   value: transdata?.data?.id || "NA",
                 },
+                 {
+                  label: "Token",
+                  value: transdata?.data?.token || "NA",
+                },
                 {
                   label: "Customer Name",
                   value: transdata?.data?.name || "NA",

@@ -46,6 +46,7 @@ interface UserData {
   payment_method?: any
   phoneNumber?: any
   reference?: any
+  token?: any
 }
 
 // Define the interface for the expected response data structure
