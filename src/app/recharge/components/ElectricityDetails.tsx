@@ -110,7 +110,7 @@ export const ElectricityDetails = () => {
   );
 
 
-  const providersList = discosdata?.data?.map((provider: { name: any; }) => provider.name) || [];
+  const providersList = discosdata?.data?.map((provider: { id: any; }) => provider.id) || [];
 
 // console.log(providersList, "providersList")
 
@@ -169,11 +169,11 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
 
 
   const sumbitForm = (data: DataProps) => {
-    //  console.log("data=>", data);
+      // console.log("data=>", data);
     //  console.log(errors, 'eeeee')
      setElectricityDetails(data)
      setElectricityStepper(1)
-    // // console.log(customerdetailsData, "customerdetailsData");
+  // console.log(customerdetailsData, "customerdetailsData");
      setElectricityCustomerDetails(customerdetailsData?.data?.data);
   };
 

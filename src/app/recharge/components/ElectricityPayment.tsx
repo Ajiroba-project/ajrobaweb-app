@@ -37,7 +37,9 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
   const extractedContent = ElectricityDetails?.decoder?.match(/\((.*?)\)/)?.[1] || '';
 
-//  console.log(customerElectricityDetails, 'cabbbbbb---cvvv')
+  //  console.log(customerElectricityDetails, 'cabbbbbb---cvvv')
+  //  console.log(ElectricityDetails, 'cabbbbbb')
+  //  console.log(extractedContent, 'extractedContent')
 
     const router = useRouter();
 
@@ -78,7 +80,8 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
     const payload = {
 
-      disco: extractedContent,
+    /*   disco: extractedContent, */
+    disco: ElectricityDetails?.decoder,
        payerName: userInfo?.data?.first_name,
       amount: Number(ElectricityDetails?.elecamount),
       customerId: ElectricityDetails?.iucnumber,
