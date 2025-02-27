@@ -276,3 +276,16 @@ export const ElectricityPurchase = create(
 
   )
 )
+
+
+
+
+// {
+//   "amount": 100,
+//     "phoneNumber": "07037495325",
+//       "network": "MTN",
+//         "senderName": "Femi"
+// }
+// Gbolahan Alaba
+// 09: 42
+// 54100076436
