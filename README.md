@@ -75,7 +75,7 @@ Add additional notes about how to deploy this on a live system.
 
 ### ✍️ Authors <a name = "authors"></a>
 
-- [@Akin Femi](https://github.com/) - Lead Frontend Developer
+- [@Femi Akinyemi](https://github.com/femakin) - Lead Frontend Developer
 - [@Peter Samuel](https://github.com/petsamuel) - jnr Frontend Developer
 
 
