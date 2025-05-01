@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { Fragment, Suspense, useEffect, useState } from "react";
 import { Header } from "../component/Header";
@@ -256,7 +257,7 @@ const LiveChatPage = () => {
     if (userToken) {
       ChatData();
     }
-  }, []);
+  }, [userToken]);
 
 
 

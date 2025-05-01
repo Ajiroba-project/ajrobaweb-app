@@ -36,6 +36,7 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPin]);
 
   const CreateNewPin = yup.object().shape({

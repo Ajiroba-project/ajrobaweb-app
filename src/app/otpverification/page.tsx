@@ -180,12 +180,12 @@ function Page() {
                                         maxLength={1}
                                         className="shadow-md border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         onKeyDown={(e) => handleBackspace(index, e)}
+                                        {...register(`otp.${index}`)}
                                         ref={(el) => {
                                             if (el) {
                                                 inputRefs.current[index] = el;
                                             }
                                         }}
-                                        {...register(`otp.${index}`)}
                                         onChange={(e) => handleInputChange(index, e)}
                                     />
                                 ))}
@@ -208,7 +208,7 @@ function Page() {
 
                         <div className="flex justify-center items-center mt-4">
                             <nav className="flex gap-2">
-                                <small className="text-base">Didn't get email?</small>
+                                <small className="text-base">Didn&apos;t get email?</small>
                                 <small className="text-base">
                                     <button onClick={() => resendotp()} className="text-[#F25E26] text-sm">
                                         Click to resend

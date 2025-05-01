@@ -423,7 +423,7 @@ export const OrderDetails = () => {
    /*    return pendingFilter?.slice(start, end); */
     return orderinfo?.data?.data?.data?.pending_order ? orderinfo?.data?.data?.data?.pending_order?.slice(start, end) : [];
     }
-  }, [currentPage, pipeline, completedFilter, pendingFilter, orderinfo]);
+  }, [currentPage, pipeline, orderinfo, orderSwitch, itemsPerPage]);
 
   if (ordersLoading) {
     return <div>Loading...</div>;

@@ -119,7 +119,7 @@ const Page = () => {
       );
       setFilteredCatData(filteredCat);
     }
-  }, [categoriesInfo, categoryCurrentPage, cardsPerPage,]);
+  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, headerNav, setHeaderNav ]);
 
   useEffect(() => {
     if (auctionInfo?.data) {

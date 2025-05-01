@@ -17,7 +17,7 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
     setSuccessModal: state.setSuccessModal
   }))
 
-    const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const {
     reset,
@@ -45,7 +45,7 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [changePin])
+  }, [changePin, setChangePin])
 
 
 
@@ -57,13 +57,13 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
 
 
     if (data.status === 201 || data.status === 200) {
-     setSuccess(true)
-         setSuccessModal(!successModal)
-    setChangePin(false)
+      setSuccess(true)
+      setSuccessModal(!successModal)
+      setChangePin(false)
 
       reset();
     } else if (data.status === 400 || data.status === 409) {
-      toast.error(`${data?.data?.message || 'Password doesnt match' } `, {
+      toast.error(`${data?.data?.message || 'Password doesnt match'} `, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -134,16 +134,16 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
   };
 
 
-    const { isLoggedIn, user, token } = useAuthStore(state => ({
+  const { isLoggedIn, user, token } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
     user: state.user,
     token: state.token
   }))
 
 
- /*  const userToken = token; */
+  /*  const userToken = token; */
 
-   const userToken = (Cookies.get("token") as string) || "";
+  const userToken = (Cookies.get("token") as string) || "";
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
     'changewalletpin',
@@ -155,15 +155,15 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
 
 
 
-// console.log(data)
- const payload = {
+    // console.log(data)
+    const payload = {
       old_pin: data?.oldpass,
       new_pin: data?.newpass
     }
 
     console.log(payload, 'payload')
 
-      mutate({
+    mutate({
       url: "/api/changewalletpin",
       payload: { payload: payload, token: userToken },
       token: userToken
@@ -227,19 +227,19 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
       </CustomModal>
 
 
-   {
-  success && (
-    <Modal
-      title="Password Updated Successfully"
-      buttoncount={1}
-      icon={verify}
-      buttontype="button"
-      buttonclass="w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white"
-      buttontext="Proceed to Profile"
-      handleEvent={() => setSuccess(false)}  // Fix: Use a function to set success
-    />
-  )
-}
+      {
+        success && (
+          <Modal
+            title="Password Updated Successfully"
+            buttoncount={1}
+            icon={verify}
+            buttontype="button"
+            buttonclass="w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white"
+            buttontext="Proceed to Profile"
+            handleEvent={() => setSuccess(false)}  // Fix: Use a function to set success
+          />
+        )
+      }
 
     </div>
   )

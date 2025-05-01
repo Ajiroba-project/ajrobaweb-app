@@ -30,6 +30,7 @@ export const MakePayment = ({handleClick , createPin, setCreatePin,  amount, onC
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPin])
 
   const {
