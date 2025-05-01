@@ -5,7 +5,7 @@ import Image from "next/image";
 import AuthHero from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { HiArrowLongLeft } from "react-icons/hi2";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
@@ -25,25 +25,30 @@ function Page() {
             .required("All OTP fields are required"),
     });
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema),
+        defaultValues: {
+            otp: ["", "", "", "", "", ""]
+        }
     });
 
 
     const router = useRouter();
-    const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    // const inputRefs = useRef<HTMLInputElement[]>([]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
+    useEffect(() => {
+        // Focus the first input field when component mounts
+        inputRefs.current[0]?.focus();
+    }, []);
 
     const handleInputChange = (
         index: number,
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        const newOtp = [...otp];
-        newOtp[index] = event.target.value.slice(0, 1);
-        setOtp(newOtp);
-        if (index < 5 && newOtp[index].length === 1) {
+        const value = event.target.value.slice(0, 1);
+        setValue(`otp.${index}`, value);
+
+        if (index < 5 && value.length === 1) {
             inputRefs.current[index + 1]?.focus();
         }
     };
@@ -52,7 +57,7 @@ function Page() {
         index: number,
         event: React.KeyboardEvent<HTMLInputElement>,
     ) => {
-        if (index > 0 && event.keyCode === 8 && otp[index].length === 0) {
+        if (index > 0 && event.keyCode === 8 && !event.currentTarget.value) {
             inputRefs.current[index - 1]?.focus();
         }
     };
@@ -75,7 +80,6 @@ function Page() {
                 onClose: () => router.push('/verification')
 
             })
-            setOtp(["", "", "", "", "", ""])
 
 
         } else if (data.status === 400) {
@@ -90,10 +94,9 @@ function Page() {
                 theme: "light",
 
             });
-            setOtp(["", "", "", "", "", ""])
 
         } else {
-            toast.error(`${'An Error Occured'}`, {
+            toast.error(`${'An Error Occurred'}`, {
                 position: "top-right",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -104,12 +107,11 @@ function Page() {
                 theme: "light",
 
             });
-            setOtp(["", "", "", "", "", ""])
         }
     };
 
     const handleError = (error: any) => {
-        toast.error(`${'An Error Occured'}`, {
+        toast.error(`${'An Error Occurred'}`, {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -120,7 +122,6 @@ function Page() {
             theme: "light",
 
         });
-        setOtp(["", "", "", "", "", ""])
 
     };
 
@@ -133,7 +134,7 @@ function Page() {
     const handleVerify = () => {
 
         const Payload = {
-            otp: otp?.join("")
+            otp: inputRefs.current.map(el => el?.value).join("")
         }
 
 
@@ -156,7 +157,7 @@ function Page() {
         <>
 
             <div className="px-8">
-           {/*      <ToastContainer closeOnClick /> */}
+                {/*      <ToastContainer closeOnClick /> */}
                 <nav className="Brand-logo p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block flex justify-center">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />
@@ -172,12 +173,11 @@ function Page() {
                     <div className="flex flex-col">
                         <form onSubmit={handleSubmit(handleVerify)}>
                             <div className="flex space-x-2 gap-4 items-center justify-center flex-wrap">
-                                {otp.map((value, index) => (
+                                {[...Array(6)].map((_, index) => (
                                     <input
                                         key={index}
                                         type="text"
                                         maxLength={1}
-                                        value={value}
                                         className="shadow-md border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         onKeyDown={(e) => handleBackspace(index, e)}
                                         ref={(el) => {
@@ -185,14 +185,9 @@ function Page() {
                                                 inputRefs.current[index] = el;
                                             }
                                         }}
-
-                                        onChange={(e) => {
-                                            handleInputChange(index, e); // Call your custom onChange function
-                                            register(`otp.${index}`).onChange(e); // Call react-hook-form's onChange function with the correct field name
-                                        }}
+                                        {...register(`otp.${index}`)}
+                                        onChange={(e) => handleInputChange(index, e)}
                                     />
-
-
                                 ))}
                             </div>
                             {errors.otp && <div className="text-red-500">{errors.otp.message}</div>}
@@ -213,7 +208,7 @@ function Page() {
 
                         <div className="flex justify-center items-center mt-4">
                             <nav className="flex gap-2">
-                                <small className="text-base">Didn’t get email?</small>
+                                <small className="text-base">Didn't get email?</small>
                                 <small className="text-base">
                                     <button onClick={() => resendotp()} className="text-[#F25E26] text-sm">
                                         Click to resend

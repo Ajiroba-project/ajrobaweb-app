@@ -5,7 +5,7 @@ import RQProviders from '@/utils/provider'
 import { Providers } from './providers'
 import { ToastContainer, toast } from "react-toastify";
 // import '~react-toastify/dist/ReactToastify.min.css';
- import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 // import 'react-toastify/ReactToastify.min.css'
 // import { useExcludeHeader } from '@/hooks/useExcludeHeader'
 // import { Header } from './component/Header'
@@ -38,9 +38,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' className="light bg-white h-full">
       <RQProviders>
-        <body className={`${poppins.className} ${nunitoSans.className} ${inter.className}`} >
+        <body className={`${poppins.className} ${nunitoSans.className} ${inter.className} `} >
           <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}

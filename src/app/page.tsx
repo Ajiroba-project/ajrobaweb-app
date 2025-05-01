@@ -64,7 +64,7 @@ const Page = () => {
   const catCount = Math.ceil(categories.length / cardsPerPage);
   const router = useRouter();
 
-        const { setHeaderNav, headerNav } = userNavStore(state => ({
+  const { setHeaderNav, headerNav } = userNavStore(state => ({
     setHeaderNav: state.setHeaderNav,
     headerNav: state.headerNav,
   }));
@@ -81,6 +81,9 @@ const Page = () => {
       ["get categoriesdetails"],
       true,
     );
+
+  /* console.log */
+
   const { data: featuredproductInfo, isLoading: featuredproducLoading } =
     useQueryData<AuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`,
@@ -104,12 +107,9 @@ const Page = () => {
 
 
 
-     if (headerNav !== 'Home') {
-        setHeaderNav('Home');
+    if (headerNav !== 'Home') {
+      setHeaderNav('Home');
     }
-
-
-
 
 
     if (categoriesInfo?.data) {
@@ -119,7 +119,7 @@ const Page = () => {
       );
       setFilteredCatData(filteredCat);
     }
-  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, ]);
+  }, [categoriesInfo, categoryCurrentPage, cardsPerPage,]);
 
   useEffect(() => {
     if (auctionInfo?.data) {
@@ -142,12 +142,12 @@ const Page = () => {
   return (
     <>
       <Suspense >
-         <header className="fixed z-50 w-full">
+        <header className="fixed z-50 w-full">
           <Header />
         </header>
 
-        <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh] " >
-           <section>
+        <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]  " >
+          <section>
             <div className="">
               <Hero />
             </div>
@@ -170,18 +170,18 @@ const Page = () => {
               <Heading title="Auction Sales" />
             </div>
             <div className="">
-            {/*   <AuctionCard
+              {/*   <AuctionCard
                 cardInfo={filteredAuctionData}
                 currentPage={0}
                 cardsNum={0}
               /> */}
               <AuctionComp
 
-              cardInfo={filteredAuctionData}
+                cardInfo={filteredAuctionData}
                 currentPage={0}
                 cardsNum={0}
               />
-            {/*   <AuctionComp cardInfo={[]} currentPage={0} cardsNum={0}/> */}
+              {/*   <AuctionComp cardInfo={[]} currentPage={0} cardsNum={0}/> */}
             </div>
           </section>
 
@@ -191,7 +191,8 @@ const Page = () => {
             </div>
             <HIW />
 
-            <p className="font-Poppins  cursor-pointer text-lg font-semibold text-[#F25E26] underline lg:ml-5">
+            <p className="font-Poppins cursor-pointer text-lg font-semibold text-[#F25E26] underline lg:ml-5"
+              onClick={() => router.push('/raffle')}>
               Read more
             </p>
           </section>
@@ -213,8 +214,8 @@ const Page = () => {
             </div>
 
             <div className="flex flex-col justify-center">
-             {/*   <CategoryFeatureCard cardInfo={filteredCatData} /> */}
-             <CatFeatCard cardInfo={filteredCatData} />
+              {/*   <CategoryFeatureCard cardInfo={filteredCatData} /> */}
+              <CatFeatCard cardInfo={filteredCatData} />
 
               {/* <CatFeatCard cardInfo={[]} /> */}
               <div className="flex justify-center pt-8">
@@ -237,7 +238,7 @@ const Page = () => {
             </div>
             <div className="flex flex-col items-center  ">
 
-              <ProductCardMain cardInfo={featuredproductInfo?.data}  />
+              <ProductCardMain cardInfo={featuredproductInfo?.data} />
               <div className="flex justify-center pt-5">
 
                 <DefaultButton
@@ -262,14 +263,14 @@ const Page = () => {
               <Heading title="Shop from Top Deals Collection" />
             </div>
             <div className="flex flex-col items-center">
-             {/*  <TopDealsCard cardInfo={topdeals?.data} /> */}
-               <ProductCardMain cardInfo={topdeals?.data}  />
+              {/*  <TopDealsCard cardInfo={topdeals?.data} /> */}
+              <ProductCardMain cardInfo={topdeals?.data} />
               <div className="flex justify-center pt-4">
 
-                 <DefaultButton
+                <DefaultButton
                   text="View all Deals"
                   type="button"
-                   handleClick={() =>
+                  handleClick={() =>
                     router.push(
                       `/categories/${"top deals"}?top_id=${topdeals?.data[0]?.id}`,
                     )
@@ -295,13 +296,13 @@ const Page = () => {
             </div>
             <div className="flex flex-col items-center">
               {/* <TopWeakCard cardInfo={topweak?.data?.slice(0, 8)} /> */}
-                 <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
+              <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
               <div className="flex justify-center pt-5">
 
-                 <DefaultButton
+                <DefaultButton
                   text="View all Deals"
                   type="button"
-                   handleClick={() =>
+                  handleClick={() =>
                     router.push(
                       `/categories/${"This Week Top Product"}?top_id=${topdeals?.data[0]?.id}`,
                     )
@@ -312,8 +313,8 @@ const Page = () => {
             </div>
           </section>
 
-        {/*   <section className="bg-[#F25E26]"> */}
-        <section className="">
+          {/*   <section className="bg-[#F25E26]"> */}
+          <section className="">
             <Banner />
           </section>
         </main>

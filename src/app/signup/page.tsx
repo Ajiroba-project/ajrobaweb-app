@@ -21,6 +21,7 @@ import { state_and_LGA } from "../../app/static-data";
 import { useState } from "react";
 import { ModalProfile, ModalTerms } from "../profile/components/ModalProfile";
 import { IoIosClose } from "react-icons/io";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 function Page() {
   type dataProps = {
@@ -40,23 +41,43 @@ function Page() {
   const router = useRouter();
 
   const schema = yup.object().shape({
-    first_name: yup.string().required("Firstname is required"),
-    last_name: yup.string().required("Surname is required"),
+    first_name: yup
+      .string()
+      .required("Firstname is required")
+      .matches(/^[A-Za-z\s]+$/, "Firstname can only contain letters"),
+    last_name: yup
+      .string()
+      .required("Surname is required")
+      .matches(/^[A-Za-z\s]+$/, "Surname can only contain letters"),
     email: yup
       .string()
+      .email("Please enter a valid email address")
       .matches(
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
-        "Valid email is required",
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Please enter a valid email address"
       )
       .required("Email is required"),
-    phone: yup.string().required("Mobile number is required"),
-    address: yup.string().required("address is required"),
+    phone: yup
+      .string()
+      .matches(/^[0-9]+$/, "Phone number must contain only numbers")
+      .min(10, "Phone number must be at least 10 digits")
+      .max(15, "Phone number cannot exceed 15 digits")
+      .required("Mobile number is required"),
+    address: yup
+      .string()
+      .required("Address is required")
+      .min(10, "Address must be at least 10 characters long")
+      .matches(/^[a-zA-Z0-9\s,.-]+$/, "Address can only contain letters, numbers, spaces, commas, periods, and hyphens"),
     state: yup.string().required("State is required"),
     lga: yup.string().required("LGA is required"),
     password: yup
       .string()
       .required("Password is required")
-      .min(6, "Can't be lesser than 6 digits"),
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
     gender: yup.boolean().required("Gender is required"),
     agree_terms: yup
       .boolean()
@@ -79,9 +100,8 @@ function Page() {
   });
 
   const handleSuccess = (data: any) => {
-    setValue('first_name', '')
     if (data.status === 201) {
-      reset()
+      reset();
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 2000,
@@ -93,9 +113,7 @@ function Page() {
         theme: "light",
         onClose: () => router.push("/otpverification"),
       });
-      reset();
     } else if (data.status === 400 || data.status === 409) {
-        reset()
       toast.error(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 2000,
@@ -106,11 +124,8 @@ function Page() {
         progress: undefined,
         theme: "light",
       });
-      reset();
     } else {
-        reset()
       toast.error(`${"An Error Occured"}`, {
-
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -120,13 +135,10 @@ function Page() {
         progress: undefined,
         theme: "light",
       });
-      reset();
     }
   };
 
   const handleError = (error: any) => {
-        setValue('first_name', '')
-      reset()
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
@@ -137,7 +149,6 @@ function Page() {
       progress: undefined,
       theme: "light",
     });
-    reset();
   };
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
@@ -147,6 +158,21 @@ function Page() {
   );
 
   const sumbitForm = (data: dataProps) => {
+    // Validate email before submission
+    const emailIsValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email);
+    if (!emailIsValid) {
+      toast.error("Please enter a valid email address", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     mutate({
       url: "/api/auth",
       payload: data,
@@ -167,6 +193,8 @@ function Page() {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
@@ -249,6 +277,7 @@ function Page() {
                         {...field}
                         placeholder="Enter email"
                         className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
+                        onBlur={() => trigger("email")}
                       />
                     </div>
                   )}
@@ -268,10 +297,16 @@ function Page() {
                   render={({ field }) => (
                     <div>
                       <input
-                        type="text"
+                        type="tel"
                         {...field}
                         placeholder="Enter phone number"
                         className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
+                        maxLength={15}
+                        onKeyPress={(e) => {
+                          if (!/[0-9]/.test(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </div>
                   )}
@@ -289,13 +324,24 @@ function Page() {
                   name="password"
                   control={control}
                   render={({ field }) => (
-                    <div>
+                    <div className="relative">
                       <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         {...field}
                         placeholder="***********"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
+                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none pr-10"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPassword ? (
+                          <IoEyeOffOutline size={20} />
+                        ) : (
+                          <IoEyeOutline size={20} />
+                        )}
+                      </button>
                     </div>
                   )}
                 />
@@ -541,13 +587,13 @@ function Page() {
           >
             <div className=" cursor-pointer" onClick={handleCloseModal}
 
-             style={{
-        backgroundImage: "url('/ajirobabg.svg')",  // Add your image path here
-       backgroundSize: "33.33%",
-        backgroundPosition: "center",
-        backgroundRepeat: "repeat-x",
-   /*       backgroundPosition: "top", */
-      }}
+              style={{
+                backgroundImage: "url('/ajirobabg.svg')",  // Add your image path here
+                backgroundSize: "33.33%",
+                backgroundPosition: "center",
+                backgroundRepeat: "repeat-x",
+                /*       backgroundPosition: "top", */
+              }}
             >
               <div className="bg-[#F6F6F6] items-center cursor-pointer p-8">
                 <div className="flex justify-between items-center">
@@ -608,40 +654,40 @@ function Page() {
                   <div>
                     <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
                       There is no refund for any ticket already bought on the
-                      platofm as every ticket is deemed to be use or loose
+                      platform as every ticket is deemed to be use or loose
                     </p>
                   </div>
                 </div>
 
 
-                 <div>
+                <div>
                   <div>
                     <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                     Auction Winning
+                      Auction Winning
                     </h1>
                   </div>
 
                   <div>
                     <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                     There is no guarantee that you win the item you bid for as the auction
-                     process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
+                      There is no guarantee that you win the item you bid for as the auction
+                      process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
                     </p>
                   </div>
                 </div>
 
 
-                   <div>
+                <div>
                   <div>
                     <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                     Winning Redemption
+                      Winning Redemption
                     </h1>
                   </div>
 
                   <div>
                     <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                     Any item won on the platform can be redeemed through physical delivery of
-                     the items to you or through a gift voucher which can be redeemed at any of our designated stores or in some instances through cash tranfer to the winner where cash transfer
-                     remains the only efficient and feasible option
+                      Any item won on the platform can be redeemed through physical delivery of
+                      the items to you or through a gift voucher which can be redeemed at any of our designated stores or in some instances through cash tranfer to the winner where cash transfer
+                      remains the only efficient and feasible option
                     </p>
                   </div>
                 </div>

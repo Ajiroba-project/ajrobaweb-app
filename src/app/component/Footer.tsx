@@ -84,12 +84,12 @@ export const Footer = () => {
                   className='flex cursor-pointer items-center gap-2 py-2 text-base hover:text-[#F25E26]'
                 >
                   {val.icon}{' '}
-                  <Link
-                    href={val.links}
+                  <p
+                    /* href={val.links} */
                     className={`text-sm font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className}`}
                   >
                     {val.name}
-                  </Link>
+                  </p>
                 </li>
               ))}
             </ul>

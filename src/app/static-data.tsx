@@ -458,7 +458,7 @@ export const quickLinks = [
     links: '/categories'
   },
   {
-    name: 'Ralfle Draw Process',
+    name: 'Raffle draw Process',
     links: '/raffle'
   }
 ]
@@ -743,18 +743,18 @@ export const faq = [
   {
     question: 'How does raffle draw work on your platform?',
     answer: [
-        "1. Create a profile and provide the basic KYC.",
-        "2. Fund your wallet.",
-        "3. Check the list of items we have on sale by raffle.",
-        "4. Select your item of choice",
-        "5. Make payment through your wallet for ticket for the item (s) you have selected",
-        "6. You confirm your order",
-        "7. Then you submit",
-        "8. You are immidiately in the raffle draw pool",
-        "9. At the specified time for the item you selected, a raffle draw will take place",
-        "10. You get a prompt to watch the raffle draw life",
-        "11. If your ticket wins, you will get a winning confirmation advice/letter sent to your registered email and also to your dashboard on the platform",
-        "12. You can specify your preferred mode of redeeming your winning"
+      "1. Create a profile and provide the basic KYC.",
+      "2. Fund your wallet.",
+      "3. Check the list of items we have on sale by raffle.",
+      "4. Select your item of choice",
+      "5. Make payment through your wallet for ticket for the item (s) you have selected",
+      "6. You confirm your order",
+      "7. Then you submit",
+      "8. You are immidiately in the raffle draw pool",
+      "9. At the specified time for the item you selected, a raffle draw will take place",
+      "10. You get a prompt to watch the raffle draw life",
+      "11. If your ticket wins, you will get a winning confirmation advice/letter sent to your registered email and also to your dashboard on the platform",
+      "12. You can specify your preferred mode of redeeming your winning"
     ]
   },
   {
@@ -788,7 +788,7 @@ export const faq = [
       'How can I contact customer support if I have further questions or concerns?',
     answer: ["You can reach our customer support through",
       "+234-9169-881-005",
-       "support@ajiroba.com"]
+      "support@ajiroba.com"]
   }
 ]
 
@@ -837,12 +837,12 @@ export const stepperList = [
   {
     name: 'Payment',
     icons: <BsCreditCard2Back />,
-     step: 0
+    step: 0
   },
   {
     name: 'Receipts',
     icons: <IoReceiptOutline />,
-     step: 0
+    step: 0
   }
 ]
 
@@ -893,7 +893,7 @@ export const transactions = [
     type: 'received'
   },
 
-    {
+  {
 
     logo: '',
 
@@ -904,7 +904,7 @@ export const transactions = [
     status: ['completed'],
     type: 'received'
   },
-    {
+  {
 
     logo: '',
 
@@ -917,7 +917,7 @@ export const transactions = [
   }
 
   ,
-    {
+  {
 
     logo: '',
 
@@ -983,14 +983,14 @@ export const raffleWinner = [
     product: "50kg Bag of Semo",
     winner: "09023233443",
     ticket: "500",
-     number: 2
+    number: 2
   },
   {
     sn: 2,
     product: "50kg Bag of Rice",
     winner: "09023233443",
     ticket: "500",
-     number: 3
+    number: 3
   }
 ]
 

@@ -17,7 +17,7 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
-import {RelatedProductsAuction} from '@/app/component/RelatedProductsAuction'
+import { RelatedProductsAuction } from '@/app/component/RelatedProductsAuction'
 import Loading from "@/app/component/Loading";
 import Cookies from "js-cookie";
 import ModalComponent from "@/app/component/ModalComponent";
@@ -119,8 +119,8 @@ const Page = ({ params }: any) => {
 
   const router = useRouter();
 
-    /*  useAuthMiddleware(router) */
-//   AuthMiddleware(router)
+  /*  useAuthMiddleware(router) */
+  //   AuthMiddleware(router)
 
   const star = [1, 2, 3, 4, 5];
   const rating = 4;
@@ -162,76 +162,76 @@ const Page = ({ params }: any) => {
   const [loadingdata, setLoadingData] = useState(false);
 
 
-  console.log(productdatanew?.data?.related_products,   'relatedproducts')
+  // console.log(productdatanew?.data?.related_products,   'relatedproducts')
 
-//   const fetchWithAuth = async (url: string) => {
-//     setLoadingData(true); // Indicate loading start
+  //   const fetchWithAuth = async (url: string) => {
+  //     setLoadingData(true); // Indicate loading start
 
-//     const requestOptions: RequestInit = {
-//       method: "GET",
-//       headers: {
-//         Authorization: `token ${userToken}`, // Simplified header creation
-//       },
-//       redirect: "follow",
-//     };
+  //     const requestOptions: RequestInit = {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `token ${userToken}`, // Simplified header creation
+  //       },
+  //       redirect: "follow",
+  //     };
 
-//     try {
-//       const response = await fetch(url, requestOptions);
+  //     try {
+  //       const response = await fetch(url, requestOptions);
 
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! Status: ${response.status}`);
-//       }
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
 
-//       const result = await response.json(); // Parse JSON response
-//       console.log(result, 'resulttt')
-//       setProductDataNew(result); // Update state with result
-//       return result; // Return result for external use
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//       throw error; // Re-throw for the caller to handle
-//     } finally {
-//       setLoadingData(false); // Ensure loading is stopped
-//     }
-//   };
+  //       const result = await response.json(); // Parse JSON response
+  //       console.log(result, 'resulttt')
+  //       setProductDataNew(result); // Update state with result
+  //       return result; // Return result for external use
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       throw error; // Re-throw for the caller to handle
+  //     } finally {
+  //       setLoadingData(false); // Ensure loading is stopped
+  //     }
+  //   };
 
 
-const fetchWithAuth = async (url: string) => {
-  setLoadingData(true); // Indicate loading start
+  const fetchWithAuth = async (url: string) => {
+    setLoadingData(true); // Indicate loading start
 
- /*  console.log(userToken, 'usertokennn') */
+    /*  console.log(userToken, 'usertokennn') */
 
-  const requestOptions: RequestInit = {
-    method: "GET",
-    headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
-    redirect: "follow",
+    const requestOptions: RequestInit = {
+      method: "GET",
+      headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
+      redirect: "follow",
+    };
+
+    try {
+      const response = await fetch(url, requestOptions);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json(); // Parse JSON response
+      /*  console.log(result, "resulttt"); */
+      setProductDataNew(result); // Update state with result
+      return result; // Return result for external use
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Re-throw for the caller to handle
+    } finally {
+      setLoadingData(false); // Ensure loading is stopped
+    }
   };
 
-  try {
-    const response = await fetch(url, requestOptions);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const result = await response.json(); // Parse JSON response
-    /*  console.log(result, "resulttt"); */
-    setProductDataNew(result); // Update state with result
-    return result; // Return result for external use
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error; // Re-throw for the caller to handle
-  } finally {
-    setLoadingData(false); // Ensure loading is stopped
-  }
-};
-
-
-const fetchData = async () => {
+  const fetchData = async () => {
     try {
       const data = await fetchWithAuth(
         `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
       );
-    /*    console.log("Fetched data:", data); */
+      /*    console.log("Fetched data:", data); */
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -243,7 +243,7 @@ const fetchData = async () => {
   }, [product_id]); // Refetch whenever product_id changes
 
   //   console.log(productdata, "productdata");
-   /*   console.log(productdatanew, "productdatanew"); */
+  /*   console.log(productdatanew, "productdatanew"); */
 
   useEffect(() => {
     if (paths.length > 0) {
@@ -464,7 +464,7 @@ const fetchData = async () => {
   const [successbid, setSuccessbid] = useState(false);
 
 
-    const [ticketCount, setTicketCount] = useState(1);
+  const [ticketCount, setTicketCount] = useState(1);
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [auctionId, setAuctionId] = useState("");
@@ -473,7 +473,7 @@ const fetchData = async () => {
 
 
   const handleSuccessbidpayment = (data: any) => {
-  /*   console.log(data, "datatatat"); */
+    /*   console.log(data, "datatatat"); */
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
@@ -577,7 +577,7 @@ const fetchData = async () => {
   };
 
 
-    const {
+  const {
     data: bidpaymentdata,
     error: bidpaymenterror,
     error: bidpaymentterror,
@@ -606,7 +606,7 @@ const fetchData = async () => {
   };
 
 
-    useEffect(() => {
+  useEffect(() => {
     if (bidData && bidData.ticket_price) {
       const initialPrice = Number(bidData.ticket_price);
       setTicketPrice(initialPrice);
@@ -626,7 +626,7 @@ const fetchData = async () => {
   } = useMutateData("verifywalletpin", handleSuccess, handleError);
 
 
-    // Handle API success
+  // Handle API success
   const handleSuccesspayment = (data?: any) => {
     //  console.log(data)
 
@@ -669,20 +669,20 @@ const fetchData = async () => {
         }, */
       });
 
-const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
+      const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
 
-const payload = {
-  auction: auctionId,
-  ticket_quantity: ticketCount,
-  total_amount: Number(totalAmount),
-  pay_with: payWithMethod,
-};
+      const payload = {
+        auction: auctionId,
+        ticket_quantity: ticketCount,
+        total_amount: Number(totalAmount),
+        pay_with: payWithMethod,
+      };
 
-bidpaymentmutate({
-  url: "/api/bidpayment",
-  payload: { payload: payload, token: userToken },
-  token: userToken,
-});
+      bidpaymentmutate({
+        url: "/api/bidpayment",
+        payload: { payload: payload, token: userToken },
+        token: userToken,
+      });
       resetpayment();
     } else if (
       data?.data?.status === 400 ||
@@ -767,7 +767,7 @@ bidpaymentmutate({
   };
 
 
-    const {
+  const {
     data: paymentdata,
     error: paymenterror,
     isError: paymentisError,
@@ -797,7 +797,7 @@ bidpaymentmutate({
 
 
 
- const submitFormf = (data: any) => {
+  const submitFormf = (data: any) => {
     /*   console.log(data, 'dddd', paymentMethod, 'paymmm'); */
 
     // mutate(data)
@@ -830,8 +830,8 @@ bidpaymentmutate({
 
     const filteredReviews = selectedStars
       ? data?.data?.reviews.filter(
-          (review: any) => review.rating === selectedStars,
-        )
+        (review: any) => review.rating === selectedStars,
+      )
       : data?.data?.reviews;
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -862,7 +862,7 @@ bidpaymentmutate({
         </div>
 
         <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
-     <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
+          <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
             <p className="flex mt-4 items-center text-[#111111] text-sm gap-1">
               {Array.from(
                 {
@@ -917,11 +917,10 @@ bidpaymentmutate({
                 <button
                   key={item.stars}
                   onClick={() => setSelectedStars(item.stars)}
-                  className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-                    selectedStars === item.stars
+                  className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === item.stars
                       ? "bg-[#F25E26] text-white font-bold"
                       : "bg-white text-black font-normal"
-                  } rounded`}
+                    } rounded`}
                 >
                   {item.stars} Star
                 </button>
@@ -929,18 +928,17 @@ bidpaymentmutate({
 
               <button
                 onClick={() => setSelectedStars(null)}
-                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-                  selectedStars === null
+                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === null
                     ? "bg-[#F25E26] text-white font-bold"
                     : "bg-white text-black font-normal"
-                } rounded`}
+                  } rounded`}
               >
                 All Stars
               </button>
             </div>
           </div>
 
-         <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
+          <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
             {currentReviews.map((item: any, key: number) => {
               const date = item?.date_created
                 ? parseISO(item.date_created)
@@ -991,11 +989,10 @@ bidpaymentmutate({
                     <h1
                       key={pageNumber}
                       onClick={() => handlePageClick(pageNumber)}
-                      className={` px-2 cursor-pointer ${
-                        currentPage === pageNumber
+                      className={` px-2 cursor-pointer ${currentPage === pageNumber
                           ? " text-[#353131] font-bold"
                           : " text-[#353131]"
-                      }`}
+                        }`}
                     >
                       {pageNumber}
                     </h1>
@@ -1088,7 +1085,7 @@ bidpaymentmutate({
 
 
 
-    const handleBidClick = async (productId: any) => {
+  const handleBidClick = async (productId: any) => {
     if (!userToken) {
       console.error("Token is undefined");
       toast.error("Please Signin", {
@@ -1315,7 +1312,7 @@ bidpaymentmutate({
                           /*  onClick={notify} */
 
                           onClick={() =>
-                    /*         router.push(`/raffle/${product_id}/winners`) */
+                            /*         router.push(`/raffle/${product_id}/winners`) */
                             router.push(`/raffle/${product_id}`)
                           }
                           className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
@@ -1325,30 +1322,30 @@ bidpaymentmutate({
                       </div>
                     ) : (
                       <div className="flex justify-center items-center mt-4">
-                      {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
-                       {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
-                              <button
-                        /*         onClick={() => setmakepayment(!makepayment)} */
-                          onClick={() => handleBidClick(product_id)}
-                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                              >
-                                Bid
-                              </button>
-                            ) : productdatanew?.data?.bidded === "true" ? (
-                              <button
-                                disabled
-                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                              >
-                                Bidded
-                              </button>
-                            ) : (
-                              <button
-                                disabled
-                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                              >
-                                Bidded
-                              </button>
-)}
+                        {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
+                        {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
+                          <button
+                            /*         onClick={() => setmakepayment(!makepayment)} */
+                            onClick={() => handleBidClick(product_id)}
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                          >
+                            Bid
+                          </button>
+                        ) : productdatanew?.data?.bidded === "true" ? (
+                          <button
+                            disabled
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                          >
+                            Bidded
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                          >
+                            Bidded
+                          </button>
+                        )}
 
                       </div>
                     )}
@@ -1501,7 +1498,7 @@ bidpaymentmutate({
           </h1>
         </div>
 
-         {productdatanew?.data?.related_products && (
+        {productdatanew?.data?.related_products && (
           <RelatedProductsDetails
             cardInfo={productdatanew?.data?.related_products}
           />
@@ -1623,299 +1620,124 @@ bidpaymentmutate({
         }
         isModalOpen={confirmordermodal}
         showModal={showConfirmOrder}
-        handleOk={() => {}}
+        handleOk={() => { }}
         handleCancel={handlecloseOrder}
       />
 
 
 
-          <ModalComponent
-            content={
-              <div className="flex flex-col  px-6 py-4">
-                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
-                  Back
-                </div>
+      <ModalComponent
+        content={
+          <div className="flex flex-col  px-6 py-4">
+            <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+              Back
+            </div>
 
-                <div className="flex justify-between flex-wrap py-2">
-                  <div>
-                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-                      <span className="font-Poppins">{bidData?.category}</span>
-                      <span>|</span>
-                      <span className="font-Poppins font-medium">
-                        {bidData?.name}
+            <div className="flex justify-between flex-wrap py-2">
+              <div>
+                <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                  <span className="font-Poppins">{bidData?.category}</span>
+                  <span>|</span>
+                  <span className="font-Poppins font-medium">
+                    {bidData?.name}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <span className="font-Poppins font-medium">
+                  Raffle Draw
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
+              <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
+
+
+                  <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+                    <div className="bg-orange-500 p-3 rounded-lg text-center">
+                      <span className="text-sm block">Raffle Ticket</span>
+                      <span className="text-sm font-bold">
+                        ₦ {ticketPrice}
                       </span>
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  <div>
-                    <span className="font-Poppins font-medium">
-                      Raffle Draw
-                    </span>
-                  </div>
+              <div className="w-full lg:w-1/2 flex flex-col space-y-4">
+                <div>
+                  <label className="font-Poppins text-gray-700">
+                    Product
+                  </label>
+                  <input
+                    type="text"
+                    value={bidData?.name}
+                    readOnly
+                    className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
+                  />
                 </div>
 
-                <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
-                  <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-                    <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-
-
-                      <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
-
-                      <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
-                        <div className="bg-orange-500 p-3 rounded-lg text-center">
-                          <span className="text-sm block">Raffle Ticket</span>
-                          <span className="text-sm font-bold">
-                            ₦ {ticketPrice}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-full lg:w-1/2 flex flex-col space-y-4">
-                    <div>
-                      <label className="font-Poppins text-gray-700">
-                        Product
-                      </label>
-                      <input
-                        type="text"
-                        value={bidData?.name}
-                        readOnly
-                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
-                      />
-                    </div>
-
-                    <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                      <div className="flex flex-col items-center w-full sm:w-1/2">
-                        <label className="font-Poppins text-gray-700 mb-4">
-                          Ticket Price (₦)
-                        </label>
-                        <div className="flex items-center">
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded"
-                            /*    onClick={handleDecrease} */
-                            disabled={ticketCount <= 1}
-                          >
-                            -
-                          </button>
-                          <span className="mx-4 font-bold text-sm">
-                            {" "}
-                            {ticketPrice}
-                          </span>
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded"
-                            /*  onClick={handleIncrease} */
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col items-center w-full sm:w-1/2">
-                        <label className="font-Poppins text-gray-700 mb-4">
-                          No of Ticket
-                        </label>
-                        <div className="flex items-center">
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded"
-                            onClick={handleDecrease}
-                            disabled={ticketCount <= 1}
-                          >
-                            -
-                          </button>
-                          <span className="mx-4 font-bold text-sm">
-                            {ticketCount}
-                          </span>
-                          <button
-                            className="px-2 py-1 bg-orange-500 text-white rounded"
-                            onClick={handleIncrease}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end">
+                <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                  <div className="flex flex-col items-center w-full sm:w-1/2">
+                    <label className="font-Poppins text-gray-700 mb-4">
+                      Ticket Price (₦)
+                    </label>
+                    <div className="flex items-center">
                       <button
-                        onClick={() => {
-                          return (
-                            setbidopen(!bidopen), setViewTicket(!viewticket)
-                          );
-                        }}
-                        className="text-orange-500 font-Poppins text-xs mt-1"
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        /*    onClick={handleDecrease} */
+                        disabled={ticketCount <= 1}
                       >
-                        View Ticket
+                        -
+                      </button>
+                      <span className="mx-4 font-bold text-sm">
+                        {" "}
+                        {ticketPrice}
+                      </span>
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                      /*  onClick={handleIncrease} */
+                      >
+                        +
                       </button>
                     </div>
-
-                    <div>
-                      <label className="font-Poppins text-gray-700">
-                        Amount (₦)
-                      </label>
-                      <input
-                        type="text"
-                        value={`₦ ${totalAmount.toLocaleString()}`}
-                        readOnly
-                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
-                      />
-                    </div>
-
-                    <DefaultButton
-                      text="Proceed"
-                      type="submit"
-                      handleClick={() => {
-                        return (
-                          setmakepayment(!makepayment), setbidopen(!bidopen)
-                        );
-                      }}
-                      className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
-                    />
-                  </div>
-                </div>
-              </div>
-            }
-            isModalOpen={bidopen}
-            showModal={() => setbidopen(!bidopen)}
-            handleOk={() => setbidopen(false)}
-            handleCancel={() => setbidopen(false)}
-          />
-
-
-
-               <ModalComponent
-            content={
-              <div className="  px-6 py-4">
-                <div className="flex flex-col justify-center items-center">
-                  <h1 className="text-center font-bold text-lg">
-                    Make Payment
-                  </h1>
-                  <p className="text-center font-normal text-sm">
-                    Kindly select your payment option
-                  </p>
-                </div>
-
-                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
-                  <div>
-                    <p className="text-[#111111] text-base mb-4  ">
-                      Payment Method
-                    </p>
                   </div>
 
-                  <form action="">
-                    <div className="mb-4">
-                      <div>
-                        <input
-                          type="radio"
-                          id="wallet_balance"
-                          name="payment_method"
-                          value="wallet_balance"
-                          onChange={() =>
-                            handlePaymentSelection("wallet_balance")
-                          }
-                        />
-                        <label className="ml-2" htmlFor="wallet_balance">
-                          Wallet
-                        </label>
-                      </div>
-                      <div className="ml-4">
-                        <small className="text-[#A09F9F] text-sm">
-                          #230000
-                        </small>
-                      </div>
+                  <div className="flex flex-col items-center w-full sm:w-1/2">
+                    <label className="font-Poppins text-gray-700 mb-4">
+                      No of Ticket
+                    </label>
+                    <div className="flex items-center">
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        onClick={handleDecrease}
+                        disabled={ticketCount <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="mx-4 font-bold text-sm">
+                        {ticketCount}
+                      </span>
+                      <button
+                        className="px-2 py-1 bg-orange-500 text-white rounded"
+                        onClick={handleIncrease}
+                      >
+                        +
+                      </button>
                     </div>
-
-                    <div>
-                      <div>
-                        <input
-                          type="radio"
-                          id="wallet_point"
-                          name="payment_method"
-                          value="wallet_point"
-                          onChange={() =>
-                            handlePaymentSelection("wallet_point")
-                          }
-                        />
-                        <label className="ml-2" htmlFor="wallet_point">
-                          Pay With Wallet And Ajiroba Point
-                        </label>
-                      </div>
-                      <div className="ml-4">
-                        <small className="text-[#A09F9F] text-sm">
-                          #23,000 (Wallet) And #200 (Ajiroba Points)
-                        </small>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-
-                <form
-                  action=""
-                  className="flex  flex-col mt-8 mb-4"
-                  onSubmit={handleSubmit(submitFormf)}
-                >
-                  <div className="flex flex-col">
-                    <InputAction
-                      label="Enter Pin"
-                      type="password"
-                      name="password"
-                      placeholder="****"
-                      register={register}
-                      errors={errors.password}
-                      HiEyeSlash={<FaRegEyeSlash />}
-                      HiEye={<FaRegEye />}
-                    />
-                    <div className="text-xs text-red-700">
-                      {errors?.password?.message}
-                    </div>
-
-                    <button
-                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
-                                    }`}
-                    >
-                      {paymentstatus === "pending" ? "..." : "Pay"}
-                    </button>
                   </div>
-                </form>
-              </div>
-            }
-            isModalOpen={makepayment}
-            showModal={() => setmakepayment(!makepayment)}
-            handleOk={() => setmakepayment(false)}
-            handleCancel={() => setmakepayment(false)}
-          />
-
-
-
-            <ModalComponent
-            content={
-              <div className="  px-6 py-4">
-                <div className="py-2 flex justify-center items-center">
-                  <Image src={verify} width={60} height={60} alt="icon" />
-                </div>
-                <div className="flex flex-col justify-center items-center">
-                  <h1 className="text-center font-bold text-lg">
-                    Successfully
-                  </h1>
-                  <p className="text-center font-normal text-sm">
-                    You have entered into raffle draw for this product. Good
-                    luck
-                  </p>
                 </div>
 
-                <div className="flex flex-col justify-center items-center">
-                  <DefaultButton
-                    text="Proceed"
-                    /*  text={status === 'pending' ? 'loading...' : "Save"} */
-                    className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
-                    type="submit"
-                  />
+                <div className="flex justify-end">
                   <button
                     onClick={() => {
                       return (
-                        setbidopen(false),
-                        setViewTicket(!viewticket),
-                        setSuccessbid(!successbid)
+                        setbidopen(!bidopen), setViewTicket(!viewticket)
                       );
                     }}
                     className="text-orange-500 font-Poppins text-xs mt-1"
@@ -1923,13 +1745,188 @@ bidpaymentmutate({
                     View Ticket
                   </button>
                 </div>
+
+                <div>
+                  <label className="font-Poppins text-gray-700">
+                    Amount (₦)
+                  </label>
+                  <input
+                    type="text"
+                    value={`₦ ${totalAmount.toLocaleString()}`}
+                    readOnly
+                    className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                  />
+                </div>
+
+                <DefaultButton
+                  text="Proceed"
+                  type="submit"
+                  handleClick={() => {
+                    return (
+                      setmakepayment(!makepayment), setbidopen(!bidopen)
+                    );
+                  }}
+                  className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
+                />
               </div>
-            }
-            isModalOpen={successbid}
-            showModal={() => setSuccessbid(!successbid)}
-            handleOk={() => setSuccessbid(false)}
-            handleCancel={() => setSuccessbid(false)}
-          />
+            </div>
+          </div>
+        }
+        isModalOpen={bidopen}
+        showModal={() => setbidopen(!bidopen)}
+        handleOk={() => setbidopen(false)}
+        handleCancel={() => setbidopen(false)}
+      />
+
+
+
+      <ModalComponent
+        content={
+          <div className="  px-6 py-4">
+            <div className="flex flex-col justify-center items-center">
+              <h1 className="text-center font-bold text-lg">
+                Make Payment
+              </h1>
+              <p className="text-center font-normal text-sm">
+                Kindly select your payment option
+              </p>
+            </div>
+
+            <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+              <div>
+                <p className="text-[#111111] text-base mb-4  ">
+                  Payment Method
+                </p>
+              </div>
+
+              <form action="">
+                <div className="mb-4">
+                  <div>
+                    <input
+                      type="radio"
+                      id="wallet_balance"
+                      name="payment_method"
+                      value="wallet_balance"
+                      onChange={() =>
+                        handlePaymentSelection("wallet_balance")
+                      }
+                    />
+                    <label className="ml-2" htmlFor="wallet_balance">
+                      Wallet
+                    </label>
+                  </div>
+                  <div className="ml-4">
+                    <small className="text-[#A09F9F] text-sm">
+                      #230000
+                    </small>
+                  </div>
+                </div>
+
+                <div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="wallet_point"
+                      name="payment_method"
+                      value="wallet_point"
+                      onChange={() =>
+                        handlePaymentSelection("wallet_point")
+                      }
+                    />
+                    <label className="ml-2" htmlFor="wallet_point">
+                      Pay With Wallet And Ajiroba Point
+                    </label>
+                  </div>
+                  <div className="ml-4">
+                    <small className="text-[#A09F9F] text-sm">
+                      #23,000 (Wallet) And #200 (Ajiroba Points)
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <form
+              action=""
+              className="flex  flex-col mt-8 mb-4"
+              onSubmit={handleSubmit(submitFormf)}
+            >
+              <div className="flex flex-col">
+                <InputAction
+                  label="Enter Pin"
+                  type="password"
+                  name="password"
+                  placeholder="****"
+                  register={register}
+                  errors={errors.password}
+                  HiEyeSlash={<FaRegEyeSlash />}
+                  HiEye={<FaRegEye />}
+                />
+                <div className="text-xs text-red-700">
+                  {errors?.password?.message}
+                </div>
+
+                <button
+                  className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+                >
+                  {paymentstatus === "pending" ? "..." : "Pay"}
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+        isModalOpen={makepayment}
+        showModal={() => setmakepayment(!makepayment)}
+        handleOk={() => setmakepayment(false)}
+        handleCancel={() => setmakepayment(false)}
+      />
+
+
+
+      <ModalComponent
+        content={
+          <div className="  px-6 py-4">
+            <div className="py-2 flex justify-center items-center">
+              <Image src={verify} width={60} height={60} alt="icon" />
+            </div>
+            <div className="flex flex-col justify-center items-center">
+              <h1 className="text-center font-bold text-lg">
+                Successfully
+              </h1>
+              <p className="text-center font-normal text-sm">
+                You have entered into raffle draw for this product. Good
+                luck
+              </p>
+            </div>
+
+            <div className="flex flex-col justify-center items-center">
+              <DefaultButton
+                text="Proceed"
+                /*  text={status === 'pending' ? 'loading...' : "Save"} */
+                className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
+                type="submit"
+              />
+              <button
+                onClick={() => {
+                  return (
+                    setbidopen(false),
+                    setViewTicket(!viewticket),
+                    setSuccessbid(!successbid)
+                  );
+                }}
+                className="text-orange-500 font-Poppins text-xs mt-1"
+              >
+                View Ticket
+              </button>
+            </div>
+          </div>
+        }
+        isModalOpen={successbid}
+        showModal={() => setSuccessbid(!successbid)}
+        handleOk={() => setSuccessbid(false)}
+        handleCancel={() => setSuccessbid(false)}
+      />
 
       <Footer />
     </main>

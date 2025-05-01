@@ -7,6 +7,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force light mode and ensure text contrast */
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-white text-gray-900;
+}
+
+/* Ensure minimum contrast for text */
+.text-gray-900 {
+  @apply text-opacity-90;
+}
+
+/* Ensure proper contrast for dark backgrounds */
+.bg-gray-900 {
+  @apply text-white;
+}
+
+/* Ensure proper contrast for light backgrounds */
+.bg-white {
+  @apply text-gray-900;
+}
+
 /* @layer base { */
 /* :root { */
 /* --background: 0 0% 100%; */
@@ -83,14 +107,10 @@
 .swiper-pagination-bullet {
   border: 1px solid white !important;
 
-  width: var(
-    --swiper-pagination-bullet-width,
-    var(--swiper-pagination-bullet-size, 15px)
-  ) !important;
-  height: var(
-    --swiper-pagination-bullet-height,
-    var(--swiper-pagination-bullet-size, 15px)
-  ) !important;
+  width: var(--swiper-pagination-bullet-width,
+      var(--swiper-pagination-bullet-size, 15px)) !important;
+  height: var(--swiper-pagination-bullet-height,
+      var(--swiper-pagination-bullet-size, 15px)) !important;
 }
 
 .custom-shape {
