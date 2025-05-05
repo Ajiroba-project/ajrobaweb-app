@@ -30,7 +30,7 @@ const WrappedPage = () => {
   }));
 
 
-    const userToken = Cookies.get('token')
+  const userToken = Cookies.get('token')
 
 
 
@@ -51,7 +51,7 @@ const WrappedPage = () => {
   // console.log(producterror, "producterror")
 
 
-    // Display loading spinner or text while fetching data
+  // Display loading spinner or text while fetching data
   if (productLoading) {
     return (
       <section className="min-h-screen flex justify-center items-center">
@@ -175,14 +175,14 @@ const WrappedPage = () => {
                 key={index}
                 className="flex flex-col justify-between md:flex-row   mt-8 items-center border px-8 py-8 rounded-md w-full"
               >
-              <div style={{
-                width: '55%'
-              }}  className="flex flex-col md:flex-row items-center gap-2 w-full md:w-1/2">
+                <div style={{
+                  width: '55%'
+                }} className="flex flex-col md:flex-row items-center gap-2 w-full md:w-1/2">
                   <div className="">
                     <Image
                       width={100}
                       height={100}
-                      src={`https://ajiroba.onrender.com/media/${item.product?.images[0]?.image}`}
+                      src={`https://staging.ajiroba.ng/media/${item.product?.images[0]?.image}`}
                       alt="product_image"
                       className="object-contain"
                     />
@@ -203,8 +203,8 @@ const WrappedPage = () => {
                 </div>
 
                 <div style={{
-                width: '35%'
-              }} className="flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-4 py-2 w-full md:w-1/2">
+                  width: '35%'
+                }} className="flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-4 py-2 w-full md:w-1/2">
                   <div
                     className="flex flex-col items-baseline gap-4 w-full"
                     style={{
@@ -220,7 +220,7 @@ const WrappedPage = () => {
                       </div>
                       <div>
                         <p className="font-Poppins text-[#353131] font-medium">
-                        N {item?.price}
+                          N {item?.price}
                         </p>
                       </div>
                     </div>
@@ -303,7 +303,7 @@ const WrappedPage = () => {
               </div>
 
               <div className="flex items-center">
-               {/*  {console.log(productinfo?.data?.data[1], "price")} */}
+                {/*  {console.log(productinfo?.data?.data[1], "price")} */}
                 <div>
                   <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
                     N {productinfo?.data?.data[1]?.cost_price}

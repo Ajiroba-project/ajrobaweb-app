@@ -733,7 +733,7 @@ const handlePageClick = (pageNumber: number) => {
                     <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
                       <Image
                         className=" images-map w-32 h-32 object-cover"
-                        src={`https://ajiroba.onrender.com/media/${image.image}`}
+                        src={`https://staging.ajiroba.ng/media/${image.image}`}
                         alt="Product Thumbnail"
                         onClick={() => handleImageClick(index)}
                         width={100}
@@ -751,7 +751,7 @@ const handlePageClick = (pageNumber: number) => {
                    {/*  <Image
                       src={
                         productdata?.data?.images?.[0]?.image
-                          ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                          ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                           : ""
                       }
                       alt="Product Image"
@@ -762,7 +762,7 @@ const handlePageClick = (pageNumber: number) => {
                     /> */}
                      {productdata?.data?.images?.[selectedImageIndex] ? ( // Check if the selected image exists
                     <Image
-                      src={`https://ajiroba.onrender.com/media/${productdata.data.images[selectedImageIndex].image}`}
+                          src={`https://staging.ajiroba.ng/media/${productdata.data.images[selectedImageIndex].image}`}
                       alt="Product Image"
                       width={400}
                       height={400}
@@ -895,7 +895,7 @@ const handlePageClick = (pageNumber: number) => {
                   <Image
                     src={
                       productdata?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                          ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -909,7 +909,7 @@ const handlePageClick = (pageNumber: number) => {
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[1].image}`
+                          ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
                         : ""
                     }
                     alt="Product Image"

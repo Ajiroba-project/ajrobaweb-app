@@ -286,7 +286,7 @@ const handleDelete = async (id: number, quantity: number) => {
           <div>
             <Image
               className="w-100 h-100 object-cover"
-              src={`https://ajiroba.onrender.com/media/${item?.product?.images[0]?.image}`}
+              src={`https://staging.ajiroba.ng/media/${item?.product?.images[0]?.image}`}
               alt="Product Thumbnail"
               height={100}
               width={100}

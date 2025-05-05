@@ -331,7 +331,7 @@ const Page = ({ params }: any) => {
                                         >
                                             <Image
                                                 className=" w-32 h-32 object-cover" // Ensure uniform size for thumbnails
-                                                src={`https://ajiroba.onrender.com/media/${image.image}`}
+                                                src={`https://staging.ajiroba.ng/media/${image.image}`}
                                                 alt="Product Thumbnail"
                                                 onClick={() =>
                                                     handleImageClick(index)
@@ -353,7 +353,7 @@ const Page = ({ params }: any) => {
                                         src={
                                             productdata?.data?.images?.[0]
                                                 ?.image
-                                                ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                                                ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                                                 : ""
                                         }
                                         alt="Product Image"
@@ -482,7 +482,7 @@ const Page = ({ params }: any) => {
                             <Image
                                 src={
                                     productdata?.data?.images?.[0]?.image
-                                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                                         : ""
                                 }
                                 alt="Product Image"

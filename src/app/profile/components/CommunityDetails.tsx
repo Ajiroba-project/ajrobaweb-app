@@ -46,13 +46,11 @@ const TabComponent = ({
             key={index}
             /*        onClick={() => handleTabClick(tab)} */
             onClick={() => setActiveTab(tab)}
-            className={`w-1/3 py-2 text-center font-Poppins text-sm font-medium border-r-1 ${
-              activeTab === tab
+            className={`w-1/3 py-2 text-center font-Poppins text-sm font-medium border-r-1 ${activeTab === tab
                 ? "bg-[#f25e26] text-white rounded-tl-md" // Active tab
                 : "bg-white text-[#475367] hover:bg-gray-100" // Inactive tabs
-            } ${index === 0 ? "rounded-l-lg" : ""} ${
-              index === tabs.length - 1 ? "rounded-r-lg" : ""
-            }`}
+              } ${index === 0 ? "rounded-l-lg" : ""} ${index === tabs.length - 1 ? "rounded-r-lg" : ""
+              }`}
           >
             {tab}
           </button>
@@ -305,12 +303,12 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     return <Loading />;
   }
 
-    // Ensure posts array exists
+  // Ensure posts array exists
   if (!posts || posts.length === 0) {
     return <p>No posts available</p>;
   }
 
-const ITEMS_PER_PAGE = 5; // Adjust based on your needs
+  const ITEMS_PER_PAGE = 5; // Adjust based on your needs
 
   // Calculate total pages
   const totalPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
@@ -331,18 +329,18 @@ const ITEMS_PER_PAGE = 5; // Adjust based on your needs
           /*   console.log( posts?.length) */
 
           // Get the total number of comments from the right source
-const totalComments = item?.comments?.length > 0
-  ? item.comments.length
-  : item?.post?.comments?.length || 0;
+          const totalComments = item?.comments?.length > 0
+            ? item.comments.length
+            : item?.post?.comments?.length || 0;
 
-// Calculate total pages
-const totalPages = Math.ceil(totalComments / ITEMS_PER_PAGE);
+          // Calculate total pages
+          const totalPages = Math.ceil(totalComments / ITEMS_PER_PAGE);
 
-// Get paginated comments from the correct source
-const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-const paginatedComments = item?.comments?.length > 0
-  ? item.comments.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-  : item?.post?.comments?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
+          // Get paginated comments from the correct source
+          const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+          const paginatedComments = item?.comments?.length > 0
+            ? item.comments.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+            : item?.post?.comments?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
 
           return activeTab === "Trending" ? (
             <div
@@ -356,7 +354,7 @@ const paginatedComments = item?.comments?.length > 0
                 <Image
                   src={
                     item?.images?.[0]?.image
-                      ? `https://ajiroba.onrender.com/media/${item?.images?.[0]?.image}`
+                      ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
                       : ""
                   }
                   alt="Bracelet"
@@ -401,7 +399,7 @@ const paginatedComments = item?.comments?.length > 0
                   />
                   {item?.likes_count}{" "}
                   {bookmarkedstatus === "pending" ||
-                  unbookmarkedstatus === "pending"
+                    unbookmarkedstatus === "pending"
                     ? "loading..."
                     : "Bookmark"}
                 </span>
@@ -416,7 +414,7 @@ const paginatedComments = item?.comments?.length > 0
                   <Image
                     src={
                       item?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${item?.images?.[0]?.image}`
+                        ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
                         : ""
                     }
                     alt="Profile"
@@ -477,19 +475,19 @@ const paginatedComments = item?.comments?.length > 0
                     comment: string;
                     user: any;
                     fullname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | React.ReactElement<
-                          any,
-                          string | React.JSXElementConstructor<any>
-                        >
-                      | Iterable<React.ReactNode>
-                      | React.ReactPortal
-                      | Promise<React.AwaitedReactNode>
-                      | null
-                      | undefined;
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | React.ReactElement<
+                      any,
+                      string | React.JSXElementConstructor<any>
+                    >
+                    | Iterable<React.ReactNode>
+                    | React.ReactPortal
+                    | Promise<React.AwaitedReactNode>
+                    | null
+                    | undefined;
                   },
                   key: React.Key | null | undefined,
                 ) => {
@@ -531,27 +529,27 @@ const paginatedComments = item?.comments?.length > 0
               )}
 
 
-     {/* Pagination Controls */}
-      <div className="mt-4 flex justify-center gap-4">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
+              {/* Pagination Controls */}
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
 
-        <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
+                <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
 
-        <button
-          onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-       </div>
+                <button
+                  onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           ) : activeTab === "Liked" ? (
             <div
               key={key}
@@ -566,7 +564,7 @@ const paginatedComments = item?.comments?.length > 0
                   <Image
                     src={
                       item?.post?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
+                        ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
                         : ""
                     }
                     alt="Bracelet"
@@ -578,22 +576,22 @@ const paginatedComments = item?.comments?.length > 0
 
 
 
-                <span
-                  className="flex items-center font-Poppins font-normal text-[#252525] text-sm cursor-pointer"
-                  onClick={() =>
-                    !item?.post?.user_liked
-                      ? handleLike(item.post?.id, postLikeData.liked)
-                      : handledisLike(item.post?.id, postLikeData.liked)
-                  }
-                >
-                  <FaThumbsUp
-                    className={`mr-1 ${item?.post?.user_liked ? "text-[#F56630]" : "text-gray-500"}`}
-                  />
-                  {item?.post?.likes_count}{" "}
-                  {likedstatus === "pending" || dislikedstatus === "pending"
-                    ? "loading..."
-                    : "Kudos"}
-                </span>
+                  <span
+                    className="flex items-center font-Poppins font-normal text-[#252525] text-sm cursor-pointer"
+                    onClick={() =>
+                      !item?.post?.user_liked
+                        ? handleLike(item.post?.id, postLikeData.liked)
+                        : handledisLike(item.post?.id, postLikeData.liked)
+                    }
+                  >
+                    <FaThumbsUp
+                      className={`mr-1 ${item?.post?.user_liked ? "text-[#F56630]" : "text-gray-500"}`}
+                    />
+                    {item?.post?.likes_count}{" "}
+                    {likedstatus === "pending" || dislikedstatus === "pending"
+                      ? "loading..."
+                      : "Kudos"}
+                  </span>
 
 
                   <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
@@ -604,22 +602,22 @@ const paginatedComments = item?.comments?.length > 0
                     <FaShareAlt className="mr-1" /> Share
                   </span>
                   <span
-                  className="flex items-center font-Poppins font-normal text-[#252525] text-sm cursor-pointer"
-                  onClick={() =>
-                    !item?.post?.user_bookmarked
-                      ? handleBookMark(item.post?.id, postLikeData.liked)
-                      : handleUnBookMark(item.post?.id, postLikeData.liked)
-                  }
-                >
-                  <FiBookmark
-                    className={`mr-1 ${item?.post?.user_bookmarked ? "text-[#F56630]" : "text-gray-500"}`}
-                  />
-                  {item?.post?.likes_count}{" "}
-                  {bookmarkedstatus === "pending" ||
-                  unbookmarkedstatus === "pending"
-                    ? "loading..."
-                    : "Bookmark"}
-                </span>
+                    className="flex items-center font-Poppins font-normal text-[#252525] text-sm cursor-pointer"
+                    onClick={() =>
+                      !item?.post?.user_bookmarked
+                        ? handleBookMark(item.post?.id, postLikeData.liked)
+                        : handleUnBookMark(item.post?.id, postLikeData.liked)
+                    }
+                  >
+                    <FiBookmark
+                      className={`mr-1 ${item?.post?.user_bookmarked ? "text-[#F56630]" : "text-gray-500"}`}
+                    />
+                    {item?.post?.likes_count}{" "}
+                    {bookmarkedstatus === "pending" ||
+                      unbookmarkedstatus === "pending"
+                      ? "loading..."
+                      : "Bookmark"}
+                  </span>
                 </div>
 
                 <form
@@ -631,7 +629,7 @@ const paginatedComments = item?.comments?.length > 0
                     <Image
                       src={
                         item?.post?.images?.[0]?.image
-                          ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
+                          ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
                           : ""
                       }
                       alt="Profile"
@@ -693,19 +691,19 @@ const paginatedComments = item?.comments?.length > 0
                       comment: string;
                       user: any;
                       fullname:
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | React.ReactElement<
-                            any,
-                            string | React.JSXElementConstructor<any>
-                          >
-                        | Iterable<React.ReactNode>
-                        | React.ReactPortal
-                        | Promise<React.AwaitedReactNode>
-                        | null
-                        | undefined;
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                      | Iterable<React.ReactNode>
+                      | React.ReactPortal
+                      | Promise<React.AwaitedReactNode>
+                      | null
+                      | undefined;
                     },
                     key: React.Key | null | undefined,
                   ) => {
@@ -746,26 +744,26 @@ const paginatedComments = item?.comments?.length > 0
                   },
                 )}
 
-                  {/* Pagination Controls */}
-      <div className="mt-4 flex justify-center gap-4">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
+                {/* Pagination Controls */}
+                <div className="mt-4 flex justify-center gap-4">
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
 
-        <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
+                  <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
 
-        <button
-          onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+                  <button
+                    onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
               </>
             </div>
           ) : activeTab === "Bookmarked" ? (
@@ -780,7 +778,7 @@ const paginatedComments = item?.comments?.length > 0
                 <Image
                   src={
                     item?.post?.images?.[0]?.image
-                      ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
+                      ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
                       : ""
                   }
                   alt="Bracelet"
@@ -826,7 +824,7 @@ const paginatedComments = item?.comments?.length > 0
                   <Image
                     src={
                       item?.post?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
+                        ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
                         : ""
                     }
                     alt="Profile"
@@ -888,19 +886,19 @@ const paginatedComments = item?.comments?.length > 0
                     comment: string;
                     user: any;
                     fullname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | React.ReactElement<
-                          any,
-                          string | React.JSXElementConstructor<any>
-                        >
-                      | Iterable<React.ReactNode>
-                      | React.ReactPortal
-                      | Promise<React.AwaitedReactNode>
-                      | null
-                      | undefined;
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | React.ReactElement<
+                      any,
+                      string | React.JSXElementConstructor<any>
+                    >
+                    | Iterable<React.ReactNode>
+                    | React.ReactPortal
+                    | Promise<React.AwaitedReactNode>
+                    | null
+                    | undefined;
                   },
                   key: React.Key | null | undefined,
                 ) => {
@@ -941,26 +939,26 @@ const paginatedComments = item?.comments?.length > 0
                 },
               )}
 
-                {/* Pagination Controls */}
-      <div className="mt-4 flex justify-center gap-4">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
+              {/* Pagination Controls */}
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
 
-        <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
+                <span className="font-semibold text-lg">Page {currentPage} of {totalPages}</span>
 
-        <button
-          onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+                <button
+                  onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           ) : (
             <p>No data Available</p>
@@ -997,7 +995,7 @@ const NotificationSidebar = () => {
 
   const ITEMS_PER_PAGE = 10;
 
-    // Pagination State
+  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
 
   // Extract notifications array
@@ -1043,9 +1041,8 @@ const NotificationSidebar = () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`px-3 py-1 border rounded-md ${
-              currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
-            }`}
+            className={`px-3 py-1 border rounded-md ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+              }`}
           >
             Prev
           </button>
@@ -1055,9 +1052,8 @@ const NotificationSidebar = () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className={`px-3 py-1 border rounded-md ${
-              currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
-            }`}
+            className={`px-3 py-1 border rounded-md ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+              }`}
           >
             Next
           </button>

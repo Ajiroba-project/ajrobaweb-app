@@ -17,7 +17,7 @@ export const RelatedProductsAuction = ({ cardInfo }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12; // adjust this value to change the number of items per page
-    const totalPages = cardInfo &&  Math.ceil(cardInfo?.length / itemsPerPage);
+    const totalPages = cardInfo && Math.ceil(cardInfo?.length / itemsPerPage);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -35,11 +35,11 @@ export const RelatedProductsAuction = ({ cardInfo }) => {
             >
                 {paginatedCardInfo?.map((value, index) => (
                     <div onClick={() => router.push(`/auction/productdetails/${value.id}`)} className='w-[25%] border border-white shadow-sm ' key={index}>
-                      {/*   {console.log(value, 'value')} */}
+                        {/*   {console.log(value, 'value')} */}
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>
                                 <Image
-                                    src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                                     alt="product"
                                     className=""
                                     width={120}
@@ -56,9 +56,9 @@ export const RelatedProductsAuction = ({ cardInfo }) => {
                                         <p className=' font-Poppins text-[13px] font-bold'>{value.name}</p>
                                     </div>
 
-                                     <div className='justify-start'>
+                                    <div className='justify-start'>
                                         <p className="text-sm" >Ticket Price:</p>
-                                        <p  className=' font-Poppins text-[13px] font-semibold flex justify-end '>
+                                        <p className=' font-Poppins text-[13px] font-semibold flex justify-end '>
                                             ₦&nbsp;{value.ticket_price}
                                             <span className='font-semibold '></span>
                                         </p>
@@ -75,15 +75,15 @@ export const RelatedProductsAuction = ({ cardInfo }) => {
                                     </p>
 
 
-                                      <div className='justify-start'>
-                                       {/*  <p className='w-max text-[10px] font-normal font-Poppins  text-[#242423]'>
+                                    <div className='justify-start'>
+                                        {/*  <p className='w-max text-[10px] font-normal font-Poppins  text-[#242423]'>
                                            ({value?.product_reviews?.total_reviews})
                                             <span className='font-semibold '></span>
                                         </p> */}
                                     </div>
                                 </div>
                                 <p className='text-[13px] font-Poppins  text-[#2A2A2A] '>
-                                   w - {value?.weight || 'NA'}
+                                    w - {value?.weight || 'NA'}
                                 </p>
                             </div>
                         </div>

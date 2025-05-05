@@ -103,6 +103,9 @@ const Page = () => {
       true,
     );
 
+
+  console.log(topweak?.data, 'topweak')
+
   useEffect(() => {
 
 
@@ -119,7 +122,7 @@ const Page = () => {
       );
       setFilteredCatData(filteredCat);
     }
-  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, headerNav, setHeaderNav ]);
+  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, headerNav, setHeaderNav]);
 
   useEffect(() => {
     if (auctionInfo?.data) {

@@ -254,7 +254,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                   alt='product'
                   className='w-fit bg-contain '
                 /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
               </div>
               {/* cart */}
@@ -503,7 +503,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                   alt='product'
                   className='w-fit bg-contain '
                 /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
               </div>
               {/* cart */}
@@ -747,7 +747,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                   alt='product'
                   className='w-fit bg-contain '
                 /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
               </div>
               {/* cart */}
@@ -843,10 +843,10 @@ export const CategoryCard = () => {
           >
             <div className='rounded-t-2xl bg-[#F6F6F6]'>
               <div className='relative w-full md:h-80 lg:h-64 h-48 '>
-                {/* {value?.image[0]?.image && console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`, 'value?.image')} */}
+                {/* {value?.image[0]?.image && console.log(`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`, 'value?.image')} */}
                 {value?.image[0]?.image &&
                   <Image
-                    src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+                    src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
                     alt="product"
                     layout="fill"
                     className="fixed-size-image"
@@ -975,7 +975,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
 
               <div className='flex items-center justify-center mb-4'>
 
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
 
               </div>
@@ -1122,7 +1122,7 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
 
               <div className='flex items-center justify-center mb-4'>
 
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
 
               </div>
@@ -1221,7 +1221,7 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
           >
 
             {/*  {
-              console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`)
+              console.log(`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`)
             } */}
 
             <div className='relative flex items-center justify-center h-[300px] w-[300px]'>
@@ -1230,7 +1230,7 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
               <div
                 className='absolute inset-0 bg-cover bg-center'
                 style={{
-                  backgroundImage: `url(https://ajiroba.onrender.com/media/${value?.image[0]?.image})`,
+                  backgroundImage: `url(https://staging.ajiroba.ng/media/${value?.image[0]?.image})`,
                 }}
               ></div>
 
@@ -1277,7 +1277,7 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
             <div className="w-full h-60 overflow-hidden relative rounded-lg">
               {/* Background image */}
               <Image width={50} height={50}
-                src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+                src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
                 alt={value.name}
                 className="object-cover w-full h-full rounded-lg"
               />
@@ -1504,7 +1504,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                     >
                       <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
                         <Image
-                          src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                          src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                           width={100}
                           height={100}
                           alt="image"
@@ -1787,7 +1787,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                       {hoverStates[index] ? (
                         <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
                           <Image
-                            src={`https://ajiroba.onrender.com/media/${value?.image}`}
+                            src={`https://staging.ajiroba.ng/media/${value?.image}`}
                             width={100}
                             height={100}
                             alt="image"
@@ -1796,7 +1796,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                         </div>
                       ) : (
                         <Image
-                          src={`https://ajiroba.onrender.com/media/${value?.image}`}
+                          src={`https://staging.ajiroba.ng/media/${value?.image}`}
                           width={100}
                           height={100}
                           alt="human hair"
@@ -1947,7 +1947,7 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                       <Image
                         width={100}
                         height={100}
-                        src={`https://ajiroba.onrender.com/media/${value?.images
+                        src={`https://staging.ajiroba.ng/media/${value?.images
                           ? value?.images[0]?.image
                           : value?.image[0]?.image
                           }`}

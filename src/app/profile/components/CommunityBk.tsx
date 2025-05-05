@@ -24,7 +24,7 @@ type CommentFormValues = {
 };
 
 const TabComponent = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) => {
-//   const [activeTab, setActiveTab] = useState<string>("Trending");
+  //   const [activeTab, setActiveTab] = useState<string>("Trending");
 
   const tabs = ["Trending", "Liked", "Bookmarked"];
 
@@ -38,15 +38,13 @@ const TabComponent = ({ activeTab, setActiveTab }: { activeTab: string, setActiv
         {tabs.map((tab, index) => (
           <button
             key={index}
-     /*        onClick={() => handleTabClick(tab)} */
-      onClick={() => setActiveTab(tab)}
-            className={`w-1/3 py-2 text-center font-Poppins text-sm font-medium border-r-1 ${
-              activeTab === tab
+            /*        onClick={() => handleTabClick(tab)} */
+            onClick={() => setActiveTab(tab)}
+            className={`w-1/3 py-2 text-center font-Poppins text-sm font-medium border-r-1 ${activeTab === tab
                 ? "bg-[#f25e26] text-white rounded-tl-md" // Active tab
                 : "bg-white text-[#475367] hover:bg-gray-100" // Inactive tabs
-            } ${index === 0 ? "rounded-l-lg" : ""} ${
-              index === tabs.length - 1 ? "rounded-r-lg" : ""
-            }`}
+              } ${index === 0 ? "rounded-l-lg" : ""} ${index === tabs.length - 1 ? "rounded-r-lg" : ""
+              }`}
           >
             {tab}
           </button>
@@ -148,7 +146,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
   }));
 
   // const userToken = token;
-   const userToken = (Cookies.get("token") as string) || "";
+  const userToken = (Cookies.get("token") as string) || "";
 
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
     "comment_on_post",
@@ -232,7 +230,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
   };
 
 
-   // Set default content as trending posts
+  // Set default content as trending posts
   let posts = trendingrinfo?.data?.data?.posts || [];
   //  console.log(trendingrinfo?.data?.data?.liked_posts, 'trendinggn')
   //  console.log(posts?.length)
@@ -248,538 +246,538 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
 
 
 
-    if (trendingLoading ) {
+  if (trendingLoading) {
     return <Loading />;
   }
 
   return (
     <>
-  <div className=" w-full">
+      <div className=" w-full">
 
- {
+        {
 
-      posts?.map(
-        (item: any, key: React.Key | null | undefined) => {
-          const postLikeData = postLikes[item.id] || {
-            count: item.likes_count,
-            liked: item.is_liked_by_current_user,
-          };
-        /*   console.log( posts?.length) */
-
-
-          return (
+          posts?.map(
+            (item: any, key: React.Key | null | undefined) => {
+              const postLikeData = postLikes[item.id] || {
+                count: item.likes_count,
+                liked: item.is_liked_by_current_user,
+              };
+              /*   console.log( posts?.length) */
 
 
+              return (
 
-           activeTab === 'Trending' ?
 
 
-            <div
-              key={key}
-              className="flex flex-col gap-4 p-6 border rounded-md bg-white shadow-lg w-full"
-            >
-              <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">{item?.content}</h3>
-              <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
-                 <Image
-                  src={
-                    item?.images?.[0]?.image
-                      ? `https://ajiroba.onrender.com/media/${item?.images?.[0]?.image}`
-                      : ""
-                  }
-                  alt="Bracelet"
-                  width={100}
-                  height={100}
-                />
-              </div>
-              <div className="flex justify-between items-center text-gray-600">
-                <span
-                  className="flex items-center font-Poppins font-normal text-[#252525] text-sm"
-                  onClick={() => handleLike(item.id, postLikeData.liked)}
-                >
-                  <FaThumbsUp
-                    className={`mr-1 ${postLikeData.count ? "text-[#F56630]" : "text-gray-500"}`}
-                  />
-                  {item?.likes_count} Kudos
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FaRegCommentDots className="mr-1" /> {item?.comments_count}{" "}
-                  Comments
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FaShareAlt className="mr-1" /> Share
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FiBookmark className="mr-1" /> Bookmark
-                </span>
-              </div>
+                activeTab === 'Trending' ?
 
-              <form
-                onSubmit={handleSubmit((data) =>
-                  onSubmit({ ...data, post_id: item.id }),
-                )}
-              >
-                <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
-                   <Image
-                    src={
-                      item?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${item?.images?.[0]?.image}`
-                        : ""
-                    }
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Write your comment"
-                    {...register("comment")}
-                    className="w-full border-none rounded-lg p-2 focus:outline-none bg-transparent"
-                  />
-                  <div className="flex gap-2">
-                    <label htmlFor="imageUpload">
-                      <AiOutlinePicture className="text-2xl cursor-pointer text-gray-500" />
-                    </label>
-                    <input
-                      type="file"
-                      id="imageUpload"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={handleImageUpload}
-                    />
-                  </div>
-                </div>
-                {errors.comment && (
-                  <p className="text-[#F56630] text-sm">
-                    {errors.comment.message}
-                  </p>
-                )}
 
-                {selectedImage && (
-                  <div className="mt-3">
-                    <Image
-                      src={selectedImage}
-                      alt="Selected"
-                      width={100}
-                      height={100}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                  </div>
-                )}
-
-                <div className="flex justify-end ">
-                  <button
-                    type="submit"
-                    className=" mt-3 bg-[#F56630] font-Poppins font-normal text-sm text-white py-2 px-4 rounded-lg"
+                  <div
+                    key={key}
+                    className="flex flex-col gap-4 p-6 border rounded-md bg-white shadow-lg w-full"
                   >
-                    {status === "pending" ? "loading..." : "Post Comment"}
-                  </button>
-                </div>
-              </form>
+                    <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">{item?.content}</h3>
+                    <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
+                      <Image
+                        src={
+                          item?.images?.[0]?.image
+                            ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
+                            : ""
+                        }
+                        alt="Bracelet"
+                        width={100}
+                        height={100}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center text-gray-600">
+                      <span
+                        className="flex items-center font-Poppins font-normal text-[#252525] text-sm"
+                        onClick={() => handleLike(item.id, postLikeData.liked)}
+                      >
+                        <FaThumbsUp
+                          className={`mr-1 ${postLikeData.count ? "text-[#F56630]" : "text-gray-500"}`}
+                        />
+                        {item?.likes_count} Kudos
+                      </span>
+                      <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                        <FaRegCommentDots className="mr-1" /> {item?.comments_count}{" "}
+                        Comments
+                      </span>
+                      <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                        <FaShareAlt className="mr-1" /> Share
+                      </span>
+                      <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                        <FiBookmark className="mr-1" /> Bookmark
+                      </span>
+                    </div>
 
-              {item?.comments?.map(
-                (
-                  item: {
-                    comment: string;
-                    user: any;
-                    fullname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | React.ReactElement<
-                          any,
-                          string | React.JSXElementConstructor<any>
-                        >
-                      | Iterable<React.ReactNode>
-                      | React.ReactPortal
-                      | Promise<React.AwaitedReactNode>
-                      | null
-                      | undefined;
-                  },
-                  key: React.Key | null | undefined,
-                ) => {
-                  return (
-                    <div key={key} className="mt-4">
-                      <div className="flex gap-2 items-start">
+                    <form
+                      onSubmit={handleSubmit((data) =>
+                        onSubmit({ ...data, post_id: item.id }),
+                      )}
+                    >
+                      <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
                         <Image
                           src={
-                            item?.user?.profile_image
-                              ? `${item?.user?.profile_image}`
+                            item?.images?.[0]?.image
+                              ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
                               : ""
                           }
-                          alt="Commenter"
+                          alt="Profile"
                           width={40}
                           height={40}
                           className="rounded-full"
                         />
-                        <div>
-                          <div className="flex items-center justify-center gap-2">
-                            <p className="font-semibold font-Poppins">
-                              {item?.user?.fullname}
-                            </p>
-                            <p className="font-normal font-Poppins text-[#252525] text-sm">{item?.comment}</p>
-                          </div>
-                          <div className="flex gap-2 mt-1 text-gray-500">
-                            <FaThumbsUp className="cursor-pointer font-normal text-sm font-Poppins text-[#252525]" /> 0 Kudos
-                            <span className="ml-4 cursor-pointer font-normal text-sm font-Poppins text-[#252525]">Reply</span>
-                          </div>
+                        <input
+                          type="text"
+                          placeholder="Write your comment"
+                          {...register("comment")}
+                          className="w-full border-none rounded-lg p-2 focus:outline-none bg-transparent"
+                        />
+                        <div className="flex gap-2">
+                          <label htmlFor="imageUpload">
+                            <AiOutlinePicture className="text-2xl cursor-pointer text-gray-500" />
+                          </label>
+                          <input
+                            type="file"
+                            id="imageUpload"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={handleImageUpload}
+                          />
                         </div>
                       </div>
-                    </div>
-                  );
-                },
-              )}
-            </div>
+                      {errors.comment && (
+                        <p className="text-[#F56630] text-sm">
+                          {errors.comment.message}
+                        </p>
+                      )}
 
+                      {selectedImage && (
+                        <div className="mt-3">
+                          <Image
+                            src={selectedImage}
+                            alt="Selected"
+                            width={100}
+                            height={100}
+                            className="w-24 h-24 object-cover rounded-lg"
+                          />
+                        </div>
+                      )}
 
-
-
-            : activeTab === 'Liked' ?
-
-
-              <div
-              key={key}
-              className="flex flex-col gap-4 p-6 border rounded-md bg-white shadow-lg w-full"
-            >
-
-
-
-
-
-                <>
-              <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">{item?.post?.content || 'No data Available'}</h3>
-              <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
-                 <Image
-                  src={
-                    item?.post?.images?.[0]?.image
-                      ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
-                      : ""
-                  }
-                  alt="Bracelet"
-                  width={100}
-                  height={100}
-                />
-              </div>
-              <div className="flex justify-between items-center text-gray-600">
-                <span
-                  className="flex items-center font-Poppins font-normal text-[#252525] text-sm"
-                  onClick={() => handleLike(item?.post?.id, postLikeData.liked)}
-                >
-                  <FaThumbsUp
-                    className={`mr-1 ${postLikeData.count ? "text-[#F56630]" : "text-gray-500"}`}
-                  />
-                  {item?.likes_count} Kudos
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FaRegCommentDots className="mr-1" /> { item?.post?.comments_count}{" "}
-                  Comments
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FaShareAlt className="mr-1" /> Share
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FiBookmark className="mr-1" /> Bookmark
-                </span>
-              </div>
-
-              <form
-                onSubmit={handleSubmit((data) =>
-                  onSubmit({ ...data, post_id:  item?.id }),
-                )}
-              >
-                <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
-                  <Image
-                    src={
-                      item?.post?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
-                        : ""
-                    }
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Write your comment"
-                    {...register("comment")}
-                    className="w-full border-none rounded-lg p-2 focus:outline-none bg-transparent"
-                  />
-                  <div className="flex gap-2">
-                    <label htmlFor="imageUpload">
-                      <AiOutlinePicture className="text-2xl cursor-pointer text-gray-500" />
-                    </label>
-                    <input
-                      type="file"
-                      id="imageUpload"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={handleImageUpload}
-                    />
-                  </div>
-                </div>
-                {errors.comment && (
-                  <p className="text-[#F56630] text-sm">
-                    {errors.comment.message}
-                  </p>
-                )}
-
-                {selectedImage && (
-                  <div className="mt-3">
-                    <Image
-                      src={selectedImage}
-                      alt="Selected"
-                      width={100}
-                      height={100}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                  </div>
-                )}
-
-                <div className="flex justify-end ">
-                  <button
-                    type="submit"
-                    className=" mt-3 bg-[#F56630] font-Poppins font-normal text-sm text-white py-2 px-4 rounded-lg"
-                  >
-                    {status === "pending" ? "loading..." : "Post Comment"}
-                  </button>
-                </div>
-              </form>
-
-              {item?.post?.comments?.map(
-                (
-                  item: {
-                    post: any;
-                    comment: string;
-                    user: any;
-                    fullname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | React.ReactElement<
-                          any,
-                          string | React.JSXElementConstructor<any>
+                      <div className="flex justify-end ">
+                        <button
+                          type="submit"
+                          className=" mt-3 bg-[#F56630] font-Poppins font-normal text-sm text-white py-2 px-4 rounded-lg"
                         >
-                      | Iterable<React.ReactNode>
-                      | React.ReactPortal
-                      | Promise<React.AwaitedReactNode>
-                      | null
-                      | undefined;
-                  },
-                  key: React.Key | null | undefined,
-                ) => {
-                  return (
-                    <div key={key} className="mt-4">
-                      <div className="flex gap-2 items-start">
-                        <Image
-                          src={
-                            item?.user?.profile_image
-                              ? `${item?.user?.profile_image}`
-                              : ""
-                          }
-                          alt="Commenter"
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
-                        <div>
-                          <div className="flex items-center justify-center gap-2">
-                            <p className="font-semibold font-Poppins">
-                              {item?.user?.fullname}
-                            </p>
-                            <p className="font-normal font-Poppins text-[#252525] text-sm">{item?.comment}</p>
-                          </div>
-                          <div className="flex gap-2 mt-1 text-gray-500">
-                            <FaThumbsUp className="cursor-pointer font-normal text-sm font-Poppins text-[#252525]" /> 0 Kudos
-                            <span className="ml-4 cursor-pointer font-normal text-sm font-Poppins text-[#252525]">Reply</span>
-                          </div>
-                        </div>
+                          {status === "pending" ? "loading..." : "Post Comment"}
+                        </button>
                       </div>
-                    </div>
-                  );
-                },
-              )}
+                    </form>
 
-
-
-              </>
-            </div>
-
-
-
-
-
-            : activeTab === 'Bookmarked' ?
-            <div
-              key={key}
-              className="flex flex-col gap-4 p-6 border rounded-md bg-white shadow-lg w-full"
-            >
-              <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">{item?.post?.content}</h3>
-              <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
-                <Image
-                  src={
-                    item?.post?.images?.[0]?.image
-                      ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
-                      : ""
-                  }
-                  alt="Bracelet"
-                  width={100}
-                  height={100}
-                />
-              </div>
-              <div className="flex justify-between items-center text-gray-600">
-                <span
-                  className="flex items-center font-Poppins font-normal text-[#252525] text-sm"
-                  onClick={() => handleLike(item?.post?.id, postLikeData.liked)}
-                >
-                  <FaThumbsUp
-                    className={`mr-1 ${postLikeData.count ? "text-[#F56630]" : "text-gray-500"}`}
-                  />
-                  {item?.likes_count} Kudos
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FaRegCommentDots className="mr-1" /> { item?.post?.comments_count}{" "}
-                  Comments
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FaShareAlt className="mr-1" /> Share
-                </span>
-                <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
-                  <FiBookmark className="mr-1" /> Bookmark
-                </span>
-              </div>
-
-              <form
-                onSubmit={handleSubmit((data) =>
-                  onSubmit({ ...data, post_id:  item?.id }),
-                )}
-              >
-                <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
-                  <Image
-                    src={
-                      item?.post?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${item?.post?.images?.[0]?.image}`
-                        : ""
-                    }
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Write your comment"
-                    {...register("comment")}
-                    className="w-full border-none rounded-lg p-2 focus:outline-none bg-transparent"
-                  />
-                  <div className="flex gap-2">
-                    <label htmlFor="imageUpload">
-                      <AiOutlinePicture className="text-2xl cursor-pointer text-gray-500" />
-                    </label>
-                    <input
-                      type="file"
-                      id="imageUpload"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={handleImageUpload}
-                    />
+                    {item?.comments?.map(
+                      (
+                        item: {
+                          comment: string;
+                          user: any;
+                          fullname:
+                          | string
+                          | number
+                          | bigint
+                          | boolean
+                          | React.ReactElement<
+                            any,
+                            string | React.JSXElementConstructor<any>
+                          >
+                          | Iterable<React.ReactNode>
+                          | React.ReactPortal
+                          | Promise<React.AwaitedReactNode>
+                          | null
+                          | undefined;
+                        },
+                        key: React.Key | null | undefined,
+                      ) => {
+                        return (
+                          <div key={key} className="mt-4">
+                            <div className="flex gap-2 items-start">
+                              <Image
+                                src={
+                                  item?.user?.profile_image
+                                    ? `${item?.user?.profile_image}`
+                                    : ""
+                                }
+                                alt="Commenter"
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                              <div>
+                                <div className="flex items-center justify-center gap-2">
+                                  <p className="font-semibold font-Poppins">
+                                    {item?.user?.fullname}
+                                  </p>
+                                  <p className="font-normal font-Poppins text-[#252525] text-sm">{item?.comment}</p>
+                                </div>
+                                <div className="flex gap-2 mt-1 text-gray-500">
+                                  <FaThumbsUp className="cursor-pointer font-normal text-sm font-Poppins text-[#252525]" /> 0 Kudos
+                                  <span className="ml-4 cursor-pointer font-normal text-sm font-Poppins text-[#252525]">Reply</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      },
+                    )}
                   </div>
-                </div>
-                {errors.comment && (
-                  <p className="text-[#F56630] text-sm">
-                    {errors.comment.message}
-                  </p>
-                )}
-
-                {selectedImage && (
-                  <div className="mt-3">
-                    <Image
-                      src={selectedImage}
-                      alt="Selected"
-                      width={100}
-                      height={100}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                  </div>
-                )}
-
-                <div className="flex justify-end ">
-                  <button
-                    type="submit"
-                    className=" mt-3 bg-[#F56630] font-Poppins font-normal text-sm text-white py-2 px-4 rounded-lg"
-                  >
-                    {status === "pending" ? "loading..." : "Post Comment"}
-                  </button>
-                </div>
-              </form>
 
 
-              {item?.post?.comments?.map(
-                (
-                  item: {
-                    post: any;
-                    comment: string;
-                    user: any;
-                    fullname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | React.ReactElement<
-                          any,
-                          string | React.JSXElementConstructor<any>
+
+
+                  : activeTab === 'Liked' ?
+
+
+                    <div
+                      key={key}
+                      className="flex flex-col gap-4 p-6 border rounded-md bg-white shadow-lg w-full"
+                    >
+
+
+
+
+
+                      <>
+                        <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">{item?.post?.content || 'No data Available'}</h3>
+                        <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
+                          <Image
+                            src={
+                              item?.post?.images?.[0]?.image
+                                ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                                : ""
+                            }
+                            alt="Bracelet"
+                            width={100}
+                            height={100}
+                          />
+                        </div>
+                        <div className="flex justify-between items-center text-gray-600">
+                          <span
+                            className="flex items-center font-Poppins font-normal text-[#252525] text-sm"
+                            onClick={() => handleLike(item?.post?.id, postLikeData.liked)}
+                          >
+                            <FaThumbsUp
+                              className={`mr-1 ${postLikeData.count ? "text-[#F56630]" : "text-gray-500"}`}
+                            />
+                            {item?.likes_count} Kudos
+                          </span>
+                          <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                            <FaRegCommentDots className="mr-1" /> {item?.post?.comments_count}{" "}
+                            Comments
+                          </span>
+                          <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                            <FaShareAlt className="mr-1" /> Share
+                          </span>
+                          <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                            <FiBookmark className="mr-1" /> Bookmark
+                          </span>
+                        </div>
+
+                        <form
+                          onSubmit={handleSubmit((data) =>
+                            onSubmit({ ...data, post_id: item?.id }),
+                          )}
                         >
-                      | Iterable<React.ReactNode>
-                      | React.ReactPortal
-                      | Promise<React.AwaitedReactNode>
-                      | null
-                      | undefined;
-                  },
-                  key: React.Key | null | undefined,
-                ) => {
-                  return (
-                    <div key={key} className="mt-4">
-                      <div className="flex gap-2 items-start">
-                         <Image
-                          src={
-                            item?.user?.profile_image
-                              ? `${item?.user?.profile_image}`
-                              : ""
-                          }
-
-                          alt="Commenter"
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
-                        <div>
-                          <div className="flex items-center justify-center gap-2">
-                            <p className="font-semibold font-Poppins">
-                              {item?.user?.fullname}
+                          <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
+                            <Image
+                              src={
+                                item?.post?.images?.[0]?.image
+                                  ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                                  : ""
+                              }
+                              alt="Profile"
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Write your comment"
+                              {...register("comment")}
+                              className="w-full border-none rounded-lg p-2 focus:outline-none bg-transparent"
+                            />
+                            <div className="flex gap-2">
+                              <label htmlFor="imageUpload">
+                                <AiOutlinePicture className="text-2xl cursor-pointer text-gray-500" />
+                              </label>
+                              <input
+                                type="file"
+                                id="imageUpload"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handleImageUpload}
+                              />
+                            </div>
+                          </div>
+                          {errors.comment && (
+                            <p className="text-[#F56630] text-sm">
+                              {errors.comment.message}
                             </p>
-                            <p className="font-normal font-Poppins text-[#252525] text-sm">{item?.comment}</p>
+                          )}
+
+                          {selectedImage && (
+                            <div className="mt-3">
+                              <Image
+                                src={selectedImage}
+                                alt="Selected"
+                                width={100}
+                                height={100}
+                                className="w-24 h-24 object-cover rounded-lg"
+                              />
+                            </div>
+                          )}
+
+                          <div className="flex justify-end ">
+                            <button
+                              type="submit"
+                              className=" mt-3 bg-[#F56630] font-Poppins font-normal text-sm text-white py-2 px-4 rounded-lg"
+                            >
+                              {status === "pending" ? "loading..." : "Post Comment"}
+                            </button>
                           </div>
-                          <div className="flex gap-2 mt-1 text-gray-500">
-                            <FaThumbsUp className="cursor-pointer font-normal text-sm font-Poppins text-[#252525]" /> 0 Kudos
-                            <span className="ml-4 cursor-pointer font-normal text-sm font-Poppins text-[#252525]">Reply</span>
-                          </div>
-                        </div>
-                      </div>
+                        </form>
+
+                        {item?.post?.comments?.map(
+                          (
+                            item: {
+                              post: any;
+                              comment: string;
+                              user: any;
+                              fullname:
+                              | string
+                              | number
+                              | bigint
+                              | boolean
+                              | React.ReactElement<
+                                any,
+                                string | React.JSXElementConstructor<any>
+                              >
+                              | Iterable<React.ReactNode>
+                              | React.ReactPortal
+                              | Promise<React.AwaitedReactNode>
+                              | null
+                              | undefined;
+                            },
+                            key: React.Key | null | undefined,
+                          ) => {
+                            return (
+                              <div key={key} className="mt-4">
+                                <div className="flex gap-2 items-start">
+                                  <Image
+                                    src={
+                                      item?.user?.profile_image
+                                        ? `${item?.user?.profile_image}`
+                                        : ""
+                                    }
+                                    alt="Commenter"
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full"
+                                  />
+                                  <div>
+                                    <div className="flex items-center justify-center gap-2">
+                                      <p className="font-semibold font-Poppins">
+                                        {item?.user?.fullname}
+                                      </p>
+                                      <p className="font-normal font-Poppins text-[#252525] text-sm">{item?.comment}</p>
+                                    </div>
+                                    <div className="flex gap-2 mt-1 text-gray-500">
+                                      <FaThumbsUp className="cursor-pointer font-normal text-sm font-Poppins text-[#252525]" /> 0 Kudos
+                                      <span className="ml-4 cursor-pointer font-normal text-sm font-Poppins text-[#252525]">Reply</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          },
+                        )}
+
+
+
+                      </>
                     </div>
-                  );
-                },
-              )}
-            </div> : <p>No data Available</p>
-          );
+
+
+
+
+
+                    : activeTab === 'Bookmarked' ?
+                      <div
+                        key={key}
+                        className="flex flex-col gap-4 p-6 border rounded-md bg-white shadow-lg w-full"
+                      >
+                        <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">{item?.post?.content}</h3>
+                        <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
+                          <Image
+                            src={
+                              item?.post?.images?.[0]?.image
+                                ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                                : ""
+                            }
+                            alt="Bracelet"
+                            width={100}
+                            height={100}
+                          />
+                        </div>
+                        <div className="flex justify-between items-center text-gray-600">
+                          <span
+                            className="flex items-center font-Poppins font-normal text-[#252525] text-sm"
+                            onClick={() => handleLike(item?.post?.id, postLikeData.liked)}
+                          >
+                            <FaThumbsUp
+                              className={`mr-1 ${postLikeData.count ? "text-[#F56630]" : "text-gray-500"}`}
+                            />
+                            {item?.likes_count} Kudos
+                          </span>
+                          <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                            <FaRegCommentDots className="mr-1" /> {item?.post?.comments_count}{" "}
+                            Comments
+                          </span>
+                          <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                            <FaShareAlt className="mr-1" /> Share
+                          </span>
+                          <span className="flex items-center font-Poppins font-normal text-[#252525] text-sm">
+                            <FiBookmark className="mr-1" /> Bookmark
+                          </span>
+                        </div>
+
+                        <form
+                          onSubmit={handleSubmit((data) =>
+                            onSubmit({ ...data, post_id: item?.id }),
+                          )}
+                        >
+                          <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
+                            <Image
+                              src={
+                                item?.post?.images?.[0]?.image
+                                  ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                                  : ""
+                              }
+                              alt="Profile"
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Write your comment"
+                              {...register("comment")}
+                              className="w-full border-none rounded-lg p-2 focus:outline-none bg-transparent"
+                            />
+                            <div className="flex gap-2">
+                              <label htmlFor="imageUpload">
+                                <AiOutlinePicture className="text-2xl cursor-pointer text-gray-500" />
+                              </label>
+                              <input
+                                type="file"
+                                id="imageUpload"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handleImageUpload}
+                              />
+                            </div>
+                          </div>
+                          {errors.comment && (
+                            <p className="text-[#F56630] text-sm">
+                              {errors.comment.message}
+                            </p>
+                          )}
+
+                          {selectedImage && (
+                            <div className="mt-3">
+                              <Image
+                                src={selectedImage}
+                                alt="Selected"
+                                width={100}
+                                height={100}
+                                className="w-24 h-24 object-cover rounded-lg"
+                              />
+                            </div>
+                          )}
+
+                          <div className="flex justify-end ">
+                            <button
+                              type="submit"
+                              className=" mt-3 bg-[#F56630] font-Poppins font-normal text-sm text-white py-2 px-4 rounded-lg"
+                            >
+                              {status === "pending" ? "loading..." : "Post Comment"}
+                            </button>
+                          </div>
+                        </form>
+
+
+                        {item?.post?.comments?.map(
+                          (
+                            item: {
+                              post: any;
+                              comment: string;
+                              user: any;
+                              fullname:
+                              | string
+                              | number
+                              | bigint
+                              | boolean
+                              | React.ReactElement<
+                                any,
+                                string | React.JSXElementConstructor<any>
+                              >
+                              | Iterable<React.ReactNode>
+                              | React.ReactPortal
+                              | Promise<React.AwaitedReactNode>
+                              | null
+                              | undefined;
+                            },
+                            key: React.Key | null | undefined,
+                          ) => {
+                            return (
+                              <div key={key} className="mt-4">
+                                <div className="flex gap-2 items-start">
+                                  <Image
+                                    src={
+                                      item?.user?.profile_image
+                                        ? `${item?.user?.profile_image}`
+                                        : ""
+                                    }
+
+                                    alt="Commenter"
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full"
+                                  />
+                                  <div>
+                                    <div className="flex items-center justify-center gap-2">
+                                      <p className="font-semibold font-Poppins">
+                                        {item?.user?.fullname}
+                                      </p>
+                                      <p className="font-normal font-Poppins text-[#252525] text-sm">{item?.comment}</p>
+                                    </div>
+                                    <div className="flex gap-2 mt-1 text-gray-500">
+                                      <FaThumbsUp className="cursor-pointer font-normal text-sm font-Poppins text-[#252525]" /> 0 Kudos
+                                      <span className="ml-4 cursor-pointer font-normal text-sm font-Poppins text-[#252525]">Reply</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          },
+                        )}
+                      </div> : <p>No data Available</p>
+              );
+            }
+          )
+
+
+
         }
-      )
-
-
-
-      }
-  </div>
+      </div>
 
 
 
@@ -797,7 +795,7 @@ const NotificationSidebar = () => {
     token: state.token,
   }));
 
- const userToken = (Cookies.get("token") as string) || "";
+  const userToken = (Cookies.get("token") as string) || "";
 
 
 
@@ -837,7 +835,7 @@ const NotificationSidebar = () => {
 };
 
 const MainLayout = () => {
-      const [activeTab, setActiveTab] = useState<string>("Trending");
+  const [activeTab, setActiveTab] = useState<string>("Trending");
   return (
     /*  <div className="flex gap-8 mx-auto max-w-7xl p-4">
        <div className="flex-1 w-auto 2xl:w-[500px] lg:w-[500px] md:w-[500px] sm:w-[500px] " >
@@ -852,15 +850,15 @@ const MainLayout = () => {
     </div> */
 
 
-      <section className='md:full mb-6 flex w-full flex-col gap-4 lg:w-[60dvw] lg:flex-row '>
+    <section className='md:full mb-6 flex w-full flex-col gap-4 lg:w-[60dvw] lg:flex-row '>
       <div className=' p-4   flex-1 h-max grow'>
-    <TabComponent activeTab={activeTab} setActiveTab={setActiveTab} />
-          <ContentPost activeTab={activeTab} />
+        <TabComponent activeTab={activeTab} setActiveTab={setActiveTab} />
+        <ContentPost activeTab={activeTab} />
       </div>
       <div className="  p-4  bg-white ">
 
 
-           <NotificationSidebar />
+        <NotificationSidebar />
       </div>
     </section>
 

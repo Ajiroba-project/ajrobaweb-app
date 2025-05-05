@@ -151,14 +151,14 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
   const tkn_: string = Cookies.get("token") as string;
 
- /*  const {
-    data: pointinfo,
-    isLoading: pointsLoading,
-    error: pointerror,
-  } = useGetPointData("/api/getpoints", "get_point_details", userToken); */
+  /*  const {
+     data: pointinfo,
+     isLoading: pointsLoading,
+     error: pointerror,
+   } = useGetPointData("/api/getpoints", "get_point_details", userToken); */
 
   const handleSuccessbidpayment = (data: any) => {
-  /*   console.log(data, "datatatat"); */
+    /*   console.log(data, "datatatat"); */
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
@@ -354,18 +354,18 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
       const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
 
-const payload = {
-  auction: auctionId,
-  ticket_quantity: ticketCount,
-  total_amount: Number(totalAmount),
-  pay_with: payWithMethod,
-};
+      const payload = {
+        auction: auctionId,
+        ticket_quantity: ticketCount,
+        total_amount: Number(totalAmount),
+        pay_with: payWithMethod,
+      };
 
-bidpaymentmutate({
-  url: "/api/bidpayment",
-  payload: { payload: payload, token: userToken },
-  token: userToken,
-});
+      bidpaymentmutate({
+        url: "/api/bidpayment",
+        payload: { payload: payload, token: userToken },
+        token: userToken,
+      });
       resetpayment();
     } else if (
       data?.data?.status === 400 ||
@@ -503,7 +503,7 @@ bidpaymentmutate({
       const data = await response.json();
 
       if (data.data.status === "failed") {
-        console.log("Failed:", data.data);
+      /*   console.log("Failed:", data.data); */
         toast.error(`${data.data.message}`, {
           position: "top-right",
           progress: 4,
@@ -607,7 +607,7 @@ bidpaymentmutate({
     });
   };
 
-  const handlePay = () => {};
+  const handlePay = () => { };
 
   return (
     <>
@@ -620,16 +620,16 @@ bidpaymentmutate({
                   id: any;
                   images: { image: any }[];
                   name:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<any, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<AwaitedReactNode>
-                    | null
-                    | undefined;
+                  | string
+                  | number
+                  | bigint
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | Promise<AwaitedReactNode>
+                  | null
+                  | undefined;
                   ticket_price: {
                     toLocaleString: () =>
                       | string
@@ -686,7 +686,7 @@ bidpaymentmutate({
                     >
                       <div className="bg-transparent p-0">
                         <Image
-                          src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                          src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                           width={100}
                           height={100}
                           alt="human hair"
@@ -803,7 +803,7 @@ bidpaymentmutate({
                           Ticket Price (₦)
                         </label>
                         <div className="flex items-center">
-                         {/*  <button
+                          {/*  <button
                             className="px-2 py-1 bg-gray-200 rounded"
 
                             disabled={ticketCount <= 1}
@@ -814,7 +814,7 @@ bidpaymentmutate({
                             {" "}
                             {ticketPrice}
                           </span>
-                        {/*   <button
+                          {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
 
                           >
@@ -849,7 +849,7 @@ bidpaymentmutate({
                     </div>
 
                     <div className="flex justify-end">
-                     {/*  <button
+                      {/*  <button
                         onClick={() => {
                           return (
                             setbidopen(!bidopen), setViewTicket(!viewticket)
@@ -924,7 +924,7 @@ bidpaymentmutate({
                         Ticket Price (₦)
                       </label>
                       <div className="flex items-center">
-                       {/*  <button
+                        {/*  <button
                           className="px-2 py-1 bg-gray-200 rounded"
 
                           disabled={true}
@@ -932,7 +932,7 @@ bidpaymentmutate({
                           -
                         </button> */}
                         <span className="mx-4 font-bold text-sm"> {ticketData?.data?.ticket_price}</span>
-                       {/*  <button
+                        {/*  <button
                           className="px-2 py-1 bg-gray-200 rounded"
 
                           disabled={true}
@@ -981,44 +981,44 @@ bidpaymentmutate({
                 </div>
 
 
-{
+                {
 
 
-                <div  className="mt-6">
-                  <table className="w-full border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-[#FCDFD4] text-left">
-                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
-                          S/N
-                        </th>
-                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
-                          Ticket Type
-                        </th>
-                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
-                          Ticket Number
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="mt-8">
-{
-ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; ticket_number: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }, index: number)=>{
-  return (
-    <tr key={index + 1}>
-    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-      {index + 1}
-    </td>
-    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-      {item?.ticket_type}
-    </td>
-    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-      {item?.ticket_number}
-    </td>
-  </tr>
-  )
-})
-}
+                  <div className="mt-6">
+                    <table className="w-full border-collapse border border-gray-300">
+                      <thead>
+                        <tr className="bg-[#FCDFD4] text-left">
+                          <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                            S/N
+                          </th>
+                          <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                            Ticket Type
+                          </th>
+                          <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                            Ticket Number
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="mt-8">
+                        {
+                          ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; ticket_number: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }, index: number) => {
+                            return (
+                              <tr key={index + 1}>
+                                <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                  {index + 1}
+                                </td>
+                                <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                  {item?.ticket_type}
+                                </td>
+                                <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                  {item?.ticket_number}
+                                </td>
+                              </tr>
+                            )
+                          })
+                        }
 
-                      {/* <tr>
+                        {/* <tr>
                         <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
                           {index + 1}
                         </td>
@@ -1031,12 +1031,12 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                       </tr> */}
 
 
-                    </tbody>
-                  </table>
-                </div>
+                      </tbody>
+                    </table>
+                  </div>
 
 
-}
+                }
 
               </div>
             }

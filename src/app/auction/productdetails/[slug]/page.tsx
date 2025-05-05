@@ -918,8 +918,8 @@ const Page = ({ params }: any) => {
                   key={item.stars}
                   onClick={() => setSelectedStars(item.stars)}
                   className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === item.stars
-                      ? "bg-[#F25E26] text-white font-bold"
-                      : "bg-white text-black font-normal"
+                    ? "bg-[#F25E26] text-white font-bold"
+                    : "bg-white text-black font-normal"
                     } rounded`}
                 >
                   {item.stars} Star
@@ -929,8 +929,8 @@ const Page = ({ params }: any) => {
               <button
                 onClick={() => setSelectedStars(null)}
                 className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === null
-                    ? "bg-[#F25E26] text-white font-bold"
-                    : "bg-white text-black font-normal"
+                  ? "bg-[#F25E26] text-white font-bold"
+                  : "bg-white text-black font-normal"
                   } rounded`}
               >
                 All Stars
@@ -990,8 +990,8 @@ const Page = ({ params }: any) => {
                       key={pageNumber}
                       onClick={() => handlePageClick(pageNumber)}
                       className={` px-2 cursor-pointer ${currentPage === pageNumber
-                          ? " text-[#353131] font-bold"
-                          : " text-[#353131]"
+                        ? " text-[#353131] font-bold"
+                        : " text-[#353131]"
                         }`}
                     >
                       {pageNumber}
@@ -1199,7 +1199,7 @@ const Page = ({ params }: any) => {
                       <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
                         <Image
                           className=" images-map w-32 h-32 object-cover"
-                          src={`https://ajiroba.onrender.com/media/${image.image}`}
+                          src={`https://staging.ajiroba.ng/media/${image.image}`}
                           alt="Product Thumbnail"
                           onClick={() => handleImageClick(index)}
                           width={100}
@@ -1217,7 +1217,7 @@ const Page = ({ params }: any) => {
                   <div className="main-image ">
                     {productdatanew?.data?.images?.[selectedImageIndex] ? (
                       <Image
-                        src={`https://ajiroba.onrender.com/media/${productdatanew?.data.images[selectedImageIndex].image}`}
+                        src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[selectedImageIndex].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -1388,7 +1388,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdatanew?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdatanew?.data.images[0].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -1402,7 +1402,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdatanew?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdatanew?.data.images[1].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -1445,7 +1445,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -1459,7 +1459,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[1].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
                         : ""
                     }
                     alt="Product Image"

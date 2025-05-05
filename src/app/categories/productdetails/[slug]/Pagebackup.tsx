@@ -364,7 +364,7 @@ const Page = ({ params }: any) => {
                       <div key={index} className="thumbnail-image ">
                         <Image
                           className=" images-map w-32 h-32 object-cover"
-                          src={`https://ajiroba.onrender.com/media/${image.image}`}
+                          src={`https://staging.ajiroba.ng/media/${image.image}`}
                           alt="Product Thumbnail"
                           onClick={() => handleImageClick(index)}
                           width={100}
@@ -381,7 +381,7 @@ const Page = ({ params }: any) => {
                         <Image
                           src={
                             productdata?.data?.images?.[0]?.image
-                              ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                              ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                               : ""
                           }
                           alt="Product Image"
@@ -514,7 +514,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -528,7 +528,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[1].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
                         : ""
                     }
                     alt="Product Image"
