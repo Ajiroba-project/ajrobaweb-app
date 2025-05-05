@@ -104,7 +104,6 @@ const Page = () => {
     );
 
 
-  console.log(topweak?.data, 'topweak')
 
   useEffect(() => {
 
