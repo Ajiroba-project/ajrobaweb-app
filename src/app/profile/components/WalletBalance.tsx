@@ -29,21 +29,74 @@ type ConfirmationModalProps = {
   onClose: () => void;
 };
 
-
 const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
   const [loadingverify, setloadingverify] = useState(false);
+  const [showModalUp, setShowModalUp] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState("");
+  const [paymentReference, setPaymentReference] = useState("");
+  const [verificationInterval, setVerificationInterval] = useState<NodeJS.Timeout | null>(null);
+
+  // Cleanup function for event listeners and intervals
+  const cleanup = () => {
+    if (verificationInterval) {
+      clearInterval(verificationInterval);
+      setVerificationInterval(null);
+    }
+    window.removeEventListener('message', handlePaymentMessage);
+    setPaymentReference("");
+    setShowModalUp(false);
+    onClose();
+  };
+
+  const handlePaymentMessage = (event: MessageEvent) => {
+    /*    console.log(event.data, "url");
+       console.log(paymentReference, "paymentReference");
+       console.log(event.data?.data, "paymentReference"); */
+    if (event.data?.data?.status === 'success' && paymentReference) {
+      startVerificationLoop(paymentReference);
+    }
+  };
+
+  const Modal = ({ url, onClose }: { url: string; onClose: () => void }) => {
+    useEffect(() => {
+      // Add event listener when modal mounts
+      window.addEventListener('message', handlePaymentMessage);
+
+      // Cleanup when modal unmounts
+      return () => {
+        window.removeEventListener('message', handlePaymentMessage);
+      };
+    }, []);
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
+        <div className="bg-white p-4 rounded-lg w-full max-w-3xl relative h-[90vh]">
+          <h1>Payment Page</h1>
+          <button
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 z-[101]"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+          <iframe
+            src={url}
+            className="w-full h-full border-0"
+            title="Payment"
+            allow="payment"
+          />
+        </div>
+      </div>
+    );
+  };
 
   const handleContinue = async () => {
     try {
-      // console.log(amount);
-
       if (!amount) {
         toast.error("Please enter a valid amount.");
         return;
       }
 
       const tkn_: string = Cookies.get("token") as string;
-
       const payload = { amount: Number(amount) };
 
       const response = await axios.post(
@@ -56,66 +109,68 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         }
       );
 
-      console.log(response, "response")
-
       if (response.status === 200) {
         const { payment_url, reference } = response.data;
-        // console.log("Payment initiated, redirecting to:", payment_url);
-
         localStorage.setItem("paymentReference", reference);
         Cookies.set("paymentReference", reference, { expires: 1 });
+        setPaymentReference(reference);
 
-        startVerificationLoop(reference);
-
-        window.open(payment_url, "_blank");
+        // Set payment URL and show modal
+        setPaymentUrl(payment_url);
+        setShowModalUp(true);
 
         toast.success(`Payment initiated successfully`, {
           closeButton: false,
-
         });
       } else {
         toast.error("An unexpected status was returned.");
       }
     } catch (error) {
       toast.error("An error occurred during the payment process.");
-    } finally {
-      onClose();
     }
   };
 
   const startVerificationLoop = (reference: string) => {
-    const intervalTime = 2000;
-    const totalDuration = 2 * 60 * 1000;
+    // Clear any existing verification interval
+    if (verificationInterval) {
+      clearInterval(verificationInterval);
+    }
+
+    const intervalTime = 2000; // Check every 2 seconds
+    const totalDuration = 2 * 60 * 1000; // Total duration of 2 minutes
     const maxAttempts = totalDuration / intervalTime;
     let attempts = 0;
 
-    const stopLoop = () => {
-      clearInterval(intervalId);
-      /*   console.log("Verification loop stopped."); */
-    };
+    const intervalId = setInterval(async () => {
+      attempts++;
+      await verifyWalletPayment(reference, () => {
+        clearInterval(intervalId);
+        cleanup();
+      });
 
-    let intervalId: NodeJS.Timeout;
+      if (attempts >= maxAttempts) {
+        clearInterval(intervalId);
+        cleanup();
+        toast.error("Payment verification timed out. Please check your wallet balance.");
+      }
+    }, intervalTime);
 
+    setVerificationInterval(intervalId);
+
+    // Set a timeout to stop the loop after total duration
     setTimeout(() => {
-      intervalId = setInterval(async () => {
-        attempts++;
-
-        await verifyWalletPayment(reference, stopLoop);
-
-        if (attempts >= maxAttempts) {
-          clearInterval(intervalId);
-          /*   console.log("Verification loop stopped after max attempts."); */
-        }
-      }, intervalTime);
-
-      setTimeout(() => clearInterval(intervalId), totalDuration);
-    }, 15 * 1000);
+      clearInterval(intervalId);
+      cleanup();
+    }, totalDuration);
   };
 
   const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
-    setloadingverify(true); // Set loading to true when verification starts
+    setloadingverify(true);
+    let message;
     try {
       const tkn_: string = Cookies.get("token") as string;
+
+
 
       const response = await axios.get(
         `https://staging.ajiroba.ng/v1/pay/verify_wallet_payment/${reference}/`,
@@ -126,23 +181,24 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         }
       );
 
-      /*  console.log(response, "response"); */
       if (response.status === 200 || response.status === 201) {
-        setloadingverify(false); // Stop loading when verification is successful
-        /*  toast.success(`${response?.data?.message}`); */
-        toast.success(`${response?.data?.message}`, {
-          closeButton: false,
-
+        setloadingverify(false);
+        message = response?.data?.message;
+        toast.success(`${message}`, {
+          closeButton: true,
+          onClose: () => {
+            window.location.reload();
+          }
         });
-        stopLoop(); // Stop the loop after success
+        stopLoop();
       } else {
-        setloadingverify(false); // Stop loading even for unsuccessful responses
-        toast.error("Unexpected status during verification.");
+        setloadingverify(false);
+        toast.error(message || "Unexpected status during verification.");
       }
     } catch (error) {
-      setloadingverify(false); // Ensure loading stops on error
+      setloadingverify(false);
       console.error(error);
-      toast.error("Error occurred during payment verification.");
+      toast.error(message || "Error occurred during payment verification.");
     }
   };
 
@@ -154,31 +210,37 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
   }
 
   return (
-    <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
-      <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
-        <p className="text-center">
-          You are going to deposit the amount of N {amount}
-        </p>
-        <div className="flex w-full gap-5 flex-col">
-          <DefaultButton
-            text="Continue"
-            type="button"
-            className="w-full rounded-md bg-[#E84526] p-3 text-white"
-            handleClick={handleContinue}
-          />
-          <DefaultButton
-            text="Back"
-            type="button"
-            className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
-            handleClick={onClose}
-          />
+    <>
+      <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
+        <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
+          <p className="text-center">
+            You are going to deposit the amount of N {amount}
+          </p>
+          <div className="flex w-full gap-5 flex-col">
+            <DefaultButton
+              text="Continue"
+              type="button"
+              className="w-full rounded-md bg-[#E84526] p-3 text-white"
+              handleClick={handleContinue}
+            />
+            <DefaultButton
+              text="Back"
+              type="button"
+              className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
+              handleClick={cleanup}
+            />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      {showModalUp && (
+        <Modal
+          url={paymentUrl}
+          onClose={cleanup}
+        />
+      )}
+    </>
   );
 };
-
-
 
 export const WalletBalance = () => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
@@ -213,8 +275,6 @@ export const WalletBalance = () => {
     user: state.user,
     token: state.token,
   }));
-
-
 
   const [userData, setUserData] = useState<any>(null);
   const [isTokenReady, setIsTokenReady] = useState(false);

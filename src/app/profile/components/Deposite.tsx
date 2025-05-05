@@ -81,9 +81,9 @@ export const Deposite = ({ handleClick, handleNext }: DepositeProps) => {
 const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: string }) => {
 
 
-const handlefundwalletandVerifyPayment =  ()=>{
-console.log('fund and verify wallet')
-}
+  const handlefundwalletandVerifyPayment = () => {
+    console.log('fund and verify wallet')
+  }
 
 
 
