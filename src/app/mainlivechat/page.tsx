@@ -124,7 +124,7 @@ const LiveChatPage = () => {
       };
 
       const response = await axios.get(
-        "https://ajiroba.onrender.com/v1/admin/messages/",
+        "https://staging.ajiroba.ng/v1/admin/messages/",
         { headers },
       );
 
@@ -192,13 +192,13 @@ const LiveChatPage = () => {
       };
 
       const response = await axios.post(
-        "https://ajiroba.onrender.com/v1/admin/send_message/",
+        "https://staging.ajiroba.ng/v1/admin/send_message/",
         payload,
         { headers },
       );
 
-   /*    console.log(response.data, "response.data");
-      console.log(response, "response"); */
+      /*    console.log(response.data, "response.data");
+         console.log(response, "response"); */
       if (response.data.status === "success") {
         const newMessage: Message = {
           type: "client",
@@ -261,51 +261,51 @@ const LiveChatPage = () => {
 
 
 
-const EndChat = async () => {
-  try {
-    const headers = {
-      Authorization: `token ${userToken}`,
-    };
+  const EndChat = async () => {
+    try {
+      const headers = {
+        Authorization: `token ${userToken}`,
+      };
 
-    const response = await axios.put(
-      "https://ajiroba.onrender.com/v1/admin/end_chat/",
-      {}, // No body for this request
-      { headers } // Pass headers here
-    );
+      const response = await axios.put(
+        "https://staging.ajiroba.ng/v1/admin/end_chat/",
+        {}, // No body for this request
+        { headers } // Pass headers here
+      );
 
-    if (response.data.status === "success") {
-      toast.success(`${response.data.message || "Success"}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => router.push("/chatended"),
-      });
-    } else {
-      alert("Failed to end chat: " + response.data.message);
+      if (response.data.status === "success") {
+        toast.success(`${response.data.message || "Success"}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onClose: () => router.push("/chatended"),
+        });
+      } else {
+        alert("Failed to end chat: " + response.data.message);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error("Error ending chat:", error);
+        toast.error(`${error.response?.data?.detail || "An Error Occurred"}`, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        console.log("An unexpected error occurred:", error);
+      }
     }
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      console.error("Error ending chat:", error);
-      toast.error(`${error.response?.data?.detail || "An Error Occurred"}`, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } else {
-      console.log("An unexpected error occurred:", error);
-    }
-  }
-};
+  };
 
 
 
@@ -457,7 +457,7 @@ const EndChat = async () => {
                                     alt="Admin Avatar"
                                     src={
                                       message?.image
-                                        ? `https://ajiroba.onrender.com${message?.image}`
+                                        ? `https://staging.ajiroba.ng${message?.image}`
                                         : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                                     }
                                     width={24}
@@ -474,7 +474,7 @@ const EndChat = async () => {
                                 <div className="mt-2 flex justify-end">
                                   <Image
                                     alt="Admin Avatar"
-                                    src={`https://ajiroba.onrender.com${message?.image}`}
+                                    src={`https://staging.ajiroba.ng${message?.image}`}
                                     width={24}
                                     height={24}
                                     className="w-24 h-24 object-cover rounded-md border"

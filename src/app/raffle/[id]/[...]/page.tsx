@@ -96,7 +96,7 @@ const Page = ({ params }: any) => {
       }
 
       const result = await response.json();
-            console.log(result, "result");
+      console.log(result, "result");
       setProductDataNew(result);
       return result;
     } catch (error) {
@@ -109,11 +109,11 @@ const Page = ({ params }: any) => {
 
   const fetchData = async () => {
     try {
-       const data = await fetchWithAuth(
-        `https://ajiroba.onrender.com/v1/auction/auction_tickets/?auction_id=${product_id}`,
+      const data = await fetchWithAuth(
+        `https://staging.ajiroba.ng/v1/auction/auction_tickets/?auction_id=${product_id}`,
       ).then((data) => {
-       /*  setProductDataNew(data); */
-       console.log(data, "data");
+        /*  setProductDataNew(data); */
+        console.log(data, "data");
       })
 
       console.log(data, "data");
@@ -124,7 +124,7 @@ const Page = ({ params }: any) => {
 
   useEffect(() => {
     fetchData();
-  }, [ product_id]);
+  }, [product_id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -177,15 +177,14 @@ const Page = ({ params }: any) => {
                 <tr className="tracking-wide">
                   {thead.map((header) => (
                     <th
-                      className={`${
-                        header === "S/N"
+                      className={`${header === "S/N"
                           ? "rounded-bl-3xl"
                           : header === "Ticket Price"
                             ? "rounded-br-3xl"
                             : header === `Phone Number`
                               ? "rounded-br-3xl  text-left"
                               : "text-center"
-                      } p-3 text-2xl font-semibold capitalize lg:w-max`}
+                        } p-3 text-2xl font-semibold capitalize lg:w-max`}
                       key={header}
                     >
                       {header}
@@ -231,11 +230,10 @@ const Page = ({ params }: any) => {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 mx-2 rounded-lg ${
-                currentPage === 1
+              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#F25E26] hover:bg-[#EA7000]"
-              } text-white`}
+                } text-white`}
             >
               Previous
             </button>
@@ -247,11 +245,10 @@ const Page = ({ params }: any) => {
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 mx-2 rounded-lg ${
-                currentPage === totalPages
+              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#F25E26] hover:bg-[#EA7000]"
-              } text-white`}
+                } text-white`}
             >
               Next
             </button>
@@ -267,15 +264,14 @@ const Page = ({ params }: any) => {
                 <tr className="tracking-wide">
                   {thead.map((header) => (
                     <th
-                      className={`${
-                        header === "S/N"
+                      className={`${header === "S/N"
                           ? "rounded-bl-3xl"
                           : header === "Ticket Price"
                             ? "rounded-br-3xl"
                             : header === `Phone Number`
                               ? "rounded-br-3xl  text-left"
                               : "text-center"
-                      } p-3 text-2xl font-semibold capitalize lg:w-max`}
+                        } p-3 text-2xl font-semibold capitalize lg:w-max`}
                       key={header}
                     >
                       {header}
@@ -317,11 +313,10 @@ const Page = ({ params }: any) => {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 mx-2 rounded-lg ${
-                currentPage === 1
+              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#F25E26] hover:bg-[#EA7000]"
-              } text-white`}
+                } text-white`}
             >
               Previous
             </button>
@@ -333,11 +328,10 @@ const Page = ({ params }: any) => {
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 mx-2 rounded-lg ${
-                currentPage === totalPages
+              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#F25E26] hover:bg-[#EA7000]"
-              } text-white`}
+                } text-white`}
             >
               Next
             </button>
@@ -378,8 +372,8 @@ const Page = ({ params }: any) => {
 
 
         <div className="my-8  rounded-2xl 2xl:w-auto xl:w-auto lg:w-auto md:w-auto w-full overflow-y-scroll  p-4 bg-black">
-            {renderRows()}
-          </div>
+          {renderRows()}
+        </div>
 
         <div className="flex flex-col justify-center mb-8">
           <DefaultButton

@@ -24,7 +24,7 @@ interface ProductData {
 const Page = ({ params }: any) => {
   const router = useRouter();
   // AuthMiddleware(router);
-    useAuthMiddleware(router);
+  useAuthMiddleware(router);
 
   const [data, setData] = useState<any>(
     raffle.filter((val) => val.host === params.id),
@@ -44,56 +44,56 @@ const Page = ({ params }: any) => {
   const [loadingdata, setLoadingData] = useState(false);
 
   const fetchWithAuth = useCallback(async (url: string) => {
-      setLoadingData(true);
+    setLoadingData(true);
 
-      const requestOptions: RequestInit = {
-        method: "GET",
-        headers: {
-          Authorization: `token ${userToken}`,
-        },
-        redirect: "follow",
-      };
+    const requestOptions: RequestInit = {
+      method: "GET",
+      headers: {
+        Authorization: `token ${userToken}`,
+      },
+      redirect: "follow",
+    };
 
-      try {
-        const response = await fetch(url, requestOptions);
+    try {
+      const response = await fetch(url, requestOptions);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        setProductDataNew(result?.data);
-        setViewCountdown(true);
-
-        if (result?.data?.starts_in === "Raffle Ended") {
-          setraffleended(true);
-        }
-        setLoadingData(false);
-        if (result?.data) {
-        }
-        return result;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        throw error;
-      } finally {
-        setLoadingData(false);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    }, [userToken]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const data = await fetchWithAuth(
-            `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
-          );
-        } catch (error) {
-          console.error("Failed to fetch data:", error);
-        }
-      };
+      const result = await response.json();
 
-      fetchData();
-    }, [product_id, fetchWithAuth]);
+      setProductDataNew(result?.data);
+      setViewCountdown(true);
+
+      if (result?.data?.starts_in === "Raffle Ended") {
+        setraffleended(true);
+      }
+      setLoadingData(false);
+      if (result?.data) {
+      }
+      return result;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    } finally {
+      setLoadingData(false);
+    }
+  }, [userToken]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchWithAuth(
+          `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
+        );
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [product_id, fetchWithAuth]);
 
   useEffect(() => {
     const filtered = raffle.filter((val) => val.host === params.id);
@@ -192,7 +192,7 @@ const Page = ({ params }: any) => {
       <section className="relative mb-[5rem] mt-7 flex flex-col items-center justify-center">
         <div className="relative z-auto mb-4 w-full">
           <div className="flex justify-center items-center">
-           {/*  <iframe
+            {/*  <iframe
               ref={iframeRef}
               src="https://www.youtube.com/embed/A50B4AwxwsU?autoplay=1&enablejsapi=1"
               width="800"
@@ -202,17 +202,17 @@ const Page = ({ params }: any) => {
               allowFullScreen
             ></iframe> */}
             <video
-   /*      ref={iframeRef} */
-        width="800"
-        height="306"
-        controls
-        autoPlay
+              /*      ref={iframeRef} */
+              width="800"
+              height="306"
+              controls
+              autoPlay
 
-        className="rounded-lg shadow-md"
-      >
-        <source src="/ajirobaadvideo.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+              className="rounded-lg shadow-md"
+            >
+              <source src="/ajirobaadvideo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
 

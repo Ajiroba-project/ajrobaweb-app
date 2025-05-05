@@ -52,7 +52,7 @@ const nextConfig = {
         return [
             {
                 source: "/api/cable_tv_packages",
-                destination: "https://ajiroba.onrender.com/v1/pay/nomba/cable_tv_packages",
+                destination: "https://staging.ajiroba.ng/v1/pay/nomba/cable_tv_packages",
             },
         ];
     },

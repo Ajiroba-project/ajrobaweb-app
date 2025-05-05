@@ -114,7 +114,7 @@ const CustomerReview = ({ data }: any) => {
                                 <div key={key} className="flex gap-2">
                                     <div className="">
                                         <Image
-                                            src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
+                                            src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
                                             height={40}
                                             width={40}
                                             alt="Profile Image"
@@ -302,7 +302,7 @@ const Page = ({ params }: any) => {
 
     return (
         <main>
-        {/*     <ToastContainer /> */}
+            {/*     <ToastContainer /> */}
             <Header />
             <Breadcrumb paths={verifiedpaths} text={undefined} />
 
@@ -421,7 +421,7 @@ const Page = ({ params }: any) => {
                                         </button>
                                     </div>
 
-                            <p className="text-[#111111] text-base mt-4 ">
+                                    <p className="text-[#111111] text-base mt-4 ">
                                         Weight
                                     </p>
 
@@ -440,14 +440,14 @@ const Page = ({ params }: any) => {
                                             ?.delivery_estimation || "NA"}
                                     </h1>
 
-                                   <div className="flex justify-center items-center mt-4" >
-                                     <button
-                                        onClick={notify}
-                                        className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded"
-                                    >
-                                        Add to Cart
-                                    </button>
-                                   </div>
+                                    <div className="flex justify-center items-center mt-4" >
+                                        <button
+                                            onClick={notify}
+                                            className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded"
+                                        >
+                                            Add to Cart
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}

@@ -32,20 +32,20 @@ const WrappedPage = () => {
 
 
 
-//   const {
-//     data: productinfo,
-//     isLoading: productLoading,
-//     error: producterror,
-//   } = useGetProductData(
-//     "/api/productdetailsbyid",
-//     userToken,
-//     order_id,
-//     "get_product_details"
-//   );
+  //   const {
+  //     data: productinfo,
+  //     isLoading: productLoading,
+  //     error: producterror,
+  //   } = useGetProductData(
+  //     "/api/productdetailsbyid",
+  //     userToken,
+  //     order_id,
+  //     "get_product_details"
+  //   );
 
 
 
-    const userToken_ = Cookies.get("token")
+  const userToken_ = Cookies.get("token")
 
 
 
@@ -61,16 +61,16 @@ const WrappedPage = () => {
 
   const filteredItems = auctioninfo?.data?.data?.all?.filter(item => item.id === order_id);
 
-    // console.log(filteredItems, "filteredItems")
+  // console.log(filteredItems, "filteredItems")
 
   /*  console.log(productinfo?.data?.data, "productinfo") */
 
   // console.log(producterror, "producterror")
 
 
-//   console.log(auctioninfo?.data?.data?.all, 'auctioninfo')
+  //   console.log(auctioninfo?.data?.data?.all, 'auctioninfo')
 
-    // Display loading spinner or text while fetching data
+  // Display loading spinner or text while fetching data
   if (auctionLoading) {
     return (
       <section className="min-h-screen flex justify-center items-center">
@@ -181,7 +181,7 @@ const WrappedPage = () => {
           </div>
         </div>
 
-       <section
+        <section
           className="container"
           style={{
             margin: "0 auto",
@@ -190,82 +190,82 @@ const WrappedPage = () => {
         >
 
 
-              <div
+          <div
 
-                className="flex flex-col justify-between md:flex-row   mt-8 items-center border px-8 py-8 rounded-md w-full"
-              >
-              <div style={{
-                width: '55%'
-              }}  className="flex flex-col md:flex-row items-center gap-2 w-full md:w-1/2">
-                  <div className="">
-                    <Image
-                      width={100}
-                      height={100}
-                      src={`https://ajiroba.onrender.com${filteredItems[0]?.auction[0]?.images[0]}`}
-                      alt="product_image"
-                      className="object-contain"
-                    />
-                  </div>
+            className="flex flex-col justify-between md:flex-row   mt-8 items-center border px-8 py-8 rounded-md w-full"
+          >
+            <div style={{
+              width: '55%'
+            }} className="flex flex-col md:flex-row items-center gap-2 w-full md:w-1/2">
+              <div className="">
+                <Image
+                  width={100}
+                  height={100}
+                  src={`https://staging.ajiroba.ng${filteredItems[0]?.auction[0]?.images[0]}`}
+                  alt="product_image"
+                  className="object-contain"
+                />
+              </div>
 
-                   <div className="flex flex-col gap-2 w-full">
-                    <div>
-                      <p className="text-[#353131] text-base font-Poppins">
-                        {filteredItems[0]?.auction[0]?.name}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[#A09F9F] text-[12px] font-Poppins font-normal">
-                         {filteredItems[0]?.auction[0]?.name}
-                      </p>
-                    </div>
-                  </div>
+              <div className="flex flex-col gap-2 w-full">
+                <div>
+                  <p className="text-[#353131] text-base font-Poppins">
+                    {filteredItems[0]?.auction[0]?.name}
+                  </p>
                 </div>
-
-                 <div style={{
-                width: '35%'
-              }} className="flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-4 py-2 w-full md:w-1/2">
-                  <div
-                    className="flex flex-col items-baseline gap-4 w-full"
-                    style={{
-                      borderBottom: "1px solid #6E6E6E",
-                      paddingBottom: ".5rem",
-                    }}
-                  >
-                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
-                      <div>
-                        <p className="text-[#6E6E6E] font-Poppins text-sm">
-                          Ticket Price:
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-Poppins text-[#353131] font-medium">
-                        N    {filteredItems[0]?.ticket_price}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
-                      <div>
-                        <p className="text-[#6E6E6E] font-Poppins text-sm">
-                          Ticket Number:
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-Poppins text-[#353131] font-medium">
-                 {filteredItems[0]?.ticket_number}
-                        </p>
-                      </div>
-                    </div>
-
-
-                  </div>
+                <div>
+                  <p className="text-[#A09F9F] text-[12px] font-Poppins font-normal">
+                    {filteredItems[0]?.auction[0]?.name}
+                  </p>
                 </div>
               </div>
+            </div>
+
+            <div style={{
+              width: '35%'
+            }} className="flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-4 py-2 w-full md:w-1/2">
+              <div
+                className="flex flex-col items-baseline gap-4 w-full"
+                style={{
+                  borderBottom: "1px solid #6E6E6E",
+                  paddingBottom: ".5rem",
+                }}
+              >
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
+                  <div>
+                    <p className="text-[#6E6E6E] font-Poppins text-sm">
+                      Ticket Price:
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-Poppins text-[#353131] font-medium">
+                      N    {filteredItems[0]?.ticket_price}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
+                  <div>
+                    <p className="text-[#6E6E6E] font-Poppins text-sm">
+                      Ticket Number:
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-Poppins text-[#353131] font-medium">
+                      {filteredItems[0]?.ticket_number}
+                    </p>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
 
 
         </section>
 
-         <section
+        <section
           style={{
             margin: "0 auto",
             width: "95%",

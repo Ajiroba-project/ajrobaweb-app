@@ -337,7 +337,7 @@ const Page = ({ params }: any) => {
 
     const handleOrderbutton = () => {
         let pin = Cookies.get("nvd");
-         console.log('yes....', pin)
+        console.log('yes....', pin)
 
 
     };
@@ -354,8 +354,8 @@ const Page = ({ params }: any) => {
 
         const filteredReviews = selectedStars
             ? data?.data?.reviews.filter(
-                  (review: any) => review.rating === selectedStars,
-              )
+                (review: any) => review.rating === selectedStars,
+            )
             : data?.data?.reviews;
 
         const [currentPage, setCurrentPage] = useState(1);
@@ -451,11 +451,10 @@ const Page = ({ params }: any) => {
                                         onClick={() =>
                                             setSelectedStars(item.stars)
                                         }
-                                        className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-                                            selectedStars === item.stars
+                                        className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === item.stars
                                                 ? "bg-[#F25E26] text-white font-bold"
                                                 : "bg-white text-black font-normal"
-                                        } rounded`}
+                                            } rounded`}
                                     >
                                         {item.stars} Star
                                     </button>
@@ -464,11 +463,10 @@ const Page = ({ params }: any) => {
 
                             <button
                                 onClick={() => setSelectedStars(null)}
-                                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-                                    selectedStars === null
+                                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === null
                                         ? "bg-[#F25E26] text-white font-bold"
                                         : "bg-white text-black font-normal"
-                                } rounded`}
+                                    } rounded`}
                             >
                                 All Stars
                             </button>
@@ -488,7 +486,7 @@ const Page = ({ params }: any) => {
                                 <div key={key} className="flex gap-2">
                                     <div className="">
                                         <Image
-                                            src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
+                                            src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
                                             height={40}
                                             width={40}
                                             alt="Profile Image"
@@ -537,13 +535,12 @@ const Page = ({ params }: any) => {
                                                         pageNumber,
                                                     )
                                                 }
-                                                className={` px-2 cursor-pointer ${
-                                                    currentPage ===
-                                                    pageNumber
+                                                className={` px-2 cursor-pointer ${currentPage ===
+                                                        pageNumber
                                                         ?
-                                                          " text-[#353131] font-bold"
+                                                        " text-[#353131] font-bold"
                                                         : " text-[#353131]"
-                                                }`}
+                                                    }`}
                                             >
                                                 {pageNumber}
                                             </h1>
@@ -718,7 +715,7 @@ const Page = ({ params }: any) => {
                                             selectedImageIndex
                                         ] ? (
                                             <Image
-                                          src={`https://staging.ajiroba.ng/media/${productdata.data.images[selectedImageIndex].image}`}
+                                                src={`https://staging.ajiroba.ng/media/${productdata.data.images[selectedImageIndex].image}`}
                                                 alt="Product Image"
                                                 width={400}
                                                 height={400}
@@ -745,10 +742,10 @@ const Page = ({ params }: any) => {
                                                         <FaStar
                                                             className={
                                                                 index <
-                                                                productdata
-                                                                    ?.data
-                                                                    ?.auction_reviews
-                                                                    ?.average_ratings
+                                                                    productdata
+                                                                        ?.data
+                                                                        ?.auction_reviews
+                                                                        ?.average_ratings
                                                                     ? "text-[#FFD60A]"
                                                                     : "text-[#A09F9F]"
                                                             }
@@ -808,7 +805,7 @@ const Page = ({ params }: any) => {
                                         </h1>
 
                                         {productdata?.data?.starts_in ===
-                                        "Raffle Ended" ? (
+                                            "Raffle Ended" ? (
                                             <div className="flex justify-center items-center mt-4">
                                                 <button
                                                     onClick={notify}
@@ -983,7 +980,7 @@ const Page = ({ params }: any) => {
                 }
                 isModalOpen={confirmordermodal}
                 showModal={showConfirmOrder}
-                handleOk={() => {}}
+                handleOk={() => { }}
                 handleCancel={handlecloseOrder}
             />
         </main>

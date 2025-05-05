@@ -103,9 +103,9 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     token: state.token,
   }));
 
-   const userToken = (Cookies.get("token") as string) || "";
+  const userToken = (Cookies.get("token") as string) || "";
 
- /*  const userToken = token; */
+  /*  const userToken = token; */
 
   const handleSuccess = (data: any) => {
     Setreviewerror("");
@@ -275,7 +275,7 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
 
 
 
-    const itemsPerPage = 5; // Number of items per page
+  const itemsPerPage = 5; // Number of items per page
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate total pages
@@ -310,17 +310,17 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
               >
 
 
-            <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
-                <Image
-                  src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
-                  alt={val?.auction[0]?.name}
-                  layout="fixed"
-                  width={100}
-                  height={80}
-                  objectFit="cover"
-                  className="rounded-lg"
-                />
-              </div>
+                <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
+                  <Image
+                    src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
+                    alt={val?.auction[0]?.name}
+                    layout="fixed"
+                    width={100}
+                    height={80}
+                    objectFit="cover"
+                    className="rounded-lg"
+                  />
+                </div>
 
                 <div className="flex flex-col gap-3 capitalize">
                   <p className=" font-semibold">{val?.auction[0]?.name}</p>
@@ -351,27 +351,27 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
         </div>
 
 
-         {openProducts?.length > itemsPerPage && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
-          >
-            Previous
-          </button>
-          <span className="mx-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
-          >
-            Next
-          </button>
-        </div>
-      )}
+        {openProducts?.length > itemsPerPage && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+            >
+              Previous
+            </button>
+            <span className="mx-2">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       {isdeleteModalOpen && (
@@ -430,10 +430,10 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   const [redeemprice, setRedeemPrice] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState("");
   const [showaddress, setShowaddress] = useState(false);
-    const [showcode, setshowCode] = useState(false);
+  const [showcode, setshowCode] = useState(false);
 
 
-    const handlePaymentSelection = (method: SetStateAction<string>) => {
+  const handlePaymentSelection = (method: SetStateAction<string>) => {
     setPaymentMethod(method);
   };
 
@@ -487,7 +487,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     user: state.user,
     token: state.token,
   }));
- const userToken = (Cookies.get("token") as string) || "";
+  const userToken = (Cookies.get("token") as string) || "";
 
 
   // const userToken = token;
@@ -775,7 +775,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   const handleRedeemItemsClick = () => {
     // Logic for "redeem items" tag
 
-        setRedeemPrice(!redeemprice);
+    setRedeemPrice(!redeemprice);
   };
 
   const handleWinningAdviseClick = () => {
@@ -804,14 +804,14 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
 
 
-    const itemsPerPage = 5; // Number of items per page
+  const itemsPerPage = 5; // Number of items per page
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate total pages
   const totalPages = Math.ceil(closedProducts?.length / itemsPerPage);
 
   // Slice data based on the current page
-  const currentData =closedProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentData = closedProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Handle page navigation
   const handlePageChange = (page: number) => {
@@ -837,17 +837,17 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
               >
 
 
-            <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
-  <Image
-    src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
-    alt={val?.auction[0]?.name}
-    layout="fixed"
-    width={100}
-    height={80}
-    objectFit="cover"
-    className="rounded-lg"
-  />
-</div>
+                <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
+                  <Image
+                    src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
+                    alt={val?.auction[0]?.name}
+                    layout="fixed"
+                    width={100}
+                    height={80}
+                    objectFit="cover"
+                    className="rounded-lg"
+                  />
+                </div>
 
                 <div className="flex flex-col gap-3 capitalize">
                   <p className=" font-semibold">{val?.auction[0]?.name}</p>
@@ -867,11 +867,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   </div>
                 </div>
                 <span className="absolute right-3 top-2 rounded-md border p-2 cursor-pointer">
-                   <DropDownAuctionWin
+                  <DropDownAuctionWin
 
-                onOptionClick={(option) => handleOptionClick(option, val)}
-                transaction={val}
-              />
+                    onOptionClick={(option) => handleOptionClick(option, val)}
+                    transaction={val}
+                  />
                 </span>
               </div>
             ))
@@ -880,26 +880,26 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
 
         {closedProducts?.length > itemsPerPage && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
-          >
-            Previous
-          </button>
-          <span className="mx-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
-          >
-            Next
-          </button>
-        </div>
-      )}
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+            >
+              Previous
+            </button>
+            <span className="mx-2">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       {isdeleteModalOpen && (
@@ -1053,7 +1053,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
 
 
-        <CustomModal isOpen={redeemprice}>
+      <CustomModal isOpen={redeemprice}>
         {redeemprice && (
           <>
 
@@ -1074,64 +1074,64 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                 </div>
 
 
-                        <form action="">
-                          <div className="mb-4">
-                            <div>
-                              <input
-                                type="radio"
-                                id="delivery"
-                               name="paymentMethod"
-                                value="delivery"
-                                onChange={() =>
-                                   handlePaymentSelection("delivery")
-                                }
-                              />
-                              <label className="ml-2" htmlFor="delivery">
-                                By Delivery
-                              </label>
-                            </div>
+                <form action="">
+                  <div className="mb-4">
+                    <div>
+                      <input
+                        type="radio"
+                        id="delivery"
+                        name="paymentMethod"
+                        value="delivery"
+                        onChange={() =>
+                          handlePaymentSelection("delivery")
+                        }
+                      />
+                      <label className="ml-2" htmlFor="delivery">
+                        By Delivery
+                      </label>
+                    </div>
 
 
-                          </div>
+                  </div>
 
-                          <div>
-                            <div>
-                              <input
-                                type="radio"
-                                id="voucher"
-                                name="paymentMethod"
-                                value="voucher"
-                                 onChange={() => handlePaymentSelection("voucher")}
-                              />
-                              <label className="ml-2" htmlFor="voucher">
-                                Gift Voucher
-                              </label>
-                            </div>
+                  <div>
+                    <div>
+                      <input
+                        type="radio"
+                        id="voucher"
+                        name="paymentMethod"
+                        value="voucher"
+                        onChange={() => handlePaymentSelection("voucher")}
+                      />
+                      <label className="ml-2" htmlFor="voucher">
+                        Gift Voucher
+                      </label>
+                    </div>
 
-              <div className='mt-5 flex gap-8 justify-between'>
-              {/* buttons */}
-              <DefaultButton
-                text='Back'
-                className='rounded-md border-2 border-[#F25E26] p-2 text-[#F25E26]'
-                type='button'
-                handleClick={()=> setRedeemPrice(!redeemprice)}
-              />
-              <DefaultButton
-                 text='Next'
-                  /*    text={status === 'pending' ? 'loading...' : "Save"} */
-                className='rounded-md bg-[#F25E26] p-2 px-4 text-white'
-                type='button'
-                handleClick={()=>{
-                  return(
-                    setShowaddress(!showaddress),
-                    console.log('clicked', paymentMethod),
-                    setRedeemPrice(!redeemprice)
-                  )
-                } }
-              />
-            </div>
-                          </div>
-                        </form>
+                    <div className='mt-5 flex gap-8 justify-between'>
+                      {/* buttons */}
+                      <DefaultButton
+                        text='Back'
+                        className='rounded-md border-2 border-[#F25E26] p-2 text-[#F25E26]'
+                        type='button'
+                        handleClick={() => setRedeemPrice(!redeemprice)}
+                      />
+                      <DefaultButton
+                        text='Next'
+                        /*    text={status === 'pending' ? 'loading...' : "Save"} */
+                        className='rounded-md bg-[#F25E26] p-2 px-4 text-white'
+                        type='button'
+                        handleClick={() => {
+                          return (
+                            setShowaddress(!showaddress),
+                            console.log('clicked', paymentMethod),
+                            setRedeemPrice(!redeemprice)
+                          )
+                        }}
+                      />
+                    </div>
+                  </div>
+                </form>
               </div>
             </>
           </>
@@ -1142,8 +1142,8 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
 
 
-        <CustomModal isOpen={showaddress && paymentMethod === "delivery" }>
-        { (
+      <CustomModal isOpen={showaddress && paymentMethod === "delivery"}>
+        {(
           <>
 
             <>
@@ -1163,41 +1163,41 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                 </div>
 
 
-                    <div>
-                     <div className="flex items-center justify-center  bg-gray-100">
-  <div className="w-80  bg-white shadow-md p-6 text-center">
-    <h2 className="text-xl font-semibold text-gray-900">Address</h2>
+                <div>
+                  <div className="flex items-center justify-center  bg-gray-100">
+                    <div className="w-80  bg-white shadow-md p-6 text-center">
+                      <h2 className="text-xl font-semibold text-gray-900">Address</h2>
 
-    <div className="mt-6 text-left space-y-2">
-      <p className="font-semibold text-gray-800">Alex Rachel</p>
-      <p className="text-gray-600">234 Festac road, Ikot-Abasi, Nigeria</p>
-      <p className="text-gray-600">08012345678</p>
-    </div>
+                      <div className="mt-6 text-left space-y-2">
+                        <p className="font-semibold text-gray-800">Alex Rachel</p>
+                        <p className="text-gray-600">234 Festac road, Ikot-Abasi, Nigeria</p>
+                        <p className="text-gray-600">08012345678</p>
+                      </div>
 
-  <div className="flex justify-end ">
-      <button className="mt-4 text-sm text-[#E84526] hover:underline">
-      Change
-    </button>
-  </div>
+                      <div className="flex justify-end ">
+                        <button className="mt-4 text-sm text-[#E84526] hover:underline">
+                          Change
+                        </button>
+                      </div>
 
-    <div className="mt-6 flex flex-col space-y-4">
-      <button onClick={()=> {
-        return(
-         /*  setRedeemPrice(!redeemprice), */
-          setShowaddress(!showaddress),
-           setshowCode(!showcode)
-        )
-      }} className="bg-[#E84526] text-white font-medium py-2 rounded-lg">
-        Proceed
-      </button>
-      <button className="border border-[#E84526] text-[#E84526] font-medium py-2 rounded-lg">
-        Back
-      </button>
-    </div>
-  </div>
-</div>
-
+                      <div className="mt-6 flex flex-col space-y-4">
+                        <button onClick={() => {
+                          return (
+                            /*  setRedeemPrice(!redeemprice), */
+                            setShowaddress(!showaddress),
+                            setshowCode(!showcode)
+                          )
+                        }} className="bg-[#E84526] text-white font-medium py-2 rounded-lg">
+                          Proceed
+                        </button>
+                        <button className="border border-[#E84526] text-[#E84526] font-medium py-2 rounded-lg">
+                          Back
+                        </button>
+                      </div>
                     </div>
+                  </div>
+
+                </div>
               </div>
             </>
           </>
@@ -1207,8 +1207,8 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
 
 
-        <CustomModal isOpen={showcode}>
-        { (
+      <CustomModal isOpen={showcode}>
+        {(
           <>
 
             <>
@@ -1227,34 +1227,34 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   </button>
                 </div>
 
-    <div className="flex items-center justify-center  bg-gray-100">
-      <div className="w-80 rounded-lg bg-white shadow-md p-6 text-center">
-        {/* Icon */}
-        <div className="flex justify-center mb-4">
-          <Image
-            src={bikecode} // Path to your image
-            alt="Order on the way"
-            width={64} // Adjust width as needed
-            height={64} // Adjust height as needed
-          />
-        </div>
+                <div className="flex items-center justify-center  bg-gray-100">
+                  <div className="w-80 rounded-lg bg-white shadow-md p-6 text-center">
+                    {/* Icon */}
+                    <div className="flex justify-center mb-4">
+                      <Image
+                        src={bikecode} // Path to your image
+                        alt="Order on the way"
+                        width={64} // Adjust width as needed
+                        height={64} // Adjust height as needed
+                      />
+                    </div>
 
-        {/* Order Code */}
-        <p className="text-lg">
-          Order Code: <span className="font-semibold">232432</span>
-        </p>
+                    {/* Order Code */}
+                    <p className="text-lg">
+                      Order Code: <span className="font-semibold">232432</span>
+                    </p>
 
-        {/* Order Status Message */}
-        <p className="mt-2 text-gray-700">
-          Congratulations. Your Order is on its way
-        </p>
+                    {/* Order Status Message */}
+                    <p className="mt-2 text-gray-700">
+                      Congratulations. Your Order is on its way
+                    </p>
 
-        {/* Proceed Button */}
-        <button className="mt-6 bg-[#E84526] text-white font-medium py-2 px-6 rounded-lg">
-          Proceed
-        </button>
-      </div>
-    </div>
+                    {/* Proceed Button */}
+                    <button className="mt-6 bg-[#E84526] text-white font-medium py-2 px-6 rounded-lg">
+                      Proceed
+                    </button>
+                  </div>
+                </div>
               </div>
             </>
           </>

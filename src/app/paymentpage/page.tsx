@@ -79,7 +79,7 @@ const Page = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://ajiroba.onrender.com/v1/commerce/checkout/`,
+      url: `https://staging.ajiroba.ng/v1/commerce/checkout/`,
       headers: headers,
     };
 
@@ -361,7 +361,7 @@ const Page = () => {
         };
 
         const response = await axios.post(
-          "https://ajiroba.onrender.com/v1/commerce/order/",
+          "https://staging.ajiroba.ng/v1/commerce/order/",
           payload,
           {
             headers: {
@@ -395,7 +395,7 @@ const Page = () => {
             startVerificationLoop(reference);
           }
         } else {
-        /*   console.log(status, 'statusss', data, 'datatatta', response, 'resss') */
+          /*   console.log(status, 'statusss', data, 'datatatta', response, 'resss') */
           toast.error(`${response.data.message}`);
           setLoading(false)
         }
@@ -403,7 +403,7 @@ const Page = () => {
         if (axios.isAxiosError(error)) {
           toast.error(
             error.response?.data?.message ||
-              "An error occurred during the payment process.",
+            "An error occurred during the payment process.",
           );
           setLoading(false)
         } else {
@@ -451,7 +451,7 @@ const Page = () => {
       try {
         const tkn_: string = Cookies.get("token") as string;
         const response = await axios.get(
-          `https://ajiroba.onrender.com/v1/commerce/verify_product_payment/${reference}/`,
+          `https://staging.ajiroba.ng/v1/commerce/verify_product_payment/${reference}/`,
           {
             headers: { Authorization: `token ${tkn_}` },
           },
@@ -471,7 +471,7 @@ const Page = () => {
         if (axios.isAxiosError(error) && error.response) {
           toast.error(
             error.response.data.message ||
-              "Error occurred during payment verification.",
+            "Error occurred during payment verification.",
           );
         } else {
           toast.error("An unexpected error occurred.");
@@ -496,8 +496,8 @@ const Page = () => {
           </p>
           <div className="flex w-full gap-5 flex-col">
             <DefaultButton
-            /*   text="Continue" */
-            text={`${loading ? 'loading...' : 'Continue'}`}
+              /*   text="Continue" */
+              text={`${loading ? 'loading...' : 'Continue'}`}
               type="button"
               className="w-full rounded-md bg-[#E84526] p-3 text-white"
               handleClick={handleContinue}
@@ -747,11 +747,10 @@ const Page = () => {
                         ? handleOrderbutton
                         : showConfirmOrder
                     }
-                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
-                      isPaymentMethodConfirmed
+                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
                         ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
                         : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
-                    }`}
+                      }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
                     {status === "pending" ? "..." : "Confirm Order"}
@@ -813,11 +812,10 @@ const Page = () => {
 
                   <button
                     onClick={showConfirmOrderCard}
-                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
-                      isPaymentMethodConfirmed
+                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
                         ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
                         : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
-                    }`}
+                      }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
                     Confirm Order
@@ -891,11 +889,10 @@ const Page = () => {
                   </div>
 
                   <button
-                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${
-                      isPaymentMethodConfirmed
+                    className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
                         ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
                         : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
-                    }`}
+                      }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
                     Confirm Order

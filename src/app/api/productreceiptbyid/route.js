@@ -70,7 +70,7 @@ export async function GET(request) {
             return NextResponse.json({ error: 'Token is required' }, { status: 400 });
         }
 
-        // https://ajiroba.onrender.com/v1/user/view_purchase_order/<order_id>/
+        // https://staging.ajiroba.ng/v1/user/view_purchase_order/<order_id>/
 
         const cacheBuster = `cache=${Date.now()}`;
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/transaction_receipt/${id}?${cacheBuster}`, {

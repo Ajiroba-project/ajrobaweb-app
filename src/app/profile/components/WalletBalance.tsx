@@ -47,7 +47,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       const payload = { amount: Number(amount) };
 
       const response = await axios.post(
-        "https://ajiroba.onrender.com/v1/pay/fund_wallet/",
+        "https://staging.ajiroba.ng/v1/pay/fund_wallet/",
         payload,
         {
           headers: {
@@ -69,7 +69,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
         window.open(payment_url, "_blank");
 
-          toast.success(`Payment initiated successfully`, {
+        toast.success(`Payment initiated successfully`, {
           closeButton: false,
 
         });
@@ -91,7 +91,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
     const stopLoop = () => {
       clearInterval(intervalId);
-    /*   console.log("Verification loop stopped."); */
+      /*   console.log("Verification loop stopped."); */
     };
 
     let intervalId: NodeJS.Timeout;
@@ -104,7 +104,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
         if (attempts >= maxAttempts) {
           clearInterval(intervalId);
-        /*   console.log("Verification loop stopped after max attempts."); */
+          /*   console.log("Verification loop stopped after max attempts."); */
         }
       }, intervalTime);
 
@@ -118,7 +118,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       const tkn_: string = Cookies.get("token") as string;
 
       const response = await axios.get(
-        `https://ajiroba.onrender.com/v1/pay/verify_wallet_payment/${reference}/`,
+        `https://staging.ajiroba.ng/v1/pay/verify_wallet_payment/${reference}/`,
         {
           headers: {
             Authorization: `token ${tkn_}`,
@@ -126,11 +126,11 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         }
       );
 
-     /*  console.log(response, "response"); */
+      /*  console.log(response, "response"); */
       if (response.status === 200 || response.status === 201) {
         setloadingverify(false); // Stop loading when verification is successful
-       /*  toast.success(`${response?.data?.message}`); */
-       toast.success(`${response?.data?.message}`, {
+        /*  toast.success(`${response?.data?.message}`); */
+        toast.success(`${response?.data?.message}`, {
           closeButton: false,
 
         });
@@ -247,7 +247,7 @@ export const WalletBalance = () => {
     }
   }, [isTokenReady, userInfo, isLoggedIn, userDetails]);
 
-  if (userLoading || !userData ) {
+  if (userLoading || !userData) {
     return <Loading />;
   }
 

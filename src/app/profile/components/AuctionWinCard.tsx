@@ -286,7 +286,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
   };
 
 
-    const itemsPerPage = 5; // Number of items per page
+  const itemsPerPage = 5; // Number of items per page
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate total pages
@@ -321,7 +321,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   {" "}
                   {/* Container height control */}
                   <Image
-                    src={`https://ajiroba.onrender.com${val?.auction[0]?.images[0]}`}
+                    src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
                     layout="fixed"
                     width={100}
@@ -359,26 +359,26 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
         </div>
 
         {productMain?.length > itemsPerPage && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
-          >
-            Previous
-          </button>
-          <span className="mx-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
-          >
-            Next
-          </button>
-        </div>
-      )}
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`mx-2 px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+            >
+              Previous
+            </button>
+            <span className="mx-2">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`mx-2 px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F25E26] hover:bg-[#EA7000] text-white'}`}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       {isdeleteModalOpen && (

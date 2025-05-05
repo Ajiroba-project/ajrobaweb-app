@@ -229,7 +229,7 @@ const Page = ({ params }: any) => {
   const fetchData = async () => {
     try {
       const data = await fetchWithAuth(
-        `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`,
       );
       /*    console.log("Fetched data:", data); */
     } catch (error) {
@@ -951,7 +951,7 @@ const Page = ({ params }: any) => {
                 <div key={key} className="flex gap-2">
                   <div className="">
                     <Image
-                      src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
+                      src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
                       height={40}
                       width={40}
                       alt="Profile Image"

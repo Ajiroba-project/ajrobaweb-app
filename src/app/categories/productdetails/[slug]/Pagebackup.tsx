@@ -258,7 +258,7 @@ const Page = ({ params }: any) => {
                   <div key={key} className="flex gap-2">
                     <div className="">
                       <Image
-                        src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
+                        src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
                         height={40}
                         width={40}
                         alt="Profile Image"
