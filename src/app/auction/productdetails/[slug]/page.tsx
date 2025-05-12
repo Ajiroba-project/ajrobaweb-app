@@ -1306,6 +1306,10 @@ const Page = ({ params }: any) => {
                         )}
                       </div>
                     )} */}
+{/*
+                    {
+                      console.log(productdatanew?.data, "productdatanew?.data?.starts_in")
+                    } */}
                     {productdatanew?.data?.starts_in === "Raffle Ended" ? (
                       <div className="flex justify-center items-center mt-4">
                         <button

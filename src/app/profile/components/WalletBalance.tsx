@@ -130,48 +130,11 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     }
   };
 
-  const startVerificationLoop = (reference: string) => {
-    // Clear any existing verification interval
-    if (verificationInterval) {
-      clearInterval(verificationInterval);
-    }
-
-    const intervalTime = 2000; // Check every 2 seconds
-    const totalDuration = 2 * 60 * 1000; // Total duration of 2 minutes
-    const maxAttempts = totalDuration / intervalTime;
-    let attempts = 0;
-
-    const intervalId = setInterval(async () => {
-      attempts++;
-      await verifyWalletPayment(reference, () => {
-        clearInterval(intervalId);
-        cleanup();
-      });
-
-      if (attempts >= maxAttempts) {
-        clearInterval(intervalId);
-        cleanup();
-        toast.error("Payment verification timed out. Please check your wallet balance.");
-      }
-    }, intervalTime);
-
-    setVerificationInterval(intervalId);
-
-    // Set a timeout to stop the loop after total duration
-    setTimeout(() => {
-      clearInterval(intervalId);
-      cleanup();
-    }, totalDuration);
-  };
-
   const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
     setloadingverify(true);
     let message;
     try {
       const tkn_: string = Cookies.get("token") as string;
-
-
-
       const response = await axios.get(
         `https://staging.ajiroba.ng/v1/pay/verify_wallet_payment/${reference}/`,
         {
@@ -180,6 +143,11 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
           },
         }
       );
+
+
+      const res = response.data;
+
+      console.log(res, "res");
 
       if (response.status === 200 || response.status === 201) {
         setloadingverify(false);
@@ -194,12 +162,59 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       } else {
         setloadingverify(false);
         toast.error(message || "Unexpected status during verification.");
+        stopLoop(); // Stop on unexpected status
       }
     } catch (error) {
       setloadingverify(false);
       console.error(error);
+
+      // Check if it's a 500 error
+      if (axios.isAxiosError(error) && error.response?.status === 500) {
+        toast.error("Server error occurred. Please try again later.");
+        stopLoop(); // Stop retrying on 500 errors
+        return;
+      }
+
       toast.error(message || "Error occurred during payment verification.");
     }
+  };
+
+  const startVerificationLoop = (reference: string) => {
+    // Clear any existing verification interval
+    if (verificationInterval) {
+      clearInterval(verificationInterval);
+    }
+
+    const maxAttempts = 5; // Limit to 5 attempts
+    let attempts = 0;
+    let backoffTime = 2000; // Start with 2 seconds
+
+    const intervalId = setInterval(async () => {
+      attempts++;
+
+      if (attempts > maxAttempts) {
+        clearInterval(intervalId);
+        cleanup();
+        toast.error("Payment verification timed out. Please check your wallet balance.");
+        return;
+      }
+
+      await verifyWalletPayment(reference, () => {
+        clearInterval(intervalId);
+        cleanup();
+      });
+
+      // Exponential backoff: double the wait time after each attempt
+      backoffTime = Math.min(backoffTime * 2, 30000); // Cap at 30 seconds
+    }, backoffTime);
+
+    setVerificationInterval(intervalId);
+
+    // Set a timeout to stop the loop after total duration
+    setTimeout(() => {
+      clearInterval(intervalId);
+      cleanup();
+    }, 2 * 60 * 1000); // 2 minutes total timeout
   };
 
   const router = useRouter();
