@@ -33,13 +33,13 @@ const Page = ({ params }: any) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [viewCoundown, setViewCountdown] = useState(false);
   const [raffleended, setraffleended] = useState(false);
+  const [loadingdata, setLoadingData] = useState(true);
 
   const userToken = (Cookies.get("token") as string) || "";
 
   const product_id = params?.id;
 
   const [productdatanew, setProductDataNew] = useState<string | null>(null);
-  const [loadingdata, setLoadingData] = useState(false);
 
   const fetchWithAuth = useCallback(async (url: string) => {
     setLoadingData(false);
@@ -205,64 +205,56 @@ const Page = ({ params }: any) => {
         </div>
       </div>
       <section className="relative mb-[5rem] mt-7 flex flex-col items-center justify-center">
-        <div className="relative z-auto mb-4 w-full">
-          <div className="flex justify-center items-center">
-            {/*  <iframe
-              ref={iframeRef}
-              src="https://www.youtube.com/embed/A50B4AwxwsU?autoplay=1&enablejsapi=1"
-              width="800"
-              height="306"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe> */}
-            <video
-              /*      ref={iframeRef} */
-              width="800"
-              height="306"
-              controls
-              autoPlay
-
-              className="rounded-lg shadow-md"
-            >
-              <source src="/ajirobaadvideo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+        {loadingdata ? (
+          <div className="flex flex-col items-center justify-center min-h-[306px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25E26]"></div>
+            <p className="mt-4 text-gray-600">Loading raffle data...</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="relative z-auto mb-4 w-full">
+              <div className="flex justify-center items-center">
+                <video
+                  width="800"
+                  height="306"
+                  controls
+                  autoPlay
+                  className="rounded-lg shadow-md"
+                >
+                  <source src="/ajirobaadvideo.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
 
-        {/*    {
-          console.log(productdatanew, "productdatanew?.starts_in")
-        } */}
-
-        {productdatanew === "Raffle Started" ? (
-          <div className="flex justify-center items-center mt-4">
-            <button
-              onClick={() => router.push(`/raffle/${product_id}/winners`)}
-              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-            >
-              Raffle Started, Watch Live Raffle
-            </button>
-          </div>
-        ) :
-
-          productdatanew === "Raffle Ended" ? (
-            <DefaultButton
-              text="Watch Live Raffle"
-              className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-              type="button"
-              handleClick={() => {
-                router.push(`/raffle/${product_id}/winners`);
-              }}
-            />
-          ) : (
-            <DefaultButton
-              text={playState ? "Stop Video" : "Play Video"}
-              className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-              type="button"
-              handleClick={handleVideoControl}
-            />
-          )}
+            {productdatanew === "Raffle Started" ? (
+              <div className="flex justify-center items-center mt-4">
+                <button
+                  onClick={() => router.push(`/raffle/${product_id}/winners`)}
+                  className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                >
+                  Raffle Started, Watch Live Raffle
+                </button>
+              </div>
+            ) : productdatanew === "Raffle Ended" ? (
+              <DefaultButton
+                text="Watch Live Raffle"
+                className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                type="button"
+                handleClick={() => {
+                  router.push(`/raffle/${product_id}/winners`);
+                }}
+              />
+            ) : (
+              <DefaultButton
+                text={playState ? "Stop Video" : "Play Video"}
+                className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                type="button"
+                handleClick={handleVideoControl}
+              />
+            )}
+          </>
+        )}
       </section>
 
       <ModalComponent
