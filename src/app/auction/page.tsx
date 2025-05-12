@@ -38,13 +38,12 @@ const AuctionPage = () => {
   const [itemsPerPage] = useState<number>(12);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const { data: auctionInfo, isLoading: auctionLoading,    isFetching: auctionfetching, } = useQueryData<AuctionResponse>(
+  const { data: auctionInfo, isLoading: auctionLoading, isFetching: auctionfetching, } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`,
     ['get auctiondetails'],
     true
   );
 
-  // console.log(auctionInfo?.data);
 
   // Extract and set auction dates
   const auctionDates = useMemo(() => {
@@ -91,7 +90,7 @@ const AuctionPage = () => {
   });
 
 
-      {auctionfetching && <Loading />}
+  { auctionfetching && <Loading /> }
 
 
   return (
@@ -122,16 +121,16 @@ const AuctionPage = () => {
         </section>
 
         <section className='my-4'>
-    {/*       <h1>Auction</h1> */}
-        {
-          auctionfetching ? <Loading /> : (
-            <AuctionComp
-              cardInfo={filteredData}
-              currentPage={currentPage}
-              cardsNum={itemsPerPage}
-            />
-          )
-        }
+          {/*       <h1>Auction</h1> */}
+          {
+            auctionfetching ? <Loading /> : (
+              <AuctionComp
+                cardInfo={filteredData}
+                currentPage={currentPage}
+                cardsNum={itemsPerPage}
+              />
+            )
+          }
           <Pagination
             pageCount={pageCount}
             onPageChange={({ selected }) => handlePageChange(selected)}

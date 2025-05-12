@@ -18,7 +18,7 @@ interface ProductData {
   name?: string;
   price?: number;
   data?: any;
-  starts_in?: any;
+  starts_in?: string;
 }
 
 const Page = ({ params }: any) => {
@@ -38,13 +38,11 @@ const Page = ({ params }: any) => {
 
   const product_id = params?.id;
 
-  const [productdatanew, setProductDataNew] = useState<ProductData | null>(
-    null,
-  );
+  const [productdatanew, setProductDataNew] = useState<string | null>(null);
   const [loadingdata, setLoadingData] = useState(false);
 
   const fetchWithAuth = useCallback(async (url: string) => {
-    setLoadingData(true);
+    setLoadingData(false);
 
     const requestOptions: RequestInit = {
       method: "GET",
@@ -63,11 +61,16 @@ const Page = ({ params }: any) => {
 
       const result = await response.json();
 
-      setProductDataNew(result?.data);
-      setViewCountdown(true);
+      setProductDataNew(result?.data?.starts_in);
 
+
+      if (result?.data?.starts_in === "Raffle Started") {
+        setViewCountdown(false);
+      } else if (result?.data?.starts_in === "Raffle Ended") {
+        setViewCountdown(true);
+      }
       if (result?.data?.starts_in === "Raffle Ended") {
-        setraffleended(true);
+        setraffleended(false);
       }
       setLoadingData(false);
       if (result?.data) {
@@ -135,6 +138,7 @@ const Page = ({ params }: any) => {
     };
   }
 
+  // Countdown Timer component
   const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     const {
       totalMinutes: initialTotalMinutes,
@@ -143,30 +147,41 @@ const Page = ({ params }: any) => {
       minutesLeft: initialMinutesLeft,
     } = parseStartsIn(startsIn);
 
-    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+    // Convert total minutes to seconds for the countdown
+    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
     useEffect(() => {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => Math.max(prev - 1, 0));
+        setTimeLeft((prev) => Math.max(prev - 1, 0)); // Decrease time left, but don't go below 0
       }, 1000);
 
       return () => clearInterval(timer);
     }, []);
 
-    const minutesLeft = timeLeft % 60;
-    const hoursLeft = Math.floor(timeLeft / 60) % 24;
-    const daysLeft = Math.floor(timeLeft / 1440);
+    // Convert seconds back to days, hours, and minutes for display
+    const totalSeconds = timeLeft;
+    const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
+    const hoursLeft = Math.floor((totalSeconds % 86400) / 3600);
+    const daysLeft = Math.floor(totalSeconds / 86400);
 
+    // Progress should be 0% when timeLeft is 0 or when the total time is 0
     const progress =
-      initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+      initialTotalMinutes > 0 ? (timeLeft / (initialTotalMinutes * 60)) * 100 : 0;
 
     return (
       <div className="mb-3">
-        <p className="mt-4 text-2xl font-bold text-gray-900 flex justify-center items-center gap-1 flex-wrap text-center ">
+        <p className="text-xs capitalize mb-2 ">
           <span className="font-medium">{daysLeft}</span> dy:{" "}
           <span className="font-medium">{hoursLeft}</span> Hr:{" "}
           <span className="font-medium">{minutesLeft}</span> Min{" "}
+          <span className="font-medium">Left</span>
         </p>
+        <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
+          <div
+            className="h-2 rounded-full bg-[#F25E26]"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
       </div>
     );
   };
@@ -216,23 +231,38 @@ const Page = ({ params }: any) => {
           </div>
         </div>
 
-        {productdatanew?.starts_in == "Raffle Ended" ? (
-          <DefaultButton
-            text="Watch Live Raffle"
-            className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-            type="button"
-            handleClick={() => {
-              router.push(`/raffle/${product_id}/winners`);
-            }}
-          />
-        ) : (
-          <DefaultButton
-            text={playState ? "Stop Video" : "Play Video"}
-            className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-            type="button"
-            handleClick={handleVideoControl}
-          />
-        )}
+        {/*    {
+          console.log(productdatanew, "productdatanew?.starts_in")
+        } */}
+
+        {productdatanew === "Raffle Started" ? (
+          <div className="flex justify-center items-center mt-4">
+            <button
+              onClick={() => router.push(`/raffle/${product_id}/winners`)}
+              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+            >
+              Raffle Started, Watch Live Raffle
+            </button>
+          </div>
+        ) :
+
+          productdatanew === "Raffle Ended" ? (
+            <DefaultButton
+              text="Watch Live Raffle"
+              className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+              type="button"
+              handleClick={() => {
+                router.push(`/raffle/${product_id}/winners`);
+              }}
+            />
+          ) : (
+            <DefaultButton
+              text={playState ? "Stop Video" : "Play Video"}
+              className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+              type="button"
+              handleClick={handleVideoControl}
+            />
+          )}
       </section>
 
       <ModalComponent
@@ -256,7 +286,7 @@ const Page = ({ params }: any) => {
 
                 <p className="mt-1 text-sm text-gray-500">    starts in</p>
 
-                <CountdownTimer startsIn={productdatanew?.starts_in} />
+                <CountdownTimer startsIn={productdatanew || "0 Days, 0 Hr: 0 Mins Left"} />
               </div>
             </div>
           </div>

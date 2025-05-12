@@ -98,7 +98,8 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     minutesLeft: initialMinutesLeft,
   } = parseStartsIn(startsIn);
 
-  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+  // Convert total minutes to seconds for the countdown
+  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -108,13 +109,15 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     return () => clearInterval(timer);
   }, []);
 
-  const minutesLeft = timeLeft % 60;
-  const hoursLeft = Math.floor(timeLeft / 60) % 24;
-  const daysLeft = Math.floor(timeLeft / 1440);
+  // Convert seconds back to days, hours, and minutes for display
+  const totalSeconds = timeLeft;
+  const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
+  const hoursLeft = Math.floor((totalSeconds % 86400) / 3600);
+  const daysLeft = Math.floor(totalSeconds / 86400);
 
   // Progress should be 0% when timeLeft is 0 or when the total time is 0
   const progress =
-    initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+    initialTotalMinutes > 0 ? (timeLeft / (initialTotalMinutes * 60)) * 100 : 0;
 
   return (
     <div className="mb-3">
@@ -503,7 +506,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
       const data = await response.json();
 
       if (data.data.status === "failed") {
-      /*   console.log("Failed:", data.data); */
+        /*   console.log("Failed:", data.data); */
         toast.error(`${data.data.message}`, {
           position: "top-right",
           progress: 4,
@@ -555,7 +558,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
     setTotalAmount((prevTotal) => prevTotal + ticketPrice);
   };
 
-  // Handler to decrease ticket count, ensuring count doesn’t go below 1
+  // Handler to decrease ticket count, ensuring count doesn't go below 1
   const handleDecrease = () => {
     if (ticketCount > 1) {
       setTicketCount((prevCount) => prevCount - 1);

@@ -1,8 +1,10 @@
 "use  client";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useState, useEffect } from "react";
 import Image from "next/image";
 import { CiMenuKebab } from "react-icons/ci";
 import Dropdown from "./Dropdown";
+
+
 import DropDownAuction from "./DropDownAuction";
 import { ModalProfile } from "./ModalProfile";
 import { DefaultButton } from "@/app/component/Button";
@@ -35,6 +37,7 @@ type Order = {
   total_price: string;
   order_date: string;
   delivery_status: string;
+  id?: string;
 };
 
 const AuctionWinCardNew = ({ product }: AuctionProps) => {
@@ -54,6 +57,15 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
   const [isSussessModal, setisSucceessModal] = useState(false);
+  const [isWinningAdviseModalOpen, setIsWinningAdviseModalOpen] = useState(false);
+  const [isMerchantsModalOpen, setIsMerchantsModalOpen] = useState(false);
+  const [selectedRedemption, setSelectedRedemption] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [merchants, setMerchants] = useState([]);
+  const [isLoadingMerchants, setIsLoadingMerchants] = useState(false);
+  const [voucherData, setVoucherData] = useState<any>(null);
+  const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
+  const [isProcessingGiftCard, setIsProcessingGiftCard] = useState(false);
 
   const router = useRouter();
 
@@ -74,6 +86,11 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
       setSelectedTransactiondelete(transaction);
       // console.log(transaction, "Transaction to delete"); // Check if this logs correctly
       setisdeleteModalOpen(true);
+    }
+
+    if (option === "winning advise") {
+      setSelectedTransaction(transaction);
+      setIsWinningAdviseModalOpen(true);
     }
   };
 
@@ -112,7 +129,7 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     reset();
 
     if (data.status === 201 || data.status === 200 || data.status === 204) {
-      console.log(data, "data");
+
       setSuccess(true);
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
@@ -225,7 +242,7 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     event.preventDefault();
 
     console.log(errors);
-    console.log(data, "datata");
+
 
     //  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
 
@@ -291,8 +308,68 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     }
   };
 
+  // Add this near other useEffect hooks
+  useEffect(() => {
+    const fetchMerchants = async () => {
+      if (isMerchantsModalOpen) {
+        setIsLoadingMerchants(true);
+        try {
+          const response = await fetch("/api/suregifts/merchants", {
+            headers: {
+              Authorization: `token ${userToken}`,
+            },
+          });
+          const data = await response.json();
+          if (data.status === "success") {
+            setMerchants(data.data);
+          } else {
+            toast.error(data.message || "Failed to fetch merchants");
+          }
+        } catch (error) {
+          toast.error("Error fetching merchants");
+        } finally {
+          setIsLoadingMerchants(false);
+        }
+      }
+    };
 
+    fetchMerchants();
+  }, [isMerchantsModalOpen, userToken]);
 
+  // Filter merchants based on search query
+  const filteredMerchants = merchants.filter((merchant: any) =>
+    merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleProcessGiftCard = async (auctionId: string, productCode: string) => {
+    setIsProcessingGiftCard(true);
+    try {
+      const response = await fetch("/api/suregifts/process_giftcard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `token ${userToken}`,
+        },
+        body: JSON.stringify({
+          auction_id: auctionId,
+          productCode: productCode,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.status === "success") {
+        setVoucherData(data.data.data);
+        setIsMerchantsModalOpen(false);
+        setIsVoucherModalOpen(true);
+      } else {
+        toast.error(data.message || "Failed to process gift card");
+      }
+    } catch (error) {
+      toast.error("Error processing gift card");
+    } finally {
+      setIsProcessingGiftCard(false);
+    }
+  };
 
   return (
     <div>
@@ -405,9 +482,248 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
           </form>
         </ModalProfile>
       )}
+
+      {isWinningAdviseModalOpen && (
+        <ModalProfile
+          icon={""}
+          isOpen={isWinningAdviseModalOpen}
+          onClose={() => setIsWinningAdviseModalOpen(false)}
+          title="Select Redemption Method"
+          handleEvent={() => setIsWinningAdviseModalOpen(false)}
+        >
+          <div className="flex flex-col p-4">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="delivery"
+                  name="redemption"
+                  value="delivery"
+                  checked={selectedRedemption === "delivery"}
+                  onChange={(e) => setSelectedRedemption(e.target.value)}
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                />
+                <label htmlFor="delivery" className="text-gray-700">
+                  By Delivery
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="voucher"
+                  name="redemption"
+                  value="voucher"
+                  checked={selectedRedemption === "voucher"}
+                  onChange={(e) => setSelectedRedemption(e.target.value)}
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                />
+                <label htmlFor="voucher" className="text-gray-700">
+                  Gift Voucher
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="transfer"
+                  name="redemption"
+                  value="transfer"
+                  checked={selectedRedemption === "transfer"}
+                  onChange={(e) => setSelectedRedemption(e.target.value)}
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                />
+                <label htmlFor="transfer" className="text-gray-700">
+                  Cash Transfer
+                </label>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-between">
+              <DefaultButton
+                text="Back"
+                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                type="button"
+                handleClick={() => setIsWinningAdviseModalOpen(false)}
+              />
+              <DefaultButton
+                text="Next"
+                className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                type="button"
+                handleClick={() => {
+                  if (!selectedRedemption) {
+                    toast.error("Please select a redemption method");
+                    return;
+                  }
+                  if (selectedRedemption === "voucher") {
+                    setIsWinningAdviseModalOpen(false);
+                    setIsMerchantsModalOpen(true);
+                  } else {
+                    // Handle other redemption methods
+                    setIsWinningAdviseModalOpen(false);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </ModalProfile>
+      )}
+
+      {isMerchantsModalOpen && (
+        <ModalProfile
+          icon={""}
+          isOpen={isMerchantsModalOpen}
+          onClose={() => setIsMerchantsModalOpen(false)}
+          title="Select Merchant"
+          handleEvent={() => setIsMerchantsModalOpen(false)}
+        >
+          <div className="flex flex-col p-4">
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search merchants..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26]"
+              />
+            </div>
+
+            {isLoadingMerchants ? (
+              <div className="text-center py-4">Loading merchants...</div>
+            ) : (
+              <div className="max-h-[300px] overflow-y-auto">
+                {filteredMerchants.length === 0 ? (
+                  <div className="text-center py-4 text-gray-500">
+                    No merchants found
+                  </div>
+                ) : (
+                  filteredMerchants.map((merchant: any) => (
+                    <div
+                      key={merchant.code}
+                      className="p-3 border-b hover:bg-gray-50 cursor-pointer"
+                      onClick={() => {
+                        if (selectedTransaction?.id) {
+                          handleProcessGiftCard(selectedTransaction.id, merchant.code);
+                        } else {
+                          toast.error("Invalid auction ID");
+                        }
+                      }}
+                    >
+                      <p className="font-medium">{merchant.name}</p>
+                      <p className="text-sm text-gray-500">Code: {merchant.code}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-between gap-4 flex-wrap">
+              <DefaultButton
+                text="Back"
+                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                type="button"
+                handleClick={() => {
+                  setIsMerchantsModalOpen(false);
+                  setIsWinningAdviseModalOpen(true);
+                }}
+              />
+            </div>
+          </div>
+        </ModalProfile>
+      )}
+
+      {isVoucherModalOpen && voucherData && (
+        <ModalProfile
+          icon={""}
+          isOpen={isVoucherModalOpen}
+          onClose={() => setIsVoucherModalOpen(false)}
+          title="Your Gift Voucher"
+          handleEvent={() => setIsVoucherModalOpen(false)}
+        >
+          <div className="flex flex-col p-4">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-gray-800">Gift Voucher</h3>
+                <p className="text-gray-600">Order #{voucherData.orderNumber}</p>
+              </div>
+
+              <div className="space-y-4">
+                {voucherData.vouchers.map((voucher: any, index: number) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600">Value</p>
+                        <p className="font-semibold">₦{voucher.value}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Expiry Date</p>
+                        <p className="font-semibold">
+                          {new Date(voucher.expiryDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">PIN</p>
+                        <p className="font-semibold">{voucher.pin}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Code</p>
+                        <p className="font-semibold">{voucher.code}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 flex justify-between gap-4 flex-wrap">
+                <DefaultButton
+                  text="Download"
+                  className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                  type="button"
+                  handleClick={() => {
+                    // Create a PDF or image of the voucher
+                    const voucherContent = document.createElement('div');
+                    voucherContent.innerHTML = `
+                      <div style="padding: 20px; border: 2px solid #F25E26; border-radius: 8px;">
+                        <h2 style="text-align: center; color: #F25E26;">Gift Voucher</h2>
+                        <p style="text-align: center;">Order #${voucherData.orderNumber}</p>
+                        ${voucherData.vouchers.map((voucher: any) => `
+                          <div style="margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+                            <p><strong>Value:</strong> ₦${voucher.value}</p>
+                            <p><strong>Expiry Date:</strong> ${new Date(voucher.expiryDate).toLocaleDateString()}</p>
+                            <p><strong>PIN:</strong> ${voucher.pin}</p>
+                            <p><strong>Code:</strong> ${voucher.code}</p>
+                          </div>
+                        `).join('')}
+                      </div>
+                    `;
+
+                    // Use html2canvas to create an image
+                    import('html2canvas').then(({ default: html2canvas }) => {
+                      html2canvas(voucherContent).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = `voucher-${voucherData.orderNumber}.png`;
+                        link.href = canvas.toDataURL();
+                        link.click();
+                      });
+                    });
+                  }}
+                />
+                <DefaultButton
+                  text="Close"
+                  className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                  type="button"
+                  handleClick={() => setIsVoucherModalOpen(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </ModalProfile>
+      )}
     </div>
   );
 };
+
+
 
 const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   /* console.log(product, 'product') */
@@ -426,16 +742,20 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
   const [isSussessModal, setisSucceessModal] = useState(false);
-  const [openWinningCard, setOpenWinningCard] = useState(false);
-  const [redeemprice, setRedeemPrice] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [showaddress, setShowaddress] = useState(false);
-  const [showcode, setshowCode] = useState(false);
+  const [isWinningAdviseModalOpen, setIsWinningAdviseModalOpen] = useState(false);
 
 
-  const handlePaymentSelection = (method: SetStateAction<string>) => {
-    setPaymentMethod(method);
-  };
+  const [isMerchantsModalOpen, setIsMerchantsModalOpen] = useState(false);
+  const [selectedRedemption, setSelectedRedemption] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [merchants, setMerchants] = useState([]);
+  const [isLoadingMerchants, setIsLoadingMerchants] = useState(false);
+  const [voucherData, setVoucherData] = useState<any>(null);
+  const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
+  const [isProcessingGiftCard, setIsProcessingGiftCard] = useState(false);
+
+
+
 
   const router = useRouter();
 
@@ -446,6 +766,8 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   const handleOptionClick = (option: string, transaction: Order) => {
     //   console.log(`${option} clicked for transaction:`, transaction);
     //  console.log(transaction, 'transactionnnnn')
+
+
 
     if (option === "Review") {
       setSelectedTransaction(transaction);
@@ -458,8 +780,10 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
       setisdeleteModalOpen(true);
     }
 
-
-
+    if (option === "Redeem") {
+      setSelectedTransaction(transaction);
+      setIsWinningAdviseModalOpen(true);
+    }
   };
 
   const {
@@ -487,17 +811,17 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     user: state.user,
     token: state.token,
   }));
+
   const userToken = (Cookies.get("token") as string) || "";
 
-
-  // const userToken = token;
+  /*  const userToken = token; */
 
   const handleSuccess = (data: any) => {
     Setreviewerror("");
     reset();
 
     if (data.status === 201 || data.status === 200 || data.status === 204) {
-      console.log(data, "data");
+
       setSuccess(true);
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
@@ -610,7 +934,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     event.preventDefault();
 
     console.log(errors);
-    console.log(data, "datata");
+
 
     //  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
 
@@ -638,103 +962,6 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     Setreviewerrordelete("");
   };
 
-  const demodata = {
-    status: "success",
-    message: "Your biddings",
-    data: {
-      all: [
-        {
-          id: "bfebf54b-8797-49d7-b2de-0ba5af7c39fa",
-          auction: [
-            {
-              name: "Smart Watch",
-              images: [
-                "/media/auction_images/Smart_Watch.jpg",
-                "/media/auction_images/Smart_Watch_hjJex2j.jpg",
-              ],
-            },
-          ],
-          bid_number: "BID4827493",
-          ticket_price: "2000.00",
-        },
-        {
-          id: "a64eedfd-289d-4ef6-b4b4-f7f27c973ef3",
-          auction: [
-            {
-              name: "Smart Watch",
-              images: [
-                "/media/auction_images/Smart_Watch.jpg",
-                "/media/auction_images/Smart_Watch_hjJex2j.jpg",
-              ],
-            },
-          ],
-          bid_number: "BID5029154",
-          ticket_price: "2000.00",
-        },
-      ],
-      open: [
-        {
-          id: "bfebf54b-8797-49d7-b2de-0ba5af7c39fa",
-          auction: [
-            {
-              name: "Smart Watch",
-              images: [
-                "/media/auction_images/Smart_Watch.jpg",
-                "/media/auction_images/Smart_Watch_hjJex2j.jpg",
-              ],
-            },
-          ],
-          bid_number: "BID4827493",
-          ticket_price: "2000.00",
-        },
-        {
-          id: "a64eedfd-289d-4ef6-b4b4-f7f27c973ef3",
-          auction: [
-            {
-              name: "Smart Watch",
-              images: [
-                "/media/auction_images/Smart_Watch.jpg",
-                "/media/auction_images/Smart_Watch_hjJex2j.jpg",
-              ],
-            },
-          ],
-          bid_number: "BID5029154",
-          ticket_price: "2000.00",
-        },
-      ],
-      closed: [
-        {
-          id: "e12ab78c-5f2c-4f2a-8b3f-0cba3efc58ef",
-          auction: [
-            {
-              name: "Wireless Earbuds",
-              images: [
-                "/media/auction_images/Smart_Watch.jpg",
-                "/media/auction_images/Smart_Watch_hjJex2j.jpg",
-              ],
-            },
-          ],
-          bid_number: "BID6938721",
-          ticket_price: "1500.00",
-        },
-        {
-          id: "d29be934-8464-4a65-ae99-2e3f7f6c7489",
-          auction: [
-            {
-              name: "Bluetooth Speaker",
-              images: [
-                "/media/auction_images/Smart_Watch.jpg",
-                "/media/auction_images/Smart_Watch_hjJex2j.jpg",
-              ],
-            },
-          ],
-          bid_number: "BID7493056",
-          ticket_price: "2500.00",
-        },
-      ],
-    },
-  };
-
   const userToken_ = Cookies.get("token") as string;
 
   const tkn_: string = Cookies.get("token") as string;
@@ -749,58 +976,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     userToken_,
   );
 
-  const closedProducts = auctioninfo?.data?.data?.close?.map((item: { id: any }) => {
-    return {
-      ...item,
-      tag: ["close", "redeem items", "winning advise"],
-    }; // Add tag as an array with "open" for consistency
-  });
-
-  // Define functions for each tag type
-  const handleOpenClick = () => {
-    // Logic for "open" tag
-    console.log("Open tag clicked");
-  };
-
-  const handleDeliveredClick = () => {
-    // Logic for "delivered" tag
-    console.log("Delivered tag clicked");
-  };
-
-  const handleCloseClick = () => {
-    // Logic for "close" tag
-    console.log("Close tag clicked");
-  };
-
-  const handleRedeemItemsClick = () => {
-    // Logic for "redeem items" tag
-
-    setRedeemPrice(!redeemprice);
-  };
-
-  const handleWinningAdviseClick = () => {
-    // Logic for "winning advise" tag
-    setOpenWinningCard(!openWinningCard);
-
-  };
-
-  // Helper function to get the appropriate click handler
-  const getClickHandler = (value: any) => {
-    switch (value) {
-      case "open":
-        return handleOpenClick;
-      case "delivered":
-        return handleDeliveredClick;
-      case "close":
-        return handleCloseClick;
-      case "redeem items":
-        return handleRedeemItemsClick;
-      case "winning advise":
-        return handleWinningAdviseClick;
-      default:
-        return () => console.log("Unknown tag clicked");
-    }
-  };
+  const openProducts = auctioninfo?.data?.data?.closed.map(
+    (item: { id: any }) => {
+      return { ...item, tag: ["closed", 'redeem items', 'winning advise'] }; // Add tag as an array with "open" for consistency
+    },
+  );
 
 
 
@@ -808,10 +988,10 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate total pages
-  const totalPages = Math.ceil(closedProducts?.length / itemsPerPage);
+  const totalPages = Math.ceil(openProducts?.length / itemsPerPage);
 
   // Slice data based on the current page
-  const currentData = closedProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentData = openProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Handle page navigation
   const handlePageChange = (page: number) => {
@@ -820,6 +1000,71 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     }
   };
 
+  // Add this near other useEffect hooks
+  useEffect(() => {
+    const fetchMerchants = async () => {
+      if (isMerchantsModalOpen) {
+        setIsLoadingMerchants(true);
+        try {
+          const response = await fetch("/api/suregifts/merchants", {
+            headers: {
+              Authorization: `token ${userToken}`,
+            },
+          });
+          const data = await response.json();
+
+          if (data.status === "success") {
+            setMerchants(data.data);
+          } else {
+            toast.error(data.message || "Failed to fetch merchants");
+          }
+        } catch (error) {
+          toast.error("Error fetching merchants");
+        } finally {
+          setIsLoadingMerchants(false);
+        }
+      }
+    };
+
+    fetchMerchants();
+  }, [isMerchantsModalOpen, userToken]);
+
+  // Filter merchants based on search query
+  const filteredMerchants = merchants.filter((merchant: any) =>
+    merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleProcessGiftCard = async (auctionId: string, productCode: string) => {
+
+
+    setIsProcessingGiftCard(true);
+    try {
+      const response = await fetch("/api/suregifts/process_giftcard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `token ${userToken}`,
+        },
+        body: JSON.stringify({
+          auction_id: auctionId,
+          productCode: productCode,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.status === "success") {
+        setVoucherData(data.data.data);
+        setIsMerchantsModalOpen(false);
+        setIsVoucherModalOpen(true);
+      } else {
+        toast.error(data.message || "Failed to process gift card");
+      }
+    } catch (error) {
+      toast.error("Error processing gift card");
+    } finally {
+      setIsProcessingGiftCard(false);
+    }
+  };
 
   return (
     <div>
@@ -827,7 +1072,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         <div className="flex flex-col ">
           {auctionLoading ? (
             <p className="text-center text-gray-500 py-8">Loading...</p>
-          ) : closedProducts?.length === 0 ? (
+          ) : openProducts?.length === 0 ? (
             <p className="text-center text-gray-500 py-8">No data available</p>
           ) : (
             currentData?.map((val: any, index: number) => (
@@ -852,14 +1097,33 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                 <div className="flex flex-col gap-3 capitalize">
                   <p className=" font-semibold">{val?.auction[0]?.name}</p>
                   <p>Ticket Number: {val?.ticket_number} </p>
+
                   <p>Ticket Price: ₦{val?.ticket_price}</p>
+
                   <div className="mt-5 flex gap-3 flex-wrap">
                     {val.tag &&
                       val.tag.map((value: string, index: number) => (
                         <p
-                          onClick={getClickHandler(value)}
                           key={index}
-                          className={`text-xs ${value === "open" || value === "delivered" ? "bg-green-200 text-emerald-800" : value === "close" ? "bg-rose-200 text-red-800" : value === "redeem items" ? "bg-blue-700 text-white" : value === "winning advise" ? "bg-[#F25E26] text-white" : "bg-[#F25E26] text-white"} rounded-xl px-2.5  py-1 cursor-pointer `}
+                          onClick={() => {
+
+                            if (value === "redeem items") {
+                              handleOptionClick("Redeem", val);
+                            } else if (value === "winning advise") {
+                              handleOptionClick("winning advise", val);
+                            }
+                          }}
+                          className={`text-xs ${!val.won ? "opacity-50 " : ""
+                            }${value === "open" || value === "delivered"
+                              ? "bg-green-200 text-emerald-800"
+                              : value === "close"
+                                ? "bg-rose-200 text-red-800"
+                                : value === "redeem items"
+                                  ? "bg-blue-700 text-white cursor-pointer"
+                                  : value === "winning advise"
+                                    ? "bg-[#F25E26] text-white cursor-pointer"
+                                    : "bg-[#F25E26] text-white"
+                            } rounded-xl px-2.5 py-1`}
                         >
                           {value}
                         </p>
@@ -867,8 +1131,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   </div>
                 </div>
                 <span className="absolute right-3 top-2 rounded-md border p-2 cursor-pointer">
-                  <DropDownAuctionWin
-
+                  <DropDownAuction
                     onOptionClick={(option) => handleOptionClick(option, val)}
                     transaction={val}
                   />
@@ -879,7 +1142,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         </div>
 
 
-        {closedProducts?.length > itemsPerPage && (
+        {openProducts?.length > itemsPerPage && (
           <div className="flex justify-center mt-4">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
@@ -934,334 +1197,158 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         </ModalProfile>
       )}
 
-      <CustomModal isOpen={openWinningCard}>
-        {openWinningCard && (
-          <>
+      {isWinningAdviseModalOpen && (
+        <ModalProfile
+          icon={""}
+          isOpen={isWinningAdviseModalOpen}
+          onClose={() => setIsWinningAdviseModalOpen(false)}
+          title="Select means to redeem item"
+          handleEvent={() => setIsWinningAdviseModalOpen(false)}
+        >
+          <div className="flex flex-col p-4">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="delivery"
+                  name="redemption"
+                  value="delivery"
+                  checked={selectedRedemption === "delivery"}
+                  onChange={(e) => setSelectedRedemption(e.target.value)}
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                />
+                <label htmlFor="delivery" className="text-gray-700">
+                  By Delivery
+                </label>
+              </div>
 
-            <>
-              <div
-                className="bg-cover bg-center"
-                style={{
-                  backgroundImage: "url('/ajirobabg.svg')",
-                  backgroundSize: "33.33%",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "repeat-x",
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="voucher"
+                  name="redemption"
+                  value="voucher"
+                  checked={selectedRedemption === "voucher"}
+                  onChange={(e) => setSelectedRedemption(e.target.value)}
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                />
+                <label htmlFor="voucher" className="text-gray-700">
+                  Gift Voucher
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  id="transfer"
+                  name="redemption"
+                  value="transfer"
+                  checked={selectedRedemption === "transfer"}
+                  onChange={(e) => setSelectedRedemption(e.target.value)}
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                />
+                <label htmlFor="transfer" className="text-gray-700">
+                  Cash Transfer
+                </label>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-between gap-4 flex-wrap">
+              <DefaultButton
+                text="Back"
+                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                type="button"
+                handleClick={() => setIsWinningAdviseModalOpen(false)}
+              />
+              <DefaultButton
+                text="Next"
+                className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                type="button"
+                handleClick={() => {
+                  if (!selectedRedemption) {
+                    toast.error("Please select a redemption method");
+                    return;
+                  }
+                  if (selectedRedemption === "voucher") {
+                    setIsWinningAdviseModalOpen(false);
+                    setIsMerchantsModalOpen(true);
+                  } else {
+                    // Handle other redemption methods
+                    setIsWinningAdviseModalOpen(false);
+                  }
                 }}
-              >
-                {/* Close Button */}
-                <div className="flex justify-end mb-4 px-4">
-                  <button
-                    onClick={() => setOpenWinningCard(false)}
-                    className="text-gray-500 hover:text-gray-800 focus:outline-none"
-                    aria-label="Close"
-                  >
-                    Close
-                  </button>
-                </div>
+              />
+            </div>
+          </div>
+        </ModalProfile>
+      )}
 
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-8">
-                  <Link href={"/"} className="mb-4 md:mb-0">
-                    <Image src={Brand} alt="brand-logo" />
-                  </Link>
+      {isMerchantsModalOpen && (
+        <ModalProfile
+          icon={""}
+          isOpen={isMerchantsModalOpen}
+          onClose={() => setIsMerchantsModalOpen(false)}
+          title="Select Merchant"
+          handleEvent={() => setIsMerchantsModalOpen(false)}
+        >
+          <div className="flex flex-col p-4">
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search merchants..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26]"
+              />
+            </div>
 
-                  <div className="text-center mb-4 md:mb-0">
-                    <p className="text-[#504D4D] text-sm">Ajiroba Auction</p>
-                    <h1 className="text-[#2A2A2A] font-semibold text-lg md:text-xl">
-                      Winning Advice
-                    </h1>
+            {isLoadingMerchants ? (
+              <div className="text-center py-4">Loading merchants...</div>
+            ) : (
+              <div className="max-h-[300px] overflow-y-auto">
+                {filteredMerchants.length === 0 ? (
+                  <div className="text-center py-4 text-gray-500">
+                    No merchants found
                   </div>
-                </div>
-
-                {/* Background Header */}
-                <div className="bg-gradient-to-r from-gray-900 to-orange-600 p-4 flex flex-col md:flex-row items-center justify-between px-4 md:px-8 text-center md:text-left">
-                  <div>
-                    <div className="text-[#FEEEAE] text-3xl md:text-5xl font-bold">
-                      Winning
-                    </div>
-                    <p className="text-base text-[#F6F6F6] font-mono">Advice</p>
-                  </div>
-                  <Image
-                    src={maskgroup}
-                    alt="Celebration"
-                    className="mt-4 md:mt-0"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="px-4 md:px-8 py-4">
-                  <div className="flex flex-col md:flex-row justify-between mb-4">
-                    <div className="text-sm text-gray-600 mb-4 md:mb-0">
-                      Date: Fri, March 1, 2024
-                    </div>
-                    <button className="bg-gray-200 text-[#E84526] px-4 py-2 rounded-lg shadow">
-                      Print
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-8 flex-wrap  text-center md:text-left">
-                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-                      Congratulations!
-                    </h2>
-                    <p className="text-lg font-semibold text-gray-700">
-                      Oloruntoba Ayodele
-                    </p>
-                  </div>
-
-                  <p className="mt-2 text-gray-600 text-sm md:text-base">
-                    You have won{" "}
-                    <span className="font-bold">1 bag of rice</span> in our draw
-                    which took place on{" "}
-                    <span className="font-semibold">Feb 24, 2024</span> with
-                    your ticket number <span className="font-bold">123536</span>
-                    .
-                  </p>
-
-                  <p className="mt-4 text-xs md:text-sm text-gray-500">
-                    Kindly log in to your dashboard to specify your preferred
-                    mode of redemption. Thank you for your patronage.
-                  </p>
-
-                  <div className="flex flex-col md:flex-row justify-between items-center mt-6">
-                    <div className="text-center md:text-left mb-4 md:mb-0">
-                      <p className="text-gray-700 font-semibold">
-                        Ayoola Ayodele
-                      </p>
-                      <p className="text-gray-500">MD/CEO & Yeye Ajiroba</p>
-                    </div>
-
-                    <div>
-                      <Image
-                        src={Barcode}
-                        alt="Barcode"
-                        width={50}
-                        height={50}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="bg-orange-600 text-white p-4 text-center mt-4 text-xs md:text-sm">
-                  <p>www.ajiroba.com • ajiroba@gmail.com • 08123940496</p>
-                </div>
-              </div>
-            </>
-          </>
-        )}
-      </CustomModal>
-
-
-
-      <CustomModal isOpen={redeemprice}>
-        {redeemprice && (
-          <>
-
-            <>
-              <div
-                className="bg-cover bg-center"
-
-              >
-                {/* Close Button */}
-                <div className="flex justify-end mb-4 px-4">
-                  <button
-                    onClick={() => setRedeemPrice(false)}
-                    className="text-gray-500 hover:text-gray-800 focus:outline-none"
-                    aria-label="Close"
-                  >
-                    Close
-                  </button>
-                </div>
-
-
-                <form action="">
-                  <div className="mb-4">
-                    <div>
-                      <input
-                        type="radio"
-                        id="delivery"
-                        name="paymentMethod"
-                        value="delivery"
-                        onChange={() =>
-                          handlePaymentSelection("delivery")
+                ) : (
+                  filteredMerchants.map((merchant: any) => (
+                    <div
+                      key={merchant.code}
+                      className="p-3 border-b hover:bg-gray-50 cursor-pointer"
+                      onClick={() => {
+                        if (selectedTransaction?.id) {
+                          handleProcessGiftCard(selectedTransaction.id, merchant.code);
+                        } else {
+                          toast.error("Invalid auction ID");
                         }
-                      />
-                      <label className="ml-2" htmlFor="delivery">
-                        By Delivery
-                      </label>
+                      }}
+                    >
+                      <p className="font-medium">{merchant.name}</p>
+                      <p className="text-sm text-gray-500">Code: {merchant.code}</p>
                     </div>
-
-
-                  </div>
-
-                  <div>
-                    <div>
-                      <input
-                        type="radio"
-                        id="voucher"
-                        name="paymentMethod"
-                        value="voucher"
-                        onChange={() => handlePaymentSelection("voucher")}
-                      />
-                      <label className="ml-2" htmlFor="voucher">
-                        Gift Voucher
-                      </label>
-                    </div>
-
-                    <div className='mt-5 flex gap-8 justify-between'>
-                      {/* buttons */}
-                      <DefaultButton
-                        text='Back'
-                        className='rounded-md border-2 border-[#F25E26] p-2 text-[#F25E26]'
-                        type='button'
-                        handleClick={() => setRedeemPrice(!redeemprice)}
-                      />
-                      <DefaultButton
-                        text='Next'
-                        /*    text={status === 'pending' ? 'loading...' : "Save"} */
-                        className='rounded-md bg-[#F25E26] p-2 px-4 text-white'
-                        type='button'
-                        handleClick={() => {
-                          return (
-                            setShowaddress(!showaddress),
-                            console.log('clicked', paymentMethod),
-                            setRedeemPrice(!redeemprice)
-                          )
-                        }}
-                      />
-                    </div>
-                  </div>
-                </form>
+                  ))
+                )}
               </div>
-            </>
-          </>
-        )}
-      </CustomModal>
+            )}
 
-
-
-
-
-      <CustomModal isOpen={showaddress && paymentMethod === "delivery"}>
-        {(
-          <>
-
-            <>
-              <div
-                className="bg-cover bg-center"
-
-              >
-                {/* Close Button */}
-                <div className="flex justify-end mb-4 px-4">
-                  <button
-                    onClick={() => setShowaddress(false)}
-                    className="text-gray-500 hover:text-gray-800 focus:outline-none"
-                    aria-label="Close"
-                  >
-                    Close
-                  </button>
-                </div>
-
-
-                <div>
-                  <div className="flex items-center justify-center  bg-gray-100">
-                    <div className="w-80  bg-white shadow-md p-6 text-center">
-                      <h2 className="text-xl font-semibold text-gray-900">Address</h2>
-
-                      <div className="mt-6 text-left space-y-2">
-                        <p className="font-semibold text-gray-800">Alex Rachel</p>
-                        <p className="text-gray-600">234 Festac road, Ikot-Abasi, Nigeria</p>
-                        <p className="text-gray-600">08012345678</p>
-                      </div>
-
-                      <div className="flex justify-end ">
-                        <button className="mt-4 text-sm text-[#E84526] hover:underline">
-                          Change
-                        </button>
-                      </div>
-
-                      <div className="mt-6 flex flex-col space-y-4">
-                        <button onClick={() => {
-                          return (
-                            /*  setRedeemPrice(!redeemprice), */
-                            setShowaddress(!showaddress),
-                            setshowCode(!showcode)
-                          )
-                        }} className="bg-[#E84526] text-white font-medium py-2 rounded-lg">
-                          Proceed
-                        </button>
-                        <button className="border border-[#E84526] text-[#E84526] font-medium py-2 rounded-lg">
-                          Back
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </>
-          </>
-        )}
-      </CustomModal>
-
-
-
-
-      <CustomModal isOpen={showcode}>
-        {(
-          <>
-
-            <>
-              <div
-                className="bg-cover bg-center"
-
-              >
-                {/* Close Button */}
-                <div className="flex justify-end mb-4 px-4">
-                  <button
-                    onClick={() => setshowCode(false)}
-                    className="text-gray-500 hover:text-gray-800 focus:outline-none"
-                    aria-label="Close"
-                  >
-                    Close
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-center  bg-gray-100">
-                  <div className="w-80 rounded-lg bg-white shadow-md p-6 text-center">
-                    {/* Icon */}
-                    <div className="flex justify-center mb-4">
-                      <Image
-                        src={bikecode} // Path to your image
-                        alt="Order on the way"
-                        width={64} // Adjust width as needed
-                        height={64} // Adjust height as needed
-                      />
-                    </div>
-
-                    {/* Order Code */}
-                    <p className="text-lg">
-                      Order Code: <span className="font-semibold">232432</span>
-                    </p>
-
-                    {/* Order Status Message */}
-                    <p className="mt-2 text-gray-700">
-                      Congratulations. Your Order is on its way
-                    </p>
-
-                    {/* Proceed Button */}
-                    <button className="mt-6 bg-[#E84526] text-white font-medium py-2 px-6 rounded-lg">
-                      Proceed
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          </>
-        )}
-      </CustomModal>
+            <div className="mt-6 flex justify-between gap-4 flex-wrap">
+              <DefaultButton
+                text="Back"
+                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                type="button"
+                handleClick={() => {
+                  setIsMerchantsModalOpen(false);
+                  setIsWinningAdviseModalOpen(true);
+                }}
+              />
+            </div>
+          </div>
+        </ModalProfile>
+      )}
     </div>
   );
 };
+
+
 
 export { AuctionWinCardNew, AuctionWinCardClosed };

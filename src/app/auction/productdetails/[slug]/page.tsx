@@ -1039,6 +1039,7 @@ const Page = ({ params }: any) => {
     };
   }
 
+  // Countdown Timer component
   const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     const {
       totalMinutes: initialTotalMinutes,
@@ -1047,38 +1048,41 @@ const Page = ({ params }: any) => {
       minutesLeft: initialMinutesLeft,
     } = parseStartsIn(startsIn);
 
-    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+    // Convert total minutes to seconds for the countdown
+    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
     useEffect(() => {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => Math.max(prev - 1, 0));
+        setTimeLeft((prev) => Math.max(prev - 1, 0)); // Decrease time left, but don't go below 0
       }, 1000);
 
       return () => clearInterval(timer);
     }, []);
 
-    const minutesLeft = timeLeft % 60;
-    const hoursLeft = Math.floor(timeLeft / 60) % 24;
-    const daysLeft = Math.floor(timeLeft / 1440);
+    // Convert seconds back to days, hours, and minutes for display
+    const totalSeconds = timeLeft;
+    const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
+    const hoursLeft = Math.floor((totalSeconds % 86400) / 3600);
+    const daysLeft = Math.floor(totalSeconds / 86400);
 
+    // Progress should be 0% when timeLeft is 0 or when the total time is 0
     const progress =
-      initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+      initialTotalMinutes > 0 ? (timeLeft / (initialTotalMinutes * 60)) * 100 : 0;
 
     return (
       <div className="mb-3">
+        <p className="text-xs capitalize mb-2 ">
+          <span className="font-medium">{daysLeft}</span> dy:{" "}
+          <span className="font-medium">{hoursLeft}</span> Hr:{" "}
+          <span className="font-medium">{minutesLeft}</span> Min{" "}
+          <span className="font-medium">Left</span>
+        </p>
         <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
           <div
             className="h-2 rounded-full bg-[#F25E26]"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
-
-        <p className="text-xs capitalize mb-2 mt-2 ">
-          <span className="font-medium">{daysLeft}</span> dy:{" "}
-          <span className="font-medium">{hoursLeft}</span> Hr:{" "}
-          <span className="font-medium">{minutesLeft}</span> Min{" "}
-          <span className="font-medium">Left</span>
-        </p>
       </div>
     );
   };
@@ -1306,53 +1310,65 @@ const Page = ({ params }: any) => {
                         )}
                       </div>
                     )} */}
-{/*
+                    {/*
                     {
                       console.log(productdatanew?.data, "productdatanew?.data?.starts_in")
                     } */}
-                    {productdatanew?.data?.starts_in === "Raffle Ended" ? (
+                    {productdatanew?.data?.starts_in === "Raffle Started" ? (
                       <div className="flex justify-center items-center mt-4">
                         <button
-                          /*  onClick={notify} */
-
                           onClick={() =>
                             /*         router.push(`/raffle/${product_id}/winners`) */
                             router.push(`/raffle/${product_id}`)
                           }
                           className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                         >
-                          Watch Live Raffle
+                          Raffle Started, Watch Live Raffle
                         </button>
                       </div>
-                    ) : (
-                      <div className="flex justify-center items-center mt-4">
-                        {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
-                        {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
-                          <button
-                            /*         onClick={() => setmakepayment(!makepayment)} */
-                            onClick={() => handleBidClick(product_id)}
-                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                          >
-                            Bid
-                          </button>
-                        ) : productdatanew?.data?.bidded === "true" ? (
-                          <button
-                            disabled
-                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                          >
-                            Bidded
-                          </button>
-                        ) : (
-                          <button
-                            disabled
-                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                          >
-                            Bidded
-                          </button>
-                        )}
+                    ) :
 
-                      </div>
-                    )}
+
+                      productdatanew?.data?.starts_in === "Raffle Ended" ? (
+                        <div className="flex justify-center items-center mt-4">
+                          <button
+                            /*  onClick={notify} */
+
+                            disabled
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                          >
+                            Raffle Ended
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex justify-center items-center mt-4">
+                          {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
+                          {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
+                            <button
+                              /*         onClick={() => setmakepayment(!makepayment)} */
+                              onClick={() => handleBidClick(product_id)}
+                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                            >
+                              Bid
+                            </button>
+                          ) : productdatanew?.data?.bidded === "true" ? (
+                            <button
+                              disabled
+                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                            >
+                              Bidded
+                            </button>
+                          ) : (
+                            <button
+                              disabled
+                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                            >
+                              Bidded
+                            </button>
+                          )}
+
+                        </div>
+                      )}
                   </div>
                 </div>
               )}

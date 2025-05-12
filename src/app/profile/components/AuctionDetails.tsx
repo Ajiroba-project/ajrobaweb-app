@@ -15,12 +15,6 @@ export const AuctionDetails = () => {
   const [closeFilter, setCloseFilter] = useState<any>()
   const Filtered = Products.filter(val => val.tag)
 
-  useEffect(() => {
-    const filteredOpen = Products.filter(val => val.tag?.includes('open'))
-    setOpenFilter(filteredOpen)
-    const filteredClose = Products.filter(val => val.tag?.includes('close'))
-    setCloseFilter(filteredClose)
-  }, [])
 
 
   // const userToken = token;
@@ -30,7 +24,16 @@ export const AuctionDetails = () => {
 
   const { data: auctioninfo, isLoading: auctionLoading, error: ordererror } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken);
 
-  // console.log(auctioninfo, "auctioninfo")
+
+
+
+  useEffect(() => {
+    const filteredOpen = Products.filter(val => val.tag?.includes('open'))
+    setOpenFilter(filteredOpen)
+    const filteredClose = Products.filter(val => val.tag?.includes('close'))
+
+    setCloseFilter(filteredClose)
+  }, [])
 
 
   return (
@@ -41,9 +44,9 @@ export const AuctionDetails = () => {
         {pipeline === auctionSwitch[0] ? (
           <AllAuction product={auctioninfo?.data?.data?.all} />
         ) : pipeline === auctionSwitch[1] ? (
-          <OpenAuction product={openFilter} />
+          <OpenAuction product={auctioninfo?.data?.data?.open} />
         ) : (
-          <CloseAuction product={closeFilter} />
+          <CloseAuction product={auctioninfo?.data?.data?.closed} />
         )}
       </div>
 
