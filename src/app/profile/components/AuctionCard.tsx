@@ -22,6 +22,7 @@ import Link from "next/link";
 import Brand from "@/app/asset/logo.svg";
 import bikecode from '@/app/asset/image/bikecode.svg'
 import DropDownAuctionWin from "./DropDownAuctionWin";
+import WinningAdviceModal from "../components/WinningAdviceModal";
 
 type AuctionProps = {
   product: any[];
@@ -38,6 +39,9 @@ type Order = {
   order_date: string;
   delivery_status: string;
   id?: string;
+  auction?: {
+    auction_id: string;
+  }[];
 };
 
 const AuctionWinCardNew = ({ product }: AuctionProps) => {
@@ -58,6 +62,7 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
   const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
   const [isSussessModal, setisSucceessModal] = useState(false);
   const [isWinningAdviseModalOpen, setIsWinningAdviseModalOpen] = useState(false);
+  const [isWinningAdvice, setIsWinningAdvice] = useState(false);
   const [isMerchantsModalOpen, setIsMerchantsModalOpen] = useState(false);
   const [selectedRedemption, setSelectedRedemption] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,6 +82,8 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
     //   console.log(`${option} clicked for transaction:`, transaction);
     //  console.log(transaction, 'transactionnnnn')
 
+    console.log(option, 'optionnnnn')
+
     if (option === "Review") {
       setSelectedTransaction(transaction);
       setModalOpen(true);
@@ -90,7 +97,7 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
 
     if (option === "winning advise") {
       setSelectedTransaction(transaction);
-      setIsWinningAdviseModalOpen(true);
+      setIsWinningAdvice(true);
     }
   };
 
@@ -569,6 +576,21 @@ const AuctionWinCardNew = ({ product }: AuctionProps) => {
         </ModalProfile>
       )}
 
+
+      {isWinningAdvice && (
+        <WinningAdviceModal
+          isOpen={isWinningAdvice}
+          onClose={() => setIsWinningAdvice(false)}
+          adviceData={{
+            date: "Fri, March 1, 2024",
+            name: "Oloruntoba Ayodele",
+            prize: "1 bag of rice",
+            drawDate: "Feb 24, 2024",
+            ticketNumber: "123536",
+          }}
+        />
+      )}
+
       {isMerchantsModalOpen && (
         <ModalProfile
           icon={""}
@@ -743,6 +765,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
   const [isSussessModal, setisSucceessModal] = useState(false);
   const [isWinningAdviseModalOpen, setIsWinningAdviseModalOpen] = useState(false);
+  const [isWinningAdvice, setIsWinningAdvice] = useState(false);
 
 
   const [isMerchantsModalOpen, setIsMerchantsModalOpen] = useState(false);
@@ -768,7 +791,6 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     //  console.log(transaction, 'transactionnnnn')
 
 
-
     if (option === "Review") {
       setSelectedTransaction(transaction);
       setModalOpen(true);
@@ -783,6 +805,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     if (option === "Redeem") {
       setSelectedTransaction(transaction);
       setIsWinningAdviseModalOpen(true);
+    }
+
+
+    if (option === "winning advise") {
+      setIsWinningAdvice(true);
     }
   };
 
@@ -1053,7 +1080,9 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
       const data = await response.json();
       if (data.status === "success") {
-        setVoucherData(data.data.data);
+        console.log(data.data.data, "data.data.data")
+        console.log(data.data, "data.data")
+        setVoucherData(data.data);
         setIsMerchantsModalOpen(false);
         setIsVoucherModalOpen(true);
       } else {
@@ -1317,9 +1346,15 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                       className="p-3 border-b hover:bg-gray-50 cursor-pointer"
                       onClick={() => {
                         if (selectedTransaction?.id) {
-                          handleProcessGiftCard(selectedTransaction.id, merchant.code);
+                          // console.log(selectedTransaction?.auction?.[0]?.auction_id, "selectedTransaction")
+                          const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
+                          if (auctionId) {
+                            handleProcessGiftCard(auctionId, merchant.code);
+                          } else {
+                            toast.error("Invalid auction ID");
+                          }
                         } else {
-                          toast.error("Invalid auction ID");
+                          toast.error("Invalid transaction");
                         }
                       }}
                     >
@@ -1341,6 +1376,123 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   setIsWinningAdviseModalOpen(true);
                 }}
               />
+            </div>
+          </div>
+        </ModalProfile>
+      )}
+
+
+
+      {isWinningAdvice && (
+        <WinningAdviceModal
+          isOpen={isWinningAdvice}
+          onClose={() => setIsWinningAdvice(false)}
+          adviceData={{
+            date: "Fri, March 1, 2024",
+            name: "Oloruntoba Ayodele",
+            prize: "1 bag of rice",
+            drawDate: "Feb 24, 2024",
+            ticketNumber: "123536",
+          }}
+        />
+      )}
+
+
+      {isVoucherModalOpen && voucherData && (
+        <ModalProfile
+          icon={""}
+          isOpen={isVoucherModalOpen}
+          onClose={() => setIsVoucherModalOpen(false)}
+          title="Your Gift Voucher"
+          handleEvent={() => setIsVoucherModalOpen(false)}
+        >
+          <div className="flex flex-col p-4">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              {/* Voucher content display */}
+
+              {/*   {
+                console.log(voucherData, "voucherData")
+              }
+ */}
+              <p>Voucher Code: {voucherData.code}</p>
+              <p>Voucher Amount: ₦{voucherData.amount}</p>
+              <p>Voucher Expiry: {voucherData.expiry_date}</p>
+              <p>Voucher Status: {voucherData.status}</p>
+              <p>Voucher Store: {voucherData.store}</p>
+              <p>Voucher Description: {voucherData.description}</p>
+
+              <div className="mt-6 flex justify-between gap-4 flex-wrap">
+                <DefaultButton
+                  text="Download"
+                  className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                  type="button"
+                  handleClick={() => {
+                    // Create a canvas element
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Set canvas dimensions
+                    canvas.width = 600;
+                    canvas.height = 400;
+
+                    if (ctx) {
+                      // Set background
+                      ctx.fillStyle = '#ffffff';
+                      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                      // Add border
+                      ctx.strokeStyle = '#F25E26';
+                      ctx.lineWidth = 10;
+                      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+                      // Add logo
+                      const logo = new window.Image();
+                      logo.onload = () => {
+                        // Draw logo in top-right corner
+                        const logoWidth = 100;
+                        const logoHeight = 50;
+                        const logoX = canvas.width - logoWidth - 20;
+                        const logoY = 20;
+                        ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+
+                        // Configure text style
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '24px Arial';
+                        ctx.textAlign = 'left';
+
+                        // Add voucher details
+                        const padding = 40;
+                        const lineHeight = 40;
+                        let y = padding + lineHeight;
+
+                        ctx.fillText(`Voucher Code: ${voucherData.code}`, padding, y);
+                        y += lineHeight;
+                        ctx.fillText(`Amount: ₦${voucherData.amount}`, padding, y);
+                        y += lineHeight;
+                        ctx.fillText(`Expiry: ${voucherData.expiry_date}`, padding, y);
+                        y += lineHeight;
+                        ctx.fillText(`Status: ${voucherData.status}`, padding, y);
+                        y += lineHeight;
+                        ctx.fillText(`Store: ${voucherData.store}`, padding, y);
+
+                        // Create download link
+                        const link = document.createElement('a');
+                        link.download = `voucher-${voucherData.code}.png`;
+                        link.href = canvas.toDataURL();
+                        link.click();
+                      };
+                      logo.src = Brand.src || Brand; // Use the imported Brand variable
+                    }
+                  }}
+                />
+
+                <DefaultButton
+                  text="Back"
+                  className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                  type="button"
+                  handleClick={() => setIsVoucherModalOpen(false)}
+                />
+              </div>
             </div>
           </div>
         </ModalProfile>
