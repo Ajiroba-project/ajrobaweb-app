@@ -59,11 +59,19 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
     let tag;
     if (isOpen) tag = "open";
-    else if (isClosed) tag = "close";
+    else if (isClosed) tag = ["closed",];
     else tag = "unknown";
 
     return { ...item, tag: [tag] };
   });
+
+
+  // const openProducts = auctioninfo?.data?.data?.closed.map(
+  //   (item: { id: any }) => {
+  //     return { ...item, tag: ["closed", 'redeem items', 'winning advise'] }; // Add tag as an array with "open" for consistency
+  //   },
+  // );
+
 
   // console.log(productMain, 'productmainnnn')
 

@@ -1,18 +1,19 @@
 import Image from "next/image"
-import {ReactNode} from "react"
+import { ReactNode } from "react"
 type ButtonProps = {
     text: string,
-    handleClick?: () => void;
+    handleClick?: () => void | Promise<void>;
     className: string;
     type: "submit" | "reset" | "button" | undefined
-    icon?:any
+    icon?: any
+    disabled?: boolean;
 }
 
 
-export const DefaultButton = ({ text, type, handleClick, className }: ButtonProps) => {
+export const DefaultButton = ({ text, type, handleClick, className, disabled }: ButtonProps) => {
     return (
         <>
-            <button className={`${className}`} type={type} onClick={handleClick}>
+            <button className={`${className}`} type={type} onClick={handleClick} disabled={disabled}>
                 {text}
             </button>
 
@@ -45,7 +46,7 @@ export const IconButton = ({ text, handleClick, icon, className }: ButtonProps) 
     return (
         <>
             <button className={className} onClick={handleClick}>
-                {icon } {text}
+                {icon} {text}
             </button>
 
         </>
@@ -53,18 +54,18 @@ export const IconButton = ({ text, handleClick, icon, className }: ButtonProps) 
 }
 
 type customProps = {
-    children:ReactNode,
-    className:string
-    type?:"button"|"submit"|"reset"
-    handleClick?:()=>void
+    children: ReactNode,
+    className: string
+    type?: "button" | "submit" | "reset"
+    handleClick?: () => void
 }
 
 export const CustomizeButton = ({ children, className, handleClick, type }: customProps) => {
-  return (
-    <>
-      <button className={className} onClick={handleClick} type={type}>
-        {children}
-      </button>
-    </>
-  )
+    return (
+        <>
+            <button className={className} onClick={handleClick} type={type}>
+                {children}
+            </button>
+        </>
+    )
 }

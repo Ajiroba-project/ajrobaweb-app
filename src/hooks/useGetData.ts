@@ -250,3 +250,31 @@ export const useGetOrderWinsData = (
     refetchOnWindowFocus: false
   })
 }
+
+type Bank = {
+  name: string;
+  code: string;
+};
+
+type BanksResponse = {
+  status: string;
+  message: string;
+  data: Bank[];
+};
+
+const fetchBanksData = async (url: string, token: string): Promise<BanksResponse> => {
+  const response = await Axios.get<BanksResponse>(url, {
+    headers: {
+      Authorization: `Token ${token}`
+    }
+  });
+  return response.data;
+};
+
+export const useGetBanksData = (url: string, queryKey: string, token: string): UseQueryResult<BanksResponse, Error> => {
+  return useQuery<BanksResponse, Error>({
+    queryKey: [queryKey, url],
+    queryFn: () => fetchBanksData(url, token),
+    refetchOnWindowFocus: false
+  });
+};

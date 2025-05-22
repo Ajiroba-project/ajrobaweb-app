@@ -3,10 +3,12 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     try {
         const token = request.headers.get("Authorization")?.split(" ")[1];
+
         const body = await request.json();
 
-        /*  console.log(token, "token") */
-        console.log(body, "body")
+          /*   console.log(body, "body") */
+
+            // console.log(token, "token")
 
         if (!token) {
             return NextResponse.json(
@@ -15,43 +17,32 @@ export async function POST(request: Request) {
             );
         }
 
-        if (!body.auction_id || !body.productCode) {
-            return NextResponse.json(
-                { status: "failed", message: "Missing required fields" },
-                { status: 400 }
-            );
-        }
-
         const response = await fetch(
-            "https://staging.ajiroba.ng/v1/pay/suregifts/process_giftcard/",
+            "https://staging.ajiroba.ng/v1/pay/nomba/cashout/",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `token ${token}`,
                 },
-                body: JSON.stringify({
-                    auction_id: body.auction_id,
-                    productCode: body.productCode,
-                    ticket_id: body.ticket_id,
-                }),
+                body: JSON.stringify(body)
             }
         );
 
         const data = await response.json();
 
-        // console.log(data, "data")
+        console.log(data, "data")
 
         if (!response.ok) {
             return NextResponse.json(
-                { status: "failed", message: data.message || "Failed to process gift card" },
+                { status: "failed", message: data.message || "Failed to fetch bank account details" },
                 { status: response.status }
             );
         }
 
         return NextResponse.json(data);
     } catch (error) {
-        console.error("Error processing gift card:", error);
+        console.error("Error fetching bank account details:", error);
         return NextResponse.json(
             { status: "failed", message: "Internal server error" },
             { status: 500 }
