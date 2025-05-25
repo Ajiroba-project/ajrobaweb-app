@@ -498,7 +498,7 @@ export const getInTouch = [
 export const marqueeInfo = [
   'Follow us on all our social media platforms : www.ajiroba.com.',
   'Buy a ticket now and stand a chance to win ',
-  'your preferred goods in our raffle draw.'
+  'your preferred goods in our raffle draw.'
 ]
 
 
@@ -933,39 +933,33 @@ export const transactions = [
 export const raffle = [
   {
     name: 'live raffle draw',
-    video: raf,
+    video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     description:
       'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
     title: 'rice',
     host: 'ajiroba',
     date: '4 Aug 2024',
-
     price: "300"
   },
   {
-
     name: 'live raffle draw',
-    video: raf,
+    video: 'https://www.youtube.com/embed/3JZ_D3ELwOQ',
     description:
       'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
     title: 'rice',
     host: 'ajiroba-2',
     date: '4 Aug 2024',
-
     price: "300"
   },
   {
-
     name: 'live raffle draw',
-    video: raf,
+    video: 'https://www.youtube.com/embed/V-_O7nl0Ii0',
     description:
       'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
     title: 'rice',
     host: 'ajiroba-3',
     date: '4 Aug 2024',
-
     price: "300"
-
   }
 ]
 

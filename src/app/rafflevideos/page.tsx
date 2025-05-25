@@ -1,0 +1,265 @@
+// 'use client'
+
+// import { Header } from '../component/Header'
+// import { Footer } from '../component/Footer'
+// import { Fragment } from 'react';
+// import { Suspense } from 'react';
+// import { raffle } from '../static-data';
+// import { useState } from 'react';
+
+// const RaffleVideosPage = () => {
+//     const [currentPage, setCurrentPage] = useState(1);
+//     const itemsPerPage = 4;
+//     const totalPages = Math.ceil(raffle.length / itemsPerPage);
+//     const startIndex = (currentPage - 1) * itemsPerPage;
+//     const endIndex = startIndex + itemsPerPage;
+//     const paginatedRaffle = raffle.slice(startIndex, endIndex);
+
+//     const handlePageChange = (page: number) => {
+//         setCurrentPage(page);
+//     };
+
+//     return (
+//         <Fragment>
+//             <header className="fixed z-50 w-full">
+//                 <Header />
+//             </header>
+//             <main className="w-full min-h-[80vh] bg-[#fafafa] pt-[13vh] pb-8 flex flex-col items-center">
+//                 <div className="w-full max-w-3xl mx-auto">
+//                     <h2 className="text-center text-2xl font-bold mb-8 mt-4">Raffle Draw videos</h2>
+//                     <div className="flex flex-col gap-8">
+//                         {paginatedRaffle.map((item, idx) => (
+//                             <div
+//                                 key={idx}
+//                                 className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden border border-[#F6F6F6] hover:shadow-xl transition-all duration-200"
+//                             >
+//                                 {/* Video Section */}
+//                                 <div className="relative flex-shrink-0 w-full md:w-56 h-48 md:h-36 bg-black">
+//                                     <iframe
+//                                         className="w-full h-full rounded-none md:rounded-l-2xl"
+//                                         src={item.video}
+//                                         title={item.name}
+//                                         frameBorder="0"
+//                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+//                                         allowFullScreen
+//                                     ></iframe>
+//                                     {/* Live badge */}
+//                                     <span className="absolute top-2 left-2 bg-[#2A2A2A] text-white text-xs font-semibold px-2 py-1 rounded">LIVE</span>
+//                                 </div>
+//                                 {/* Details Section */}
+//                                 <div className="flex-1 flex flex-col items-start p-4 md:pl-6">
+//                                     {/* Title Row */}
+//                                     <div className="flex flex-row items-center gap-2">
+//                                         <span className="text-base md:text-lg font-semibold text-[#2A2A2A]">{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</span>
+//                                         <span className="mx-2 text-xs text-gray-400 font-medium">– Ajroba</span>
+//                                     </div>
+//                                     {/* Subtitle Row */}
+//                                     <div className="flex flex-row flex-wrap gap-4 text-xs text-gray-500 mt-1 mb-1">
+//                                         <span className="font-semibold text-[#F25E26]">Rice</span>
+//                                         <span>Ticket price: <span className="font-semibold text-[#F25E26]">₦{item.price}</span></span>
+//                                     </div>
+//                                     {/* Description */}
+//                                     <p className="text-xs md:text-sm text-gray-700 mt-1 mb-2 max-w-xl">{item.description}</p>
+//                                     {/* Footer Row */}
+//                                     <div className="flex flex-row gap-4 text-xs text-gray-400 mt-auto pt-2">
+//                                         <span className="capitalize font-medium">{item.host}</span>
+//                                         <span>{item.date}</span>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         ))}
+//                     </div>
+//                     {/* Pagination */}
+//                     <div className="flex justify-center items-center gap-2 mt-10">
+//                         <button
+//                             className={`w-8 h-8 flex items-center justify-center rounded border text-lg font-bold transition-all duration-150 ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white text-[#F25E26] border-[#F25E26] hover:bg-[#F25E26] hover:text-white'}`}
+//                             onClick={() => handlePageChange(currentPage - 1)}
+//                             disabled={currentPage === 1}
+//                         >
+//                             &lt;
+//                         </button>
+//                         {Array.from({ length: totalPages }, (_, i) => (
+//                             <button
+//                                 key={i}
+//                                 className={`w-8 h-8 flex items-center justify-center rounded border text-lg font-bold transition-all duration-150 ${currentPage === i + 1 ? 'bg-[#F25E26] text-white border-[#F25E26]' : 'bg-white text-[#F25E26] border-[#F25E26] hover:bg-[#F25E26] hover:text-white'}`}
+//                                 onClick={() => handlePageChange(i + 1)}
+//                             >
+//                                 {i + 1}
+//                             </button>
+//                         ))}
+//                         <button
+//                             className={`w-8 h-8 flex items-center justify-center rounded border text-lg font-bold transition-all duration-150 ${currentPage === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white text-[#F25E26] border-[#F25E26] hover:bg-[#F25E26] hover:text-white'}`}
+//                             onClick={() => handlePageChange(currentPage + 1)}
+//                             disabled={currentPage === totalPages}
+//                         >
+//                             &gt;
+//                         </button>
+//                     </div>
+//                 </div>
+//             </main>
+//             <Footer />
+//         </Fragment>
+//     );
+// }
+
+// export default function Page() {
+//     return (
+//         <Suspense>
+//             <RaffleVideosPage />
+//         </Suspense>
+//     );
+// }
+
+
+
+'use client'
+
+import { Header } from '../component/Header'
+import { Footer } from '../component/Footer'
+import { Fragment } from 'react';
+import { Suspense } from 'react';
+import { raffle } from '../static-data';
+import { useState } from 'react';
+
+const RaffleVideosPage = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 2;
+    const totalPages = Math.ceil(raffle.length / itemsPerPage);
+    // console.log(totalPages, 'totalPages')
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedRaffle = raffle.slice(startIndex, endIndex);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    return (
+        <Fragment>
+            <header className="fixed z-50 w-full">
+                <Header />
+            </header>
+            <main className="w-full min-h-[80vh] bg-[#fafafa] pt-[13vh] pb-8 flex flex-col items-center">
+                <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-center text-2xl font-bold mb-8 mt-4 text-[#2A2A2A]">Raffle Draw videos</h2>
+
+                    <div className="flex flex-col gap-6">
+                        {paginatedRaffle.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="flex flex-col md:flex-row bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200"
+                            >
+                                {/* Video Section */}
+                                <div className="relative flex-shrink-0 w-full md:w-60 h-44 bg-black">
+                                    <iframe
+                                        className="w-full h-full"
+                                        src={item.video}
+                                        title={item.name}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                    {/* Live badge */}
+                                    <div className="absolute top-3 left-3 bg-black bg-opacity-80 text-white text-xs font-medium px-2 py-1 rounded">
+                                        LIVE
+                                    </div>
+                                </div>
+
+                                {/* Content Section */}
+                                <div className="flex-1 p-5 md:p-6 flex flex-col justify-between">
+                                    {/* Header Section */}
+                                    <div className="mb-3">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <h3 className="text-lg font-semibold text-[#2A2A2A] capitalize">
+                                                {item.name}
+                                            </h3>
+                                            <span className="text-gray-400 text-sm">-</span>
+                                            <span className="text-gray-600 text-sm font-medium capitalize">
+                                                {item.host}
+                                            </span>
+                                        </div>
+
+                                        {/* Metadata row */}
+                                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
+                                            <span className="font-semibold text-[#F25E26] capitalize">
+                                                {item.title}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                Ticket price:
+                                                <span className="font-semibold text-[#F25E26]">
+                                                    ₦{parseInt(item.price).toLocaleString('en-US')}
+                                                </span>
+                                            </span>
+                                        </div>
+
+                                        {/* Description */}
+                                        <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                                            {item.description}
+                                        </p>
+                                    </div>
+
+                                    {/* Footer Section */}
+                                    <div className="flex items-center justify-between text-sm text-gray-500 pt-2 border-t border-gray-100">
+                                        <span className="capitalize font-medium">
+                                            {item.host}
+                                        </span>
+                                        <span>{item.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="flex justify-center items-center gap-2 mt-12">
+                            <button
+                                className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all duration-200 ${currentPage === 1
+                                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                    : 'bg-white text-[#F25E26] border-[#F25E26] hover:bg-[#F25E26] hover:text-white shadow-sm'
+                                    }`}
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                            >
+                                ‹
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, i) => (
+                                <button
+                                    key={i}
+                                    className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all duration-200 ${currentPage === i + 1
+                                        ? 'bg-[#F25E26] text-white border-[#F25E26] shadow-sm'
+                                        : 'bg-white text-[#F25E26] border-[#F25E26] hover:bg-[#F25E26] hover:text-white shadow-sm'
+                                        }`}
+                                    onClick={() => handlePageChange(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+
+                            <button
+                                className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all duration-200 ${currentPage === totalPages
+                                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                    : 'bg-white text-[#F25E26] border-[#F25E26] hover:bg-[#F25E26] hover:text-white shadow-sm'
+                                    }`}
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                            >
+                                ›
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </main>
+            <Footer />
+        </Fragment>
+    );
+}
+
+export default function Page() {
+    return (
+        <Suspense>
+            <RaffleVideosPage />
+        </Suspense>
+    );
+}

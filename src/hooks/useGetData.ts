@@ -47,6 +47,7 @@ interface UserData {
   phoneNumber?: any
   reference?: any
   token?: any
+  wallet_balance?: any
 }
 
 // Define the interface for the expected response data structure

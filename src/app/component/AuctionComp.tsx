@@ -22,7 +22,7 @@ import { Axios } from "axios";
 import { toast } from "react-toastify";
 import rice from "../asset/image/rice2.jpeg";
 import { DefaultButton } from "./Button";
-import { useGetPointData } from "@/hooks/useGetData";
+import { useGetDatanew, useGetPointData } from "@/hooks/useGetData";
 import { SetStateAction } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -153,6 +153,12 @@ export const AuctionComp = ({ cardInfo }: any) => {
   const [successbid, setSuccessbid] = useState(false);
 
   const tkn_: string = Cookies.get("token") as string;
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
+
+  // console.log(userInfo?.data?.my_wallet[0]?.balance, 'userInfo')
 
   /*  const {
      data: pointinfo,
@@ -322,7 +328,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      setBidData(data?.data); // Store the API response in bidData for modal usage
+      // setBidData(data?.data); // Store the API response in bidData for modal usage
 
       setbidopen(false); // Open modal after successful API response
       setmakepayment(false);
@@ -376,6 +382,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
       data.status === 400 ||
       data.status === 409
     ) {
+      setBidData(null)
       setbidopen(false);
       setmakepayment(false);
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
@@ -747,11 +754,13 @@ export const AuctionComp = ({ cardInfo }: any) => {
           <ModalComponent
             content={
               <div className="flex flex-col  px-6 py-4">
-                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                <div onClick={() => setbidopen(false)} className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
                   Back
                 </div>
 
                 <div className="flex justify-between flex-wrap py-2">
+
+                  {/* {console.log(bidData, 'bidData')} */}
                   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
                       <span className="font-Poppins">{bidData?.category}</span>
@@ -771,8 +780,13 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
                 <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-                    <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-
+                    <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
+                      <Image
+                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        alt={bidData?.name || "Product Image"}
+                        fill
+                        className="object-cover rounded-md"
+                      />
 
                       <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
 
@@ -782,6 +796,8 @@ export const AuctionComp = ({ cardInfo }: any) => {
                           <span className="text-sm font-bold">
                             ₦ {ticketPrice}
                           </span>
+
+
                         </div>
                       </div>
                     </div>
@@ -1086,7 +1102,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          #230000
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString()}
                         </small>
                       </div>
                     </div>
@@ -1108,7 +1124,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          #23,000 (Wallet) And #200 (Ajiroba Points)
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString()}(Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
                         </small>
                       </div>
                     </div>

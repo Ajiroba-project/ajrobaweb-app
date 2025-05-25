@@ -101,7 +101,7 @@ const AuctionPage = () => {
       <AuctionBanner text='Auction Deals' banner={auctionImg} />
       <main className='container my-4'>
         <section className='my-5 flex flex-col items-center justify-between gap-5 lg:flex-row'>
-          <div className="text-[#F25E26] underline lg:text-xl cursor-pointer" onClick={() => router.push("/raffle")}>
+          <div className="text-[#F25E26] underline lg:text-xl cursor-pointer" onClick={() => router.push("/rafflevideos")}>
             View All Raffle Draw Video
           </div>
 
