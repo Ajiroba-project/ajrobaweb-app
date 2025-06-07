@@ -14,7 +14,7 @@ import { error } from "console";
 import verify from "@/app/asset/verify.svg";
 import Cookies from "js-cookie";
 
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { BlobProviderParams, PDFDownloadLink } from "@react-pdf/renderer";
 import Receipt from "./receiptpdf/Receipt";
 import ReceiptPDF from "./receiptpdf/Receipt";
 
@@ -149,9 +149,9 @@ const WrappedPage = () => {
           document={<ReceiptPDF data={transdata?.data} message={transdata?.message} />}
           fileName={`receipt`}
         >
-          {({ blob, url, loading, error }) =>
+          {/*   {({ blob, url, loading, error }: BlobProviderParams) =>
             loading ? (
-              "Loading..."
+              <span>Loading...</span>
             ) : (
               <div>
                 <button
@@ -163,7 +163,24 @@ const WrappedPage = () => {
                 </button>
               </div>
             )
-          }
+          } */}
+
+
+          {(({ loading }: BlobProviderParams) =>
+            loading ? (
+              <span>Loading...</span>
+            ) : (
+              <div>
+                <button
+                  type="button"
+                  onClick={close}
+                  className={`my-6 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] p-4 px-10 hover:bg-[#F25E26] hover:text-white `}
+                >
+                  Download
+                </button>
+              </div>
+            )
+          ) as unknown as React.ReactNode}
         </PDFDownloadLink>
       </section>
     </section>
