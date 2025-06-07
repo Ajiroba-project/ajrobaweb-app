@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense } from "react";
+import React, { Suspense, useRef } from "react";
 import { Header } from "../component/Header";
 import { Profile } from "../../app/profile/components/Profile";
 import { useAuthStore, userProfile } from "@/store/store";
@@ -18,10 +18,12 @@ import Cookies from "js-cookie";
 import GoogleTicket from "../component/Googleticket";
 import raffledraw from "@/app/asset/image/ticketdraw.png";
 import RaffleTicket from "../component/RaffleTicket";
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const WrappedPage = () => {
   const router = useRouter();
+  const contentRef = useRef(null);
   useAuthOrders(router);
   const searchParams = useSearchParams();
   const order_id = searchParams.get("orderId");
@@ -33,9 +35,83 @@ const WrappedPage = () => {
   }));
   const userToken = token;
 
+  const handleDownload = async () => {
+    if (!contentRef.current) return;
 
+    try {
+      // Store original styles
+      const originalStyles = {
+        width: contentRef.current.style.width,
+        height: contentRef.current.style.height,
+        overflow: contentRef.current.style.overflow,
+        position: contentRef.current.style.position,
+      };
 
+      // Set fixed dimensions for capture
+      contentRef.current.style.width = '1200px';
+      contentRef.current.style.height = 'auto';
+      contentRef.current.style.overflow = 'visible';
+      contentRef.current.style.position = 'relative';
 
+      const canvas = await html2canvas(contentRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        windowWidth: 1200,
+        windowHeight: contentRef.current.scrollHeight,
+        onclone: (clonedDoc) => {
+          // Ensure all images are loaded in the cloned document
+          const images = clonedDoc.getElementsByTagName('img');
+          return Promise.all(Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => {
+              img.onload = resolve;
+              img.onerror = resolve;
+            });
+          }));
+        }
+      });
+
+      // Restore original styles
+      contentRef.current.style.width = originalStyles.width;
+      contentRef.current.style.height = originalStyles.height;
+      contentRef.current.style.overflow = originalStyles.overflow;
+      contentRef.current.style.position = originalStyles.position;
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Add content to PDF with proper scaling
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+      // If content is too long, add it to multiple pages
+      if (imgHeight > 297) { // A4 height in mm
+        const pageCount = Math.ceil(imgHeight / 297);
+        for (let i = 1; i < pageCount; i++) {
+          pdf.addPage();
+          pdf.addImage(
+            imgData,
+            'PNG',
+            0,
+            -(297 * i),
+            imgWidth,
+            imgHeight
+          );
+        }
+      }
+
+      pdf.save(`auction-win-${filteredItems[0]?.ticket_number}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
 
   //   const {
   //     data: productinfo,
@@ -48,11 +124,7 @@ const WrappedPage = () => {
   //     "get_product_details"
   //   );
 
-
-
   const userToken_ = Cookies.get("token")
-
-
 
   const {
     data: auctioninfo,
@@ -72,10 +144,7 @@ const WrappedPage = () => {
 
   // console.log(producterror, "producterror")
 
-
   //   console.log(auctioninfo?.data?.data?.all, 'auctioninfo')
-
-
 
   // Display loading spinner or text while fetching data
   if (auctionLoading) {
@@ -104,7 +173,6 @@ const WrappedPage = () => {
     );
   }
 
-
   return (
     <section className="bg-[#F6F6F6] min-h-screen">
       <header className="z-50">
@@ -130,7 +198,7 @@ const WrappedPage = () => {
         </div>
       </section>
 
-      <main className="container bg-white py-8">
+      <main className="container bg-white py-8" ref={contentRef}>
         <div className="container">
           <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0">
             <div className="flex items-center gap-4">
@@ -154,7 +222,10 @@ const WrappedPage = () => {
                 <MdOutlineFileDownload color="red" size={12} />
               </div>
               <div>
-                <p className="font-Poppins text-sm text-[#504D4D] font-medium">
+                <p
+                  className="font-Poppins text-sm text-[#504D4D] font-medium cursor-pointer"
+                  onClick={handleDownload}
+                >
                   Download
                 </p>
               </div>
@@ -187,11 +258,6 @@ const WrappedPage = () => {
             </div>
           </div>
         </div>
-
-
-
-
-
 
         <section
           className="container mx-auto px-4 md:px-6 lg:px-8 mb-8"
@@ -263,9 +329,6 @@ const WrappedPage = () => {
             </div>
           </div>
         </section>
-
-
-
 
         {/*   <GoogleTicket /> */}
 
@@ -361,8 +424,6 @@ const WrappedPage = () => {
             </div>
           </div>
         </section>
-
-
       </main>
 
       <Footer />

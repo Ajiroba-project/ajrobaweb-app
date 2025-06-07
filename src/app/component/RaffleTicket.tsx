@@ -99,11 +99,11 @@ const TicketCard = ({
 
 
 const TicketCardMobile = ({
-  /*   ticketPrice = "N 200",
-    purchaseDate = "May 23, 2025",
-    product = "T- Shirt",
-    raffleDate = "May 23, 2025",
-    raffleTime = "7:30 PM" */
+    /*   ticketPrice = "N 200",
+      purchaseDate = "May 23, 2025",
+      product = "T- Shirt",
+      raffleDate = "May 23, 2025",
+      raffleTime = "7:30 PM" */
     ticketPrice,
     purchaseDate,
     product,
