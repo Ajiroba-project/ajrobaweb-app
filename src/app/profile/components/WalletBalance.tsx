@@ -147,7 +147,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
       const res = response.data;
 
-      
+
 
       if (response.status === 200 || response.status === 201) {
         setloadingverify(false);
