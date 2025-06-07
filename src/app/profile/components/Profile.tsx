@@ -5,7 +5,7 @@ import photo from '../../asset/image/photo.png';
 import { ProfileContent } from './ProfileContent';
 import { IoIosCamera } from 'react-icons/io';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
-import { LuMenuSquare } from 'react-icons/lu';
+import { LuMenu } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
 
@@ -74,7 +74,7 @@ export const Profile = () => {
         className={`absolute left-0 top-0 cursor-pointer text-[#f25e26] lg:hidden `}
         onClick={() => setSideNav(!sideNav)}
       >
-        <LuMenuSquare className="text-2xl" />
+        <LuMenu className="text-2xl" />
       </span>
       <section
         className={`${sideNav

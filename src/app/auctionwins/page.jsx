@@ -15,6 +15,9 @@ import payment_method from "@/app/asset/image/payment_method.svg";
 import { useGetOrderData, useGetOrderWinsData, useGetProductData } from "@/hooks/useGetData";
 import { useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import GoogleTicket from "../component/Googleticket";
+import raffledraw from "@/app/asset/image/ticketdraw.png";
+import RaffleTicket from "../component/RaffleTicket";
 
 
 const WrappedPage = () => {
@@ -29,6 +32,8 @@ const WrappedPage = () => {
     token: state.token,
   }));
   const userToken = token;
+
+
 
 
 
@@ -69,6 +74,8 @@ const WrappedPage = () => {
 
 
   //   console.log(auctioninfo?.data?.data?.all, 'auctioninfo')
+
+
 
   // Display loading spinner or text while fetching data
   if (auctionLoading) {
@@ -125,7 +132,7 @@ const WrappedPage = () => {
 
       <main className="container bg-white py-8">
         <div className="container">
-          <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0">
             <div className="flex items-center gap-4">
               <div>
                 <Image
@@ -181,89 +188,95 @@ const WrappedPage = () => {
           </div>
         </div>
 
+
+
+
+
+
         <section
-          className="container"
+          className="container mx-auto px-4 md:px-6 lg:px-8 mb-8"
           style={{
-            margin: "0 auto",
-            width: "85%",
+            width: "100%",
+            maxWidth: "1200px"
           }}
         >
-
-
-          <div
-
-            className="flex flex-col justify-between md:flex-row   mt-8 items-center border px-8 py-8 rounded-md w-full"
-          >
-            <div style={{
-              width: '55%'
-            }} className="flex flex-col md:flex-row items-center gap-2 w-full md:w-1/2">
-              <div className="">
+          <div className="flex flex-col md:flex-row justify-between mt-4 md:mt-8 items-center border px-4 md:px-8 py-4 md:py-8 rounded-md w-full">
+            <div className="w-full md:w-[55%] flex flex-col md:flex-row items-center gap-4 md:gap-2">
+              <div className="w-24 md:w-auto">
                 <Image
                   width={100}
                   height={100}
                   src={`https://staging.ajiroba.ng${filteredItems[0]?.auction[0]?.images[0]}`}
                   alt="product_image"
-                  className="object-contain"
+                  className="object-contain w-full h-auto"
                 />
               </div>
 
-              <div className="flex flex-col gap-2 w-full">
+              <div className="flex flex-col gap-2 w-full text-center md:text-left">
                 <div>
-                  <p className="text-[#353131] text-base font-Poppins">
+                  <p className="text-[#353131] text-sm md:text-base font-Poppins">
                     {filteredItems[0]?.auction[0]?.name}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[#A09F9F] text-[12px] font-Poppins font-normal">
+                  <p className="text-[#A09F9F] text-[10px] md:text-[12px] font-Poppins font-normal">
                     {filteredItems[0]?.auction[0]?.name}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div style={{
-              width: '35%'
-            }} className="flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-4 py-2 w-full md:w-1/2">
+            <div className="w-full md:w-[35%] mt-4 md:mt-0 flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-3 md:px-4 py-2">
               <div
-                className="flex flex-col items-baseline gap-4 w-full"
+                className="flex flex-col items-baseline gap-3 md:gap-4 w-full"
                 style={{
                   borderBottom: "1px solid #6E6E6E",
                   paddingBottom: ".5rem",
                 }}
               >
-                <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
+                <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-between w-full">
                   <div>
-                    <p className="text-[#6E6E6E] font-Poppins text-sm">
+                    <p className="text-[#6E6E6E] font-Poppins text-xs md:text-sm">
                       Ticket Price:
                     </p>
                   </div>
                   <div>
-                    <p className="font-Poppins text-[#353131] font-medium">
-                      N    {filteredItems[0]?.ticket_price}
+                    <p className="font-Poppins text-[#353131] text-sm md:text-base font-medium">
+                      N {filteredItems[0]?.ticket_price}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 items-center justify-between w-full">
+                <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-between w-full">
                   <div>
-                    <p className="text-[#6E6E6E] font-Poppins text-sm">
+                    <p className="text-[#6E6E6E] font-Poppins text-xs md:text-sm">
                       Ticket Number:
                     </p>
                   </div>
                   <div>
-                    <p className="font-Poppins text-[#353131] font-medium">
+                    <p className="font-Poppins text-[#353131] text-sm md:text-base font-medium">
                       {filteredItems[0]?.ticket_number}
                     </p>
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>
-
-
         </section>
+
+
+
+
+        {/*   <GoogleTicket /> */}
+
+        <RaffleTicket
+          ticket_number={filteredItems[0]?.ticket_number || 'N/A'}
+          ticket_price={filteredItems[0]?.ticket_price || 'N/A'}
+          purchase_date={filteredItems[0]?.purchase_date || 'N/A'}
+          product={filteredItems[0]?.auction[0]?.name || 'N/A'}
+          raffle_date={filteredItems[0]?.raffle_date || 'N/A'}
+          raffle_time={filteredItems[0]?.raffle_time || 'N/A'}
+        />
 
         <section
           style={{
@@ -271,83 +284,85 @@ const WrappedPage = () => {
             width: "95%",
             marginTop: "3rem",
           }}
-          className="border rounded-md px-4 py-2"
+          className="border rounded-md px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6"
         >
-          <div className="flex flex-col gap-8">
-            <div className="flex justify-between">
+          <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
+            <div className="flex justify-between items-center">
               <div>
-                <p className="font-Poppins text-[#353131] font-medium text-base">
+                <p className="font-Poppins text-[#353131] font-medium text-sm sm:text-base">
                   Payment Method
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <div>
                   <Image
-                    width={20}
-                    height={20}
+                    width={16}
+                    height={16}
+                    className="w-4 h-4 sm:w-5 sm:h-5"
                     src={payment_method}
                     alt="purchasecheck"
                   />
                 </div>
                 <div>
-                  <p className="font-Poppins text-sm text-[#2A2A2A] font-normal">
+                  <p className="font-Poppins text-xs sm:text-sm text-[#2A2A2A] font-normal">
                     {'N/A'}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <div>
-                <p className="font-Poppins text-[#353131] font-medium text-base">
+                <p className="font-Poppins text-[#353131] font-medium text-sm sm:text-base">
                   Ticket Price
                 </p>
               </div>
 
               <div className="flex items-center">
-
                 <div>
-                  <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N  {filteredItems[0]?.ticket_price}
+                  <p className="font-Poppins text-sm sm:text-base text-[#2A2A2A] font-semibold">
+                    N {filteredItems[0]?.ticket_price}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <div>
-                <p className="font-Poppins text-[#353131] font-medium text-base">
+                <p className="font-Poppins text-[#353131] font-medium text-sm sm:text-base">
                   Discount
                 </p>
               </div>
 
               <div className="flex items-center">
                 <div>
-                  <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N  {0}
+                  <p className="font-Poppins text-sm sm:text-base text-[#2A2A2A] font-semibold">
+                    N {0}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center pt-2 sm:pt-3 border-t border-gray-200">
               <div>
-                <p className="font-Poppins text-[#353131] font-medium text-base">
+                <p className="font-Poppins text-[#353131] font-medium text-sm sm:text-base">
                   Total
                 </p>
               </div>
 
               <div className="flex items-center">
                 <div>
-                  <p className="font-Poppins text-base text-[#2A2A2A] font-semibold">
-                    N  {filteredItems[0]?.ticket_price}
+                  <p className="font-Poppins text-sm sm:text-base text-[#2A2A2A] font-semibold">
+                    N {filteredItems[0]?.ticket_price}
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
+
+
       </main>
 
       <Footer />

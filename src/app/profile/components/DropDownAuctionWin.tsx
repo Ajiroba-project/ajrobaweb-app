@@ -37,8 +37,6 @@ const DropDownAuctionWin: React.FC<DropdownProps> = ({ onOptionClick, value, tra
 
   const handleOptionClick = (option: string) => {
 
-// console.log(transaction, 'transaction' )
-
     switch (option) {
       case 'Purchase order':
      transaction?.id ?   router.push(`/auctionwins?orderId=${transaction?.id}`) : router.push(`/auctionwins?orderId=${transaction?.order_id}`);

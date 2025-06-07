@@ -23,6 +23,8 @@ import Brand from "@/app/asset/logo.svg";
 import bikecode from '@/app/asset/image/bikecode.svg'
 import DropDownAuctionWin from "./DropDownAuctionWin";
 import WinningAdviceModal from "../components/WinningAdviceModal";
+import TestWin from "./TestWin";
+import DropDownAuctionClosed from "./DropDownAuctionClosed";
 
 type AuctionProps = {
   product: any[];
@@ -120,6 +122,8 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     // console.log(`${option} clicked for transaction:`, transaction);
     //  console.log(transaction, 'transactionnnnn')
 
+    // console.log(option, 'option')
+
 
     if (option === "Review") {
       setSelectedTransaction(transaction);
@@ -144,7 +148,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
       /*  console.log(storedVoucherData, "storedVoucherData") */
       if (transactionId) {
         setVoucherData(JSON.parse(storedVoucherData || '{}'));
-        setIsVoucherModalOpen(true);
+       /*  setIsVoucherModalOpen(true); */
       } else {
         toast.error("Voucher data not found");
       }
@@ -463,7 +467,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         setIsMerchantsModalOpen(false);
         setIsVoucherModalOpen(true);
 
-    /*     window.location.reload(); */
+        /*     window.location.reload(); */
       } else {
         toast.error(responseData.message || "Failed to process gift card");
       }
@@ -674,17 +678,22 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                                     : "bg-[#F25E26] text-white"
                             } rounded-xl px-2.5 py-1`}
                         >
-                          {value === "redeem items" && val.redeemed ? "Download Voucher" : value}
+                          {value === "redeem items" && val.redeemed ? "Redeemed" : value}
                         </p>
                       ))}
 
                   </div>
                 </div>
                 <span className="absolute right-3 top-2 rounded-md border p-2 cursor-pointer">
-                  <DropDownAuction
+                  <DropDownAuctionClosed
                     onOptionClick={(option) => handleOptionClick(option, val)}
                     transaction={val}
                   />
+
+                {/*   <DropDownAuctionWin
+                    onOptionClick={(option) => handleOptionClick(option, val)}
+                    transaction={val}
+                  /> */}
                 </span>
               </div>
             ))
@@ -903,8 +912,23 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
           </div>
         </ModalProfile>
       )}
-      {isWinningAdvice && selectedTransaction && (
+      {/*    {isWinningAdvice && selectedTransaction && (
         <WinningAdviceModal
+          isOpen={isWinningAdvice}
+          onClose={() => setIsWinningAdvice(false)}
+          adviceData={{
+            date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }),
+            name: `${userInfo?.data?.first_name} ${userInfo?.data?.last_name}`,
+            prize: selectedTransaction?.auction?.[0]?.name || "Prize",
+            drawDate: new Date(selectedTransaction?.auction?.[0]?.draw_date || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            ticketNumber: selectedTransaction?.ticket_number || "",
+          }}
+        />
+      )}  */}
+
+
+      {isWinningAdvice && selectedTransaction && (
+        <TestWin
           isOpen={isWinningAdvice}
           onClose={() => setIsWinningAdvice(false)}
           adviceData={{

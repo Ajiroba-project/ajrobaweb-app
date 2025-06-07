@@ -90,7 +90,7 @@ function parseStartsIn(startsIn = "0 Days, 0 Hr: 3 Mins Left") {
 }
 
 // Countdown Timer component
-const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
+const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left", date = "May 4  4:30 AM" }) => {
   const {
     totalMinutes: initialTotalMinutes,
     daysLeft: initialDaysLeft,
@@ -121,12 +121,21 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
 
   return (
     <div className="mb-3">
-      <p className="text-xs capitalize mb-2 ">
-        <span className="font-medium">{daysLeft}</span> dy:{" "}
-        <span className="font-medium">{hoursLeft}</span> Hr:{" "}
-        <span className="font-medium">{minutesLeft}</span> Min{" "}
-        <span className="font-medium">Left</span>
-      </p>
+      <div className="flex flex-row justify-between mt-4">
+        <div className="">
+          <p className="text-xs capitalize mb-2 ">
+            <span className="font-medium">{daysLeft}</span> dy:{" "}
+            <span className="font-medium">{hoursLeft}</span> Hr:{" "}
+            <span className="font-medium">{minutesLeft}</span> Min{" "}
+            <span className="font-medium">Left</span>
+          </p>
+        </div>
+        <div>
+          <p className="text-xs capitalize mb-2 ">
+            {date}
+          </p>
+        </div>
+      </div>
       <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
         <div
           className="h-2 rounded-full bg-[#F25E26]"
@@ -655,6 +664,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
                   };
                   reviews: any;
                   starts_in: string | undefined;
+                  start_date?: string | undefined;
                 },
                 index: Key | null | undefined,
               ) => (
@@ -688,6 +698,10 @@ export const AuctionComp = ({ cardInfo }: any) => {
                       </div>
                     </div>
 
+                  {/*   {
+                      console.log(value, 'value')
+                    }
+ */}
                     <div
                       className="flex justify-center items-center m-3"
                       onClick={() =>
@@ -743,7 +757,12 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
                     {/*      <div className="bg-[#F6F6F6] px-4 "> */}
                     <div className="bg-[#f6f6f6] px-4 ">
-                      <CountdownTimer startsIn={value?.starts_in} />
+                      {/*   {
+                        console.log(value, 'value')
+                      } */}
+                      <CountdownTimer startsIn={value?.starts_in} date={value?.start_date || 'June 6 4:30 AM'} />
+
+
                     </div>
                   </div>
                 </motion.div>
