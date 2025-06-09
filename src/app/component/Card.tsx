@@ -1317,8 +1317,6 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   }));
 
 
-
-
   const getSessionKey = () => {
     let sessionKey = Cookies.get('session_key');
 
@@ -1369,8 +1367,12 @@ export const ProductCardMain = ({ cardInfo }: any) => {
         setCardCartState(false);
       }, 5000);
 
+      /*   refetch(); */
+
+
+   /*    window.location.reload(); */
       return () => clearTimeout(timeoutID);
-      /*  refetch(); */
+
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -1424,7 +1426,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
 
 
-  const { mutate: mutate, status: likedstatus } = useMutateData(
+  const { mutate: mutate, status: likedstatus, } = useMutateData(
     "addtocart",
     handleSuccess,
     handleError,

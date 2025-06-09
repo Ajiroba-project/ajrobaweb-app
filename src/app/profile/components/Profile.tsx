@@ -66,7 +66,7 @@ export const Profile = () => {
 
   const userphoto = profileurl || userDetails?.profile_image_url || '';
 
-  const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community'];
+  const menu = ['my profile', 'auction wins', 'my order', 'wallet', 'community'];
 
   return (
     <section className="relative flex gap-5 ">
@@ -87,7 +87,7 @@ export const Profile = () => {
           <h3 className="my-5 w-full text-xl font-semibold lg:text-2xl font-Poppins text-[#111111]">
             {activeMenu === 'my profile'
               ? 'Profile Details'
-              : activeMenu === 'auction win'
+              : activeMenu === 'auction wins'
                 ? 'Auction Wins'
                 : activeMenu === 'my order'
                   ? 'My Order'
@@ -95,7 +95,7 @@ export const Profile = () => {
                     ? 'My Wallet'
                     : 'Community'}
           </h3>
-          <div className={`${activeMenu === 'my order' || activeMenu === 'wallet' || activeMenu === 'wallet' || activeMenu === 'community' ? 'border rounded  flex flex-col  px-2' : ' flex flex-col  px-2'}`}>
+          <div className={`${activeMenu === 'my order' || activeMenu === 'wallet' || activeMenu === 'wallet' || activeMenu === 'community' || activeMenu === 'auction wins' || activeMenu === 'my profile' ? 'border rounded  flex flex-col  px-2' : ' flex flex-col  px-2'}`}>
             <div className="relative justify-center flex items-center mt-2 ">
               <Image
                 src={userphoto}

@@ -335,7 +335,7 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
                           value="pdf"
                           checked={format === 'pdf'}
                           onChange={handleFormatChange}
-                          className="mr-2"
+                          className="mr-2 accent-[#f25e26]"
                         />
                         PDF
                       </label>
@@ -346,7 +346,7 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
                           value="excel"
                           checked={format === 'excel'}
                           onChange={handleFormatChange}
-                          className="mr-2"
+                          className="mr-2 accent-[#f25e26]"
                         />
                         Excel File
                       </label>

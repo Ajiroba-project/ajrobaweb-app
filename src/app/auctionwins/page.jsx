@@ -20,6 +20,7 @@ import raffledraw from "@/app/asset/image/ticketdraw.png";
 import RaffleTicket from "../component/RaffleTicket";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import "./style.css";
 
 const WrappedPage = () => {
   const router = useRouter();
@@ -193,7 +194,10 @@ const WrappedPage = () => {
               width: "80%",
             }}
           >
-            <Title title="Purchase Order Details" />
+           {/*  <Title title="Purchase Order Details" /> */}
+            <div className="container py-4 mb-8">
+              <p className="text-center  2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px]  font-Poppins text-sm text-[#504D4D] font-extrabold">{'Purchase Order Details'}</p>
+            </div>
           </section>
         </div>
       </section>
@@ -202,28 +206,53 @@ const WrappedPage = () => {
         <div className="container">
           <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0">
             <div className="flex items-center gap-4">
-              <div>
-                <Image
-                  width={30}
-                  height={30}
-                  src={purchasecheck}
-                  alt="purchasecheck"
-                />
+              <div className="w-[40px] h-[40px] rounded-full bg-[#F25E26] flex items-center justify-center">
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.3334 4L6.00008 11.3333L2.66675 8"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
               <div>
                 <p className="font-Poppins text-base text-[#2A2A2A] font-medium">
-                  Your purchase Order is successful!
+                  Your Purchase Order is successful!
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div>
-                <MdOutlineFileDownload color="red" size={12} />
+          {/*   <div className="flex items-center gap-2 border border-[#F25E26] p-2 hover:bg-[#F25E26] hover:text-white cursor-pointer  texthover  ">
+              <div className="hover:bg-[#F25E26] hover:text-white">
+
+                <MdOutlineFileDownload className="text-[#F25E26] texthover" size={12} />
+
               </div>
               <div>
                 <p
-                  className="font-Poppins text-sm text-[#504D4D] font-medium cursor-pointer"
+                  className="font-Poppins text-sm  font-medium cursor-pointer hover:bg-[#F25E26] hover:text-white"
+                  onClick={handleDownload}
+                >
+                  Download
+                </p>
+              </div>
+            </div> */}
+
+            <div className="group flex items-center gap-2 border border-[#F25E26] p-2 hover:bg-[#F25E26] hover:text-white cursor-pointer">
+              <div>
+                <MdOutlineFileDownload className="text-[#F25E26] group-hover:text-white" size={12} />
+              </div>
+              <div>
+                <p
+                  className="font-Poppins text-sm font-medium"
                   onClick={handleDownload}
                 >
                   Download
@@ -233,7 +262,7 @@ const WrappedPage = () => {
           </div>
 
           <div
-            style={{ borderBottom: ".5px solid #6E6E6E" }}
+            style={{ borderBottom: ".5px solid #6E6E6E", paddingBottom: ".3rem" }}
             className="flex justify-between mt-8"
           >
             <div className="flex items-center gap-2 flex-wrap">
@@ -244,7 +273,7 @@ const WrappedPage = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
+            {/* <div className="flex items-center gap-2 flex-wrap">
               <div>
                 <p className="font-Poppins text-sm text-[#6E6E6E] font-medium">
                   Ticket Number:
@@ -255,7 +284,7 @@ const WrappedPage = () => {
                   {filteredItems[0]?.ticket_number}
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -295,10 +324,10 @@ const WrappedPage = () => {
             <div className="w-full md:w-[35%] mt-4 md:mt-0 flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-3 md:px-4 py-2">
               <div
                 className="flex flex-col items-baseline gap-3 md:gap-4 w-full"
-                style={{
+               /*  style={{
                   borderBottom: "1px solid #6E6E6E",
                   paddingBottom: ".5rem",
-                }}
+                }} */
               >
                 <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-between w-full">
                   <div>
@@ -308,7 +337,8 @@ const WrappedPage = () => {
                   </div>
                   <div>
                     <p className="font-Poppins text-[#353131] text-sm md:text-base font-medium">
-                      N {filteredItems[0]?.ticket_price}
+                {/*       N {filteredItems[0]?.ticket_price} */}
+                   N {Number(filteredItems[0]?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 </div>

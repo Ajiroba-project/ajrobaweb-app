@@ -342,7 +342,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                 <div className="flex flex-col gap-3 capitalize">
                   <p className=" font-semibold">{val?.auction[0]?.name}</p>
                   <p>Ticket Number: {val?.ticket_number} </p>
-                  <p>Ticket Price: ₦{val?.ticket_price}</p>
+                  <p>Ticket Price: ₦{Number(val?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                   <div className="mt-5 flex gap-3 flex-wrap">
                     {val.tag &&
                       val.tag.map((value: string, index: number) => (

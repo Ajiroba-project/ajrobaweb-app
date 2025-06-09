@@ -170,7 +170,7 @@ export const WalletTransaction = () => {
           currentData?.map((val, index) => (
             <div
               key={index}
-              className="flex flex-col gap-8 py-4 px-2 rounded-lg shadow-sm bg-white mb-3 sm:flex-row sm:items-center sm:justify-between"
+              className="border-b border-gray-200 flex flex-col gap-8 py-4 px-2 rounded-lg shadow-sm bg-white mb-3 sm:flex-row sm:items-center sm:justify-between "
             >
               {/* Left: Icon and Description */}
               <div className="flex items-center gap-3 w-full sm:w-1/2">

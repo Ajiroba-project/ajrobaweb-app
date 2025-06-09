@@ -65,7 +65,17 @@ export const ReceiptTable: React.FC<DataProps> = ({ Data }) => {
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                  Transaction Date
                 </span>
-  <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.date_created}</span>
+                <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>
+                  {new Date(Data[0]?.date_created).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  })}
+                </span>
               </td>
               <td className='flex items-center justify-between py-2'>
                 <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
@@ -86,7 +96,7 @@ export const ReceiptTable: React.FC<DataProps> = ({ Data }) => {
 
               </td> */}
               <td className='flex items-center justify-between py-2'>
-                <span className='brand1  font-semibold capitalize'>
+                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
                 Transaction Reference
                 </span>
                  <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.reference}</span>

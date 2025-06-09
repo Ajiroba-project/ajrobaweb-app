@@ -18,7 +18,7 @@ import { Community } from "./component/Community";
 import { Products, categories } from "./static-data";
 import { Header } from "./component/Header";
 import { Footer } from "./component/Footer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./globals.css";
 import { Suspense } from "react";
 import { CircularPagination } from "./component/Pagination";
@@ -143,6 +143,10 @@ const Page = () => {
     setAuctionCurrentPage(pageNumber);
   };
 
+  const onAuctionLoadingChange = useCallback((loading: any) => {
+    setLoadingData(loading);
+  }, []);
+
   return (
     <>
       <Suspense >
@@ -179,7 +183,7 @@ const Page = () => {
                 cardInfo={filteredAuctionData}
                 currentPage={0}
                 cardsNum={0}
-                onLoadingChange={(loading) => setLoadingData(loading)}
+                onLoadingChange={onAuctionLoadingChange}
               />
             </div>
           </section>

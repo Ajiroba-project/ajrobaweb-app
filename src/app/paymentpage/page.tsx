@@ -86,14 +86,32 @@ const Page = () => {
     axios
       .request(config)
       .then((response) => {
-        /*   console.log(response.data, "response"); */
-        setCartItemsn(response.data?.data);
-        setLoading(false);
+      /*   console.log(response.data, "response"); */
+        const { data } = response.data;
+
+        // console.log(data, 'data', data?.status)
+
+        if (data?.status === 400) {
+          router.push("/cart");
+        } else {
+          setCartItemsn(data);
+          setLoading(false);
+        }
+
+
+
       })
       .catch((error) => {
-        /*  console.log(error, 'error'); */
-        setError("Error loading cart items");
-        setLoading(false);
+        // console.log(error, 'error', error.status);
+
+        if (error.status === 400) {
+          router.push("/cart");
+        } else {
+          setError("Error loading cart items");
+          setLoading(false);
+        }
+
+
       })
       .finally(() => setLoading(false));
   };
@@ -333,32 +351,262 @@ const Page = () => {
     );
   };
 
+//   const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
+//     const [loadingverify, setloadingverify] = useState(false);
+
+//     const [loading, setLoading] = useState(false)
+
+//     const handleContinue = async () => {
+//       setLoading(true)
+//       try {
+//         // console.log(amount);
+
+//         if (!amount) {
+//           toast.error("Please enter a valid amount.");
+//           setLoading(false)
+//           return;
+//         }
+
+//         const tkn_: string = Cookies.get("token") as string;
+
+//         // const payload = { amount: Number(amount) };
+
+//         const payload = {
+//           shipping_address: cartItemsn?.["Delivery Details"],
+//           shipping_method: "standard",
+//           payment_method: "Electronic",
+//           amount: Number(amount),
+//         };
+
+//         const response = await axios.post(
+//           "https://staging.ajiroba.ng/v1/commerce/order/",
+//           payload,
+//           {
+//             headers: {
+//               Authorization: `token ${tkn_}`,
+//             },
+//           },
+//         );
+
+//         // console.log(response, "responseee");
+
+//         if (response.status === 200 && response.data.status !== 'failed') {
+//           const { payment_url, reference, status, message, data } = response.data;
+//           setLoading(false)
+//           localStorage.setItem("paymentReference", reference);
+//           Cookies.set("paymentReference", reference, { expires: 1 });
+
+//           /*  ; */
+
+//           /*    window.open(payment_url, "_blank"); */
+//           /*     console.log(message, 'message')
+//         console.log(status, 'status')
+//         console.log(reference, 'reference')
+//         console.log(payment_url, 'payment_url')
+
+//  */
+
+//           if (status === "success") {
+//             setPaymentUrl(payment_url); // Store the URL in state
+//             setShowModalUp(true);
+//             toast.success("Payment initiated successfully.");
+//             startVerificationLoop(reference);
+//           }
+//         } else {
+//           /*   console.log(status, 'statusss', data, 'datatatta', response, 'resss') */
+//           toast.error(`${response.data.message}`);
+//           setLoading(false)
+//         }
+//       } catch (error) {
+//         if (axios.isAxiosError(error)) {
+//           toast.error(
+//             error.response?.data?.message ||
+//             "An error occurred during the payment process.",
+//           );
+//           setLoading(false)
+//         } else {
+//           toast.error("An unexpected error occurred.");
+//           setLoading(false)
+//         }
+//       } finally {
+//         onClose();
+//       }
+//     };
+
+//     const startVerificationLoop = (reference: string) => {
+//       //
+//       const intervalTime = 3000; // 2 seconds
+//       const maxAttempts = 5; // Limit to 5 attempts
+//       let attempts = 0;
+
+//       let intervalId: NodeJS.Timeout; // Declare once and reuse
+
+//       const stopLoop = () => {
+//         clearInterval(intervalId); // This will now correctly stop the loop
+//         console.log("Verification loop stopped after", attempts, "attempts.");
+//       };
+
+//       // Start the loop after a delay (optional)
+//       setTimeout(() => {
+//         // Use the outer `intervalId` variable
+//         intervalId = setInterval(async () => {
+//           attempts++;
+
+//           const success = await verifyWalletPayment(reference);
+//           if (success) {
+//             stopLoop(); // Stop if successful
+//           } else if (attempts >= maxAttempts) {
+//             stopLoop(); // Stop after 5 attempts
+//             toast.error(
+//               "Verification failed after 5 attempts. Please try again later.",
+//             );
+//           }
+//         }, intervalTime);
+//       }, 5000); // 5 seconds delay (adjust as needed)
+//     };
+
+//     const verifyWalletPayment = async (reference: any): Promise<boolean> => {
+//       try {
+//         const tkn_: string = Cookies.get("token") as string;
+//         const response = await axios.get(
+//           `https://staging.ajiroba.ng/v1/commerce/verify_product_payment/${reference}/`,
+//           {
+//             headers: { Authorization: `token ${tkn_}` },
+//           },
+//         );
+
+//         if (response.status === 200 || response.status === 201) {
+//           toast.success(`${response?.data?.message}`);
+//           setShowModalUp(false);
+//           return true; // Success, stop the loop
+//         } else {
+//           toast.error("Unexpected verification status.");
+//           setShowModalUp(false);
+//           return false; // Keep trying
+//         }
+//       } catch (error) {
+//         console.error("Verification error:", error);
+//         if (axios.isAxiosError(error) && error.response) {
+//           toast.error(
+//             error.response.data.message ||
+//             "Error occurred during payment verification.",
+//           );
+//         } else {
+//           toast.error("An unexpected error occurred.");
+//         }
+
+//         return false; // Error, keep trying
+//       }
+//     };
+
+//     const router = useRouter();
+
+//     // Show Loading component while verification is in progress
+//     if (loadingverify) {
+//       return <Loading />;
+//     }
+
+//     return (
+//       <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
+//         <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
+//           <p className="text-center">
+//             Please make a payment of ₦ {amount} for your purchase.
+//           </p>
+//           <div className="flex w-full gap-5 flex-col">
+//             <DefaultButton
+//               /*   text="Continue" */
+//               text={`${loading ? 'loading...' : 'Continue'}`}
+//               type="button"
+//               className="w-full rounded-md bg-[#E84526] p-3 text-white"
+//               handleClick={handleContinue}
+//             />
+//             <DefaultButton
+//               text="Back"
+//               type="button"
+//               className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
+//               handleClick={onClose}
+//             />
+//           </div>
+//         </div>
+//       </section>
+//     );
+//   };
+
+
   const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     const [loadingverify, setloadingverify] = useState(false);
+    const [showModalUp, setShowModalUp] = useState(false);
+    const [paymentUrl, setPaymentUrl] = useState("");
+    const [paymentReference, setPaymentReference] = useState("");
+    const [verificationInterval, setVerificationInterval] = useState<NodeJS.Timeout | null>(null);
 
-    const [loading, setLoading] = useState(false)
+    // Cleanup function for event listeners and intervals
+    const cleanup = () => {
+      if (verificationInterval) {
+        clearInterval(verificationInterval);
+        setVerificationInterval(null);
+      }
+      window.removeEventListener('message', handlePaymentMessage);
+      setPaymentReference("");
+      setShowModalUp(false);
+      onClose();
+    };
+
+    const handlePaymentMessage = (event: MessageEvent) => {
+      /*    console.log(event.data, "url");
+         console.log(paymentReference, "paymentReference");
+         console.log(event.data?.data, "paymentReference"); */
+      if (event.data?.data?.status === 'success' && paymentReference) {
+        startVerificationLoop(paymentReference);
+      }
+    };
+
+    const Modal = ({ url, onClose }: { url: string; onClose: () => void }) => {
+      useEffect(() => {
+        // Add event listener when modal mounts
+        window.addEventListener('message', handlePaymentMessage);
+
+        // Cleanup when modal unmounts
+        return () => {
+          window.removeEventListener('message', handlePaymentMessage);
+        };
+      }, []);
+
+      return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
+          <div className="bg-white p-4 rounded-lg w-full max-w-3xl relative h-[90vh]">
+            <h1>Payment Page</h1>
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 z-[101]"
+              onClick={onClose}
+            >
+              ✕
+            </button>
+            <iframe
+              src={url}
+              className="w-full h-full border-0"
+              title="Payment"
+              allow="payment"
+            />
+          </div>
+        </div>
+      );
+    };
 
     const handleContinue = async () => {
-      setLoading(true)
       try {
-        // console.log(amount);
-
         if (!amount) {
           toast.error("Please enter a valid amount.");
-          setLoading(false)
           return;
         }
 
         const tkn_: string = Cookies.get("token") as string;
-
-        // const payload = { amount: Number(amount) };
-
-        const payload = {
-          shipping_address: cartItemsn?.["Delivery Details"],
-          shipping_method: "standard",
-          payment_method: "Electronic",
-          amount: Number(amount),
-        };
+                 const payload = {
+                   shipping_address: cartItemsn?.["Delivery Details"],
+                   shipping_method: "standard",
+                   payment_method: "Electronic",
+                   amount: Number(amount),
+                 };
 
         const response = await axios.post(
           "https://staging.ajiroba.ng/v1/commerce/order/",
@@ -367,118 +615,118 @@ const Page = () => {
             headers: {
               Authorization: `token ${tkn_}`,
             },
-          },
+          }
         );
 
-        // console.log(response, "responseee");
-
-        if (response.status === 200 && response.data.status !== 'failed') {
-          const { payment_url, reference, status, message, data } = response.data;
-          setLoading(false)
+        if (response.status === 200) {
+          const { payment_url, reference } = response.data;
           localStorage.setItem("paymentReference", reference);
           Cookies.set("paymentReference", reference, { expires: 1 });
+          setPaymentReference(reference);
 
-          /*  ; */
+          // Set payment URL and show modal
+          setPaymentUrl(payment_url);
+          setShowModalUp(true);
 
-          /*    window.open(payment_url, "_blank"); */
-          /*     console.log(message, 'message')
-        console.log(status, 'status')
-        console.log(reference, 'reference')
-        console.log(payment_url, 'payment_url')
-
- */
-
-          if (status === "success") {
-            setPaymentUrl(payment_url); // Store the URL in state
-            setShowModalUp(true);
-            toast.success("Payment initiated successfully.");
-            startVerificationLoop(reference);
-          }
+          toast.success(`Payment initiated successfully`, {
+            closeButton: false,
+          });
         } else {
-          /*   console.log(status, 'statusss', data, 'datatatta', response, 'resss') */
-          toast.error(`${response.data.message}`);
-          setLoading(false)
+          toast.error("An unexpected status was returned.");
         }
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          toast.error(
-            error.response?.data?.message ||
-            "An error occurred during the payment process.",
-          );
-          setLoading(false)
+        toast.error("An error occurred during the payment process.");
+      }
+    };
+
+    const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+      setloadingverify(true);
+      let message;
+      try {
+        const tkn_: string = Cookies.get("token") as string;
+        const response = await axios.get(
+         /*  `https://staging.ajiroba.ng/v1/pay/verify_wallet_payment/${reference}/`, */
+          `https://staging.ajiroba.ng/v1/commerce/verify_product_payment/${reference}/`,
+          {
+            headers: {
+              Authorization: `token ${tkn_}`,
+            },
+          }
+        );
+
+
+        const res = response.data;
+
+
+
+        if (response.status === 200 || response.status === 201) {
+          setloadingverify(false);
+          message = response?.data?.message;
+          toast.success(`${message}`, {
+            closeButton: true,
+            onClose: () => {
+               window.location.reload();
+           /*  console.log(response, 'response') */
+            }
+          });
+          stopLoop();
         } else {
-          toast.error("An unexpected error occurred.");
-          setLoading(false)
+          setloadingverify(false);
+          stopLoop();
+          toast.error(message || "Unexpected status during verification.");
+           // Stop on unexpected status
         }
-      } finally {
-        onClose();
+      } catch (error) {
+        setloadingverify(false);
+        console.error(error);
+
+        // Check if it's a 500 error
+        if (axios.isAxiosError(error) && error.response?.status === 500) {
+          toast.error("Server error occurred. Please try again later.");
+          stopLoop(); // Stop retrying on 500 errors
+          return;
+        }
+
+        toast.error(message || "Error occurred during payment verification.");
       }
     };
 
     const startVerificationLoop = (reference: string) => {
-      //
-      const intervalTime = 3000; // 2 seconds
+      // Clear any existing verification interval
+      if (verificationInterval) {
+        clearInterval(verificationInterval);
+      }
+
       const maxAttempts = 5; // Limit to 5 attempts
       let attempts = 0;
+      let backoffTime = 2000; // Start with 2 seconds
 
-      let intervalId: NodeJS.Timeout; // Declare once and reuse
+      const intervalId = setInterval(async () => {
+        attempts++;
 
-      const stopLoop = () => {
-        clearInterval(intervalId); // This will now correctly stop the loop
-        console.log("Verification loop stopped after", attempts, "attempts.");
-      };
+        if (attempts > maxAttempts) {
+          clearInterval(intervalId);
+          cleanup();
+          toast.error("Payment verification timed out. Please check your wallet balance.");
+          return;
+        }
 
-      // Start the loop after a delay (optional)
+        await verifyWalletPayment(reference, () => {
+          clearInterval(intervalId);
+          cleanup();
+        });
+
+        // Exponential backoff: double the wait time after each attempt
+        backoffTime = Math.min(backoffTime * 2, 30000); // Cap at 30 seconds
+      }, backoffTime);
+
+      setVerificationInterval(intervalId);
+
+      // Set a timeout to stop the loop after total duration
       setTimeout(() => {
-        // Use the outer `intervalId` variable
-        intervalId = setInterval(async () => {
-          attempts++;
-
-          const success = await verifyWalletPayment(reference);
-          if (success) {
-            stopLoop(); // Stop if successful
-          } else if (attempts >= maxAttempts) {
-            stopLoop(); // Stop after 5 attempts
-            toast.error(
-              "Verification failed after 5 attempts. Please try again later.",
-            );
-          }
-        }, intervalTime);
-      }, 5000); // 5 seconds delay (adjust as needed)
-    };
-
-    const verifyWalletPayment = async (reference: any): Promise<boolean> => {
-      try {
-        const tkn_: string = Cookies.get("token") as string;
-        const response = await axios.get(
-          `https://staging.ajiroba.ng/v1/commerce/verify_product_payment/${reference}/`,
-          {
-            headers: { Authorization: `token ${tkn_}` },
-          },
-        );
-
-        if (response.status === 200 || response.status === 201) {
-          toast.success(`${response?.data?.message}`);
-          setShowModalUp(false);
-          return true; // Success, stop the loop
-        } else {
-          toast.error("Unexpected verification status.");
-          setShowModalUp(false);
-          return false; // Keep trying
-        }
-      } catch (error) {
-        console.error("Verification error:", error);
-        if (axios.isAxiosError(error) && error.response) {
-          toast.error(
-            error.response.data.message ||
-            "Error occurred during payment verification.",
-          );
-        } else {
-          toast.error("An unexpected error occurred.");
-        }
-
-        return false; // Error, keep trying
-      }
+        clearInterval(intervalId);
+        cleanup();
+      }, 2 * 60 * 1000); // 2 minutes total timeout
     };
 
     const router = useRouter();
@@ -489,28 +737,35 @@ const Page = () => {
     }
 
     return (
-      <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
-        <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
-          <p className="text-center">
-            Please make a payment of ₦ {amount} for your purchase.
-          </p>
-          <div className="flex w-full gap-5 flex-col">
-            <DefaultButton
-              /*   text="Continue" */
-              text={`${loading ? 'loading...' : 'Continue'}`}
-              type="button"
-              className="w-full rounded-md bg-[#E84526] p-3 text-white"
-              handleClick={handleContinue}
-            />
-            <DefaultButton
-              text="Back"
-              type="button"
-              className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
-              handleClick={onClose}
-            />
+      <>
+        <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
+          <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
+            <p className="text-center">
+              You are going to deposit the amount of N {amount}
+            </p>
+            <div className="flex w-full gap-5 flex-col">
+              <DefaultButton
+                text="Continue"
+                type="button"
+                className="w-full rounded-md bg-[#E84526] p-3 text-white"
+                handleClick={handleContinue}
+              />
+              <DefaultButton
+                text="Back"
+                type="button"
+                className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
+                handleClick={cleanup}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+        {showModalUp && (
+          <Modal
+            url={paymentUrl}
+            onClose={cleanup}
+          />
+        )}
+      </>
     );
   };
 
@@ -748,8 +1003,8 @@ const Page = () => {
                         : showConfirmOrder
                     }
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
-                        ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
-                        : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
+                      ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
+                      : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
                       }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
@@ -813,8 +1068,8 @@ const Page = () => {
                   <button
                     onClick={showConfirmOrderCard}
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
-                        ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
-                        : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
+                      ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
+                      : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
                       }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
@@ -890,8 +1145,8 @@ const Page = () => {
 
                   <button
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
-                        ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
-                        : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
+                      ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
+                      : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
                       }`}
                     disabled={!isPaymentMethodConfirmed}
                   >

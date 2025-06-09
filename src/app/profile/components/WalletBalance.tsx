@@ -343,13 +343,18 @@ export const WalletBalance = () => {
       </div>
       <div className="balance pt-1">
         <p className="text-2xl font-semibold slashed-zero leading-normal">
-          {showBalance ? userInfo?.data?.my_wallet[0]?.balance : "*****"}
+          {showBalance
+            ? new Intl.NumberFormat('en-NG', {
+                style: 'currency',
+                currency: 'NGN'
+              }).format(userInfo?.data?.my_wallet[0]?.balance || 0)
+            : "*****"}
         </p>
       </div>
 
       <div className="wallet-pin flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <p>{showPin ? "1234" : "*****"}</p>
+          <p>{showPin ? "******" : "*****"}</p>
           <div
             onClick={() => setShowPin(!showPin)}
             className="justify-center text-sm"
@@ -358,10 +363,10 @@ export const WalletBalance = () => {
           </div>
         </div>
         <p
-          className="cursor-pointer justify-end text-end text-sm capitalize"
+          className="cursor-pointer justify-end text-end text-sm capitalize underline underline-offset-4 hover:text-[#f25e26]"
           onClick={() => setCreatePin(!createPin)}
         >
-          create pin
+          create PIN
         </p>
       </div>
 
@@ -373,7 +378,7 @@ export const WalletBalance = () => {
           </p>
         </div>
         <p
-          className="cursor-pointer text-sm capitalize"
+          className="cursor-pointer text-sm capitalize underline underline-offset-4 hover:text-[#f25e26]"
           onClick={() => setViewPoint(!viewPoint)}
         >
           view
@@ -391,7 +396,7 @@ export const WalletBalance = () => {
         <DefaultButton
           text="change pin"
           type="button"
-          className="rounded-lg border-2 border-[#f25e26] p-2 text-xs capitalize text-[#f25e26] lg:w-max"
+          className="rounded-lg font-bold border-2 border-[#f25e26] p-2 text-xs capitalize text-[#f25e26] lg:w-max"
           handleClick={() => setChangePin(!changePin)}
         />
       </div>

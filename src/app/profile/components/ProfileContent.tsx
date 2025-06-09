@@ -25,7 +25,7 @@ export const ProfileContent = () => {
 
   }));
 
-    const searchParams = useSearchParams()
+  const searchParams = useSearchParams()
 
   const query = searchParams.get('q')
 
@@ -36,21 +36,21 @@ export const ProfileContent = () => {
     <section className='w-full' >
       {activeMenu === 'my profile' ? (
         <ProfileDetails />
-      ) : activeMenu === 'auction win' ? (
+      ) : activeMenu === 'auction wins' ? (
         <AuctionDetails />
       ) : activeMenu === 'my order' ? (
         <OrderDetails />
       ) : activeMenu === 'wallet' ? (
         <WalletDetails />
-      ) :  activeMenu === 'community' ? (
-      /*   <CommunityDetails /> */
-      <MainLayout/>
+      ) : activeMenu === 'community' ? (
+        /*   <CommunityDetails /> */
+        <MainLayout />
       ) :
 
 
-      (
-        ''
-      )}
+        (
+          ''
+        )}
     </section>
   )
 }

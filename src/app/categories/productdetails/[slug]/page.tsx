@@ -241,13 +241,22 @@ const Page = ({ params }: any) => {
 
 
 
-  const { mutate: mutate, status: likedstatus } = useMutateData(
+  const { mutate: mutate, status: likedstatus, } = useMutateData(
     "addtocart",
-    handleSuccess,
-    handleError,
+    (data) => {
+      handleSuccess(data);
+      setIsAddingToCart(false);
+    },
+    (error) => {
+      handleError(error);
+      setIsAddingToCart(false);
+    }
   );
 
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
   const AddToCart = () => {
+    setIsAddingToCart(true);
     const sessionKey = getSessionKey();
     const payload = {
       product_id: product_id,
@@ -255,36 +264,13 @@ const Page = ({ params }: any) => {
       session_key: sessionKey,
     };
 
-
-    /*   console.log(payload, 'payload') */
     mutate({
       url: "/api/addtocart/",
       payload: { payload: payload, tkn: userToken },
       token: userToken,
     });
-
-
-    // reset();
   };
 
-
-  const notify = () => {
-    toast("🦄 ‘Mama Gold Rice’ has been added to cart", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce,
-      style: {
-        backgroundColor: "#08B504",
-        color: "#FFFFFF",
-      },
-    });
-  };
 
   if (error) {
     console.error("Error fetching product data:", error);
@@ -568,8 +554,8 @@ const Page = ({ params }: any) => {
                   key={item.stars}
                   onClick={() => setSelectedStars(item.stars)}
                   className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === item.stars
-                      ? "bg-[#F25E26] text-white font-bold"
-                      : "bg-white text-black font-normal"
+                    ? "bg-[#F25E26] text-white font-bold"
+                    : "bg-white text-black font-normal"
                     } rounded`}
                 >
                   {item.stars} Star
@@ -580,8 +566,8 @@ const Page = ({ params }: any) => {
               <button
                 onClick={() => setSelectedStars(null)}
                 className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === null
-                    ? "bg-[#F25E26] text-white font-bold"
-                    : "bg-white text-black font-normal"
+                  ? "bg-[#F25E26] text-white font-bold"
+                  : "bg-white text-black font-normal"
                   } rounded`}
               >
                 All Stars
@@ -641,10 +627,10 @@ const Page = ({ params }: any) => {
                       key={pageNumber}
                       onClick={() => handlePageClick(pageNumber)}
                       className={` px-2 cursor-pointer ${currentPage === pageNumber
-                          /*   ? "bg-[#F25E26] text-white font-bold"
-                            : "bg-white text-black border border-gray-300" */
-                          ? " text-[#353131] font-bold"
-                          : " text-[#353131]"
+                        /*   ? "bg-[#F25E26] text-white font-bold"
+                          : "bg-white text-black border border-gray-300" */
+                        ? " text-[#353131] font-bold"
+                        : " text-[#353131]"
                         }`}
                     >
                       {pageNumber}
@@ -845,10 +831,18 @@ const Page = ({ params }: any) => {
                     <div className="flex justify-center items-center mt-4">
                       <button
                         onClick={AddToCart}
+                        disabled={isAddingToCart}
                         /* className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded" */
                         className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                       >
-                        Add to Cart
+                        {isAddingToCart ? (
+                          <div className="flex items-center justify-center">
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Adding to Cart...
+                          </div>
+                        ) : (
+                          'Add to Cart'
+                        )}
                       </button>
                     </div>
                   </div>
@@ -952,6 +946,10 @@ const Page = ({ params }: any) => {
         )}
       </section>
       {productdatafetching && <Loading />}
+
+      {
+        isAddingToCart && <Loading />
+      }
     </main>
   );
 };

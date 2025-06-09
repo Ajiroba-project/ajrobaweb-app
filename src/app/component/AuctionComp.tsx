@@ -38,6 +38,7 @@ import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import RaffleTicket from "./RaffleTicket";
 
+
 interface cardDetails {
   cardInfo: Array<{
     name: string;
@@ -1114,10 +1115,10 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                 </div>
               </div>
             }
-              isModalOpen={viewticket}
-               showModal={() => setViewTicket(!viewticket)}
-               handleOk={() => setViewTicket(false)}
-               handleCancel={() => setViewTicket(false)} 
+            isModalOpen={viewticket}
+            showModal={() => setViewTicket(!viewticket)}
+            handleOk={() => setViewTicket(false)}
+            handleCancel={() => setViewTicket(false)}
 
           /*   isModalOpen={true}
             showModal={() => setViewTicket(!true)}
