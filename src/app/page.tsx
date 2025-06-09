@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
 import { AuctionComp } from "./component/AuctionComp";
+import Loading from "./component/Loading";
 
 type AuctionData = {
   id: string;
@@ -59,6 +60,7 @@ const Page = () => {
   const [cardsPerPage] = useState<number>(4);
   const [filteredCatData, setFilteredCatData] = useState<any>([]);
   const [filteredAuctionData, setFilteredAuctionData] = useState<any>([]);
+  const [loadingdata, setLoadingData] = useState<boolean>(false);
 
   const totalPages = Math.ceil(Products.length / cardsPerPage);
   const catCount = Math.ceil(categories.length / cardsPerPage);
@@ -172,18 +174,13 @@ const Page = () => {
               <Heading title="Auction Sales" />
             </div>
             <div className="">
-              {/*   <AuctionCard
-                cardInfo={filteredAuctionData}
-                currentPage={0}
-                cardsNum={0}
-              /> */}
+              {loadingdata && <Loading />}
               <AuctionComp
-
                 cardInfo={filteredAuctionData}
                 currentPage={0}
                 cardsNum={0}
+                onLoadingChange={(loading) => setLoadingData(loading)}
               />
-              {/*   <AuctionComp cardInfo={[]} currentPage={0} cardsNum={0}/> */}
             </div>
           </section>
 
@@ -320,6 +317,8 @@ const Page = () => {
             <Banner />
           </section>
         </main>
+
+
         <Footer />
       </Suspense>
     </>

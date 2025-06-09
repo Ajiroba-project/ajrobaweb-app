@@ -358,30 +358,35 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       return (
                         <li
                           key={index}
-                          className={` font-Poppins cursor-pointer px-4  ${val.name === headerNav ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
-                          /*   onClick={() => {
-                            setActiveMenu(activeMenu === index ? null : index);
-                          }} */
+                          className={` font-Poppins cursor-pointer px-4 hover:text-[#F25E26]  ${val.name === headerNav ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent interference from child elements
+                            e.stopPropagation();
                             setActiveMenu(activeMenu === index ? null : index);
                           }}
-
-                          onMouseEnter={() => setHoveredMenu(index)}
-                          onMouseLeave={() => setHoveredMenu(null)}
+                          onMouseEnter={() => {
+                            setHoveredMenu(index);
+                            setActiveMenu(null); // Clear active menu when hovering
+                          }}
+                          onMouseLeave={() => {
+                            setHoveredMenu(null);
+                          }}
                         >
                           {val.submenu ? (
                             <div className='relative'>
                               <span className='flex items-center gap-2 '>
                                 {val.name}
-                                {activeMenu === index || hoveredMenu === index ? (
+                                {hoveredMenu === index ? (
                                   <IoIosArrowUp />
                                 ) : (
                                   <IoIosArrowDown />
                                 )}
                               </span>
-                              {(activeMenu === index || hoveredMenu === index) && (
-                                <ul className='absolute left-0 z-10 mt-2 h-fit w-max rounded-md bg-white pb-2 shadow-md'>
+                              {hoveredMenu === index && (
+                                <ul
+                                  className='absolute left-0 z-10 mt-0 h-fit w-max rounded-md bg-white pb-2 shadow-md'
+                                  onMouseEnter={() => setHoveredMenu(index)}
+                                  onMouseLeave={() => setHoveredMenu(null)}
+                                >
                                   {val.submenu.map((subItem, subIndex) => (
                                     <li
                                       key={subIndex}
