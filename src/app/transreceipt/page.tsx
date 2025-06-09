@@ -61,49 +61,24 @@ const WrappedPage = () => {
     }
 
     try {
-      // Store original styles
-      const originalStyles = {
-        width: receiptElement.style.width,
-        height: receiptElement.style.height,
-        overflow: receiptElement.style.overflow,
-        position: receiptElement.style.position,
-        backgroundColor: receiptElement.style.backgroundColor,
-      };
-
-      // Set fixed dimensions for capture
-      receiptElement.style.width = '1200px';
-      receiptElement.style.height = 'auto';
-      receiptElement.style.overflow = 'visible';
-      receiptElement.style.position = 'relative';
-      receiptElement.style.backgroundColor = '#ffffff';
-
       // Create canvas from the receipt element
       const canvas = await html2canvas(receiptElement, {
-        scale: 2, // Higher scale for better quality
-        useCORS: true, // Enable CORS for images
+        scale: 2,
+        useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
-        windowWidth: 1200,
-        windowHeight: receiptElement.scrollHeight,
+        width: receiptElement.scrollWidth,
+        height: receiptElement.scrollHeight,
         onclone: (clonedDoc) => {
-          // Ensure all images are loaded in the cloned document
-          const images = clonedDoc.getElementsByTagName('img');
-          return Promise.all(Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(resolve => {
-              img.onload = resolve;
-              img.onerror = resolve;
-            });
-          }));
+          const clonedElement = clonedDoc.getElementById('receipt-container');
+          if (clonedElement) {
+            clonedElement.style.width = '100%';
+            clonedElement.style.height = 'auto';
+            clonedElement.style.position = 'relative';
+            clonedElement.style.backgroundColor = '#ffffff';
+          }
         }
       });
-
-      // Restore original styles
-      receiptElement.style.width = originalStyles.width;
-      receiptElement.style.height = originalStyles.height;
-      receiptElement.style.overflow = originalStyles.overflow;
-      receiptElement.style.position = originalStyles.position;
-      receiptElement.style.backgroundColor = originalStyles.backgroundColor;
 
       // Create PDF with the same dimensions as the canvas
       const imgWidth = 210; // A4 width in mm
@@ -136,12 +111,10 @@ const WrappedPage = () => {
         }
       }
 
-      // Save the PDF with a meaningful name
-      const fileName = `ajiroba_transaction_receipt_${order_id}.pdf`;
-      pdf.save(fileName);
+      // Save the PDF
+      pdf.save('ajiroba_transaction_receipt.pdf');
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
     }
   };
 
@@ -150,7 +123,7 @@ const WrappedPage = () => {
 
   return (
     <section>
-      <div id="receipt-container" className="bg-white">
+      <div id="receipt-container" className="bg-white min-h-screen">
         <div className='bg-gray-100 py-8'>
           <div style={{ margin: '0 auto', width: '90%' }}>
             <Header />
@@ -175,8 +148,8 @@ const WrappedPage = () => {
 
         <section className='container my-4 flex flex-col items-center gap-8'>
           <div className='flex justify-center gap-3'>
-            <Image src={androidstore} alt='android' width={190} className='cursor-pointer' />
-            <Image src={applestore} alt='apple' width={190} className='cursor-pointer' />
+            <Image src={androidstore} alt='android' width={190} height={60} className='cursor-pointer' />
+            <Image src={applestore} alt='apple' width={190} height={60} className='cursor-pointer' />
           </div>
           <p className='brand3 container text-center font-medium text-[12px] text-[#A09F9F] mt-12 font-Poppins'>
             This electronically generated receipt is provided for informational purposes only and is not a legally binding document.
