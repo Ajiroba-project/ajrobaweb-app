@@ -9,7 +9,7 @@ import { userNavStore, useAuthStore, AirtimePurchase } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import { SideMenu } from './components/SideMenu'
 import { DataContent } from './components/DataContent'
-import { LuMenuSquare } from 'react-icons/lu'
+import { LuMenu } from 'react-icons/lu'
 import banner from '../asset/image/recharge-banner.png'
 import TitleText from '../component/TitleText'
 
