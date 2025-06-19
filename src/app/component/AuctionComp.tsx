@@ -158,6 +158,10 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
   const [loadingdata, setLoadingData] = useState<boolean>(false);
 
   // Update parent's loading state whenever our local loading state changes
+
+  console.log(cardInfo, 'cardInfo')
+
+
   useEffect(() => {
     if (typeof onLoadingChange === 'function') {
       onLoadingChange(loadingdata);

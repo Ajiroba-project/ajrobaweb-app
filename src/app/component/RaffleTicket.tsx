@@ -53,7 +53,17 @@ const TicketCard = ({
                 <div className="flex justify-between items-center mb-1">
                     <span className="text-white text-xs md:text-sm">Purchase Date:</span>
                     <div className="bg-white text-gray-800 px-2 md:px-4 py-1 rounded text-xs md:text-sm w-28 md:w-40 text-center">
-                        {purchaseDate}
+                        {purchaseDate
+                            ? (() => {
+                                // Handles ISO 8601 format like "2025-05-12T09:29:03.800738+01:00"
+                                const dateObj = new Date(purchaseDate as string);
+                                if (isNaN(dateObj.getTime())) return purchaseDate;
+                                const day = dateObj.getDate();
+                                const month = dateObj.toLocaleString('en-US', { month: 'long' });
+                                const year = dateObj.getFullYear();
+                                return `${day} ${month}, ${year}`;
+                            })()
+                            : ''}
                     </div>
                 </div>
                 <div className="border-b-3 border-dashed border-white opacity-60"></div>
@@ -134,7 +144,17 @@ const TicketCardMobile = ({
                 <div className="flex justify-between items-center mb-1">
                     <span className="text-white text-[10px] md:text-[10px]">Purchase Date:</span>
                     <div className="bg-white text-gray-800 px-2 md:px-4 py-1 rounded text-[10px] md:text-[10px] w-28 md:w-40 text-center">
-                        {purchaseDate}
+                        {purchaseDate
+                            ? (() => {
+                                // Handles ISO 8601 format like "2025-05-12T09:29:03.800738+01:00"
+                                const dateObj = new Date(purchaseDate as string);
+                                if (isNaN(dateObj.getTime())) return purchaseDate;
+                                const day = dateObj.getDate();
+                                const month = dateObj.toLocaleString('en-US', { month: 'long' });
+                                const year = dateObj.getFullYear();
+                                return `${day} ${month}, ${year}`;
+                            })()
+                            : ''}
                     </div>
                 </div>
                 <div className="border-b-3 border-dashed border-white opacity-60"></div>

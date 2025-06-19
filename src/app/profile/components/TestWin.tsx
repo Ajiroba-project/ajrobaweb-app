@@ -6,6 +6,8 @@ import { Phone, Mail, Instagram, Globe, Smartphone, Apple } from 'lucide-react';
 import { BsApple, BsInstagram } from "react-icons/bs";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useAuthStore } from "@/store/store";
+import { useGetDatanew } from "@/hooks/useGetData";
 
 export type WinningAdviceModalProps = {
     isOpen: boolean;
@@ -18,9 +20,13 @@ export type WinningAdviceModalProps = {
         ticketNumber: string;
         productId?: string;
         raffleDrawTime?: string;
-        estimatedValue?: string;
+        estimated_value?: string;
+        start_date?: string
     };
 };
+
+
+
 
 const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
     isOpen,
@@ -72,6 +78,13 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
             console.error('Error generating PDF:', error);
         }
     };
+    /*   const { isLoggedIn, user, token } = useAuthStore((state) => ({
+          isLoggedIn: state.isLoggedIn,
+          user: state.user,
+          token: state.token,
+      }));
+   */
+
 
     return (
         <div
@@ -152,7 +165,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             {/* Dear Section */}
                             <div className="mb-4">
                                 <p className="text-sm text-black">
-                                    Dear: <span className="border-b-2 border-dotted border-gray-500 inline-block min-w-[300px] pb-1 ml-1">Femi Adebayo</span>
+                                    Dear: <span className="border-b-2 border-dotted border-gray-500 inline-block min-w-[300px] pb-1 ml-1"> {adviceData.name}</span>
                                 </p>
                             </div>
 
@@ -190,7 +203,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
                                         <span className="text-sm min-w-[160px] text-black">Estimated Market Value of Item:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.estimatedValue}</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.estimated_value}</span>
                                     </div>
                                 </div>
                             </div>

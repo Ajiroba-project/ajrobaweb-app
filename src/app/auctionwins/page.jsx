@@ -140,6 +140,7 @@ const WrappedPage = () => {
   const filteredItems = auctioninfo?.data?.data?.all?.filter(item => item.id === order_id);
 
   // console.log(filteredItems, "filteredItems")
+  // console.log(filteredItems[0]?.start_date, "filteredItems")
 
   /*  console.log(productinfo?.data?.data, "productinfo") */
 
@@ -194,7 +195,7 @@ const WrappedPage = () => {
               width: "80%",
             }}
           >
-           {/*  <Title title="Purchase Order Details" /> */}
+            {/*  <Title title="Purchase Order Details" /> */}
             <div className="container py-4 mb-8">
               <p className="text-center  2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px]  font-Poppins text-sm text-[#504D4D] font-extrabold">{'Purchase Order Details'}</p>
             </div>
@@ -230,7 +231,7 @@ const WrappedPage = () => {
               </div>
             </div>
 
-          {/*   <div className="flex items-center gap-2 border border-[#F25E26] p-2 hover:bg-[#F25E26] hover:text-white cursor-pointer  texthover  ">
+            {/*   <div className="flex items-center gap-2 border border-[#F25E26] p-2 hover:bg-[#F25E26] hover:text-white cursor-pointer  texthover  ">
               <div className="hover:bg-[#F25E26] hover:text-white">
 
                 <MdOutlineFileDownload className="text-[#F25E26] texthover" size={12} />
@@ -324,10 +325,10 @@ const WrappedPage = () => {
             <div className="w-full md:w-[35%] mt-4 md:mt-0 flex items-center gap-2 border rounded-sm border-[#6E6E6E] px-3 md:px-4 py-2">
               <div
                 className="flex flex-col items-baseline gap-3 md:gap-4 w-full"
-               /*  style={{
-                  borderBottom: "1px solid #6E6E6E",
-                  paddingBottom: ".5rem",
-                }} */
+              /*  style={{
+                 borderBottom: "1px solid #6E6E6E",
+                 paddingBottom: ".5rem",
+               }} */
               >
                 <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-between w-full">
                   <div>
@@ -337,8 +338,8 @@ const WrappedPage = () => {
                   </div>
                   <div>
                     <p className="font-Poppins text-[#353131] text-sm md:text-base font-medium">
-                {/*       N {filteredItems[0]?.ticket_price} */}
-                   N {Number(filteredItems[0]?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {/*       N {filteredItems[0]?.ticket_price} */}
+                      N {Number(filteredItems[0]?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 </div>
@@ -365,10 +366,10 @@ const WrappedPage = () => {
         <RaffleTicket
           ticket_number={filteredItems[0]?.ticket_number || 'N/A'}
           ticket_price={filteredItems[0]?.ticket_price || 'N/A'}
-          purchase_date={filteredItems[0]?.purchase_date || 'N/A'}
+          purchase_date={filteredItems[0]?.date_created || 'N/A'}
           product={filteredItems[0]?.auction[0]?.name || 'N/A'}
-          raffle_date={filteredItems[0]?.raffle_date || 'N/A'}
-          raffle_time={filteredItems[0]?.raffle_time || 'N/A'}
+          raffle_date={filteredItems[0]?.start_date || 'N/A'}
+          raffle_time={filteredItems[0]?.start_time || 'N/A'}
         />
 
         <section
@@ -399,7 +400,7 @@ const WrappedPage = () => {
                 </div>
                 <div>
                   <p className="font-Poppins text-xs sm:text-sm text-[#2A2A2A] font-normal">
-                    {'N/A'}
+                    {filteredItems[0]?.payment_method}
                   </p>
                 </div>
               </div>

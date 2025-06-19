@@ -46,9 +46,16 @@ type Order = {
     name: string;
     draw_date: string;
     images: string[];
+    estimated_value?: string
   }[];
   ticket_number?: string;
   ticket_price?: string;
+  start_date?: string;
+  start_time?: string;
+  estimated_value?: string;
+  redeemed?: boolean;
+  won?: boolean;
+  cost_price?: string
 };
 
 type ButtonProps = {
@@ -114,6 +121,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
   const router = useRouter();
 
+
+
+
+
+
   const handleCloseModaldelete = () => {
     setisdeleteModalOpen(false);
   };
@@ -148,7 +160,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
       /*  console.log(storedVoucherData, "storedVoucherData") */
       if (transactionId) {
         setVoucherData(JSON.parse(storedVoucherData || '{}'));
-       /*  setIsVoucherModalOpen(true); */
+        /*  setIsVoucherModalOpen(true); */
       } else {
         toast.error("Voucher data not found");
       }
@@ -156,6 +168,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
 
     if (option === "winning advise") {
+      console.log(transaction, "transaction")
       setSelectedTransaction(transaction);
       setIsWinningAdvice(true);
     }
@@ -690,7 +703,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                     transaction={val}
                   />
 
-                {/*   <DropDownAuctionWin
+                  {/*   <DropDownAuctionWin
                     onOptionClick={(option) => handleOptionClick(option, val)}
                     transaction={val}
                   /> */}
@@ -933,9 +946,15 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
           onClose={() => setIsWinningAdvice(false)}
           adviceData={{
             date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }),
+            productId: `${selectedTransaction?.auction?.[0]?.auction_id}`,
+            /*  productCode: `${selectedTransaction?.auction?.[0]?.product_code}`, */
             name: `${userInfo?.data?.first_name} ${userInfo?.data?.last_name}`,
             prize: selectedTransaction?.auction?.[0]?.name || "Prize",
-            drawDate: new Date(selectedTransaction?.auction?.[0]?.draw_date || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            drawDate: selectedTransaction?.start_date || "",
+            raffleDrawTime: selectedTransaction?.start_time || "",
+            estimated_value: selectedTransaction?.cost_price || "N/A",
+
+            /*   drawDate: new Date(selectedTransaction?.auction?.[0]?.draw_date || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), */
             ticketNumber: selectedTransaction?.ticket_number || "",
           }}
         />
