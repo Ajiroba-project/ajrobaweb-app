@@ -47,13 +47,103 @@ const WrappedPage = () => {
       });
   }, [order_id, userToken]);
 
+  // const handleDownloadReceipt = async () => {
+  //   if (!productInfo) {
+  //     console.error('No product info available');
+  //     return;
+  //   }
+
+  //   // Get the receipt container element
+  //   const receiptElement = document.getElementById('receipt-container');
+  //   if (!receiptElement) {
+  //     console.error('Receipt container not found');
+  //     return;
+  //   }
+
+  //   try {
+  //     // Create canvas from the receipt element
+  //     const canvas = await html2canvas(receiptElement, {
+  //       scale: 2,
+  //       useCORS: true,
+  //       logging: false,
+  //       backgroundColor: '#ffffff',
+  //       width: receiptElement.scrollWidth,
+  //       height: receiptElement.scrollHeight,
+  //       onclone: (clonedDoc) => {
+  //         const clonedElement = clonedDoc.getElementById('receipt-container');
+  //         if (clonedElement) {
+  //           clonedElement.style.width = '100%';
+  //           clonedElement.style.height = 'auto';
+  //           clonedElement.style.position = 'relative';
+  //           clonedElement.style.backgroundColor = '#ffffff';
+  //         }
+  //       }
+  //     });
+
+  //     // Create PDF with the same dimensions as the canvas
+  //     const imgWidth = 210; // A4 width in mm
+  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //     const pdf = new jsPDF('p', 'mm', 'a4');
+
+  //     // Add the image to the PDF
+  //     pdf.addImage(
+  //       canvas.toDataURL('image/png'),
+  //       'PNG',
+  //       0,
+  //       0,
+  //       imgWidth,
+  //       imgHeight
+  //     );
+
+  //     // If content is too long, add it to multiple pages
+  //     if (imgHeight > 297) { // A4 height in mm
+  //       const pageCount = Math.ceil(imgHeight / 297);
+  //       for (let i = 1; i < pageCount; i++) {
+  //         pdf.addPage();
+  //         pdf.addImage(
+  //           canvas.toDataURL('image/png'),
+  //           'PNG',
+  //           0,
+  //           -(297 * i),
+  //           imgWidth,
+  //           imgHeight
+  //         );
+  //       }
+  //     }
+
+  //     // Save the PDF
+  //     pdf.save('ajiroba_transaction_receipt.pdf');
+  //   } catch (error) {
+  //     console.error('Error generating PDF:', error);
+  //   }
+  // };
+
+
+  const imageToBase64 = (img: HTMLImageElement): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        reject(new Error('Failed to get 2D context from canvas'));
+        return;
+      }
+
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+
+      ctx.drawImage(img, 0, 0);
+      const dataURL = canvas.toDataURL('image/png');
+      resolve(dataURL);
+    });
+  };
+
   const handleDownloadReceipt = async () => {
     if (!productInfo) {
-      console.error('No product info available');
+      console.error('No transaction data available');
       return;
     }
 
-    // Get the receipt container element
     const receiptElement = document.getElementById('receipt-container');
     if (!receiptElement) {
       console.error('Receipt container not found');
@@ -61,31 +151,74 @@ const WrappedPage = () => {
     }
 
     try {
-      // Create canvas from the receipt element
+      // Convert all images to base64 first
+      const images = receiptElement.querySelectorAll('img');
+      const imagePromises = Array.from(images).map(async (img: HTMLImageElement) => {
+        return new Promise<void>((resolve, reject) => {
+          if (!img.complete || img.naturalWidth === 0) {
+            img.onload = async () => {
+              try {
+                const base64 = await imageToBase64(img);
+                img.src = base64;
+                resolve();
+              } catch (error) {
+                console.error('Error converting image to base64:', error);
+                resolve(); // Continue even if one image fails
+              }
+            };
+            img.onerror = () => resolve(); // Continue even if image fails to load
+          } else {
+            imageToBase64(img).then(base64 => {
+              img.src = base64;
+              resolve();
+            }).catch(error => {
+              console.error('Error converting image to base64:', error);
+              resolve(); // Continue even if conversion fails
+            });
+          }
+        });
+      });
+
+      await Promise.all(imagePromises);
+
+      // Wait a bit for the base64 images to load
+      await new Promise<void>(resolve => setTimeout(resolve, 500));
+
+      // Now capture with html2canvas
       const canvas = await html2canvas(receiptElement, {
         scale: 2,
         useCORS: true,
+        allowTaint: true, // Allow tainted canvas since we're using base64
         logging: false,
         backgroundColor: '#ffffff',
         width: receiptElement.scrollWidth,
         height: receiptElement.scrollHeight,
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.getElementById('receipt-container');
-          if (clonedElement) {
-            clonedElement.style.width = '100%';
-            clonedElement.style.height = 'auto';
-            clonedElement.style.position = 'relative';
-            clonedElement.style.backgroundColor = '#ffffff';
-          }
+        scrollX: 0,
+        scrollY: 0,
+        onclone: (clonedDoc, element) => {
+          element.style.width = receiptElement.scrollWidth + 'px';
+          element.style.height = 'auto';
+          element.style.overflow = 'visible';
+          element.style.backgroundColor = '#ffffff';
+
+          // Ensure images maintain their size
+          const clonedImages = element.querySelectorAll('img');
+          clonedImages.forEach((img, index) => {
+            const originalImg = images[index];
+            if (originalImg) {
+              img.style.width = originalImg.offsetWidth + 'px';
+              img.style.height = originalImg.offsetHeight + 'px';
+              img.style.objectFit = 'contain';
+            }
+          });
         }
       });
 
-      // Create PDF with the same dimensions as the canvas
-      const imgWidth = 210; // A4 width in mm
+      // Create PDF
+      const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF('p', 'mm', imgHeight > 297 ? [imgWidth, imgHeight] : 'a4');
 
-      // Add the image to the PDF
       pdf.addImage(
         canvas.toDataURL('image/png'),
         'PNG',
@@ -95,28 +228,14 @@ const WrappedPage = () => {
         imgHeight
       );
 
-      // If content is too long, add it to multiple pages
-      if (imgHeight > 297) { // A4 height in mm
-        const pageCount = Math.ceil(imgHeight / 297);
-        for (let i = 1; i < pageCount; i++) {
-          pdf.addPage();
-          pdf.addImage(
-            canvas.toDataURL('image/png'),
-            'PNG',
-            0,
-            -(297 * i),
-            imgWidth,
-            imgHeight
-          );
-        }
-      }
+      pdf.save(`ajiroba_transaction_receipt.pdf`);
 
-      // Save the PDF
-      pdf.save('ajiroba_transaction_receipt.pdf');
     } catch (error) {
       console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
     }
   };
+
 
   if (loading) return <div className='text-center'>Loading...</div>;
   if (productError) return <div className='text-center text-red-500'>{productError}</div>;
@@ -131,7 +250,9 @@ const WrappedPage = () => {
         </div>
         <div className='flex flex-col items-center py-8'>
           <p className='brand3 text-[#A09F9F] font-Poppins text-[12px]'>Transaction Amount</p>
-          <p className='text-2xl font-semibold font-Poppins'>₦{Number(productInfo?.data[0]?.amount).toLocaleString('en-NG')}</p>
+          <p className='text-2xl font-semibold font-Poppins'>
+            ₦{Number(productInfo?.data[0]?.amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </p>
         </div>
         <section>
           <div>
