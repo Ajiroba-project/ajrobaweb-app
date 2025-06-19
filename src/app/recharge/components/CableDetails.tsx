@@ -132,21 +132,21 @@ export const CableDetails = () => {
 
 
   // Debounce the customerId to delay API call
-const debouncedCustomerId = useDebounce(customerId, 1000); // 800ms delay
+  const debouncedCustomerId = useDebounce(customerId, 1000); // 800ms delay
 
 
- const customerdetailsurl =
-  debouncedCustomerId && selectedNetwork
-    ? `/api/cabletvdetails?customerId=${debouncedCustomerId}&cableTvType=${selectedNetwork}`
-    : "";
+  const customerdetailsurl =
+    debouncedCustomerId && selectedNetwork
+      ? `/api/cabletvdetails?customerId=${debouncedCustomerId}&cableTvType=${selectedNetwork}`
+      : "";
 
-// Call API only when the user stops typing (debounced value changes)
-const { data: customerdetailsData, isLoading: customerdetailssLoading } =
-  useGetDatanew(
-    debouncedCustomerId ? customerdetailsurl : "",
-    "get_customer_details",
-    userToken
-  );
+  // Call API only when the user stops typing (debounced value changes)
+  const { data: customerdetailsData, isLoading: customerdetailssLoading } =
+    useGetDatanew(
+      debouncedCustomerId ? customerdetailsurl : "",
+      "get_customer_details",
+      userToken
+    );
 
 
 
@@ -228,8 +228,8 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
             <DefaultButton
               text="Proceed"
               type="submit"
-              handleClick={() => {}}
-              className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg "
+              handleClick={() => { }}
+              className="my-10 w-full text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
             />
           </div>
 
