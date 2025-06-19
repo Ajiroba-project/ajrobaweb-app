@@ -159,7 +159,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
 
   // Update parent's loading state whenever our local loading state changes
 
-  console.log(cardInfo, 'cardInfo')
+  // console.log(cardInfo, 'cardInfo')
 
 
   useEffect(() => {
