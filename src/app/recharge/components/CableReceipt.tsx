@@ -1,20 +1,20 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import verify from '../../asset/verify.svg'
 import Image from 'next/image'
 import { Formtitle } from './Formtitle'
 import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
-import {FaToggleOn, FaToggleOff} from 'react-icons/fa'
+import { FaToggleOn, FaToggleOff } from 'react-icons/fa'
 import Cookies from 'js-cookie'
 
 
 export const CableReceipt = () => {
   const router = useRouter()
-  const [toggle, setToggle]=useState(false)
+  const [toggle, setToggle] = useState(false)
 
-    const usertoken = Cookies.get('atd')
+  const usertoken = Cookies.get('atd')
 
-const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
+  const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
   return (
     <section className='p-5 '>
       <div className='my-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
@@ -23,8 +23,8 @@ const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
         </div>
         <div className='w-content'>
           <Formtitle
-            title='Successfully'
-            subtitle={`you have successfully make a payment`}
+            title='Successful'
+            subtitle={`you have successfully made a payment`}
           />
           <DefaultButton
             text='View Reciept'

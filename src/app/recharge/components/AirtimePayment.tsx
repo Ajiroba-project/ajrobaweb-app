@@ -13,7 +13,7 @@ import Input from './Input'
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6'
 import { useMutateData } from '@/hooks/useMutateNewData'
 import { Bounce, ToastContainer, toast } from "react-toastify";
-import { usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { useGetDatanew } from '@/hooks/useGetData'
 
@@ -29,40 +29,40 @@ export const AirtimePayment = () => {
 
 
 
-    const { isLoggedIn } = useAuthStore(state => ({
-      isLoggedIn: state.isLoggedIn
-    }))
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn
+  }))
 
-const router = useRouter()
+  const router = useRouter()
 
 
-      const [successModal, setSuccessModal] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [makepayment, setmakepayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
 
-  const Reroute =()=>{
+  const Reroute = () => {
     const router = useRouter()
     router.push('/signin')
 
-   return null
-}
+    return null
+  }
 
   const userToken = (Cookies.get("token") as string) || "";
 
-const [paywithwallet, setPaywithWallet] = useState(false);
-const [showpaymentbutton, setShowpaymentbutton] = useState(false);
+  const [paywithwallet, setPaywithWallet] = useState(false);
+  const [showpaymentbutton, setShowpaymentbutton] = useState(false);
 
 
   const showWalletPayment = () => {
     setPaywithWallet(true);
   };
 
-   const handlecloseOrder = () => {
- setPaywithWallet(false);
+  const handlecloseOrder = () => {
+    setPaywithWallet(false);
   };
 
 
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 
   const { data: userInfo, isLoading: userLoading } = useGetDatanew(
     url,
@@ -72,36 +72,36 @@ const [showpaymentbutton, setShowpaymentbutton] = useState(false);
 
 
 
-    const handleOrderbutton = () => {
+  const handleOrderbutton = () => {
 
     const payload = {
 
       amount: Number(AirtimeDetails.amount),
-    phoneNumber: AirtimeDetails.phone,
-    network: AirtimeDetails.network,
-    senderName: userInfo?.data?.first_name,
+      phoneNumber: AirtimeDetails.phone,
+      network: AirtimeDetails.network,
+      senderName: userInfo?.data?.first_name,
     };
 
-// console.log(payload, 'payload')
+    // console.log(payload, 'payload')
 
 
     airtimemutate({
       url: "/api/purchaseairtime",
-       payload: { payload: payload },
-     /*  payload: { payload: payload, token: userToken }, */
-   /*    token: userToken, */
+      payload: { payload: payload },
+      /*  payload: { payload: payload, token: userToken }, */
+      /*    token: userToken, */
     });
   };
 
 
 
-const MakePurchase = () => {
+  const MakePurchase = () => {
     let pin = Cookies.get("nvd");
     console.log('Make purchase')
   };
 
 
-   const submitForm = (data: any) => {
+  const submitForm = (data: any) => {
     Cookies.set("nvd", data?.password, { expires: 1 });
     const payload = {
       wallet_pin: data?.password,
@@ -147,10 +147,10 @@ const MakePurchase = () => {
     ) {
       localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
-    setShowpaymentbutton(prevState => !prevState);
+      setShowpaymentbutton(prevState => !prevState);
 
       setPaywithWallet(false)
-      toast.success(`${data?.data?.message } `, {
+      toast.success(`${data?.data?.message} `, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -221,7 +221,7 @@ const MakePurchase = () => {
   };
 
   const handleError = (error: any) => {
-     setShowpaymentbutton(false)
+    setShowpaymentbutton(false)
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
@@ -236,7 +236,7 @@ const MakePurchase = () => {
   };
 
 
-   const {
+  const {
     data,
     error: walleterror,
     isError,
@@ -247,9 +247,9 @@ const MakePurchase = () => {
 
 
 
-    const handleSuccessAirtime = (data: any) => {
+  const handleSuccessAirtime = (data: any) => {
 
-     /*  console.log(data, 'aitimeeeedatatat') */
+    /*  console.log(data, 'aitimeeeedatatat') */
 
     if (
       data.status === 200 ||
@@ -257,10 +257,10 @@ const MakePurchase = () => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-     /*   console.log(data, 'aitimeeeedatatat') */
+      /*   console.log(data, 'aitimeeeedatatat') */
 
- /*    Cookies.set("atd", data?.data, { expires: 1 }); */
-    Cookies.set("atd", JSON.stringify(data?.data));
+      /*    Cookies.set("atd", data?.data, { expires: 1 }); */
+      Cookies.set("atd", JSON.stringify(data?.data));
 
       localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
@@ -268,38 +268,38 @@ const MakePurchase = () => {
 
       setPaywithWallet(false)
 
-     /*  console.log(data?.data?.status, 'data?.data?.status', data?.data) */
+      /*  console.log(data?.data?.status, 'data?.data?.status', data?.data) */
 
       if (data?.data?.status === 'success') {
-              toast.success(`${data?.data?.message } `, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => {
-        setAirtimeStepper(3)
-        },
-      });
-      reset();
-      }else{
- toast.error(`${data?.data?.message } `, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        onClose: () => {
-        setAirtimeStepper(1)
-        },
-      });
-      reset();
+        toast.success(`${data?.data?.message} `, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onClose: () => {
+            setAirtimeStepper(3)
+          },
+        });
+        reset();
+      } else {
+        toast.error(`${data?.data?.message} `, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onClose: () => {
+            setAirtimeStepper(1)
+          },
+        });
+        reset();
 
       }
 
@@ -363,8 +363,8 @@ const MakePurchase = () => {
 
 
 
-    const handleErrorAirtime = (error: any) => {
-     setShowpaymentbutton(false)
+  const handleErrorAirtime = (error: any) => {
+    setShowpaymentbutton(false)
     toast.error(`${"An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
@@ -379,7 +379,7 @@ const MakePurchase = () => {
   };
 
 
-    const {
+  const {
     data: airtimedata,
     error: airtimerror,
     isError: airtimeisError,
@@ -390,77 +390,77 @@ const MakePurchase = () => {
 
   return (
 
-      <section className='bg-[#F6F6F6] py-12 w-9/12' style={{
-        margin: '0 auto'
-      }}>
-         <p className='brand1 cursor-pointer flex items-start px-8' onClick={() => setAirtimeStepper(0)}>
+    <section className='bg-[#F6F6F6] py-12 w-9/12' style={{
+      margin: '0 auto'
+    }}>
+      <p className='brand1 cursor-pointer flex items-start px-8' onClick={() => setAirtimeStepper(0)}>
         Back
       </p>
-   <div className='  '>
+      <div className='  '>
 
-      <div className='flex items-center justify-center '>
-        <Formtitle
-          title='Payment'
-          subtitle='you can make your payment with any of the payment option below '
-        />
-      </div>
+        <div className='flex items-center justify-center '>
+          <Formtitle
+            title='Payment'
+            subtitle='you can make your payment with any of the payment options below '
+          />
+        </div>
 
 
 
- <div className='flex px-8'>
-        <form className='flex w-full flex-col items-start justify-start gap-4 py-10 '>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Network Provider</h3>
-            <p>{AirtimeDetails?.network}</p>
-          </div>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Phone Number</h3>
-            <p>{AirtimeDetails?.phone}</p>
-          </div>
-          <div>
-            <h3 className='text-[#6E6E6E]'>Amount</h3>
-            <p>{AirtimeDetails?.amount}</p>
-          </div>
-         {/*  <div>
+        <div className='flex px-8'>
+          <form className='flex w-full flex-col items-start justify-start gap-4 py-10 '>
+            <div>
+              <h3 className='text-[#6E6E6E]'>Network Provider</h3>
+              <p>{AirtimeDetails?.network}</p>
+            </div>
+            <div>
+              <h3 className='text-[#6E6E6E]'>Phone Number</h3>
+              <p>{AirtimeDetails?.phone}</p>
+            </div>
+            <div>
+              <h3 className='text-[#6E6E6E]'>Amount</h3>
+              <p>{AirtimeDetails?.amount}</p>
+            </div>
+            {/*  <div>
             <h3 className='text-[#6E6E6E]'>Tranction ID</h3>
             <p className='font-semibold'>1234567</p>
           </div> */}
-          <div className='my-5 flex flex-wrap w-full items-center justify-center gap-8'>
+            <div className='my-5 flex flex-wrap w-full items-center justify-center gap-8'>
 
-         {!showpaymentbutton ? (
-  <DefaultButton
-    type="button"
-    text="Verify Wallet Pin"
-    className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
-    handleClick={() => setPaywithWallet(true)}
-  />
-) : (
-  <DefaultButton
-    type="button"
-     text={airtimestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
-    className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
-    handleClick={
-      localStorage.getItem("pin_id") === "yes"
-        ? handleOrderbutton
-        : MakePurchase
-    }
-  />
-)}
+              {!showpaymentbutton ? (
+                <DefaultButton
+                  type="button"
+                  text="Verify Wallet Pin"
+                  className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
+                  handleClick={() => setPaywithWallet(true)}
+                />
+              ) : (
+                <DefaultButton
+                  type="button"
+                  text={airtimestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
+                  className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
+                  handleClick={
+                    localStorage.getItem("pin_id") === "yes"
+                      ? handleOrderbutton
+                      : MakePurchase
+                  }
+                />
+              )}
 
-            <DefaultButton
-              type='button'
-              text='Fund Wallet'
-              className='rounded-lg border-2 border-[#f25e26] px-8 py-3 text-[#f25e26]'
-        /*       handleClick={() => setAirtimeStepper(2)} */
-              handleClick={() => router.push('/profile')}
-            />
-          </div>
-        </form>
+              <DefaultButton
+                type='button'
+                text='Fund Wallet'
+                className='rounded-lg border-2 border-[#f25e26] px-8 py-3 text-[#f25e26]'
+                /*       handleClick={() => setAirtimeStepper(2)} */
+                handleClick={() => router.push('/profile')}
+              />
+            </div>
+          </form>
+        </div>
+
+
+
       </div>
-
-
-
-    </div>
 
 
       <ModalComponent
@@ -507,11 +507,11 @@ const MakePurchase = () => {
         }
         isModalOpen={paywithwallet}
         showModal={showWalletPayment}
-        handleOk={() => {}}
+        handleOk={() => { }}
         handleCancel={handlecloseOrder}
       />
 
-      </section>
+    </section>
 
   )
 }

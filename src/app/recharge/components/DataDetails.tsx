@@ -241,7 +241,7 @@ export const DataDetails = () => {
               <div className="flex justify-between items-center">
                 <Image src={Brand} alt="brand-logo" />
                 <h2 className=" font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize">
-                  {"Airtime Recharge"}
+                  {"Beneficiaries"}
                 </h2>
               </div>
               <p

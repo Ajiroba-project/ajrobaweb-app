@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { CreateNewPin } from './YupValidation'
 import { userProfile } from '@/store/store'
 
-export const MakePayment = ({handleClick , createPin, setCreatePin,  amount, onConfirm, onCancel }: any) => {
+export const MakePayment = ({ handleClick, createPin, setCreatePin, amount, onConfirm, onCancel }: any) => {
   const { successModal, setSuccessModal } = userProfile(state => ({
     successModal: state.successModal,
     setSuccessModal: state.setSuccessModal
@@ -30,7 +30,7 @@ export const MakePayment = ({handleClick , createPin, setCreatePin,  amount, onC
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPin])
 
   const {
@@ -48,7 +48,7 @@ export const MakePayment = ({handleClick , createPin, setCreatePin,  amount, onC
     setSuccessModal(!successModal)
   }
 
-  const handleError = () => {}
+  const handleError = () => { }
 
   const { mutate, status } = useMutateData(
     'create-pin',
@@ -66,27 +66,28 @@ export const MakePayment = ({handleClick , createPin, setCreatePin,  amount, onC
         {createPin && (
           <>
             <div ref={modalRef} className='flex flex-col items-center justify-center gap-2'>
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-md shadow-lg max-w-md w-full text-center">
-        <p className="text-md text-gray-700">
-          You are going to deposit the amount of <span className="font-bold">₦ {amount}</span>
-        </p>
-        <div className="mt-6">
-          <button
-            onClick={onConfirm}
-            className="bg-[#E4572E] text-white py-2 px-4 rounded-md w-full mb-2"
-          >
-            Continue
-          </button>
-          <button
-            onClick={onCancel}
-            className="border border-[#E4572E] text-[#E4572E] py-2 px-4 rounded-md w-full"
-          >
-            Back
-          </button>
-        </div>
-      </div>
-    </div>
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-md shadow-lg max-w-md w-full text-center">
+                  <p className="text-md text-gray-700">
+                    {/*    You are going to deposit the amount of <span className="font-bold">₦ {amount}</span> */}
+                    You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                  <div className="mt-6">
+                    <button
+                      onClick={onConfirm}
+                      className="bg-[#E4572E] text-white py-2 px-4 rounded-md w-full mb-2"
+                    >
+                      Continue
+                    </button>
+                    <button
+                      onClick={onCancel}
+                      className="border border-[#E4572E] text-[#E4572E] py-2 px-4 rounded-md w-full"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         )}

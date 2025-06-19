@@ -10,7 +10,7 @@ type DepositeProps = {
 };
 
 export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
-  const suggestions = ['200', '300', '500'];
+  const suggestions = ['500', '1000', '2000', '3000', '4000', '5000'];
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -81,9 +81,9 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
 const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: string }) => {
 
 
-const handlefundwalletandVerifyPayment =  ()=>{
-console.log('fund and verify wallet')
-}
+  const handlefundwalletandVerifyPayment = () => {
+    console.log('fund and verify wallet')
+  }
 
 
 

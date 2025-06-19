@@ -497,8 +497,7 @@ export const getInTouch = [
 
 export const marqueeInfo = [
   'Follow us on all our social media platforms : www.ajiroba.com.',
-  'Buy a ticket now and stand a chance to win ',
-  'your preferred goods in our raffle draw.'
+  'Buy a ticket now and stand a chance to win your preferred goods in our raffle draw. ',
 ]
 
 

@@ -25,21 +25,21 @@ export const CablePayment = () => {
 
   const { setCableStepper, CableDetails, customerCabledetails } = CablePurchase((state) => ({
     setCableStepper: state.setCableStepper,
-        CableDetails: state.CableDetails,
-        customerCabledetails: state.customerCabledetails,
+    CableDetails: state.CableDetails,
+    customerCabledetails: state.customerCabledetails,
 
   }));
 
   const bundleString = CableDetails?.bundle || ""; // Ensure it's a string
-const amountMatch = bundleString.match(/-₦(\d+)/); // Match the number after "-₦"
+  const amountMatch = bundleString.match(/-₦(\d+)/); // Match the number after "-₦"
 
-const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
+  const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
 
-//   console.log(CableDetails, 'cabbbbbb')
-//  console.log(customerCabledetails, 'cabbbbbb---cvvv')
+  //   console.log(CableDetails, 'cabbbbbb')
+  //  console.log(customerCabledetails, 'cabbbbbb---cvvv')
 
-    const router = useRouter();
+  const router = useRouter();
 
   const [successModal, setSuccessModal] = useState(false);
 
@@ -79,18 +79,18 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
     const payload = {
 
       cableTvType: CableDetails.decoder,
-       payerName: userInfo?.data?.first_name,
+      payerName: userInfo?.data?.first_name,
       amount: Number(amount),
       customerId: CableDetails?.iucnumber,
     }
 
-        Cookies.set("atdnew", JSON.stringify(payload));
+    Cookies.set("atdnew", JSON.stringify(payload));
 
-     cablemutate({
-       url: "/api/purchasecable",
-       payload: { payload: payload },
+    cablemutate({
+      url: "/api/purchasecable",
+      payload: { payload: payload },
 
-     });
+    });
   };
 
   const MakePurchase = () => {
@@ -155,7 +155,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
         draggable: true,
         progress: undefined,
         theme: "light",
-        onClose: () => {},
+        onClose: () => { },
       });
       reset();
     } else if (
@@ -384,7 +384,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
         <div className="flex items-center justify-center ">
           <Formtitle
             title="Payment"
-            subtitle="you can make your payment with any of the payment option below "
+            subtitle="you can make your payment with any of the payment options below "
           />
         </div>
 
@@ -404,7 +404,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
               <p>{CableDetails?.bundle ? CableDetails?.bundle : 'NA'}</p>
             </div>
 
-              <div>
+            <div>
               <h3 className="text-[#6E6E6E]">Smart Card/IUC Number</h3>
               <p>{CableDetails?.iucnumber ? CableDetails?.iucnumber : 'NA'}</p>
             </div>
@@ -425,7 +425,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
                 <DefaultButton
                   type="button"
 
-                   text={cablestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
+                  text={cablestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
                   className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
                   handleClick={
                     localStorage.getItem("pin_id") === "yes"
@@ -490,7 +490,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
         }
         isModalOpen={paywithwallet}
         showModal={showWalletPayment}
-        handleOk={() => {}}
+        handleOk={() => { }}
         handleCancel={handlecloseOrder}
       />
     </section>

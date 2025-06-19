@@ -189,7 +189,7 @@ export const ElectricityDetails = () => {
     <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
       <Formtitle
         className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
-        title="Buy Electricity Bills"
+        title="Recharge your electricity with ease"
         subtitle="Enjoy your best TV programs by purchasing your subscription on our platform"
       />
       <div className="">
@@ -304,7 +304,7 @@ export const ElectricityDetails = () => {
               <div className="flex justify-between items-center">
                 <Image src={Brand} alt="brand-logo" />
                 <h2 className=" font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize">
-                  {"Airtime Recharge"}
+                  {"Beneficiaries"}
                 </h2>
               </div>
               <p

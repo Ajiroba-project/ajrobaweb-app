@@ -10,7 +10,7 @@ type DepositeProps = {
 };
 
 export const Deposite = ({ handleClick, handleNext }: DepositeProps) => {
-  const suggestions = ['200', '300', '500'];
+  const suggestions = ['500', '1000', '2000', '3000', '4000', '5000'];
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -91,7 +91,8 @@ const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: s
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
       <div className='xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
-        <p className='text-center'>You are going to deposit the amount of N {amount}</p>
+        <p className='text-center'> You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+
         <div className='flex w-full gap-5 flex-col'>
           <DefaultButton
             text='Continue'

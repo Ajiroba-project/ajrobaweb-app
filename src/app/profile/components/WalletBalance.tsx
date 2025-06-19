@@ -229,7 +229,8 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4">
         <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
           <p className="text-center">
-            You are going to deposit the amount of N {amount}
+
+            You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <div className="flex w-full gap-5 flex-col">
             <DefaultButton
@@ -345,9 +346,9 @@ export const WalletBalance = () => {
         <p className="text-2xl font-semibold slashed-zero leading-normal">
           {showBalance
             ? new Intl.NumberFormat('en-NG', {
-                style: 'currency',
-                currency: 'NGN'
-              }).format(userInfo?.data?.my_wallet[0]?.balance || 0)
+              style: 'currency',
+              currency: 'NGN'
+            }).format(userInfo?.data?.my_wallet[0]?.balance || 0)
             : "*****"}
         </p>
       </div>

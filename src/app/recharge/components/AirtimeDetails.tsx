@@ -172,7 +172,7 @@ export const AirtimeDetails = () => {
             <section className='container flex flex-col '>
               <div className='flex justify-between items-center'>
                 <Image src={Brand} alt='brand-logo' />
-                <h2 className=' font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize'>{'Airtime Recharge'}</h2>
+                <h2 className=' font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize'>{'Beneficiaries'}</h2>
               </div>
               <p className="brand1 py-4 cursor-pointer font-Poppins text-sm underline" onClick={() => setprintreceipt(false)}>Back</p>
             </section>
