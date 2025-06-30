@@ -180,3 +180,88 @@ img {
   background-color: transparent !important;
   /* Ensures no white background */
 }
+
+.custom-calendar {
+  background: #d3d3d3 !important;
+  /* light gray */
+  border-radius: 20px !important;
+  padding: 20px !important;
+  color: #222 !important;
+}
+
+.custom-calendar .react-datepicker__day--selected,
+.custom-day-selected {
+  background: #F25E26 !important;
+  /* orange */
+  color: #fff !important;
+  border-radius: 50% !important;
+}
+
+.custom-calendar .react-datepicker__day {
+  font-weight: 500;
+  font-size: 1.1em;
+}
+
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #F25E26;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.custom-header button {
+  background: none;
+  border: none;
+  color: #F25E26;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+
+/* Start of Selection */
+/* MUI Date Picker custom styles */
+.MuiPickersPopper-root.MuiPaper-root {
+  background: #d3d3d3 !important;
+  border-radius: 20px !important;
+  color: #222 !important;
+  min-width: 340px;
+  max-width: 100vw;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.MuiPickersCalendarHeader-root {
+  color: #F25E26 !important;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.MuiPickersArrowSwitcher-button {
+  color: #F25E26 !important;
+}
+
+/* End of Selection */
+
+/* slotProps= { */
+/* { */
+/* textField: { */
+/*  */
+/* variant: 'outlined', */
+/* fullWidth: true, */
+/* sx: { */
+/* '& input': { */
+/* padding: 2, borderRadius: 2, fontSize: 18 */
+/* } */
+/* } */
+/* } */
+/*  */
+/* , */
+/* popper: { */
+/* sx: { */
+/* pb: 6 */
+/* } */
+/* } */
+/* } */
+/* } */
