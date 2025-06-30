@@ -610,7 +610,9 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
               >
 
 
-                <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
+                <div onClick={() =>
+                  router.push(`/auction/productdetails/${val?.auction[0]?.auction_id}`)
+                } className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
                   <Image
                     src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
@@ -629,34 +631,8 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   <p>Ticket Price: ₦{Number(val?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
 
                   <div className="mt-5 flex gap-3 flex-wrap">
-                    {/*      {val.tag &&
-                      val.tag.map((value: string, index: number) => (
-                        <p
-                          key={index}
-                          onClick={() => {
-                            if (!val.won || val.redeemed) return;
 
-                            if (value === "redeem items") {
-                              handleOptionClick("Redeem", val);
-                            } else if (value === "winning advise") {
-                              handleOptionClick("winning advise", val);
-                            }
-                          }}
-                          className={`text-xs ${!val.won || val.redeemed ? "opacity-50 cursor-not-allowed" : ""
-                            } ${value === "open" || value === "delivered"
-                              ? "bg-green-200 text-emerald-800"
-                              : value === "close"
-                                ? "bg-rose-200 text-red-800"
-                                : value === "redeem items"
-                                  ? "bg-blue-700 text-white cursor-pointer"
-                                  : value === "winning advise"
-                                    ? "bg-[#F25E26] text-white cursor-pointer"
-                                    : "bg-[#F25E26] text-white"
-                            } rounded-xl px-2.5 py-1`}
-                        >
-                          {value}
-                        </p>
-                      ))} */}
+
 
 
                     {val.tag &&
@@ -677,6 +653,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                               handleOptionClick("winning advise", val);
                             }
                           }}
+
                           className={`text-xs ${!val.won ? "opacity-50 cursor-not-allowed" : ""
                             } ${value === "open" || value === "delivered"
                               ? "bg-green-200 text-emerald-800"
@@ -691,6 +668,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                                     : "bg-[#F25E26] text-white"
                             } rounded-xl px-2.5 py-1`}
                         >
+
                           {value === "redeem items" && val.redeemed ? "Redeemed" : value}
                         </p>
                       ))}
@@ -925,19 +903,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
           </div>
         </ModalProfile>
       )}
-      {/*    {isWinningAdvice && selectedTransaction && (
-        <WinningAdviceModal
-          isOpen={isWinningAdvice}
-          onClose={() => setIsWinningAdvice(false)}
-          adviceData={{
-            date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }),
-            name: `${userInfo?.data?.first_name} ${userInfo?.data?.last_name}`,
-            prize: selectedTransaction?.auction?.[0]?.name || "Prize",
-            drawDate: new Date(selectedTransaction?.auction?.[0]?.draw_date || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            ticketNumber: selectedTransaction?.ticket_number || "",
-          }}
-        />
-      )}  */}
+
 
 
       {isWinningAdvice && selectedTransaction && (

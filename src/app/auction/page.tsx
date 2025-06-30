@@ -119,7 +119,7 @@ const AuctionPage = () => {
   // --- Custom Layout INSIDE the component, using closure for handlers ---
   function CustomDatePickerLayout(props: PickersLayoutProps<any>) {
     return (
-      <div style={{ position: 'relative', }}>
+      <div style={{ position: 'relative' }}>
         <PickersLayout {...props} />
         <Box sx={{
           display: 'flex',
@@ -128,13 +128,6 @@ const AuctionPage = () => {
           mt: 2,
           mb: 2,
           px: 2,
-          pb: 2,
-          /*     position: 'absolute', */
-          bottom: 0,
-          right: 0,
-          width: '100%',
-          background: 'transparent',
-          zIndex: 2,
         }}>
           <Button color="warning" onClick={handleCancel}>Cancel</Button>
           <Button color="warning" onClick={handleOk}>OK</Button>
@@ -161,9 +154,10 @@ const AuctionPage = () => {
           {/* Date Input */}
           <div>
             {isAuctionActive ? (
-              <div onClick={() => setCalendarOpen(true)}>
+              <div>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
+                    desktopModeMediaQuery="@media (min-width: 0px)"
                     open={calendarOpen}
                     onOpen={() => setCalendarOpen(true)}
                     onClose={() => setCalendarOpen(false)}
@@ -177,7 +171,6 @@ const AuctionPage = () => {
                             d.getMonth() === day.getMonth() &&
                             d.getFullYear() === day.getFullYear()
                         );
-
                         return (
                           <button
                             type="button"

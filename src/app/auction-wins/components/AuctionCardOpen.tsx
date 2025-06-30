@@ -557,7 +557,9 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                             >
 
 
-                                <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
+                                <div onClick={() =>
+                                    router.push(`/auction/productdetails/${val?.auction[0]?.auction_id}`)
+                                } className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
                                     <Image
                                         src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
                                         alt={val?.auction[0]?.name}

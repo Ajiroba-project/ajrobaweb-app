@@ -45,7 +45,7 @@ export const RecentTransaction = () => {
   useEffect(() => {
     if (recenttransdata?.results?.data) {
 
-      console.log(recenttransdata.results.data, "recenttransdata")
+      /*  console.log(recenttransdata.results.data, "recenttransdata") */
 
       setAllTransaction(recenttransdata.results.data.slice(0, 5));
       setFullTransactionList(recenttransdata.results.data);

@@ -353,15 +353,18 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                         : 'w-full items-center gap-2 py-2 lg:flex'
                     }
                   >
+                    {/*  {console.log(pathname, 'pppp')} */}
                     {headerMenu?.map((val, index) => {
 
                       return (
                         <li
                           key={index}
-                          className={` font-Poppins cursor-pointer px-4 hover:text-[#F25E26]  ${val.name === headerNav ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
+                          className={` font-Poppins cursor-pointer px-4 hover:text-[#F25E26]  ${pathname === val.path ? 'text-[#F25E26]' : 'text-[#A09F9F]'} hover:text-[#504D4D]  ${!isOpen ? 'py-2 lg:py-1' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveMenu(activeMenu === index ? null : index);
+                            /*     setActiveMenu(null); // close submenu if needed
+                                router.push(val.path.startsWith('/') ? val.path : `/${val.path}`); */
                           }}
                           onMouseEnter={() => {
                             setHoveredMenu(index);
@@ -371,6 +374,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                             setHoveredMenu(null);
                           }}
                         >
+
                           {val.submenu ? (
                             <div className='relative'>
                               <span className='flex items-center gap-2 '>
@@ -409,7 +413,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           ) : (
                             <Link
                               href={
-                                isRootPath ? val.path : `/${val.path}`
+                                isRootPath ? val.path : `${val.path}`
                               }
                               className='flex items-center gap-2'
                             >

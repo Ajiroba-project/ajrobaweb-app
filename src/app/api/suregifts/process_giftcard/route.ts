@@ -6,7 +6,7 @@ export async function POST(request: Request) {
         const body = await request.json();
 
         /*  console.log(token, "token") */
-        console.log(body, "body")
+
 
         if (!token) {
             return NextResponse.json(

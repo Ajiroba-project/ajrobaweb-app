@@ -1059,7 +1059,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={ticketData?.data?.ticket_amount.toLocaleString('en-NG', {
+                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                       }) ?? 0}

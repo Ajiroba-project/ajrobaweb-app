@@ -37,16 +37,16 @@ export const headerMenu = [
   },
   {
     name: 'Auction Deals',
-    path: 'auction'
+    path: '/auction'
   },
 
   {
     name: 'Categories',
-    path: 'categories'
+    path: '/categories'
   },
   {
     name: 'Recharge',
-    path: 'recharge'
+    path: '/recharge'
   },
   {
     name: 'Account',
