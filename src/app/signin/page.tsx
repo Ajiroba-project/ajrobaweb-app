@@ -73,7 +73,7 @@ function Page() {
   })
 
   const handleSuccess = (data: any) => {
-    console.log(data, 'datatta----1')
+    /*  console.log(data, 'datatta----1') */
     // console.log(data.data.status)
 
     if (data.status === 200) {
@@ -119,7 +119,20 @@ function Page() {
         theme: 'light'
       })
       reset()
-    } else if (data.status === 403) {
+    } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
+      toast.error(`${data?.data?.message}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        /* onClose: () => router.push("/otpverification"), */
+      });
+      reset()
+    } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 2000,

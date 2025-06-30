@@ -56,9 +56,9 @@ export const headerMenu = [
       { name: 'Sign In', path: '/signin' },
       { name: 'Sign Out', path: '#' },
       { name: 'Profile', path: '/profile' },
-      { name: 'Wallet', path: '/profile' },
-      { name: 'Referral Code', path: '/profile' },
-      { name: 'Community', path: '/profile' }
+      { name: 'Wallet', path: '/wallet' },
+      { name: 'Referral Code', path: '/referral' },
+      { name: 'Community', path: '/community' }
     ]
   },
   {

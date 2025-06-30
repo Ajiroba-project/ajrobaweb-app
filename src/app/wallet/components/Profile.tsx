@@ -8,6 +8,7 @@ import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { LuMenu } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
+import { WalletDetails } from './WalletDetails';
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false);
@@ -39,9 +40,15 @@ export const Profile = () => {
     token: state.token,
   }));
 
+  // Set default activeMenu to 'wallet' when component mounts
+  useEffect(() => {
+    setactiveMenu('wallet');
+  }, [setactiveMenu]);
+
   // const [userToken, setUserToken] = useState<string | null>(null);
 
   /*  const userToken =  Cookies.get('token') as string; */
+
 
   const [userToken, setUserToken] = useState(Cookies.get('token'))
 
@@ -58,10 +65,6 @@ export const Profile = () => {
       setProfileurl(userInfo.profile_image_url);
     }
   }, [isLoggedIn, userInfo, setProfileurl]);
-
-  useEffect(() => {
-    setactiveMenu('my profile');
-  }, [setactiveMenu]);
 
   const userData = isLoggedIn ? userInfo?.data : userDetails;
 
@@ -137,16 +140,15 @@ export const Profile = () => {
 
       {/*   <section className="span-2 flex w-full flex-col lg:items-center"> */}
       <section className="span-2 flex w-full flex-col lg:items-center">
-        <div className="z-auto  flex justify-end items-end w-full">
+        {/*  <div className="z-auto  flex justify-end items-end w-full">
           {activeMenu === 'my profile' ? (
             <p className="brand1 w-fit cursor-pointer  lg:text-left  justify-end underline" onClick={setEditProfile}>
               {!editProfile ? 'Edit Profile' : 'Cancel'}
             </p>
           ) : null}
-        </div>
+        </div> */}
         <div className="mt-5 flex lg:mx-12  ">
-          <ProfileContent />
-          {/* <h1>Profile Content on My Wallet</h1> */}
+          <WalletDetails />
         </div>
       </section>
     </section>

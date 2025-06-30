@@ -104,6 +104,9 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left", date = "May 4 
     minutesLeft: initialMinutesLeft,
   } = parseStartsIn(startsIn);
 
+
+  /* console.log(startsIn, 'startsin') */
+
   // Convert total minutes to seconds for the countdown
   const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
@@ -182,6 +185,9 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 
   const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
+
+
+  // console.log(userInfo, 'userInfoooo')
 
 
   const AjirobaLogo = () => (
