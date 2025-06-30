@@ -29,6 +29,7 @@ export const PhotoUpload = () => {
   const [files, setFiles] = useState<FileProps[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -49,12 +50,33 @@ export const PhotoUpload = () => {
     },
     noClick: true,
     noKeyboard: true,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.svg']
+    },
+    maxSize: 1 * 1024 * 1024, // 1MB limit
+    minSize: 1024, // 1KB minimum
+    onDropRejected: (rejectedFiles) => {
+      rejectedFiles.forEach(({ file, errors }) => {
+        errors.forEach((error) => {
+          if (error.code === 'file-too-large') {
+            alert(`File ${file.name} is too large. Maximum size is 1MB.`);
+          } else if (error.code === 'file-too-small') {
+            alert(`File ${file.name} is too small. Minimum size is 1KB.`);
+          } else if (error.code === 'file-invalid-type') {
+            alert(`File ${file.name} has an invalid type. Only images are allowed.`);
+          } else {
+            alert(`Error with file ${file.name}: ${error.message}`);
+          }
+        });
+      });
+    },
   });
 
   const closeModal = () => {
     setProfile(false);
     setFiles([]);
     setUploadSuccess(false);
+    setApiError(null);
   };
 
 
@@ -68,6 +90,7 @@ export const PhotoUpload = () => {
 
     const base64Image = files[0].base64;
     setUploading(true);
+    setApiError(null); // Clear any previous errors
 
     try {
       const response = await fetch('https://staging.ajiroba.ng/v1/user/change_profile_image/', {
@@ -81,8 +104,9 @@ export const PhotoUpload = () => {
         }),
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
-        const responseData = await response.json();
         /*     console.log('Response data:', responseData); */
         setUploadSuccess(true);
         /*      console.log('Image uploaded successfully'); */
@@ -90,9 +114,15 @@ export const PhotoUpload = () => {
         // console.log('Image uploaded successfully');
         setProfileurl(responseData?.profile_image_url)
       } else {
-        console.error('Failed to upload image');
+        // Handle API errors
+        const errorMessage = responseData?.message || responseData?.error || `Upload failed with status: ${response.status}`;
+        setApiError(errorMessage);
+        console.error('Failed to upload image:', responseData);
       }
     } catch (error) {
+      // Handle network errors
+      const errorMessage = error instanceof Error ? error.message : 'Network error occurred';
+      setApiError(errorMessage);
       console.error('Error uploading image:', error);
     } finally {
       setUploading(false);
@@ -111,7 +141,7 @@ export const PhotoUpload = () => {
           <p>
             <span className="brand1">Click to upload</span> or drag and drop
           </p>
-          <p className="text-sm text-gray-300">SVG, PNG, JPG, GIF (max 800 X 400px)</p>
+          <p className="text-sm text-gray-300">SVG, PNG, JPG, GIF (max 1MB, min 1KB)</p>
         </div>
         <div className="my-4 flex w-full items-center justify-center gap-3">
           <hr className="w-full" />
@@ -144,7 +174,12 @@ export const PhotoUpload = () => {
       )}
       {uploadSuccess && (
         <div className="mt-4 text-center">
-          <p>Image uploaded successfully!</p>
+          <p className="text-green-600">Image uploaded successfully!</p>
+        </div>
+      )}
+      {apiError && (
+        <div className="mt-4 text-center">
+          <p className="text-red-600 text-sm">{apiError}</p>
         </div>
       )}
     </CustomModal>

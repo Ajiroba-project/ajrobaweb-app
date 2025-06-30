@@ -82,7 +82,6 @@ export const Profile = () => {
     { name: 'community', path: '/community' }
   ];
 
-  console.log(pathname, 'pathnammm')
 
   return (
     <section className="relative flex gap-5 ">

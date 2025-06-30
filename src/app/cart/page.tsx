@@ -26,7 +26,7 @@ const Page = () => {
 
     let sessionKey = Cookies.get("session_key");
 
-    console.log(sessionKey, "session key")
+    /*  console.log(sessionKey, "session key") */
 
     if (!sessionKey) {
       sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
@@ -397,8 +397,8 @@ const Page = () => {
                   <button
                     key={index}
                     className={`px-6 py-4 ${currentPage === index + 1
-                        ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
-                        : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
+                      ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
+                      : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
                       }  font-bold rounded`}
                     onClick={() => setCurrentPage(index + 1)}
                   >
