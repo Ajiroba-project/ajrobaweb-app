@@ -9,12 +9,15 @@ import { LuMenu } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
 import { WalletDetails } from './WalletDetails';
+import MainLayout from './CommunityDetails';
 import { useRouter, usePathname } from 'next/navigation';
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false);
-  const router = useRouter();
+  const router = useRouter()
+
   const pathname = usePathname();
+
 
   const {
     activeMenu,
@@ -45,7 +48,7 @@ export const Profile = () => {
 
   // Set default activeMenu to 'wallet' when component mounts
   useEffect(() => {
-    setactiveMenu('wallet');
+    setactiveMenu('community');
   }, [setactiveMenu]);
 
   // const [userToken, setUserToken] = useState<string | null>(null);
@@ -108,8 +111,9 @@ export const Profile = () => {
                 : activeMenu === 'my order'
                   ? 'My Order'
                   : activeMenu === 'wallet'
-                    ? 'My Wallet'
-                    : 'Community'}
+                    ? 'My Wallet' : activeMenu === 'community' ?
+                      'Community'
+                      : 'Community'}
           </h3>
           <div className={`${activeMenu === 'my order' || activeMenu === 'wallet' || activeMenu === 'wallet' || activeMenu === 'community' || activeMenu === 'auction wins' || activeMenu === 'my profile' ? 'border rounded  flex flex-col  px-2' : ' flex flex-col  px-2'}`}>
             <div className="relative justify-center flex items-center mt-2 ">
@@ -156,7 +160,7 @@ export const Profile = () => {
           ) : null}
         </div> */}
         <div className="mt-5 flex lg:mx-12  ">
-          <WalletDetails />
+          <MainLayout />
         </div>
       </section>
     </section>

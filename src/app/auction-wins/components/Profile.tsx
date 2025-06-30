@@ -10,6 +10,7 @@ import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
 import { WalletDetails } from './WalletDetails';
 import { useRouter, usePathname } from 'next/navigation';
+import { AuctionDetails } from './AuctionDetails';
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false);
@@ -156,7 +157,7 @@ export const Profile = () => {
           ) : null}
         </div> */}
         <div className="mt-5 flex lg:mx-12  ">
-          <WalletDetails />
+          <AuctionDetails />
         </div>
       </section>
     </section>

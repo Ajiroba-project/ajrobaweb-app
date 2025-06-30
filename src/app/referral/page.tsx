@@ -95,7 +95,7 @@ const ReferralPage = () => {
                     </div>
                     <div className="my-2 text-gray-500 font-semibold">OR</div>
                     {/* Referral Link */}
-                    <div className="w-full max-w-2xl flex gap-2 items-center">
+                    <div className="w-full max-w-2xl flex gap-2 items-center flex-wrap">
                         <div className="flex items-center bg-gray-100 border border-gray-300 rounded-md flex-1 px-4 py-3">
                             <span className="mr-2 text-orange-500"><FaLink /></span>
                             <input

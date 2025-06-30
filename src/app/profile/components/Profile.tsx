@@ -8,9 +8,13 @@ import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { LuMenu } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
+import { useRouter, usePathname } from 'next/navigation';
+
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const {
     activeMenu,
@@ -70,7 +74,15 @@ export const Profile = () => {
 
   const userphoto = profileurl || userDetails?.profile_image_url || '';
 
-  const menu = ['my profile', 'auction wins', 'my order', 'wallet', 'community'];
+  const menu = [
+    { name: 'my profile', path: '/profile' },
+    { name: 'auction wins', path: '/auction-wins' },
+    { name: 'my order', path: '/myorder' },
+    { name: 'wallet', path: '/wallet' },
+    { name: 'community', path: '/community' }
+  ];
+
+  console.log(pathname, 'pathnammm')
 
   return (
     <section className="relative flex gap-5 ">
@@ -122,11 +134,10 @@ export const Profile = () => {
                 {menu.map((val, index) => (
                   <li
                     key={index}
-                    className={`w-full cursor-pointer rounded-lg px-3 py-2 capitalize hover:bg-[#F25E26] hover:text-white ${activeMenu === val ? 'bg-[#FCDFD4] ' : null
-                      }`}
-                    onClick={() => setactiveMenu(val)}
+                    className={`w-full cursor-pointer rounded-lg px-3 py-2 capitalize hover:bg-[#F25E26] hover:text-white ${pathname.includes(val.path) ? 'bg-[#FCDFD4]' : ''}`}
+                    onClick={() => router.push(val.path)}
                   >
-                    {val}
+                    {val.name}
                   </li>
                 ))}
               </ul>
