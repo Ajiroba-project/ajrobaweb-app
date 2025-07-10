@@ -284,7 +284,7 @@ const Page = ({ params }: any) => {
   };
 
   const notify = () => {
-    toast("🦄 ‘Mama Gold Rice’ has been added to cart", {
+    toast("🦄 ‘Mama Gold Rice' has been added to cart", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -500,7 +500,7 @@ const Page = ({ params }: any) => {
 
 
   const handleSuccessbidpayment = (data: any) => {
-    /*   console.log(data, "datatatat"); */
+      console.log(data, "datatatat"); 
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
@@ -626,7 +626,7 @@ const Page = ({ params }: any) => {
     setTotalAmount((prevTotal) => prevTotal + ticketPrice);
   };
 
-  // Handler to decrease ticket count, ensuring count doesn’t go below 1
+  // Handler to decrease ticket count, ensuring count doesn't go below 1
   const handleDecrease = () => {
     if (ticketCount > 1) {
       setTicketCount((prevCount) => prevCount - 1);
@@ -1291,7 +1291,7 @@ const Page = ({ params }: any) => {
                     <p className="text-[#111111] text-base mt-4 ">Weight</p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
-                      {`${productdatanew?.data?.weight} KG` || "NA"}
+                      {`${productdatanew?.data?.weight}` || "NA"}
                     </h1>
 
 
@@ -2531,7 +2531,14 @@ const Page = ({ params }: any) => {
                               <td
                                 className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium cursor-pointer underline"
                                 onClick={() => {
-                                  setSelectedTicket(item);
+                                  setSelectedTicket({
+                                    ...item,
+                                    ticket_price: ticketData?.data?.ticket_price,
+                                    purchase_date: ticketData?.data?.purchase_date,
+                                    product: ticketData?.data?.product_name,
+                                    raffle_date: ticketData?.data?.raffle_date,
+                                    raffle_time: ticketData?.data?.raffle_time,
+                                  });
                                   setShowTicketModal(true);
                                 }}
                               >
@@ -2554,7 +2561,9 @@ const Page = ({ params }: any) => {
       
           />
 
-
+          {/*   {
+              console.log(selectedTicket, 'selectedTicket')
+            } */}
 
 {showTicketModal && selectedTicket && (
             <ModalComponent

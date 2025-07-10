@@ -16,7 +16,7 @@ const DropDownAuction: React.FC<DropdownProps> = ({ onOptionClick, value, transa
 
   const [isModalOpen, setModalOpen] = useState(false);
 
-  console.log(transaction, 'transaction')
+  // console.log(transaction, 'transaction')
 
   const handleCloseModal = () => {
     setModalOpen(false);
