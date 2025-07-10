@@ -33,6 +33,10 @@ import AuthMiddleware from '@/hooks/useAuth'
 import { DefaultButton } from "@/app/component/Button";
 import InputAction from "@/app/component/InputAction";
 import verify from "@/app/asset/verify.svg";
+import Link from "next/link";
+import Brand from '@/app/asset/logo.svg'
+import { useGetDatanew } from "@/hooks/useGetData";
+import RaffleTicket from "@/app/component/RaffleTicket";
 
 interface CardInfoItem {
   weight: string;
@@ -113,6 +117,15 @@ const Page = ({ params }: any) => {
   const [paymentMethod, setPaymentMethod] = useState("");
 
 
+
+  const AjirobaLogo = () => (
+    <div className=" mb-4">
+      <Link href={'/'} className={``}   >
+        <Image src={Brand} alt='brand-logo' />
+      </Link>
+
+    </div>
+  );
 
 
   const handlePaymentSelection = (method: SetStateAction<string>) => {
@@ -258,6 +271,8 @@ const Page = ({ params }: any) => {
     }
   }, [paths, path]); // Notice the added dependency on `path`
 
+
+
   const [selectedImage, setSelectedImage] = useState(0);
   const images = [image4, image2];
 
@@ -359,6 +374,7 @@ const Page = ({ params }: any) => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
+      setBidData(null)
       localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
       toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
@@ -454,6 +470,11 @@ const Page = ({ params }: any) => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
+
+
 
 
   const [bidopen, setbidopen] = useState(false);
@@ -462,6 +483,10 @@ const Page = ({ params }: any) => {
   const [viewticket, setViewTicket] = useState(false);
   const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null);
   const [ticketPrice, setTicketPrice] = useState(0);
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+
+
 
   const [successbid, setSuccessbid] = useState(false);
 
@@ -578,6 +603,8 @@ const Page = ({ params }: any) => {
     reset();
   };
 
+  
+
 
   const {
     data: bidpaymentdata,
@@ -638,7 +665,7 @@ const Page = ({ params }: any) => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      setBidData(data?.data); // Store the API response in bidData for modal usage
+      setBidData(null); // Store the API response in bidData for modal usage
 
       setbidopen(false); // Open modal after successful API response
       setmakepayment(false);
@@ -692,6 +719,7 @@ const Page = ({ params }: any) => {
       data.status === 400 ||
       data.status === 409
     ) {
+      setBidData(null)
       setbidopen(false);
       setmakepayment(false);
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
@@ -1130,8 +1158,9 @@ const Page = ({ params }: any) => {
         }, 2000);
       } else if (data.data.status === "success") {
         setbidopen(true);
-        /*    console.log("Success:", data?.data?.data); */
         setBidData(data?.data?.data);
+        /*    console.log("Success:", data?.data?.data); */
+   
         setTicketPrice(Number(data?.data?.data?.ticket_price));
 
         // Display a success toast message if needed
@@ -1374,12 +1403,19 @@ const Page = ({ params }: any) => {
                               Bid
                             </button>
                           ) : productdatanew?.data?.bidded === "true" ? (
-                            <button
+                           /*  <button
                               disabled
                               className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
                             >
                               Bidded
-                            </button>
+                            </button> */
+                            <button
+                            /*         onClick={() => setmakepayment(!makepayment)} */
+                            onClick={() => handleBidClick(product_id)}
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                          >
+                            Bid
+                          </button>
                           ) : (
                             <button
                               disabled
@@ -1431,7 +1467,7 @@ const Page = ({ params }: any) => {
                     src={
                       productdatanew?.data?.images?.[0]?.image
                         ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
-                        : ""
+                        : `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
                     }
                     alt="Product Image"
                     width={200}
@@ -1445,7 +1481,7 @@ const Page = ({ params }: any) => {
                     src={
                       productdatanew?.data?.images?.[1]?.image
                         ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
-                        : ""
+                        : `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
                     }
                     alt="Product Image"
                     width={200}
@@ -1549,7 +1585,7 @@ const Page = ({ params }: any) => {
       {/*           {productdatafetching && <Loading />} */}
       {loadingdata && <Loading />}
 
-      <ModalComponent
+    {/*   <ModalComponent
         content={
           <div className="  px-6 py-4">
             <div className="flex flex-col justify-center items-center">
@@ -1616,7 +1652,121 @@ const Page = ({ params }: any) => {
         showModal={() => setmakepayment(!makepayment)}
         handleOk={() => setmakepayment(false)}
         handleCancel={() => setmakepayment(false)}
-      />
+      /> */}
+
+
+<ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Make Payment
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    Kindly select your payment option
+                  </p>
+                </div>
+
+                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+                  <div>
+                    <p className="text-[#111111] text-base mb-4  ">
+                      Payment Method
+                    </p>
+                  </div>
+
+                  <form action="">
+                    <div className="mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_balance"
+                          name="payment_method"
+                          value="wallet_balance"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_balance")
+                          }
+                          className="accent-[#F25E26]"
+                        />
+                        <label className="ml-2" htmlFor="wallet_balance">
+                          Wallet
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}
+                        </small>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_point"
+                          name="payment_method"
+                          value="wallet_point"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_point")
+                          }
+                          className="accent-[#F25E26]"
+                        />
+                        <label className="ml-2" htmlFor="wallet_point">
+                          Pay With Wallet And Ajiroba Point
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                        </small>
+                      </div>
+                    </div>
+                  </form>
+
+
+                </div>
+
+                <form
+                  action=""
+                  className="flex  flex-col mt-8 mb-4"
+                  onSubmit={handleSubmit(submitFormf)}
+                >
+                  <div className="flex flex-col">
+                    <InputAction
+                      label="Enter Pin"
+                      type="password"
+                      name="password"
+                      placeholder="****"
+                      register={register}
+                      errors={errors.password}
+                      HiEyeSlash={<FaRegEyeSlash />}
+                      HiEye={<FaRegEye />}
+                    />
+                    <div className="text-xs text-red-700">
+                      {errors?.password?.message}
+                    </div>
+
+                    <button
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F25E26] hover:text-white'
+                        }`}
+                      disabled={!paymentMethod}
+                    >
+                      {paymentstatus === "pending" ? "..." : "Pay"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            }
+            isModalOpen={makepayment}
+            showModal={() => setmakepayment(!makepayment)}
+            handleOk={() => setmakepayment(false)}
+            handleCancel={() => setmakepayment(false)}
+          />
 
       <ModalComponent
         content={
@@ -1668,7 +1818,7 @@ const Page = ({ params }: any) => {
 
 
 
-      <ModalComponent
+    {/*   <ModalComponent
         content={
           <div className="flex flex-col  px-6 py-4">
             <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
@@ -1732,7 +1882,7 @@ const Page = ({ params }: any) => {
                     <div className="flex items-center">
                       <button
                         className="px-2 py-1 bg-gray-200 rounded"
-                        /*    onClick={handleDecrease} */
+                       
                         disabled={ticketCount <= 1}
                       >
                         -
@@ -1743,7 +1893,7 @@ const Page = ({ params }: any) => {
                       </span>
                       <button
                         className="px-2 py-1 bg-gray-200 rounded"
-                      /*  onClick={handleIncrease} */
+       
                       >
                         +
                       </button>
@@ -1818,11 +1968,182 @@ const Page = ({ params }: any) => {
         showModal={() => setbidopen(!bidopen)}
         handleOk={() => setbidopen(false)}
         handleCancel={() => setbidopen(false)}
-      />
+      /> */}
+
+
+<ModalComponent
+            content={
+              <div className="flex flex-col  px-6 py-4">
+                <AjirobaLogo />
+
+                <div onClick={() => setbidopen(false)} className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                  Back
+                </div>
+
+                <div className="flex justify-between flex-wrap py-2">
+
+                  {/* {console.log(bidData, 'bidData')} */}
+                  <div>
+                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                      <span className="font-Poppins">{bidData?.category}</span>
+                      <span>|</span>
+                      <span className="font-Poppins font-medium">
+                        {bidData?.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="font-Poppins font-medium">
+                      Raffle Draw
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
+                  <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                    <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
+                    
+                      <Image
+                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        alt={bidData?.name || "Product Image"}
+                        fill
+                        className="object-cover rounded-md"
+                      />
+
+                      <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
+
+                      <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+                        <div className="bg-orange-500 p-3 rounded-lg text-center">
+                          <span className="text-sm block">Raffle Ticket</span>
+                          <span className="text-sm font-bold">
+                            ₦ {ticketPrice}
+                          </span>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-full lg:w-1/2 flex flex-col space-y-4">
+                    <div>
+                      <label className="font-Poppins text-gray-700">
+                        Product
+                      </label>
+                      <input
+                        type="text"
+                        value={bidData?.name}
+                        readOnly
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
+                      />
+                    </div>
+
+                    <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                      <div className="flex flex-col items-center w-full sm:w-1/2">
+                        <label className="font-Poppins text-gray-700 mb-4">
+                          Ticket Price (₦)
+                        </label>
+                        <div className="flex items-center">
+                          {/*  <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+
+                            disabled={ticketCount <= 1}
+                          >
+                            -
+                          </button> */}
+                          <span className="mx-4 font-bold text-sm">
+                            {" "}
+                            {ticketPrice.toLocaleString('en-NG', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
+                            })}
+                          </span>
+                          {/*   <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+
+                          >
+                            +
+                          </button> */}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center w-full sm:w-1/2">
+                        <label className="font-Poppins text-gray-700 mb-4">
+                          No of Ticket
+                        </label>
+                        <div className="flex items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded"
+                            onClick={handleDecrease}
+                            disabled={ticketCount <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="mx-4 font-bold text-sm">
+                            {ticketCount}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-orange-500 text-white rounded"
+                            onClick={handleIncrease}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      {/*  <button
+                        onClick={() => {
+                          return (
+                            setbidopen(!bidopen), setViewTicket(!viewticket)
+                          );
+                        }}
+                        className="text-orange-500 font-Poppins text-xs mt-1"
+                      >
+                        View Ticket
+                      </button> */}
+                    </div>
+
+                    <div>
+                      <label className="font-Poppins text-gray-700">
+                        Amount (₦)
+                      </label>
+                      <input
+                        type="text"
+                        value={`₦${totalAmount.toLocaleString('en-NG', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}`}
+                        readOnly
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
+                      />
+                    </div>
+
+                    <DefaultButton
+                      text="Proceed"
+                      type="submit"
+                      handleClick={() => {
+                        return (
+                          setmakepayment(!makepayment), setbidopen(!bidopen)
+                        );
+                      }}
+                      className="my-10 w-full bg-[#FCDFD4] hover:bg-[#F25E26] hover:text-white p-3 rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            }
+            isModalOpen={bidopen}
+            showModal={() => setbidopen(!bidopen)}
+            handleOk={() => setbidopen(false)}
+            handleCancel={() => setbidopen(false)}
+          />
 
 
 
-      <ModalComponent
+    {/*   <ModalComponent
         content={
           <div className="  px-6 py-4">
             <div className="flex flex-col justify-center items-center">
@@ -1922,7 +2243,121 @@ const Page = ({ params }: any) => {
         showModal={() => setmakepayment(!makepayment)}
         handleOk={() => setmakepayment(false)}
         handleCancel={() => setmakepayment(false)}
-      />
+      /> */}
+
+
+<ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Make Payment
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    Kindly select your payment option
+                  </p>
+                </div>
+
+                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+                  <div>
+                    <p className="text-[#111111] text-base mb-4  ">
+                      Payment Method
+                    </p>
+                  </div>
+
+                  <form action="">
+                    <div className="mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_balance"
+                          name="payment_method"
+                          value="wallet_balance"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_balance")
+                          }
+                          className="accent-[#F25E26]"
+                        />
+                        <label className="ml-2" htmlFor="wallet_balance">
+                          Wallet
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}
+                        </small>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_point"
+                          name="payment_method"
+                          value="wallet_point"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_point")
+                          }
+                          className="accent-[#F25E26]"
+                        />
+                        <label className="ml-2" htmlFor="wallet_point">
+                          Pay With Wallet And Ajiroba Point
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                        </small>
+                      </div>
+                    </div>
+                  </form>
+
+
+                </div>
+
+                <form
+                  action=""
+                  className="flex  flex-col mt-8 mb-4"
+                  onSubmit={handleSubmit(submitFormf)}
+                >
+                  <div className="flex flex-col">
+                    <InputAction
+                      label="Enter Pin"
+                      type="password"
+                      name="password"
+                      placeholder="****"
+                      register={register}
+                      errors={errors.password}
+                      HiEyeSlash={<FaRegEyeSlash />}
+                      HiEye={<FaRegEye />}
+                    />
+                    <div className="text-xs text-red-700">
+                      {errors?.password?.message}
+                    </div>
+
+                    <button
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F25E26] hover:text-white'
+                        }`}
+                      disabled={!paymentMethod}
+                    >
+                      {paymentstatus === "pending" ? "..." : "Pay"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            }
+            isModalOpen={makepayment}
+            showModal={() => setmakepayment(!makepayment)}
+            handleOk={() => setmakepayment(false)}
+            handleCancel={() => setmakepayment(false)}
+          />
 
 
 
@@ -1969,6 +2404,183 @@ const Page = ({ params }: any) => {
         handleOk={() => setSuccessbid(false)}
         handleCancel={() => setSuccessbid(false)}
       />
+
+
+
+<ModalComponent
+            content={
+              <div className="flex flex-col px-6 py-4">
+                <AjirobaLogo />
+
+
+                <div className="flex justify-between flex-wrap py-2">
+                  {/*   <div>
+                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                      <span className="font-Poppins">{ticketData?.data?.category}</span>
+
+                      <span>|</span>
+                      <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
+                    </div>
+                  </div> */}
+
+                  <div onClick={() => setbidopen(false)} className=" text-red-500 font-Poppins cursor-pointer mb-4">
+                    Back
+                  </div>
+
+                  <div>
+                    <div>
+                      <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                        <span className="font-Poppins">{ticketData?.data?.category}</span>
+
+                        <span>|</span>
+                        <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* Ticket Info Row */}
+                <div className="flex flex-row items-center justify-between gap-8 my-8">
+                  {/* Ticket Price */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">Ticket Price (₦)</label>
+                    <div className="flex items-center">
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
+                      <input
+                        type="text"
+                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        }) ?? 0}
+                        readOnly
+                        className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
+                      />
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>+</button>
+                    </div>
+                  </div>
+
+                  {/* No of Ticket */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">No of Ticket</label>
+                    <div className="flex items-center">
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
+                      <input
+                        type="text"
+                        value={ticketData?.data?.ticket_quantity ?? 0}
+                        readOnly
+                        className="mx-4 w-12 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
+                      />
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>+</button>
+                    </div>
+                  </div>
+
+                  {/* Amount */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
+                    <input
+                      type="text"
+                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      }) ?? 0}
+                      readOnly
+                      className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
+                      style={{ color: '#888' }}
+                    />
+                  </div>
+                </div>
+
+                {/*  <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Raffle Drawww
+                  </h1>
+                </div> */}
+
+                <div className="mt-6">
+                  <table className="w-full border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-[#FCDFD4] text-left">
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          S/N
+                        </th>
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          Ticket Type
+                        </th>
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          Ticket Number
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="mt-8">
+                      {
+                        // Sample data when ticketData is not available
+                        (ticketData?.data?.ticket_details || [
+                          { ticket_type: "Regular", ticket_number: "RT-001" },
+                          { ticket_type: "VIP", ticket_number: "VT-002" },
+                          { ticket_type: "Regular", ticket_number: "RT-003" }
+                        ]).map((item: { ticket_type: string; ticket_number: string }, index: number) => {
+                          return (
+                            <tr key={index + 1}>
+                              <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                {index + 1}
+                              </td>
+                              <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                {item?.ticket_type}
+                              </td>
+                              <td
+                                className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium cursor-pointer underline"
+                                onClick={() => {
+                                  setSelectedTicket(item);
+                                  setShowTicketModal(true);
+                                }}
+                              >
+                                {item?.ticket_number}
+                              </td>
+                            </tr>
+                          )
+                        })
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            }
+            isModalOpen={viewticket}
+            showModal={() => setViewTicket(!viewticket)}
+            handleOk={() => setViewTicket(false)}
+            handleCancel={() => setViewTicket(false)}
+
+      
+          />
+
+
+
+{showTicketModal && selectedTicket && (
+            <ModalComponent
+              isModalOpen={showTicketModal}
+              showModal={() => setShowTicketModal(false)}
+              handleOk={() => setShowTicketModal(false)}
+              handleCancel={() => setShowTicketModal(false)}
+
+              width={1000}
+
+              content={
+
+
+
+                <RaffleTicket
+                  ticket_number={selectedTicket.ticket_number || 'N/A'}
+                  ticket_price={selectedTicket.ticket_price || 'N/A'}
+                  purchase_date={selectedTicket.purchase_date || 'N/A'}
+                  product={selectedTicket.product || 'N/A'}
+                  raffle_date={selectedTicket.raffle_date || 'N/A'}
+                  raffle_time={selectedTicket.raffle_time || 'N/A'}
+                />
+
+              }
+            />
+          )}
 
       <Footer />
     </main>

@@ -227,18 +227,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
         progress: undefined,
         theme: "light",
 
-        /*    onClose: () => {
-                        if (
-                            data?.data?.message &&
-                            data.data.message.includes(
-                                "Order placed successfully. Order Code",
-                            )
-                        ) {
-                            router.push("/profile");
-                        } else {
-                            router.push("/paymentpage");
-                        }
-                    }, */
+
       });
       reset();
     } else if (
@@ -369,7 +358,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      // setBidData(data?.data); // Store the API response in bidData for modal usage
+      
 
       setbidopen(false); // Open modal after successful API response
       setmakepayment(false);
@@ -849,6 +838,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                 <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
                     <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
+                 
                       <Image
                         src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
                         alt={bidData?.name || "Product Image"}
@@ -1130,10 +1120,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
             handleOk={() => setViewTicket(false)}
             handleCancel={() => setViewTicket(false)}
 
-          /*   isModalOpen={true}
-            showModal={() => setViewTicket(!true)}
-            handleOk={() => setViewTicket(false)}
-            handleCancel={() => setViewTicket(false)} */
+      
           />
 
           {showTicketModal && selectedTicket && (
