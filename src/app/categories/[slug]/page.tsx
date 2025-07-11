@@ -504,7 +504,34 @@ const CategoryPage = () => {
   }, []);
 
 
+  const isLoading = (
+    isFetching ||
+    filter_by_sub_catfetching ||
+    filter_by_namefetching ||
+    filter_by_price_rangefetching ||
+    filter_by_ratingsfetching ||
+    filter_by_price_underfetching ||
+    filter_from_price_abovefetching
+  );
 
+
+
+
+//   {(isFetching ||
+//     filter_by_sub_catfetching ||
+//     filter_by_namefetching ||
+//     filter_by_price_rangefetching ||
+//     filter_by_ratingsfetching ||
+//     filter_by_price_underfetching ||
+//     filter_from_price_abovefetching) ? (
+//     <Loading />
+// ) : filteredProducts.length > 0 ? (
+//     <ProductCategoryCard cardInfo={filteredProducts} />
+// ) : (
+//     <div className="text-center flex h-full items-center justify-center">
+//       No data available
+//     </div>
+// )}
 
 
 
@@ -527,8 +554,9 @@ const CategoryPage = () => {
         </div>
 
         <div className="w-9/12 h-full lg:pr-8 2xl:pr-8 pr-0 xl:pr-8 md:pr-0">
-          {filteredProducts.length > 0 ? (
-
+          {isLoading ? (
+            <Loading />
+          ) : filteredProducts.length > 0 ? (
             <ProductCategoryCard cardInfo={filteredProducts} />
           ) : (
             <div className="text-center flex h-full items-center justify-center">
@@ -566,13 +594,6 @@ const CategoryPage = () => {
           <SearchFilter />
         </div>
 
-        {(isFetching ||
-          filter_by_sub_catfetching ||
-          filter_by_namefetching ||
-          filter_by_price_rangefetching ||
-          filter_by_ratingsfetching ||
-          filter_by_price_underfetching ||
-          filter_from_price_abovefetching) && <Loading />}
       </div>
 
 

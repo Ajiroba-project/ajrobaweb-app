@@ -140,7 +140,7 @@ function Search() {
       </form>
 
       {isDropdownOpen && (
-        <div className=' xl:w-[407px] lg:w-[407px] 2xl:w-[407px] md:w-full w-full absolute left-0 right-0 z-10 mt-2 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto'>
+        <div className='w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[407px] absolute left-0 right-0 z-10 mt-2 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto'>
           <form onSubmit={handleSearchSubmit} className="p-1 relative bg-[#F5F5F5]">
             <input
               type="text"
@@ -426,26 +426,27 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                     }
 
                     )}
-                    <div className='relative mx-4 flex lg:mx-0'>
+                  {/*   <div className='relative mx-4 flex lg:mx-0'>
                       <Search />
-                    </div>
+                    </div> */}
                   </ul>
                 </div>
               </div>
 
-              <div className='flex gap-4'>
+              <div className='flex gap-2 md:gap-4 items-center min-w-0 flex-shrink flex-nowrap'>
+              <div className='relative mx-4 flex lg:mx-0'>
+                      <Search />
+                    </div>
                 <BiBell className='cursor-pointer text-xl text-[#000000]' color='black' />
 
                 <div className='relative cursor-pointer' onClick={() => router.push('/cart')}>
                   <IoCartOutline className='text-xl text-[#000000]' color='black' />
-
 
                   {cartCount > 0 && (
                     <span className='absolute -top-1 -right-2 bg-red-600 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center md:w-5 md:h-5 md:text-sm'>
                       {cartCount}
                     </span>
                   )}
-
                 </div>
 
                 {isOpen ? (

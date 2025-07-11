@@ -78,7 +78,7 @@ function Page() {
 
     if (data.status === 200) {
       toast.success(`${data?.data?.message}`, {
-        position: 'top-right',
+        position: 'bottom-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -97,7 +97,7 @@ function Page() {
       reset()
     } else if (data.status === 404) {
       toast.error(`${data?.data?.message}`, {
-        position: 'top-right',
+        position: 'bottom-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -109,7 +109,7 @@ function Page() {
       reset()
     } else if (data.status === 401) {
       toast.error(`${'Incorrect login details'}`, {
-        position: 'top-right',
+        position: 'bottom-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -121,7 +121,7 @@ function Page() {
       reset()
     } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
-        position: "top-right",
+        position: 'bottom-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -134,7 +134,7 @@ function Page() {
       reset()
     } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
-        position: "top-right",
+        position: 'bottom-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -150,7 +150,7 @@ function Page() {
 
     else {
       toast.error(`${data?.data?.message}`, {
-        position: 'top-right',
+        position: 'bottom-center',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
