@@ -515,38 +515,40 @@ interface HeaderProps {
   onSearch?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface Subcategory {
-  toLowerCase: any;
-  id: string
-  subcategory: any;
-  name?: string;
+interface SearchResult {
+  id: string;
+  name: string;
+  type: 'category' | 'subcategory' | 'product' | 'auction' | 'post';
+  url: string;
+  description: string;
+  image?: string | null;
+  price?: number | null;
   category?: string;
-  data?: any
+  author?: string;
 }
 
-interface CategoryResponse {
-  data: Category[];
-}
-
-interface Category {
-  [x: string]: any
-  category: string;
-  subcategories: Subcategory[];
-  data?: any
-}
-
-interface CategoryResponse {
-  data: Category[];
+interface SearchResponse {
+  data: {
+    results: SearchResult[];
+    total: number;
+    query: string;
+    type: string;
+  };
 }
 
 function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: () => void }) {
   const [searchInput, setSearchInput] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState<{ id: string; name: string }[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   const router = useRouter();
   const pathname = usePathname();
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -561,56 +563,72 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
     };
   }, [dropdownRef]);
 
-  const { data: catInfo, isLoading: catnLoading } = useQueryData<CategoryResponse>(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`,
-    ["get categories_and_subcategories"],
-    true
-  );
+  // Debounced search function
+  const performSearch = async (query: string) => {
+    if (!query || query.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const token = Cookies.get("token") as string;
+      const headers: { [key: string]: string } = {
+        "Content-Type": "application/json",
+      };
+
+      if (token && isLoggedIn) {
+        headers["Authorization"] = `token ${token}`;
+      }
+
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&type=all`, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (response.ok) {
+        const data: SearchResponse = await response.json();
+        setSearchResults(data.data.results);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setSearchInput(input);
     setIsDropdownOpen(true);
 
-    if (input) {
-      const lowerCaseInput = input.toLowerCase();
-      const results: { id: string; name: string }[] = [];
-
-      catInfo?.data?.forEach((category) => {
-        const categoryMatch = category.category.toLowerCase().includes(lowerCaseInput);
-        if (categoryMatch) {
-          results.push({ id: category.id, name: category.category });
-        }
-
-        category.subcategories.forEach((subcategory) => {
-          if (typeof subcategory === 'string') {
-            const lowerCaseSubcategory = (subcategory as string).toLowerCase();
-            if (lowerCaseSubcategory.includes(lowerCaseInput)) {
-              results.push(subcategory);
-            }
-          } else {
-            console.warn('Unexpected subcategory data type:', subcategory);
-          }
-        });
-      });
-
-      setSearchResults(results);
-    } else {
-      setSearchResults([]);
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
+
+    // Debounce search
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(input);
+    }, 300);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (searchInput) {
-      router.push(`${pathname}?search=${searchInput}`);
+      // Navigate to search results page or perform search
+      router.push(`/search?q=${encodeURIComponent(searchInput)}`);
     }
     setIsDropdownOpen(false);
     onClose?.();
   };
 
-  const handleResultClick = () => {
+  const handleResultClick = (result: SearchResult) => {
+    router.push(result.url);
     setIsDropdownOpen(false);
     onClose?.();
   };
@@ -639,28 +657,71 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
       </form>
 
       {isDropdownOpen && (
-        <div className={`absolute left-0 right-0 z-50 mt-1 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto border border-gray-200 ${
-          isMobile ? 'max-h-80' : ''
+        <div className={`absolute left-0 right-0 z-50 mt-1 bg-white shadow-lg rounded-md max-h-80 overflow-y-auto border border-gray-200 ${
+          isMobile ? 'max-h-96' : ''
         }`}>
-          {searchResults.length > 0 ? (
+          {isSearching ? (
+            <div className="flex items-center justify-center py-6">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#F25E26]"></div>
+              <span className="ml-2 text-sm text-gray-500">Searching...</span>
+            </div>
+          ) : searchResults.length > 0 ? (
             <div>
               {searchResults.map((result, index) => (
-                <Link 
-                  key={index} 
-                  href={`/categories/${result.name}?cat_id=${result.id}`}
-                  onClick={handleResultClick}
+                <div 
+                  key={`${result.type}-${result.id}`}
+                  onClick={() => handleResultClick(result)}
+                  className="block px-4 py-3 text-sm text-[#504D4D] font-Poppins hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer"
                 >
-                  <div className={`block px-4 py-3 text-sm text-[#504D4D] font-Poppins hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                    isMobile ? 'py-4 text-base' : ''
-                  }`}>
-                    {result.name}
+                  <div className="flex items-center gap-3">
+                   {/*  {result.image && (
+                      <image
+                        src={result.image} 
+                        alt={result.name}
+                        className="w-8 h-8 object-cover rounded"
+                      />
+                    )} */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-[#2A2A2A] truncate">
+                          {result.name}
+                        </span>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          result.type === 'category' ? 'bg-blue-100 text-blue-700' :
+                          result.type === 'subcategory' ? 'bg-green-100 text-green-700' :
+                          result.type === 'product' ? 'bg-purple-100 text-purple-700' :
+                          result.type === 'auction' ? 'bg-orange-100 text-orange-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {result.type}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1 truncate">
+                        {result.description}
+                      </div>
+                      {result.price && (
+                        <div className="text-xs font-medium text-[#F25E26] mt-1">
+                          ₦{result.price.toLocaleString()}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
+              {searchResults.length >= 20 && (
+                <div className="px-4 py-2 text-xs text-gray-500 text-center border-t border-gray-100">
+                  Showing top 20 results. <button 
+                    onClick={handleSearchSubmit}
+                    className="text-[#F25E26] hover:underline"
+                  >
+                    View all results
+                  </button>
+                </div>
+              )}
             </div>
-          ) : searchInput ? (
+          ) : searchInput && searchInput.length >= 2 ? (
             <div className={`p-4 text-sm text-gray-500 ${isMobile ? 'text-base' : ''}`}>
-              No results found
+              No results found for &quot;{searchInput}&quot;
             </div>
           ) : (
             <div className={`p-4 text-sm text-gray-500 ${isMobile ? 'text-base' : ''}`}>
@@ -681,6 +742,14 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const [cartCount, setcartCount] = useState<string | number | any>(0);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [hoveredMenu, setHoveredMenu] = useState<number | null>(null);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [expandedNotifications, setExpandedNotifications] = useState<number[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [notificationError, setNotificationError] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   
   const { isLoggedIn, clearAuthCookies } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -757,6 +826,32 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   const tkn_: string = Cookies.get("token") as string;
 
+  // Fetch notifications data
+  const { data: notificationsData, isLoading: notificationsLoading } = useQueryData<any>(
+    isLoggedIn ? `/api/demo-notifications` : "",
+    ["notifications"],
+    isLoggedIn
+  );
+
+  // Handle notifications data and count
+  useEffect(() => {
+    if (notificationsData?.data?.data && Array.isArray(notificationsData.data.data)) {
+      setNotifications(notificationsData.data.data);
+      const unreadCount = notificationsData.data.data.filter((n: any) => !n.read).length;
+      setNotificationCount(unreadCount);
+      setNotificationError(null);
+    } else if (notificationsData?.data?.count) {
+      setNotificationCount(notificationsData.data.count);
+    }
+  }, [notificationsData]);
+
+  // Handle notification errors
+  useEffect(() => {
+    if (notificationsData?.error) {
+      setNotificationError('Unable to load notifications');
+    }
+  }, [notificationsData]);
+
   useEffect(() => {
     const fetchCartItems = async () => {
       setLoading(true);
@@ -797,6 +892,79 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
     fetchCartItems();
   }, [isRootPath, tkn_]);
+
+  // Handle notification accordion toggle
+  const toggleNotification = (index: number) => {
+    setExpandedNotifications(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
+  };
+
+  // Handle notification modal close
+  const closeNotificationModal = () => {
+    setShowNotificationModal(false);
+    setExpandedNotifications([]);
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      closeNotificationModal();
+    }
+  };
+
+  // Focus management
+  useEffect(() => {
+    if (showNotificationModal) {
+      // Focus the first focusable element in the modal
+      const firstButton = document.querySelector('[role="dialog"] button') as HTMLElement;
+      if (firstButton) {
+        firstButton.focus();
+      }
+    }
+  }, [showNotificationModal]);
+
+  // Mark all notifications as read
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotificationCount(0);
+  };
+
+  // Mark single notification as read
+  const markAsRead = (id: number) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    setNotificationCount(prev => Math.max(0, prev - 1));
+  };
+
+  // Clear all notifications
+  const clearAllNotifications = () => {
+    setNotifications([]);
+    setNotificationCount(0);
+    setExpandedNotifications([]);
+  };
+
+  // Handle notification click
+  const handleNotificationClick = (notification: any) => {
+    markAsRead(notification.id);
+    if (notification.url) {
+      router.push(notification.url);
+      closeNotificationModal();
+    }
+  };
+
+  // Load more notifications (pagination)
+  const loadMoreNotifications = () => {
+    if (!isLoadingMore && hasMore) {
+      setIsLoadingMore(true);
+      // Simulate loading more notifications
+      setTimeout(() => {
+        setIsLoadingMore(false);
+        setHasMore(false); // For demo, we'll stop after first page
+      }, 1000);
+    }
+  };
 
   return (
     <>
@@ -858,7 +1026,11 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           
                           {/* Dropdown Menu */}
                           {hoveredMenu === index && (
-                            <div className='absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-md border border-gray-200 py-2 z-50'>
+                            <div 
+                              className='absolute top-full left-0  w-48 bg-white shadow-lg rounded-md border border-gray-200 py-2 z-50'
+                              onMouseEnter={() => setHoveredMenu(index)}
+                              onMouseLeave={() => setHoveredMenu(null)}
+                            >
                               {val.submenu.map((subItem, subIndex) => (
                                 <div
                                   key={subIndex}
@@ -920,8 +1092,23 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                 </button>
 
                 {/* Notifications */}
-                <button className='p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'>
+                <button 
+                  className='relative p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                  onClick={() => isLoggedIn && setShowNotificationModal(true)}
+                  title="Notifications"
+                  aria-label={`Notifications (${notificationCount} unread)`}
+                  aria-expanded={showNotificationModal}
+                  aria-haspopup="dialog"
+                >
                   <BiBell className='text-xl text-[#A09F9F] hover:text-[#F25E26] transition-colors duration-200' />
+                  {isLoggedIn && notificationCount > 0 && (
+                    <span 
+                      className='absolute -top-1 -right-1 bg-[#F25E26] text-white text-xs  rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] text-center'
+                      aria-label={`${notificationCount} unread notifications`}
+                    >
+                      {notificationCount > 99 ? '99+' : notificationCount}
+                    </span>
+                  )}
                 </button>
 
                 {/* Cart */}
@@ -1061,6 +1248,171 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           )}
         </div>
+
+        {/* Notification Modal - Full Page Overlay */}
+        {showNotificationModal && (
+          <div className='fixed inset-0 z-50 flex'>
+            {/* Main Content Area with Opacity */}
+            <div className='flex-1 bg-black bg-opacity-30' onClick={closeNotificationModal}></div>
+            
+            {/* Notification Side Panel */}
+            <div 
+              className='w-full max-w-2xl bg-white shadow-2xl h-full overflow-hidden'
+              role="dialog"
+              aria-labelledby="notification-title"
+              aria-modal="true"
+              onKeyDown={handleKeyDown}
+              tabIndex={-1}
+            >
+              {/* Modal Header */}
+              <div className='flex items-center justify-between p-6 border-b border-gray-200 bg-white'>
+                <h3 
+                  id="notification-title" 
+                  className="text-xl font-semibold text-[#2A2A2A] font-Poppins text-center w-full"
+                  style={{ textAlign: 'center', flex: 1 }}
+                >
+                  Notification
+                </h3>
+                <div className='flex items-center gap-2'>
+                 {/*  {notifications.length > 0 && (
+                    <>
+                      <button 
+                        onClick={markAllAsRead}
+                        className='px-3 py-1 text-sm text-[#F25E26] hover:bg-[#FCDFD4] rounded-md transition-colors duration-200'
+                        title="Mark all as read"
+                      >
+                        Mark all read
+                      </button>
+                      <button 
+                        onClick={clearAllNotifications}
+                        className='px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 rounded-md transition-colors duration-200'
+                        title="Clear all notifications"
+                      >
+                        Clear all
+                      </button>
+                    </>
+                  )} */}
+                  <button 
+                    onClick={closeNotificationModal}
+                    className='p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                    aria-label="Close notifications"
+                  >
+                    <IoClose className='text-xl text-[#A09F9F]' />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className='h-full overflow-y-auto'>
+                {notificationsLoading ? (
+                  <div className='flex items-center justify-center py-12'>
+                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#F25E26]'></div>
+                  </div>
+                ) : notificationError ? (
+                  <div className='text-center py-12 px-6'>
+                    <div className='text-red-500 text-4xl mb-3'>⚠️</div>
+                    <p className='text-gray-600 font-Poppins mb-2'>{notificationError}</p>
+                    <button 
+                      onClick={() => window.location.reload()}
+                      className='px-4 py-2 bg-[#F25E26] text-white rounded-md hover:bg-[#E54D26] transition-colors duration-200'
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                ) : notifications.length > 0 ? (
+                  <div className='p-6 space-y-4'>
+                    {notifications.map((notification: any, index: number) => (
+                      <div 
+                        key={notification.id}
+                        className={`border border-gray-200 rounded-lg bg-[#F6F6F6CC] shadow-sm hover:shadow-md transition-shadow duration-200 ${
+                          !notification.read ? 'border-l-4  bg-blue-50' : ''
+                        }`}
+                      >
+                        {/* Notification Header */}
+                        <button
+                          onClick={() => toggleNotification(index)}
+                          className='w-full p-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 rounded-t-lg'
+                        >
+                          <div className='flex-1'>
+                            <h4 className={`font-Poppins text-base ${
+                              !notification.read ? 'font-semibold text-[#2A2A2A]' : 'font-medium text-[#504D4D]'
+                            }`}>
+                              {notification.title}
+                            </h4>
+                            <p className='text-sm text-gray-500 mt-1'>
+                              {new Date(notification.date_created).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                          <div className='flex items-center gap-2'>
+                           {/*  {!notification.read && (
+                              <div className='w-2 h-2 bg-[#F25E26] rounded-full'></div>
+                            )} */}
+                            <IoIosArrowDown 
+                              className={`text-lg text-[#A09F9F] transition-transform duration-200 ${
+                                expandedNotifications.includes(index) ? 'rotate-180' : ''
+                              }`} 
+                            />
+                          </div>
+                        </button>
+
+                        {/* Notification Content (Accordion) */}
+                        {expandedNotifications.includes(index) && (
+                          <div className='px-4 pb-4 border-t border-gray-100'>
+                            <p className='text-sm text-[#504D4D] font-Poppins leading-relaxed mt-3'>
+                              {notification.message}
+                            </p>
+                            {/* {notification.ticket_number && (
+                              <div className='mt-3 p-3 bg-[#FCDFD4] rounded-md'>
+                                <p className='text-sm font-medium text-[#F25E26]'>
+                                  Ticket Number: <span className='font-bold'>{notification.ticket_number}</span>
+                                </p>
+                                <p className='text-xs text-[#504D4D] mt-1'>
+                                  Kindly go to &apos;auction wins&apos; on your profile to redeem your prize.
+                                </p>
+                              </div>
+                            )} */}
+                           {/*  {notification.url && (
+                              <button
+                                onClick={() => handleNotificationClick(notification)}
+                                className='mt-3 w-full px-4 py-2 bg-[#F25E26] text-white rounded-md hover:bg-[#E54D26] transition-colors duration-200 text-sm font-medium'
+                              >
+                                View Details
+                              </button>
+                            )} */}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    
+                    {/* Load More Button */}
+                    {hasMore && (
+                      <div className='text-center pt-4'>
+                        <button
+                          onClick={loadMoreNotifications}
+                          disabled={isLoadingMore}
+                          className='px-6 py-2 text-[#F25E26] border border-[#F25E26] rounded-md hover:bg-[#F25E26] hover:text-white transition-colors duration-200 disabled:opacity-50'
+                        >
+                          {isLoadingMore ? 'Loading...' : 'Load More'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className='text-center py-12'>
+                    <BiBell className='text-4xl text-gray-300 mx-auto mb-3' />
+                    <p className='text-gray-500 font-Poppins'>No notifications yet</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </section>
     </>
   );
