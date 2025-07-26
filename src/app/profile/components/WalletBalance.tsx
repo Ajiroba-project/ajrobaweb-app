@@ -354,7 +354,7 @@ export const WalletBalance = () => {
       </div>
 
       <div className="wallet-pin flex items-center justify-between">
-        <div className="flex items-center gap-8">
+       {/*  <div className="flex items-center gap-8">
           <p>{showPin ? "******" : "*****"}</p>
           <div
             onClick={() => setShowPin(!showPin)}
@@ -362,7 +362,7 @@ export const WalletBalance = () => {
           >
             {showPin ? <FaRegEyeSlash /> : <FaRegEye />}
           </div>
-        </div>
+        </div> */}
         <p
           className="cursor-pointer justify-end text-end text-sm capitalize underline underline-offset-4 hover:text-[#f25e26]"
           onClick={() => setCreatePin(!createPin)}
