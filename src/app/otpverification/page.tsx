@@ -45,9 +45,21 @@ function Page() {
         index: number,
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        const value = event.target.value.slice(0, 1);
+        const input = event.target.value;
+        
+        // Only allow numbers (0-9)
+        const numericValue = input.replace(/[^0-9]/g, '');
+        
+        // Take only the first character if multiple characters are entered
+        const value = numericValue.slice(0, 1);
+        
+        // Update the form value
         setValue(`otp.${index}`, value);
+        
+        // Update the input field value to show only the numeric character
+        event.target.value = value;
 
+        // Move to next input if a valid number is entered
         if (index < 5 && value.length === 1) {
             inputRefs.current[index + 1]?.focus();
         }
@@ -59,6 +71,17 @@ function Page() {
     ) => {
         if (index > 0 && event.keyCode === 8 && !event.currentTarget.value) {
             inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        // Allow only numbers (0-9), backspace, delete, tab, escape, enter
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        const isNumber = /^[0-9]$/.test(event.key);
+        const isAllowedKey = allowedKeys.includes(event.key);
+        
+        if (!isNumber && !isAllowedKey) {
+            event.preventDefault();
         }
     };
 
@@ -176,10 +199,13 @@ function Page() {
                                 {[...Array(6)].map((_, index) => (
                                     <input
                                         key={index}
-                                        type="text"
+                                        type="tel"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
                                         maxLength={1}
-                                        className="shadow-md border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="shadow-md border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                                         onKeyDown={(e) => handleBackspace(index, e)}
+                                        onKeyPress={handleKeyPress}
                                         {...register(`otp.${index}`)}
                                         ref={(el) => {
                                             if (el) {

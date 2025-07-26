@@ -27,13 +27,24 @@ function Page() {
         index: number,
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
+        const input = event.target.value;
+        
+        // Only allow numbers (0-9)
+        const numericValue = input.replace(/[^0-9]/g, '');
+        
+        // Take only the first character if multiple characters are entered
+        const value = numericValue.slice(0, 1);
+        
         const newOtp = [...otp];
-        newOtp[index] = event.target.value.slice(0, 1);
+        newOtp[index] = value;
         setOtp(newOtp);
         set_user_Otp(newOtp.join(''));
+        
+        // Update the input field value to show only the numeric character
+        event.target.value = value;
 
         // Automatically focus the next input field
-        if (index < 5 && newOtp[index].length === 1) {
+        if (index < 5 && value.length === 1) {
             inputRefs.current[index + 1].focus();
         }
     };
@@ -44,6 +55,17 @@ function Page() {
     ) => {
         if (index > 0 && event.keyCode === 8 && otp[index].length === 0) {
             inputRefs.current[index - 1].focus();
+        }
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        // Allow only numbers (0-9), backspace, delete, tab, escape, enter
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        const isNumber = /^[0-9]$/.test(event.key);
+        const isAllowedKey = allowedKeys.includes(event.key);
+        
+        if (!isNumber && !isAllowedKey) {
+            event.preventDefault();
         }
     };
 
@@ -178,12 +200,17 @@ function Page() {
                             {otp.map((value, index) => (
                                 <input
                                     key={index}
-                                    type="text"
+                                    type="tel"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     maxLength={1}
                                     value={value}
-                                    className=" shadow border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="shadow border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                                     onChange={(e) => handleInputChange(index, e)}
-                                    onKeyDown={(e) => handleBackspace(index, e)}
+                                    onKeyDown={(e) => {
+                                        handleBackspace(index, e);
+                                        handleKeyDown(e);
+                                    }}
                                     ref={(el) => {
                                         if (el) {
                                             inputRefs.current[index] = el;

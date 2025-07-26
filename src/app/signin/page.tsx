@@ -19,7 +19,7 @@ import { Button } from "@nextui-org/react";
 import { useAuthStore } from '@/store/store'
 
 // import 'react-toastify/dist/ReactToastify.css'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 // import Cookies from 'js-cookie'
 import Cookies from "js-cookie";
 
@@ -92,6 +92,15 @@ function Page() {
       setAuthCookie(data?.data?.token, 0)
       Cookies.set("token", data?.data?.token, { expires: 1 });
       setUser(data?.data)
+      
+      // Save email if remember me is checked
+      if (rememberMe) {
+        Cookies.set("remembered_email", data.email_or_phone, { expires: 30 }); // Save for 30 days
+      } else {
+        // Remove saved email if remember me is unchecked
+        Cookies.remove("remembered_email");
+      }
+      
       //  Cookies.set('ik', JSON.stringify(data?.data?.token), { sameSite: 'strict' });
 
       reset()
@@ -178,15 +187,119 @@ function Page() {
     reset()
   }
 
+  // Modified success handler to handle remember me
+  const handleSuccessWithRememberMe = (data: any) => {
+    if (data.status === 200) {
+      toast.success(`${data?.data?.message}`, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        onClose: () => router.push('/')
+      })
+      
+      setAuthCookie(data?.data?.token, 0)
+      Cookies.set("token", data?.data?.token, { expires: 1 });
+      setUser(data?.data)
+      
+      // Save email if remember me is checked, using the last submitted value
+      if (rememberMe && lastEmailOrPhone.current) {
+        Cookies.set("remembered_email", lastEmailOrPhone.current, { expires: 30 }); // Save for 30 days
+      } else {
+        // Remove saved email if remember me is unchecked
+        Cookies.remove("remembered_email");
+      }
+      
+      reset()
+    } else if (data.status === 404) {
+      toast.error(`${data?.data?.message}`, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      })
+      reset()
+    } else if (data.status === 401) {
+      toast.error(`${'Incorrect login details'}`, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      })
+      reset()
+    } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
+      toast.error(`${data?.data?.message}`, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset()
+    } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
+      toast.error(`${data?.data?.message}`, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => router.push("/otpverification"),
+      });
+      reset()
+    } else {
+      toast.error(`${data?.data?.message}`, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      })
+      reset()
+    }
+  }
+
   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
     'signin',
-    handleSuccess,
+    handleSuccessWithRememberMe,
     handleError
   )
 
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const lastEmailOrPhone = useRef<string | undefined>(undefined);
+
+  // Load saved email on component mount
+  useEffect(() => {
+    const savedEmail = Cookies.get('remembered_email');
+    if (savedEmail) {
+      setValue('email_or_phone', savedEmail);
+      setRememberMe(true);
+    }
+  }, [setValue]);
 
   const sumbitForm = async (data: dataProps) => {
+    lastEmailOrPhone.current = data.email_or_phone;
     // console.log(data, 'datatat')
 
     mutate({
@@ -273,9 +386,10 @@ function Page() {
               <div className="mt-4 flex items-center justify-center">
                 <DefaultButton
                   type="submit"
-                  className="rounded-lg h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white"
+                  className="rounded-lg h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                   text={status === "pending" ? "loading..." : "Sign in"}
                   handleClick={() => console.log("")}
+                  disabled={!watch('email_or_phone') || !watch('password') || status === "pending"}
                 />
               </div>
 
@@ -283,11 +397,14 @@ function Page() {
                 <div>
                   <input
                     type="checkbox"
-                    id="agreement"
-                    value="true"
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                     className="mr-2 accent-[#E84526]"
                   />
-                  <span className="text-sm">Remember me</span>
+                  <label htmlFor="rememberMe" className="text-sm cursor-pointer">
+                    Remember me
+                  </label>
                 </div>
                 <div onClick={() => router.push("forgot-password")}>
                   <span className="cursor-pointer text-sm">Forgot password?</span>
