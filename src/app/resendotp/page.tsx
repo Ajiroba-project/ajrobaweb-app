@@ -141,7 +141,7 @@ function Page() {
                 </nav>
 
                 <AuthHero
-                    title="OTP"
+                    title="Resend OTP"
                     menu="No worries! An OTP will be sent to reset your password"
                 />
 

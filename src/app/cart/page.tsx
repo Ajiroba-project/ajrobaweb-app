@@ -12,6 +12,8 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
+import AuthMiddleware from '@/hooks/useAuth'
+
 const Page = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,9 @@ const Page = () => {
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
 
   const tkn_: string = Cookies.get("token") as string;
+
+  
+  AuthMiddleware(router)
 
   const fetchCartItems = async () => {
     setLoading(true);

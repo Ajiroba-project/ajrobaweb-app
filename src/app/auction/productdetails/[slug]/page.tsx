@@ -500,7 +500,7 @@ const Page = ({ params }: any) => {
 
 
   const handleSuccessbidpayment = (data: any) => {
-      console.log(data, "datatatat"); 
+    /*   console.log(data, "datatatat");  */
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
