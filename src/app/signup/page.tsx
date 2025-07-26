@@ -61,15 +61,15 @@ function Page() {
       .string()
       .matches(/^[0-9]+$/, "Phone number must contain only numbers")
       .min(10, "Phone number must be at least 10 digits")
-      .max(15, "Phone number cannot exceed 15 digits")
+      .max(11, "Phone number cannot exceed 11 digits")
       .required("Mobile number is required"),
     address: yup
       .string()
       .required("Address is required")
       .min(10, "Address must be at least 10 characters long")
       .matches(/^[a-zA-Z0-9\s,.-]+$/, "Address can only contain letters, numbers, spaces, commas, periods, and hyphens"),
-    state: yup.string().required("State is required"),
-    lga: yup.string().required("LGA is required"),
+    state: yup.string().required("State is required").notOneOf([''], "Please select a state"),
+    lga: yup.string().required("LGA is required").notOneOf([''], "Please select an LGA"),
     password: yup
       .string()
       .required("Password is required")
@@ -186,6 +186,8 @@ function Page() {
     setSelectedState(value);
     const selectedState = state_and_LGA.find((state) => state.state === value);
     setLgas(selectedState ? selectedState.lgas : []);
+    // Clear the LGA selection when state changes
+    setValue('lga', '');
   };
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -405,17 +407,18 @@ function Page() {
                     <div>
                       <select
                         className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12"
-                        {...field}
                         style={{
                           border: "1px solid #D9D9D9",
                           borderRadius: "0.25rem",
                         }}
+                        value={field.value || ''}
                         onChange={(event) => {
                           const value = event.target.value;
                           field.onChange(value);
                           handleStateChange(value);
                         }}
                       >
+                        <option value="">Select State</option>
                         {state_and_LGA.map((state) => (
                           <option key={state.state} value={state.state}>
                             {state.state}
@@ -446,11 +449,13 @@ function Page() {
                           borderRadius: "0.25rem",
                         }}
                         disabled={!selectedState}
+                        value={field.value || ''}
                         onChange={(event) => {
                           const value = event.target.value;
                           field.onChange(value);
                         }}
                       >
+                        <option value="">Select LGA</option>
                         {lgas.map((lga) => (
                           <option key={lga} value={lga}>
                             {lga}

@@ -18,18 +18,21 @@ const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900'],
   display: "swap", // Optional: Ensure consistency across all fonts
+  style: ['normal', 'italic'],
 });
 
 const nunitoSans = Nunito_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900'],
   display: "swap",
+  style: ['normal', 'italic'],
 });
 
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '900'],
   display: "swap",
+  style: ['normal', 'italic'],
 });
 
 export default function RootLayout({

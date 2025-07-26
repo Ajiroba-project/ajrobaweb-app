@@ -23,7 +23,7 @@ export const Footer = () => {
             <Link href='/'>
               <Image src={Brand} alt='brand-logo' />
             </Link>
-            <p className={`text-sm italic text-[#F6F6F6]  ${poppins.className}`}>
+            <p className={`text-sm !italic text-[#F6F6F6]  ${poppins.className}`}>
               ... Your foremost consumer auction platform
             </p>
             <div className='header-socials flex gap-3'>

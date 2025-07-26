@@ -458,7 +458,7 @@ export const quickLinks = [
     links: '/categories'
   },
   {
-    name: 'Raffle draw Process',
+    name: 'Raffle Draw Process',
     links: '/raffle'
   }
 ]
