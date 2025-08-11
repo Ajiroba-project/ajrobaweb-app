@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
-import AuthMiddleware from '@/hooks/useAuth'
+import AuthMiddleware from '@/hooks/useAuthCart'
 
 const Page = () => {
   const router = useRouter();

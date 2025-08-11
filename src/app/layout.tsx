@@ -4,6 +4,7 @@ import './globals.css'
 import RQProviders from '@/utils/provider'
 import { Providers } from './providers'
 import { ToastContainer, toast } from "react-toastify";
+import { GlobalLoadingOverlay } from './component/Card'
 // import '~react-toastify/dist/ReactToastify.min.css';
 import "react-toastify/dist/ReactToastify.css";
 // import 'react-toastify/ReactToastify.min.css'
@@ -47,6 +48,7 @@ export default function RootLayout({
           <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}
+            <GlobalLoadingOverlay />
           </Providers>
         </body>
       </RQProviders>

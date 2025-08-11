@@ -308,6 +308,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
     isSuccess: bidpaymentsuccess,
     mutate: bidpaymentmutate,
     status: bidpaymentstatus,
+    isLoading: bidpaymentloading,
   } = useMutateData(
     "bidpayment",
     handleSuccessbidpayment,

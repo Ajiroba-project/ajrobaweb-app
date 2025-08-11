@@ -89,8 +89,9 @@ export const ProductCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }))
 
 
@@ -135,6 +136,7 @@ export const ProductCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
@@ -184,6 +186,7 @@ export const ProductCard = ({ cardInfo }: any) => {
   };
 
   const handleError = (error?: any) => {
+    setAddingToCart(false) // Hide loading on error
     console.log(error, "errr", "daaaattt");
 
     toast.error(`${error || "An Error Occured"}`, {
@@ -208,6 +211,7 @@ export const ProductCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
     const payload = {
@@ -333,8 +337,9 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }))
 
 
@@ -384,6 +389,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
@@ -433,6 +439,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   };
 
   const handleError = (error?: any) => {
+    setAddingToCart(false) // Hide loading on error
     console.log(error, "errr", "daaaattt");
 
     toast.error(`${error || "An Error Occured"}`, {
@@ -457,6 +464,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
     const payload = {
@@ -582,8 +590,9 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }))
 
   const handleCartNotification = (value: any) => {
@@ -628,6 +637,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
@@ -677,6 +687,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   };
 
   const handleError = (error?: any) => {
+    setAddingToCart(false) // Hide loading on error
     console.log(error, "errr", "daaaattt");
 
     toast.error(`${error || "An Error Occured"}`, {
@@ -701,6 +712,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
     const payload = {
@@ -1312,8 +1324,9 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<number | null>(null); // Use index or id for hover state
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn } = useAuthStore((state) => ({
+  const { isLoggedIn, setAddingToCart } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }));
 
 
@@ -1356,6 +1369,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
@@ -1409,6 +1423,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   };
 
   const handleError = (error?: any) => {
+    setAddingToCart(false) // Hide loading on error
     // console.log(error, "errr",  "daaaattt");
 
     toast.error(`${error || "An Error Occured"}`, {
@@ -1433,6 +1448,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
     const payload = {
@@ -1566,8 +1582,9 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>("");
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn } = useAuthStore((state) => ({
+  const { isLoggedIn, setAddingToCart } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }));
 
   const getSessionKey = () => {
@@ -1595,6 +1612,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
@@ -1668,6 +1686,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    setAddingToCart(true) // Show loading before API call
     const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
@@ -1995,3 +2014,21 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
     </>
   );
 };
+
+// Global Loading Overlay Component
+export const GlobalLoadingOverlay = () => {
+  const { isAddingToCart } = useAuthStore(state => ({
+    isAddingToCart: state.isAddingToCart
+  }))
+
+  if (!isAddingToCart) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg p-8 shadow-xl">
+        <Loading />
+        <p className="mt-4 text-center text-gray-700">Adding item to cart...</p>
+      </div>
+    </div>
+  )
+}
