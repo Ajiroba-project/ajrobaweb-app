@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
     try {
         const body = await request.json();
+
+        /*   console.log(body, 'body') */
+
         const cacheBuster = `cache=${Date.now()}`;
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/resend_account_activation_code/?${cacheBuster}`, {

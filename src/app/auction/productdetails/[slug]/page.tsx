@@ -17,7 +17,7 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
-import {RelatedProductsAuction} from '@/app/component/RelatedProductsAuction'
+import { RelatedProductsAuction } from '@/app/component/RelatedProductsAuction'
 import Loading from "@/app/component/Loading";
 import Cookies from "js-cookie";
 import ModalComponent from "@/app/component/ModalComponent";
@@ -33,6 +33,10 @@ import AuthMiddleware from '@/hooks/useAuth'
 import { DefaultButton } from "@/app/component/Button";
 import InputAction from "@/app/component/InputAction";
 import verify from "@/app/asset/verify.svg";
+import Link from "next/link";
+import Brand from '@/app/asset/logo.svg'
+import { useGetDatanew } from "@/hooks/useGetData";
+import RaffleTicket from "@/app/component/RaffleTicket";
 
 interface CardInfoItem {
   weight: string;
@@ -55,6 +59,8 @@ interface CardInfoItem {
   starts_in?: any;
   category_name?: any;
   subcategory_name?: any;
+  auction_date?: any;
+  auction_time?: any;
 }
 
 interface AuctionResponse {
@@ -112,6 +118,15 @@ const Page = ({ params }: any) => {
 
 
 
+  const AjirobaLogo = () => (
+    <div className=" mb-4">
+      <Link href={'/'} className={``}   >
+        <Image src={Brand} alt='brand-logo' />
+      </Link>
+
+    </div>
+  );
+
 
   const handlePaymentSelection = (method: SetStateAction<string>) => {
     setPaymentMethod(method);
@@ -119,8 +134,8 @@ const Page = ({ params }: any) => {
 
   const router = useRouter();
 
-    /*  useAuthMiddleware(router) */
-//   AuthMiddleware(router)
+  /*  useAuthMiddleware(router) */
+  //   AuthMiddleware(router)
 
   const star = [1, 2, 3, 4, 5];
   const rating = 4;
@@ -162,76 +177,76 @@ const Page = ({ params }: any) => {
   const [loadingdata, setLoadingData] = useState(false);
 
 
-  console.log(productdatanew?.data?.related_products,   'relatedproducts')
+  // console.log(productdatanew?.data?.related_products,   'relatedproducts')
 
-//   const fetchWithAuth = async (url: string) => {
-//     setLoadingData(true); // Indicate loading start
+  //   const fetchWithAuth = async (url: string) => {
+  //     setLoadingData(true); // Indicate loading start
 
-//     const requestOptions: RequestInit = {
-//       method: "GET",
-//       headers: {
-//         Authorization: `token ${userToken}`, // Simplified header creation
-//       },
-//       redirect: "follow",
-//     };
+  //     const requestOptions: RequestInit = {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `token ${userToken}`, // Simplified header creation
+  //       },
+  //       redirect: "follow",
+  //     };
 
-//     try {
-//       const response = await fetch(url, requestOptions);
+  //     try {
+  //       const response = await fetch(url, requestOptions);
 
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! Status: ${response.status}`);
-//       }
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
 
-//       const result = await response.json(); // Parse JSON response
-//       console.log(result, 'resulttt')
-//       setProductDataNew(result); // Update state with result
-//       return result; // Return result for external use
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//       throw error; // Re-throw for the caller to handle
-//     } finally {
-//       setLoadingData(false); // Ensure loading is stopped
-//     }
-//   };
+  //       const result = await response.json(); // Parse JSON response
+  //       console.log(result, 'resulttt')
+  //       setProductDataNew(result); // Update state with result
+  //       return result; // Return result for external use
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       throw error; // Re-throw for the caller to handle
+  //     } finally {
+  //       setLoadingData(false); // Ensure loading is stopped
+  //     }
+  //   };
 
 
-const fetchWithAuth = async (url: string) => {
-  setLoadingData(true); // Indicate loading start
+  const fetchWithAuth = async (url: string) => {
+    setLoadingData(true); // Indicate loading start
 
- /*  console.log(userToken, 'usertokennn') */
+    /*  console.log(userToken, 'usertokennn') */
 
-  const requestOptions: RequestInit = {
-    method: "GET",
-    headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
-    redirect: "follow",
+    const requestOptions: RequestInit = {
+      method: "GET",
+      headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
+      redirect: "follow",
+    };
+
+    try {
+      const response = await fetch(url, requestOptions);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json(); // Parse JSON response
+      /*  console.log(result, "resulttt"); */
+      setProductDataNew(result); // Update state with result
+      return result; // Return result for external use
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Re-throw for the caller to handle
+    } finally {
+      setLoadingData(false); // Ensure loading is stopped
+    }
   };
 
-  try {
-    const response = await fetch(url, requestOptions);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const result = await response.json(); // Parse JSON response
-    /*  console.log(result, "resulttt"); */
-    setProductDataNew(result); // Update state with result
-    return result; // Return result for external use
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error; // Re-throw for the caller to handle
-  } finally {
-    setLoadingData(false); // Ensure loading is stopped
-  }
-};
-
-
-const fetchData = async () => {
+  const fetchData = async () => {
     try {
       const data = await fetchWithAuth(
-        `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`,
       );
-    /*    console.log("Fetched data:", data); */
+      /*    console.log("Fetched data:", data); */
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -243,7 +258,7 @@ const fetchData = async () => {
   }, [product_id]); // Refetch whenever product_id changes
 
   //   console.log(productdata, "productdata");
-   /*   console.log(productdatanew, "productdatanew"); */
+  /*   console.log(productdatanew, "productdatanew"); */
 
   useEffect(() => {
     if (paths.length > 0) {
@@ -256,6 +271,8 @@ const fetchData = async () => {
     }
   }, [paths, path]); // Notice the added dependency on `path`
 
+
+
   const [selectedImage, setSelectedImage] = useState(0);
   const images = [image4, image2];
 
@@ -267,7 +284,7 @@ const fetchData = async () => {
   };
 
   const notify = () => {
-    toast("🦄 ‘Mama Gold Rice’ has been added to cart", {
+    toast("🦄 ‘Mama Gold Rice' has been added to cart", {
       position: "top-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -357,6 +374,7 @@ const fetchData = async () => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
+      setBidData(null)
       localStorage.setItem("pin_id", "yes");
       setSuccessModal(!successModal);
       toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
@@ -452,6 +470,11 @@ const fetchData = async () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
+
+
 
 
   const [bidopen, setbidopen] = useState(false);
@@ -460,11 +483,15 @@ const fetchData = async () => {
   const [viewticket, setViewTicket] = useState(false);
   const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null);
   const [ticketPrice, setTicketPrice] = useState(0);
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+
+
 
   const [successbid, setSuccessbid] = useState(false);
 
 
-    const [ticketCount, setTicketCount] = useState(1);
+  const [ticketCount, setTicketCount] = useState(1);
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [auctionId, setAuctionId] = useState("");
@@ -473,7 +500,7 @@ const fetchData = async () => {
 
 
   const handleSuccessbidpayment = (data: any) => {
-  /*   console.log(data, "datatatat"); */
+    /*   console.log(data, "datatatat");  */
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
@@ -576,8 +603,10 @@ const fetchData = async () => {
     reset();
   };
 
+  
 
-    const {
+
+  const {
     data: bidpaymentdata,
     error: bidpaymenterror,
     error: bidpaymentterror,
@@ -597,7 +626,7 @@ const fetchData = async () => {
     setTotalAmount((prevTotal) => prevTotal + ticketPrice);
   };
 
-  // Handler to decrease ticket count, ensuring count doesn’t go below 1
+  // Handler to decrease ticket count, ensuring count doesn't go below 1
   const handleDecrease = () => {
     if (ticketCount > 1) {
       setTicketCount((prevCount) => prevCount - 1);
@@ -606,7 +635,7 @@ const fetchData = async () => {
   };
 
 
-    useEffect(() => {
+  useEffect(() => {
     if (bidData && bidData.ticket_price) {
       const initialPrice = Number(bidData.ticket_price);
       setTicketPrice(initialPrice);
@@ -626,7 +655,7 @@ const fetchData = async () => {
   } = useMutateData("verifywalletpin", handleSuccess, handleError);
 
 
-    // Handle API success
+  // Handle API success
   const handleSuccesspayment = (data?: any) => {
     //  console.log(data)
 
@@ -636,7 +665,7 @@ const fetchData = async () => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      setBidData(data?.data); // Store the API response in bidData for modal usage
+      setBidData(null); // Store the API response in bidData for modal usage
 
       setbidopen(false); // Open modal after successful API response
       setmakepayment(false);
@@ -669,20 +698,20 @@ const fetchData = async () => {
         }, */
       });
 
-const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
+      const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
 
-const payload = {
-  auction: auctionId,
-  ticket_quantity: ticketCount,
-  total_amount: Number(totalAmount),
-  pay_with: payWithMethod,
-};
+      const payload = {
+        auction: auctionId,
+        ticket_quantity: ticketCount,
+        total_amount: Number(totalAmount),
+        pay_with: payWithMethod,
+      };
 
-bidpaymentmutate({
-  url: "/api/bidpayment",
-  payload: { payload: payload, token: userToken },
-  token: userToken,
-});
+      bidpaymentmutate({
+        url: "/api/bidpayment",
+        payload: { payload: payload, token: userToken },
+        token: userToken,
+      });
       resetpayment();
     } else if (
       data?.data?.status === 400 ||
@@ -690,6 +719,7 @@ bidpaymentmutate({
       data.status === 400 ||
       data.status === 409
     ) {
+      setBidData(null)
       setbidopen(false);
       setmakepayment(false);
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
@@ -767,7 +797,7 @@ bidpaymentmutate({
   };
 
 
-    const {
+  const {
     data: paymentdata,
     error: paymenterror,
     isError: paymentisError,
@@ -797,7 +827,7 @@ bidpaymentmutate({
 
 
 
- const submitFormf = (data: any) => {
+  const submitFormf = (data: any) => {
     /*   console.log(data, 'dddd', paymentMethod, 'paymmm'); */
 
     // mutate(data)
@@ -830,8 +860,8 @@ bidpaymentmutate({
 
     const filteredReviews = selectedStars
       ? data?.data?.reviews.filter(
-          (review: any) => review.rating === selectedStars,
-        )
+        (review: any) => review.rating === selectedStars,
+      )
       : data?.data?.reviews;
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -862,7 +892,7 @@ bidpaymentmutate({
         </div>
 
         <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
-     <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
+          <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
             <p className="flex mt-4 items-center text-[#111111] text-sm gap-1">
               {Array.from(
                 {
@@ -917,11 +947,10 @@ bidpaymentmutate({
                 <button
                   key={item.stars}
                   onClick={() => setSelectedStars(item.stars)}
-                  className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-                    selectedStars === item.stars
-                      ? "bg-[#F25E26] text-white font-bold"
-                      : "bg-white text-black font-normal"
-                  } rounded`}
+                  className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === item.stars
+                    ? "bg-[#F25E26] text-white font-bold"
+                    : "bg-white text-black font-normal"
+                    } rounded`}
                 >
                   {item.stars} Star
                 </button>
@@ -929,18 +958,17 @@ bidpaymentmutate({
 
               <button
                 onClick={() => setSelectedStars(null)}
-                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-                  selectedStars === null
-                    ? "bg-[#F25E26] text-white font-bold"
-                    : "bg-white text-black font-normal"
-                } rounded`}
+                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === null
+                  ? "bg-[#F25E26] text-white font-bold"
+                  : "bg-white text-black font-normal"
+                  } rounded`}
               >
                 All Stars
               </button>
             </div>
           </div>
 
-         <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
+          <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
             {currentReviews.map((item: any, key: number) => {
               const date = item?.date_created
                 ? parseISO(item.date_created)
@@ -953,7 +981,7 @@ bidpaymentmutate({
                 <div key={key} className="flex gap-2">
                   <div className="">
                     <Image
-                      src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
+                      src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
                       height={40}
                       width={40}
                       alt="Profile Image"
@@ -991,11 +1019,10 @@ bidpaymentmutate({
                     <h1
                       key={pageNumber}
                       onClick={() => handlePageClick(pageNumber)}
-                      className={` px-2 cursor-pointer ${
-                        currentPage === pageNumber
-                          ? " text-[#353131] font-bold"
-                          : " text-[#353131]"
-                      }`}
+                      className={` px-2 cursor-pointer ${currentPage === pageNumber
+                        ? " text-[#353131] font-bold"
+                        : " text-[#353131]"
+                        }`}
                     >
                       {pageNumber}
                     </h1>
@@ -1042,6 +1069,7 @@ bidpaymentmutate({
     };
   }
 
+  // Countdown Timer component
   const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     const {
       totalMinutes: initialTotalMinutes,
@@ -1050,45 +1078,48 @@ bidpaymentmutate({
       minutesLeft: initialMinutesLeft,
     } = parseStartsIn(startsIn);
 
-    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+    // Convert total minutes to seconds for the countdown
+    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
     useEffect(() => {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => Math.max(prev - 1, 0));
+        setTimeLeft((prev) => Math.max(prev - 1, 0)); // Decrease time left, but don't go below 0
       }, 1000);
 
       return () => clearInterval(timer);
     }, []);
 
-    const minutesLeft = timeLeft % 60;
-    const hoursLeft = Math.floor(timeLeft / 60) % 24;
-    const daysLeft = Math.floor(timeLeft / 1440);
+    // Convert seconds back to days, hours, and minutes for display
+    const totalSeconds = timeLeft;
+    const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
+    const hoursLeft = Math.floor((totalSeconds % 86400) / 3600);
+    const daysLeft = Math.floor(totalSeconds / 86400);
 
+    // Progress should be 0% when timeLeft is 0 or when the total time is 0
     const progress =
-      initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+      initialTotalMinutes > 0 ? (timeLeft / (initialTotalMinutes * 60)) * 100 : 0;
 
     return (
       <div className="mb-3">
+        <p className="text-xs capitalize mb-2 ">
+          <span className="font-medium">{daysLeft}</span> dy:{" "}
+          <span className="font-medium">{hoursLeft}</span> Hr:{" "}
+          <span className="font-medium">{minutesLeft}</span> Min{" "}
+          <span className="font-medium">Left</span>
+        </p>
         <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
           <div
             className="h-2 rounded-full bg-[#F25E26]"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
-
-        <p className="text-xs capitalize mb-2 mt-2 ">
-          <span className="font-medium">{daysLeft}</span> dy:{" "}
-          <span className="font-medium">{hoursLeft}</span> Hr:{" "}
-          <span className="font-medium">{minutesLeft}</span> Min{" "}
-          <span className="font-medium">Left</span>
-        </p>
       </div>
     );
   };
 
 
 
-    const handleBidClick = async (productId: any) => {
+  const handleBidClick = async (productId: any) => {
     if (!userToken) {
       console.error("Token is undefined");
       toast.error("Please Signin", {
@@ -1127,8 +1158,9 @@ bidpaymentmutate({
         }, 2000);
       } else if (data.data.status === "success") {
         setbidopen(true);
-        /*    console.log("Success:", data?.data?.data); */
         setBidData(data?.data?.data);
+        /*    console.log("Success:", data?.data?.data); */
+   
         setTicketPrice(Number(data?.data?.data?.ticket_price));
 
         // Display a success toast message if needed
@@ -1202,7 +1234,7 @@ bidpaymentmutate({
                       <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
                         <Image
                           className=" images-map w-32 h-32 object-cover"
-                          src={`https://ajiroba.onrender.com/media/${image.image}`}
+                          src={`https://staging.ajiroba.ng/media/${image.image}`}
                           alt="Product Thumbnail"
                           onClick={() => handleImageClick(index)}
                           width={100}
@@ -1220,7 +1252,7 @@ bidpaymentmutate({
                   <div className="main-image ">
                     {productdatanew?.data?.images?.[selectedImageIndex] ? (
                       <Image
-                        src={`https://ajiroba.onrender.com/media/${productdatanew?.data.images[selectedImageIndex].image}`}
+                        src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[selectedImageIndex].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -1259,8 +1291,28 @@ bidpaymentmutate({
                     <p className="text-[#111111] text-base mt-4 ">Weight</p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
-                      {`${productdatanew?.data?.weight} KG` || "NA"}
+                      {`${productdatanew?.data?.weight}` || "NA"}
                     </h1>
+
+
+                    <div className="flex flex-wrap flex-row justify-between">
+                      <div>
+                        <p className="text-[#111111] text-base mt-4 ">Auction Date</p>
+                        <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
+                          {productdatanew?.data?.start_date || "NA"}
+                        </h1>
+                      </div>
+                      <div>
+                        <p className="text-[#111111] text-base mt-4 ">Auction Time</p>
+                        <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
+                          {productdatanew?.data?.start_time || "NA"}
+                        </h1>
+                      </div>
+                    </div>
+
+
+
+
 
                     <hr className="mt-4" />
 
@@ -1309,49 +1361,72 @@ bidpaymentmutate({
                         )}
                       </div>
                     )} */}
-                    {productdatanew?.data?.starts_in === "Raffle Ended" ? (
+                    {/*
+                    {
+                      console.log(productdatanew?.data, "productdatanew?.data?.starts_in")
+                    } */}
+                    {productdatanew?.data?.starts_in === "Raffle Started" ? (
                       <div className="flex justify-center items-center mt-4">
                         <button
-                          /*  onClick={notify} */
-
                           onClick={() =>
-                    /*         router.push(`/raffle/${product_id}/winners`) */
+                            /*         router.push(`/raffle/${product_id}/winners`) */
                             router.push(`/raffle/${product_id}`)
                           }
                           className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                         >
-                          Watch Live Raffle
+                          Raffle Started, Watch Live Raffle
                         </button>
                       </div>
-                    ) : (
-                      <div className="flex justify-center items-center mt-4">
-                      {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
-                       {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
-                              <button
-                        /*         onClick={() => setmakepayment(!makepayment)} */
-                          onClick={() => handleBidClick(product_id)}
-                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                              >
-                                Bid
-                              </button>
-                            ) : productdatanew?.data?.bidded === "true" ? (
-                              <button
-                                disabled
-                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                              >
-                                Bidded
-                              </button>
-                            ) : (
-                              <button
-                                disabled
-                                className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                              >
-                                Bidded
-                              </button>
-)}
+                    ) :
 
-                      </div>
-                    )}
+
+                      productdatanew?.data?.starts_in === "Raffle Ended" ? (
+                        <div className="flex justify-center items-center mt-4">
+                          <button
+                            /*  onClick={notify} */
+
+                            disabled
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                          >
+                            Raffle Ended
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex justify-center items-center mt-4">
+                          {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
+                          {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
+                            <button
+                              /*         onClick={() => setmakepayment(!makepayment)} */
+                              onClick={() => handleBidClick(product_id)}
+                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                            >
+                              Bid
+                            </button>
+                          ) : productdatanew?.data?.bidded === "true" ? (
+                           /*  <button
+                              disabled
+                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                            >
+                              Bidded
+                            </button> */
+                            <button
+                            /*         onClick={() => setmakepayment(!makepayment)} */
+                            onClick={() => handleBidClick(product_id)}
+                            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                          >
+                            Bid
+                          </button>
+                          ) : (
+                            <button
+                              disabled
+                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
+                            >
+                              Bidded
+                            </button>
+                          )}
+
+                        </div>
+                      )}
                   </div>
                 </div>
               )}
@@ -1391,8 +1466,8 @@ bidpaymentmutate({
                   <Image
                     src={
                       productdatanew?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdatanew?.data.images[0].image}`
-                        : ""
+                        ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
+                        : `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
                     }
                     alt="Product Image"
                     width={200}
@@ -1405,8 +1480,8 @@ bidpaymentmutate({
                   <Image
                     src={
                       productdatanew?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdatanew?.data.images[1].image}`
-                        : ""
+                        ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
+                        : `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
                     }
                     alt="Product Image"
                     width={200}
@@ -1448,7 +1523,7 @@ bidpaymentmutate({
                   <Image
                     src={
                       productdata?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -1462,7 +1537,7 @@ bidpaymentmutate({
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[1].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -1501,7 +1576,7 @@ bidpaymentmutate({
           </h1>
         </div>
 
-         {productdatanew?.data?.related_products && (
+        {productdatanew?.data?.related_products && (
           <RelatedProductsDetails
             cardInfo={productdatanew?.data?.related_products}
           />
@@ -1510,7 +1585,7 @@ bidpaymentmutate({
       {/*           {productdatafetching && <Loading />} */}
       {loadingdata && <Loading />}
 
-      <ModalComponent
+    {/*   <ModalComponent
         content={
           <div className="  px-6 py-4">
             <div className="flex flex-col justify-center items-center">
@@ -1577,7 +1652,121 @@ bidpaymentmutate({
         showModal={() => setmakepayment(!makepayment)}
         handleOk={() => setmakepayment(false)}
         handleCancel={() => setmakepayment(false)}
-      />
+      /> */}
+
+
+<ModalComponent
+            content={
+              <div className="  px-6 py-4">
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Make Payment
+                  </h1>
+                  <p className="text-center font-normal text-sm">
+                    Kindly select your payment option
+                  </p>
+                </div>
+
+                <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+                  <div>
+                    <p className="text-[#111111] text-base mb-4  ">
+                      Payment Method
+                    </p>
+                  </div>
+
+                  <form action="">
+                    <div className="mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_balance"
+                          name="payment_method"
+                          value="wallet_balance"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_balance")
+                          }
+                          className="accent-[#F25E26]"
+                        />
+                        <label className="ml-2" htmlFor="wallet_balance">
+                          Wallet
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}
+                        </small>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="wallet_point"
+                          name="payment_method"
+                          value="wallet_point"
+                          onChange={() =>
+                            handlePaymentSelection("wallet_point")
+                          }
+                          className="accent-[#F25E26]"
+                        />
+                        <label className="ml-2" htmlFor="wallet_point">
+                          Pay With Wallet And Ajiroba Point
+                        </label>
+                      </div>
+                      <div className="ml-4">
+                        <small className="text-[#A09F9F] text-sm">
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                        </small>
+                      </div>
+                    </div>
+                  </form>
+
+
+                </div>
+
+                <form
+                  action=""
+                  className="flex  flex-col mt-8 mb-4"
+                  onSubmit={handleSubmit(submitFormf)}
+                >
+                  <div className="flex flex-col">
+                    <InputAction
+                      label="Enter Pin"
+                      type="password"
+                      name="password"
+                      placeholder="****"
+                      register={register}
+                      errors={errors.password}
+                      HiEyeSlash={<FaRegEyeSlash />}
+                      HiEye={<FaRegEye />}
+                    />
+                    <div className="text-xs text-red-700">
+                      {errors?.password?.message}
+                    </div>
+
+                    <button
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F25E26] hover:text-white'
+                        }`}
+                      disabled={!paymentMethod}
+                    >
+                      {paymentstatus === "pending" ? "..." : "Pay"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            }
+            isModalOpen={makepayment}
+            showModal={() => setmakepayment(!makepayment)}
+            handleOk={() => setmakepayment(false)}
+            handleCancel={() => setmakepayment(false)}
+          />
 
       <ModalComponent
         content={
@@ -1623,20 +1812,177 @@ bidpaymentmutate({
         }
         isModalOpen={confirmordermodal}
         showModal={showConfirmOrder}
-        handleOk={() => {}}
+        handleOk={() => { }}
         handleCancel={handlecloseOrder}
       />
 
 
 
-          <ModalComponent
+    {/*   <ModalComponent
+        content={
+          <div className="flex flex-col  px-6 py-4">
+            <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+              Back
+            </div>
+
+            <div className="flex justify-between flex-wrap py-2">
+              <div>
+                <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                  <span className="font-Poppins">{bidData?.category}</span>
+                  <span>|</span>
+                  <span className="font-Poppins font-medium">
+                    {bidData?.name}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <span className="font-Poppins font-medium">
+                  Raffle Draw
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
+              <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
+
+
+                  <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
+                    <div className="bg-orange-500 p-3 rounded-lg text-center">
+                      <span className="text-sm block">Raffle Ticket</span>
+                      <span className="text-sm font-bold">
+                        ₦ {ticketPrice}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full lg:w-1/2 flex flex-col space-y-4">
+                <div>
+                  <label className="font-Poppins text-gray-700">
+                    Product
+                  </label>
+                  <input
+                    type="text"
+                    value={bidData?.name}
+                    readOnly
+                    className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
+                  />
+                </div>
+
+                <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                  <div className="flex flex-col items-center w-full sm:w-1/2">
+                    <label className="font-Poppins text-gray-700 mb-4">
+                      Ticket Price (₦)
+                    </label>
+                    <div className="flex items-center">
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                       
+                        disabled={ticketCount <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="mx-4 font-bold text-sm">
+                        {" "}
+                        {ticketPrice}
+                      </span>
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+       
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-center w-full sm:w-1/2">
+                    <label className="font-Poppins text-gray-700 mb-4">
+                      No of Ticket
+                    </label>
+                    <div className="flex items-center">
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        onClick={handleDecrease}
+                        disabled={ticketCount <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="mx-4 font-bold text-sm">
+                        {ticketCount}
+                      </span>
+                      <button
+                        className="px-2 py-1 bg-orange-500 text-white rounded"
+                        onClick={handleIncrease}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => {
+                      return (
+                        setbidopen(!bidopen), setViewTicket(!viewticket)
+                      );
+                    }}
+                    className="text-orange-500 font-Poppins text-xs mt-1"
+                  >
+                    View Ticket
+                  </button>
+                </div>
+
+                <div>
+                  <label className="font-Poppins text-gray-700">
+                    Amount (₦)
+                  </label>
+                  <input
+                    type="text"
+                    value={`₦ ${totalAmount.toLocaleString()}`}
+                    readOnly
+                    className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                  />
+                </div>
+
+                <DefaultButton
+                  text="Proceed"
+                  type="submit"
+                  handleClick={() => {
+                    return (
+                      setmakepayment(!makepayment), setbidopen(!bidopen)
+                    );
+                  }}
+                  className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        }
+        isModalOpen={bidopen}
+        showModal={() => setbidopen(!bidopen)}
+        handleOk={() => setbidopen(false)}
+        handleCancel={() => setbidopen(false)}
+      /> */}
+
+
+<ModalComponent
             content={
               <div className="flex flex-col  px-6 py-4">
-                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                <AjirobaLogo />
+
+                <div onClick={() => setbidopen(false)} className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
                   Back
                 </div>
 
                 <div className="flex justify-between flex-wrap py-2">
+
+                  {/* {console.log(bidData, 'bidData')} */}
                   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
                       <span className="font-Poppins">{bidData?.category}</span>
@@ -1656,8 +2002,14 @@ bidpaymentmutate({
 
                 <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-                    <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-
+                    <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
+                    
+                      <Image
+                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        alt={bidData?.name || "Product Image"}
+                        fill
+                        className="object-cover rounded-md"
+                      />
 
                       <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
 
@@ -1667,6 +2019,8 @@ bidpaymentmutate({
                           <span className="text-sm font-bold">
                             ₦ {ticketPrice}
                           </span>
+
+
                         </div>
                       </div>
                     </div>
@@ -1691,23 +2045,26 @@ bidpaymentmutate({
                           Ticket Price (₦)
                         </label>
                         <div className="flex items-center">
-                          <button
+                          {/*  <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                            /*    onClick={handleDecrease} */
+
                             disabled={ticketCount <= 1}
                           >
                             -
-                          </button>
+                          </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
-                            {ticketPrice}
+                            {ticketPrice.toLocaleString('en-NG', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
+                            })}
                           </span>
-                          <button
+                          {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
-                            /*  onClick={handleIncrease} */
+
                           >
                             +
-                          </button>
+                          </button> */}
                         </div>
                       </div>
 
@@ -1737,7 +2094,7 @@ bidpaymentmutate({
                     </div>
 
                     <div className="flex justify-end">
-                      <button
+                      {/*  <button
                         onClick={() => {
                           return (
                             setbidopen(!bidopen), setViewTicket(!viewticket)
@@ -1746,7 +2103,7 @@ bidpaymentmutate({
                         className="text-orange-500 font-Poppins text-xs mt-1"
                       >
                         View Ticket
-                      </button>
+                      </button> */}
                     </div>
 
                     <div>
@@ -1755,9 +2112,12 @@ bidpaymentmutate({
                       </label>
                       <input
                         type="text"
-                        value={`₦ ${totalAmount.toLocaleString()}`}
+                        value={`₦${totalAmount.toLocaleString('en-NG', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}`}
                         readOnly
-                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
                       />
                     </div>
 
@@ -1769,7 +2129,7 @@ bidpaymentmutate({
                           setmakepayment(!makepayment), setbidopen(!bidopen)
                         );
                       }}
-                      className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
+                      className="my-10 w-full bg-[#FCDFD4] hover:bg-[#F25E26] hover:text-white p-3 rounded-lg"
                     />
                   </div>
                 </div>
@@ -1783,7 +2143,110 @@ bidpaymentmutate({
 
 
 
-               <ModalComponent
+    {/*   <ModalComponent
+        content={
+          <div className="  px-6 py-4">
+            <div className="flex flex-col justify-center items-center">
+              <h1 className="text-center font-bold text-lg">
+                Make Payment
+              </h1>
+              <p className="text-center font-normal text-sm">
+                Kindly select your payment option
+              </p>
+            </div>
+
+            <div className="bg-[#F6F6F6] shadow-lg border rounded border-[#D2D2D2] px-4 py-4 mt-4">
+              <div>
+                <p className="text-[#111111] text-base mb-4  ">
+                  Payment Method
+                </p>
+              </div>
+
+              <form action="">
+                <div className="mb-4">
+                  <div>
+                    <input
+                      type="radio"
+                      id="wallet_balance"
+                      name="payment_method"
+                      value="wallet_balance"
+                      onChange={() =>
+                        handlePaymentSelection("wallet_balance")
+                      }
+                    />
+                    <label className="ml-2" htmlFor="wallet_balance">
+                      Wallet
+                    </label>
+                  </div>
+                  <div className="ml-4">
+                    <small className="text-[#A09F9F] text-sm">
+                      #230000
+                    </small>
+                  </div>
+                </div>
+
+                <div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="wallet_point"
+                      name="payment_method"
+                      value="wallet_point"
+                      onChange={() =>
+                        handlePaymentSelection("wallet_point")
+                      }
+                    />
+                    <label className="ml-2" htmlFor="wallet_point">
+                      Pay With Wallet And Ajiroba Point
+                    </label>
+                  </div>
+                  <div className="ml-4">
+                    <small className="text-[#A09F9F] text-sm">
+                      #23,000 (Wallet) And #200 (Ajiroba Points)
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <form
+              action=""
+              className="flex  flex-col mt-8 mb-4"
+              onSubmit={handleSubmit(submitFormf)}
+            >
+              <div className="flex flex-col">
+                <InputAction
+                  label="Enter Pin"
+                  type="password"
+                  name="password"
+                  placeholder="****"
+                  register={register}
+                  errors={errors.password}
+                  HiEyeSlash={<FaRegEyeSlash />}
+                  HiEye={<FaRegEye />}
+                />
+                <div className="text-xs text-red-700">
+                  {errors?.password?.message}
+                </div>
+
+                <button
+                  className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
+                                    }`}
+                >
+                  {paymentstatus === "pending" ? "..." : "Pay"}
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+        isModalOpen={makepayment}
+        showModal={() => setmakepayment(!makepayment)}
+        handleOk={() => setmakepayment(false)}
+        handleCancel={() => setmakepayment(false)}
+      /> */}
+
+
+<ModalComponent
             content={
               <div className="  px-6 py-4">
                 <div className="flex flex-col justify-center items-center">
@@ -1813,6 +2276,7 @@ bidpaymentmutate({
                           onChange={() =>
                             handlePaymentSelection("wallet_balance")
                           }
+                          className="accent-[#F25E26]"
                         />
                         <label className="ml-2" htmlFor="wallet_balance">
                           Wallet
@@ -1820,7 +2284,10 @@ bidpaymentmutate({
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          #230000
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}
                         </small>
                       </div>
                     </div>
@@ -1835,6 +2302,7 @@ bidpaymentmutate({
                           onChange={() =>
                             handlePaymentSelection("wallet_point")
                           }
+                          className="accent-[#F25E26]"
                         />
                         <label className="ml-2" htmlFor="wallet_point">
                           Pay With Wallet And Ajiroba Point
@@ -1842,11 +2310,16 @@ bidpaymentmutate({
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          #23,000 (Wallet) And #200 (Ajiroba Points)
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
                   </form>
+
+
                 </div>
 
                 <form
@@ -1870,8 +2343,9 @@ bidpaymentmutate({
                     </div>
 
                     <button
-                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
-                                    }`}
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F25E26] hover:text-white'
+                        }`}
+                      disabled={!paymentMethod}
                     >
                       {paymentstatus === "pending" ? "..." : "Pay"}
                     </button>
@@ -1887,49 +2361,235 @@ bidpaymentmutate({
 
 
 
-            <ModalComponent
+      <ModalComponent
+        content={
+          <div className="  px-6 py-4">
+            <div className="py-2 flex justify-center items-center">
+              <Image src={verify} width={60} height={60} alt="icon" />
+            </div>
+            <div className="flex flex-col justify-center items-center">
+              <h1 className="text-center font-bold text-lg">
+                Successfully
+              </h1>
+              <p className="text-center font-normal text-sm">
+                You have entered into raffle draw for this product. Good
+                luck
+              </p>
+            </div>
+
+            <div className="flex flex-col justify-center items-center">
+              <DefaultButton
+                text="Proceed"
+                /*  text={status === 'pending' ? 'loading...' : "Save"} */
+                className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
+                type="submit"
+              />
+              <button
+                onClick={() => {
+                  return (
+                    setbidopen(false),
+                    setViewTicket(!viewticket),
+                    setSuccessbid(!successbid)
+                  );
+                }}
+                className="text-orange-500 font-Poppins text-xs mt-1"
+              >
+                View Ticket
+              </button>
+            </div>
+          </div>
+        }
+        isModalOpen={successbid}
+        showModal={() => setSuccessbid(!successbid)}
+        handleOk={() => setSuccessbid(false)}
+        handleCancel={() => setSuccessbid(false)}
+      />
+
+
+
+<ModalComponent
             content={
-              <div className="  px-6 py-4">
-                <div className="py-2 flex justify-center items-center">
-                  <Image src={verify} width={60} height={60} alt="icon" />
-                </div>
-                <div className="flex flex-col justify-center items-center">
-                  <h1 className="text-center font-bold text-lg">
-                    Successfully
-                  </h1>
-                  <p className="text-center font-normal text-sm">
-                    You have entered into raffle draw for this product. Good
-                    luck
-                  </p>
+              <div className="flex flex-col px-6 py-4">
+                <AjirobaLogo />
+
+
+                <div className="flex justify-between flex-wrap py-2">
+                  {/*   <div>
+                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                      <span className="font-Poppins">{ticketData?.data?.category}</span>
+
+                      <span>|</span>
+                      <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
+                    </div>
+                  </div> */}
+
+                  <div onClick={() => setbidopen(false)} className=" text-red-500 font-Poppins cursor-pointer mb-4">
+                    Back
+                  </div>
+
+                  <div>
+                    <div>
+                      <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                        <span className="font-Poppins">{ticketData?.data?.category}</span>
+
+                        <span>|</span>
+                        <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex flex-col justify-center items-center">
-                  <DefaultButton
-                    text="Proceed"
-                    /*  text={status === 'pending' ? 'loading...' : "Save"} */
-                    className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
-                    type="submit"
-                  />
-                  <button
-                    onClick={() => {
-                      return (
-                        setbidopen(false),
-                        setViewTicket(!viewticket),
-                        setSuccessbid(!successbid)
-                      );
-                    }}
-                    className="text-orange-500 font-Poppins text-xs mt-1"
-                  >
-                    View Ticket
-                  </button>
+
+                {/* Ticket Info Row */}
+                <div className="flex flex-row items-center justify-between gap-8 my-8">
+                  {/* Ticket Price */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">Ticket Price (₦)</label>
+                    <div className="flex items-center">
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
+                      <input
+                        type="text"
+                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        }) ?? 0}
+                        readOnly
+                        className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
+                      />
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>+</button>
+                    </div>
+                  </div>
+
+                  {/* No of Ticket */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">No of Ticket</label>
+                    <div className="flex items-center">
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
+                      <input
+                        type="text"
+                        value={ticketData?.data?.ticket_quantity ?? 0}
+                        readOnly
+                        className="mx-4 w-12 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
+                      />
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>+</button>
+                    </div>
+                  </div>
+
+                  {/* Amount */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
+                    <input
+                      type="text"
+                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      }) ?? 0}
+                      readOnly
+                      className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
+                      style={{ color: '#888' }}
+                    />
+                  </div>
+                </div>
+
+                {/*  <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Raffle Drawww
+                  </h1>
+                </div> */}
+
+                <div className="mt-6">
+                  <table className="w-full border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-[#FCDFD4] text-left">
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          S/N
+                        </th>
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          Ticket Type
+                        </th>
+                        <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">
+                          Ticket Number
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="mt-8">
+                      {
+                        // Sample data when ticketData is not available
+                        (ticketData?.data?.ticket_details || [
+                          { ticket_type: "Regular", ticket_number: "RT-001" },
+                          { ticket_type: "VIP", ticket_number: "VT-002" },
+                          { ticket_type: "Regular", ticket_number: "RT-003" }
+                        ]).map((item: { ticket_type: string; ticket_number: string }, index: number) => {
+                          return (
+                            <tr key={index + 1}>
+                              <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                {index + 1}
+                              </td>
+                              <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                {item?.ticket_type}
+                              </td>
+                              <td
+                                className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium cursor-pointer underline"
+                                onClick={() => {
+                                  setSelectedTicket({
+                                    ...item,
+                                    ticket_price: ticketData?.data?.ticket_price,
+                                    purchase_date: ticketData?.data?.purchase_date,
+                                    product: ticketData?.data?.product_name,
+                                    raffle_date: ticketData?.data?.raffle_date,
+                                    raffle_time: ticketData?.data?.raffle_time,
+                                  });
+                                  setShowTicketModal(true);
+                                }}
+                              >
+                                {item?.ticket_number}
+                              </td>
+                            </tr>
+                          )
+                        })
+                      }
+                    </tbody>
+                  </table>
                 </div>
               </div>
             }
-            isModalOpen={successbid}
-            showModal={() => setSuccessbid(!successbid)}
-            handleOk={() => setSuccessbid(false)}
-            handleCancel={() => setSuccessbid(false)}
+            isModalOpen={viewticket}
+            showModal={() => setViewTicket(!viewticket)}
+            handleOk={() => setViewTicket(false)}
+            handleCancel={() => setViewTicket(false)}
+
+      
           />
+
+          {/*   {
+              console.log(selectedTicket, 'selectedTicket')
+            } */}
+
+{showTicketModal && selectedTicket && (
+            <ModalComponent
+              isModalOpen={showTicketModal}
+              showModal={() => setShowTicketModal(false)}
+              handleOk={() => setShowTicketModal(false)}
+              handleCancel={() => setShowTicketModal(false)}
+
+              width={1000}
+
+              content={
+
+
+
+                <RaffleTicket
+                  ticket_number={selectedTicket.ticket_number || 'N/A'}
+                  ticket_price={selectedTicket.ticket_price || 'N/A'}
+                  purchase_date={selectedTicket.purchase_date || 'N/A'}
+                  product={selectedTicket.product || 'N/A'}
+                  raffle_date={selectedTicket.raffle_date || 'N/A'}
+                  raffle_time={selectedTicket.raffle_time || 'N/A'}
+                />
+
+              }
+            />
+          )}
 
       <Footer />
     </main>

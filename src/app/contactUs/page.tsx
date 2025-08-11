@@ -33,16 +33,17 @@ const ContactUsPage = () => {
   const decodedPaths = usePathName()
 
   const schema = yup.object().shape({
-    full_name: yup.string().required('Name is required'),
-    phone: yup.string().required('Phone Number is required'),
-    subject: yup.string().required('Subject is required'),
-    message: yup.string().required('Message is required'),
+    full_name: yup.string().required('Name is required').max(50, 'Name must not exceed 50 characters'),
+    phone: yup.string().required('Phone Number is required').max(15, 'Phone number must not exceed 15 characters'),
+    subject: yup.string().required('Subject is required').max(100, 'Subject must not exceed 100 characters'),
+    message: yup.string().required('Message is required').max(1000, 'Message must not exceed 1000 characters'),
     email: yup
       .string()
       .matches(
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
         'Valid email is required'
       )
+      .max(100, 'Email must not exceed 100 characters')
       .required('Email is required')
   })
 
@@ -61,7 +62,7 @@ const ContactUsPage = () => {
   })
 
   const handleSuccess = (data: any) => {
-  /*   console.log(data, 'datattt') */
+    /*   console.log(data, 'datattt') */
     if (data.status === 200 || data.status === 201) {
       toast.success(`${data?.data?.message}`, {
         position: 'top-right',
@@ -127,8 +128,8 @@ const ContactUsPage = () => {
   )
 
   const sumbitForm = async (data: dataProps) => {
- /*    console.log(data, 'datatat') */
-     mutate({
+    /*    console.log(data, 'datatat') */
+    mutate({
       url: '/api/contact',
       payload: data
     })
@@ -179,59 +180,63 @@ const ContactUsPage = () => {
             className='my-[4rem] grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2 lg:grid-cols-2'
             onSubmit={handleSubmit(sumbitForm)}
           >
-           <div className='flex flex-col'>
-             <Input
-              name='full_name'
-              placeholder='Your Name'
-              register={register}
-              errors={errors.full_name}
-              type='text'
-              className='bg-[#F6F6F6] text-[#504D4D]'
-            />
-               <div className='text-xs text-red-700'>
+            <div className='flex flex-col'>
+              <Input
+                name='full_name'
+                placeholder='Your Name'
+                register={register}
+                errors={errors.full_name}
+                type='text'
+                className='bg-[#F6F6F6] text-[#504D4D]'
+                maxLength={50}
+              />
+              <div className='text-xs text-red-700'>
                 {errors?.['full_name']?.message}
               </div>
-           </div>
-        <div className='flex flex-col'>
-             <Input
-              name='email'
-              placeholder='Your Email'
-              register={register}
-              errors={errors.email}
-              type='email'
-              className='bg-[#F6F6F6] text-[#504D4D]'
-            />
-             <div className='text-xs text-red-700'>
+            </div>
+            <div className='flex flex-col'>
+              <Input
+                name='email'
+                placeholder='Your Email'
+                register={register}
+                errors={errors.email}
+                type='email'
+                className='bg-[#F6F6F6] text-[#504D4D]'
+                maxLength={100}
+              />
+              <div className='text-xs text-red-700'>
                 {errors?.['email']?.message}
               </div>
-           </div>
-        <div className='flex flex-col'>
+            </div>
+            <div className='flex flex-col'>
               <Input
-              name='phone'
-              placeholder='Phone number'
-              register={register}
-              errors={errors.phone}
-              type='text'
-              className='bg-[#F6F6F6] text-[#504D4D]'
-            />
+                name='phone'
+                placeholder='Phone number'
+                register={register}
+                errors={errors.phone}
+                type='text'
+                className='bg-[#F6F6F6] text-[#504D4D]'
+                maxLength={15}
+              />
               <div className='text-xs text-red-700'>
                 {errors?.['phone']?.message}
               </div>
 
             </div>
-          <div>
+            <div>
               <Input
-              name='subject'
-              placeholder='Subject'
-              register={register}
-              errors={errors.subject}
-              type='text'
-              className='bg-[#F6F6F6] text-[#504D4D]'
-            />
-  <div className='text-xs text-red-700'>
+                name='subject'
+                placeholder='Subject'
+                register={register}
+                errors={errors.subject}
+                type='text'
+                className='bg-[#F6F6F6] text-[#504D4D]'
+                maxLength={100}
+              />
+              <div className='text-xs text-red-700'>
                 {errors?.['subject']?.message}
               </div>
-          </div>
+            </div>
 
             <div className='md:col-span-2 lg:col-span-2'>
               <textarea
@@ -239,6 +244,7 @@ const ContactUsPage = () => {
                 rows={3}
                 className='w-full resize-none border bg-[#F6F6F6] px-8 py-4 text-[#504D4D] focus:text-[#504D4D]'
                 {...register('message', { required: true })}
+                maxLength={1000}
               ></textarea>
               <div className='text-xs text-red-700'>
                 {errors?.['message']?.message}
@@ -249,13 +255,13 @@ const ContactUsPage = () => {
                 text={`${status === 'pending' ? 'Sending...' : 'Send Message'}`}
                 type='submit'
                 className='rounded-md bg-[#FCDFD4] p-4 px-8'
-                handleClick={() => {}}
+                handleClick={() => { }}
               />
             </div>
           </form>
         </div>
         <div className='fixed bottom-20'>
-          <ChatBox isOpen={isOpen}  />
+          <ChatBox isOpen={isOpen} />
         </div>
       </main>
       <Footer />

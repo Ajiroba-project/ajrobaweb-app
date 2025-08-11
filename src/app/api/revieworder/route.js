@@ -38,7 +38,7 @@ export async function PUT(request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        /*  POST https://ajiroba.onrender.com/v1/user/create_order_review/<order_id>/ */
+        /*  POST https://staging.ajiroba.ng/v1/user/create_order_review/<order_id>/ */
 
 
         /*   const payload = {

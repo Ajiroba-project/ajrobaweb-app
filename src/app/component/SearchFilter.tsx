@@ -68,7 +68,7 @@ export const PriceFilter = () => {
           />
           <label
             htmlFor="under5000"
-            className="text-sm text-[#504D4D] font-normal font-Poppins"
+            className="text-sm text-[#504D4D] font-normal font-Poppins cursor-pointer"
           >
             under 5000
           </label>
@@ -472,7 +472,7 @@ export const SearchFilter = () => {
               {currentCategory?.subcategories?.map((subCategory: any) => (
                 <li
                   key={subCategory?.subcategory}
-                  className={`pl-8 text-sm text-[#504D4D] font-normal ${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""
+                  className={`pl-8 text-sm text-[#504D4D] font-normal cursor-pointer ${sub === subCategory?.subcategory ? "text-[#F25E26]" : ""
                     }`}
                   onClick={() =>
                     handlesubcat(subCategory?.subcategory, subCategory?.id)

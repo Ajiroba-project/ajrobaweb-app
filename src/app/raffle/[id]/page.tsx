@@ -18,13 +18,13 @@ interface ProductData {
   name?: string;
   price?: number;
   data?: any;
-  starts_in?: any;
+  starts_in?: string;
 }
 
 const Page = ({ params }: any) => {
   const router = useRouter();
   // AuthMiddleware(router);
-    useAuthMiddleware(router);
+  useAuthMiddleware(router);
 
   const [data, setData] = useState<any>(
     raffle.filter((val) => val.host === params.id),
@@ -33,67 +33,70 @@ const Page = ({ params }: any) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [viewCoundown, setViewCountdown] = useState(false);
   const [raffleended, setraffleended] = useState(false);
+  const [loadingdata, setLoadingData] = useState(true);
 
   const userToken = (Cookies.get("token") as string) || "";
 
   const product_id = params?.id;
 
-  const [productdatanew, setProductDataNew] = useState<ProductData | null>(
-    null,
-  );
-  const [loadingdata, setLoadingData] = useState(false);
+  const [productdatanew, setProductDataNew] = useState<string | null>(null);
 
   const fetchWithAuth = useCallback(async (url: string) => {
-      setLoadingData(true);
+    setLoadingData(false);
 
-      const requestOptions: RequestInit = {
-        method: "GET",
-        headers: {
-          Authorization: `token ${userToken}`,
-        },
-        redirect: "follow",
-      };
+    const requestOptions: RequestInit = {
+      method: "GET",
+      headers: {
+        Authorization: `token ${userToken}`,
+      },
+      redirect: "follow",
+    };
 
-      try {
-        const response = await fetch(url, requestOptions);
+    try {
+      const response = await fetch(url, requestOptions);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        setProductDataNew(result?.data);
-        setViewCountdown(true);
-
-        if (result?.data?.starts_in === "Raffle Ended") {
-          setraffleended(true);
-        }
-        setLoadingData(false);
-        if (result?.data) {
-        }
-        return result;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        throw error;
-      } finally {
-        setLoadingData(false);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    }, [userToken]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const data = await fetchWithAuth(
-            `https://ajiroba.onrender.com/v1/auction/view_auction/${product_id}/`,
-          );
-        } catch (error) {
-          console.error("Failed to fetch data:", error);
-        }
-      };
+      const result = await response.json();
 
-      fetchData();
-    }, [product_id, fetchWithAuth]);
+      setProductDataNew(result?.data?.starts_in);
+
+
+      if (result?.data?.starts_in === "Raffle Started") {
+        setViewCountdown(false);
+      } else if (result?.data?.starts_in === "Raffle Ended") {
+        setViewCountdown(true);
+      }
+      if (result?.data?.starts_in === "Raffle Ended") {
+        setraffleended(false);
+      }
+      setLoadingData(false);
+      if (result?.data) {
+      }
+      return result;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    } finally {
+      setLoadingData(false);
+    }
+  }, [userToken]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchWithAuth(
+          `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
+        );
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [product_id, fetchWithAuth]);
 
   useEffect(() => {
     const filtered = raffle.filter((val) => val.host === params.id);
@@ -135,6 +138,7 @@ const Page = ({ params }: any) => {
     };
   }
 
+  // Countdown Timer component
   const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     const {
       totalMinutes: initialTotalMinutes,
@@ -143,30 +147,41 @@ const Page = ({ params }: any) => {
       minutesLeft: initialMinutesLeft,
     } = parseStartsIn(startsIn);
 
-    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+    // Convert total minutes to seconds for the countdown
+    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
     useEffect(() => {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => Math.max(prev - 1, 0));
+        setTimeLeft((prev) => Math.max(prev - 1, 0)); // Decrease time left, but don't go below 0
       }, 1000);
 
       return () => clearInterval(timer);
     }, []);
 
-    const minutesLeft = timeLeft % 60;
-    const hoursLeft = Math.floor(timeLeft / 60) % 24;
-    const daysLeft = Math.floor(timeLeft / 1440);
+    // Convert seconds back to days, hours, and minutes for display
+    const totalSeconds = timeLeft;
+    const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
+    const hoursLeft = Math.floor((totalSeconds % 86400) / 3600);
+    const daysLeft = Math.floor(totalSeconds / 86400);
 
+    // Progress should be 0% when timeLeft is 0 or when the total time is 0
     const progress =
-      initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+      initialTotalMinutes > 0 ? (timeLeft / (initialTotalMinutes * 60)) * 100 : 0;
 
     return (
       <div className="mb-3">
-        <p className="mt-4 text-2xl font-bold text-gray-900 flex justify-center items-center gap-1 flex-wrap text-center ">
+        <p className="text-xs capitalize mb-2 ">
           <span className="font-medium">{daysLeft}</span> dy:{" "}
           <span className="font-medium">{hoursLeft}</span> Hr:{" "}
           <span className="font-medium">{minutesLeft}</span> Min{" "}
+          <span className="font-medium">Left</span>
         </p>
+        <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
+          <div
+            className="h-2 rounded-full bg-[#F25E26]"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
       </div>
     );
   };
@@ -190,48 +205,55 @@ const Page = ({ params }: any) => {
         </div>
       </div>
       <section className="relative mb-[5rem] mt-7 flex flex-col items-center justify-center">
-        <div className="relative z-auto mb-4 w-full">
-          <div className="flex justify-center items-center">
-           {/*  <iframe
-              ref={iframeRef}
-              src="https://www.youtube.com/embed/A50B4AwxwsU?autoplay=1&enablejsapi=1"
-              width="800"
-              height="306"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe> */}
-            <video
-   /*      ref={iframeRef} */
-        width="800"
-        height="306"
-        controls
-        autoPlay
-
-        className="rounded-lg shadow-md"
-      >
-        <source src="/ajirobaadvideo.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+        {loadingdata ? (
+          <div className="flex flex-col items-center justify-center min-h-[306px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25E26]"></div>
+            <p className="mt-4 text-gray-600">Loading raffle data...</p>
           </div>
-        </div>
-
-        {productdatanew?.starts_in == "Raffle Ended" ? (
-          <DefaultButton
-            text="Watch Live Raffle"
-            className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-            type="button"
-            handleClick={() => {
-              router.push(`/raffle/${product_id}/winners`);
-            }}
-          />
         ) : (
-          <DefaultButton
-            text={playState ? "Stop Video" : "Play Video"}
-            className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-            type="button"
-            handleClick={handleVideoControl}
-          />
+          <>
+            <div className="relative z-auto mb-4 w-full">
+              <div className="flex justify-center items-center">
+                <video
+                  width="800"
+                  height="306"
+                  controls
+                  autoPlay
+                  className="rounded-lg shadow-md"
+                >
+                  <source src="/ajirobaadvideo.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            {productdatanew === "Raffle Started" ? (
+              <div className="flex justify-center items-center mt-4">
+                <button
+                  onClick={() => router.push(`/raffle/${product_id}/winners`)}
+                  className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                >
+                  Raffle Started, Watch Live Raffle
+                </button>
+              </div>
+            ) : productdatanew === "Raffle Ended" ? (
+              <DefaultButton
+                text="Watch Live Raffle"
+                className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                type="button"
+                handleClick={() => {
+                  router.push(`/raffle/${product_id}/winners`);
+                }}
+              />
+            ) : (
+              <DefaultButton
+                text={playState ? "Stop Video" : "Play Video"}
+                className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+                type="button"
+                handleClick={handleVideoControl}
+              />
+            )}
+          </>
         )}
       </section>
 
@@ -256,7 +278,7 @@ const Page = ({ params }: any) => {
 
                 <p className="mt-1 text-sm text-gray-500">    starts in</p>
 
-                <CountdownTimer startsIn={productdatanew?.starts_in} />
+                <CountdownTimer startsIn={productdatanew || "0 Days, 0 Hr: 0 Mins Left"} />
               </div>
             </div>
           </div>

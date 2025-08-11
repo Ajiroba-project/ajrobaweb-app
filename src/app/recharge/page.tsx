@@ -9,48 +9,32 @@ import { userNavStore, useAuthStore, AirtimePurchase } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import { SideMenu } from './components/SideMenu'
 import { DataContent } from './components/DataContent'
-import { LuMenuSquare } from 'react-icons/lu'
+import { LuMenu } from 'react-icons/lu'
 import banner from '../asset/image/recharge-banner.png'
 import TitleText from '../component/TitleText'
 
-
-const Reroute =()=>{
-  const router = useRouter()
-   router.push('/signin')
-
-   return null
-}
-
 const RechargePage = () => {
-
-    const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
-
+  const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
   const { userNavMenu, sidebar, toggleSidebar } = userNavStore(state => ({
     userNavMenu: state.userNav,
     sidebar: state.sidebar,
     toggleSidebar: state.toggleSidebar
   }))
-
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
-  }))
-const router = useRouter()
-
-    const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    setMounted(true)
-      setAirtimeStepper(0)
-    if (!isLoggedIn) {
-      router.push('/signin')
-    }
-  }, [isLoggedIn, router, setAirtimeStepper])
+    setAirtimeStepper(0)
+    setIsLoading(false)
+  }, [setAirtimeStepper])
 
-
-  if (!mounted) {
-    return <div>Loading...</div>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    )
   }
-
 
   return (
     <Fragment>
@@ -58,27 +42,25 @@ const router = useRouter()
         <Header />
       </section>
 
+      <main className='container'>
+        <section className='pt-[20vh]'>
+          <TitleText text='Ajiroba Recharge' />
+        </section>
 
-       <main className='container '>
-         <section className='pt-[20vh]'>
-            <TitleText text='Ajiroba Recharge'  />
-          </section>
+        <section className='py-8'>
+          <AuctionBanner text='Ajiroba Recharge' banner={banner} />
+        </section>
 
-          <section className='py-8'>
-            <AuctionBanner text='Ajiroba Recharge' banner={banner} />
-          </section>
+        <section className=''>
+          <RechargeCategory />
+        </section>
 
-           <section className=''>
-            <RechargeCategory />
-          </section>
+        <section>
+          <RecentTransaction />
+        </section>
+      </main>
 
-          <section>
-            <RecentTransaction />
-          </section>
-        </main>
-
-
-       <Footer />
+      <Footer />
     </Fragment>
   )
 }
@@ -87,11 +69,33 @@ export default function Searchbar() {
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn
   }))
+  const router = useRouter()
+  const [isClient, setIsClient] = useState(false)
 
-   return (
-    <Suspense fallback={<div>Loading...</div>}>
-  { !isLoggedIn ?  <Reroute/> : <RechargePage />}
+  useEffect(() => {
+    setIsClient(true)
+    if (!isLoggedIn) {
+      router.push('/signin')
+    }
+  }, [isLoggedIn, router])
+
+  // During SSR and initial client render, show nothing
+  if (!isClient) {
+    return null
+  }
+
+  // After hydration, if not logged in, show nothing (will redirect)
+  if (!isLoggedIn) {
+    return null
+  }
+
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    }>
+      <RechargePage />
     </Suspense>
   )
-  // return isLoggedIn ? <RechargePage /> : null
 }

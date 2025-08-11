@@ -34,9 +34,10 @@ interface ModalComponentProps {
     handleOk?: () => void;
     handleCancel?: () => void;
      showModal?: () => void;
+     width?: number;
 }
 
-const ModalComponent: React.FC<ModalComponentProps> = ({ content, handleOk, handleCancel, isModalOpen }) => {
+const ModalComponent: React.FC<ModalComponentProps> = ({ width, content, handleOk, handleCancel, isModalOpen }) => {
     return (
         <Modal
             footer={null}
@@ -44,6 +45,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ content, handleOk, hand
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
+            width={width}
         >
             <div>
                 {content}

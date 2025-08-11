@@ -26,11 +26,11 @@ export const DataPayment = () => {
 
   const { setDataStepper, dataDetails } = DataPurchase((state) => ({
     setDataStepper: state.setDataStepper,
-        dataDetails: state.dataDetails,
+    dataDetails: state.dataDetails,
   }));
 
 
-    const router = useRouter();
+  const router = useRouter();
 
 
 
@@ -143,7 +143,7 @@ export const DataPayment = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        onClose: () => {},
+        onClose: () => { },
       });
       reset();
     } else if (
@@ -372,7 +372,7 @@ export const DataPayment = () => {
         <div className="flex items-center justify-center ">
           <Formtitle
             title="Payment"
-            subtitle="you can make your payment with any of the payment option below "
+            subtitle="you can make your payment with any of the payment options below "
           />
         </div>
 
@@ -387,7 +387,7 @@ export const DataPayment = () => {
               <p>{dataDetails?.dataphone}</p>
             </div>
 
-              <div>
+            <div>
               <h3 className="text-[#6E6E6E]">Data Bundle</h3>
               <p>{dataDetails?.datadata}</p>
             </div>
@@ -407,7 +407,7 @@ export const DataPayment = () => {
               ) : (
                 <DefaultButton
                   type="button"
-                   text={airtimestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
+                  text={airtimestatus === 'pending' ? 'loading...' : "Pay with Wallet"}
                   className="rounded-lg bg-[#f25e26] px-8 py-3 text-white"
                   handleClick={
                     localStorage.getItem("pin_id") === "yes"
@@ -472,7 +472,7 @@ export const DataPayment = () => {
         }
         isModalOpen={paywithwallet}
         showModal={showWalletPayment}
-        handleOk={() => {}}
+        handleOk={() => { }}
         handleCancel={handlecloseOrder}
       />
     </section>

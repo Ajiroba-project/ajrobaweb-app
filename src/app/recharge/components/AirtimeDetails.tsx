@@ -11,7 +11,7 @@ import { CustomModal, Modal } from '@/app/component/Modal'
 import { Header } from '../airtime/receipt/component/Header'
 import Image from 'next/image'
 import Brand from '../../asset/ajirobalogo.png'
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useGetDatanew } from '@/hooks/useGetData'
 import Cookies from 'js-cookie'
 import airtelicon from '../../asset/airtelicon.png'
@@ -29,22 +29,22 @@ type AirtimeProps = {
   phone: string
 }
 
-   interface TransformedDataItem {
-          id: number;
-          number: string;
-          type: string;
-          icon: string | null;
-        }
+interface TransformedDataItem {
+  id: number;
+  number: string;
+  type: string;
+  icon: string | null;
+}
 
 
 export const AirtimeDetails = () => {
   const setAirtimeDetails = AirtimePurchase(state => state.setAirtimeDetails)
   const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
-   const [printreceipt, setprintreceipt] = useState<boolean>(false);
+  const [printreceipt, setprintreceipt] = useState<boolean>(false);
 
   const userToken = (Cookies.get("token") as string) || "";
 
-     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Airtime`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Airtime`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -56,24 +56,24 @@ export const AirtimeDetails = () => {
 
 
   const iconMap: { [key: string]: StaticImageData | null } = {
-  MTN: mtnicon,
-  AIRTEL: airtelicon,
-  Smile: airtelicon,
-  Virgin: airtelicon,
-  Etisalat: airtelicon,
-  ninemobile: ninemobileicon,
-  GLO: gloicon
-}
+    MTN: mtnicon,
+    AIRTEL: airtelicon,
+    Smile: airtelicon,
+    Virgin: airtelicon,
+    Etisalat: airtelicon,
+    ninemobile: ninemobileicon,
+    GLO: gloicon
+  }
 
-const transformedData = bensdata?.data?.map((item: { biller: string; number: any }, index: number) => {
-  const billerUpper = item.biller.trim().toUpperCase(); // Trim whitespace & ensure uppercase
-  return {
-    id: index + 1,
-    number: item.number,
-    type: billerUpper,
-    icon: iconMap[billerUpper] || null, // Default to null if not found
-  };
-});
+  const transformedData = bensdata?.data?.map((item: { biller: string; number: any }, index: number) => {
+    const billerUpper = item.biller.trim().toUpperCase(); // Trim whitespace & ensure uppercase
+    return {
+      id: index + 1,
+      number: item.number,
+      type: billerUpper,
+      icon: iconMap[billerUpper] || null, // Default to null if not found
+    };
+  });
 
 
 
@@ -95,7 +95,7 @@ const transformedData = bensdata?.data?.map((item: { biller: string; number: any
 
 
 
-  const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE'  ]
+  const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE']
 
 
   const sumbitForm = (data: AirtimeProps) => {
@@ -104,7 +104,7 @@ const transformedData = bensdata?.data?.map((item: { biller: string; number: any
     setAirtimeStepper(1)
   }
 
-  const router =useRouter()
+  const router = useRouter()
 
 
   const handleUseClick = (number: string, type: string) => {
@@ -128,16 +128,16 @@ const transformedData = bensdata?.data?.map((item: { biller: string; number: any
 
 
           <SelectField
-  name="network"
-  register={register}
-  errors={errors}
-  options={network}
-  label="Network Provider"
-  showlabel={false}
-  value={watch("network")} // Ensure value updates
-  onChange={(e) => setValue("network", e.target.value)} // Update manually
-  className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
-/>
+            name="network"
+            register={register}
+            errors={errors}
+            options={network}
+            label="Network Provider"
+            showlabel={false}
+            value={watch("network")} // Ensure value updates
+            onChange={(e) => setValue("network", e.target.value)} // Update manually
+            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+          />
 
 
           <InputField
@@ -155,67 +155,68 @@ const transformedData = bensdata?.data?.map((item: { biller: string; number: any
             placeholder='Amount'
 
           />
-          <p  onClick={() => setprintreceipt(!printreceipt)} className='text-end text-[#f25e26] underline cursor-pointer text-sm font-Poppins'>Beneficiaries</p>
+          <p onClick={() => setprintreceipt(!printreceipt)} className='text-end text-[#f25e26] underline cursor-pointer text-sm font-Poppins'>Beneficiaries</p>
 
           <div className='mb-6'>
             <DefaultButton
               text='Proceed'
               type='submit'
               handleClick={() => { }}
-              className='my-10 w-full bg-[#FCDFD4] p-3 rounded-lg '
+              /*      className='my-10 w-full bg-[#FCDFD4] p-3 rounded-lg   ' */
+              className="my-10 w-full text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
             />
           </div>
 
-             <CustomModal isOpen={printreceipt}>
+          <CustomModal isOpen={printreceipt}>
 
             <section className='container flex flex-col '>
-      <div className='flex justify-between items-center'>
-        <Image src={Brand} alt='brand-logo' />
-        <h2 className=' font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize'>{'Airtime Recharge' }</h2>
-      </div>
-      <p className="brand1 py-4 cursor-pointer font-Poppins text-sm underline"  onClick={()=> setprintreceipt(false)}>Back</p>
-    </section>
+              <div className='flex justify-between items-center'>
+                <Image src={Brand} alt='brand-logo' />
+                <h2 className=' font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize'>{'Beneficiaries'}</h2>
+              </div>
+              <p className="brand1 py-4 cursor-pointer font-Poppins text-sm underline" onClick={() => setprintreceipt(false)}>Back</p>
+            </section>
 
 
 
 
-     <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="space-y-4">
+            <div className="p-6 bg-gray-100 min-h-screen">
+              <div className="space-y-4">
 
-        {transformedData?.map((item: TransformedDataItem) => (
-          <div
-            key={item.id}
-            className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            {/* Icon and details */}
-            <div className="flex items-center">
-              {item.icon && (
-  <Image src={item.icon} alt={item.type} width={40}    className="w-10 h-10 rounded-full mr-4" height={40} />
-)}
+                {transformedData?.map((item: TransformedDataItem) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {/* Icon and details */}
+                    <div className="flex items-center">
+                      {item.icon && (
+                        <Image src={item.icon} alt={item.type} width={40} className="w-10 h-10 rounded-full mr-4" height={40} />
+                      )}
 
-             {/*  <Image
+                      {/*  <Image
                 src={item.icon as string}
                 alt={item.type}
                 className="w-10 h-10 rounded-full mr-4"
                 width={40}
                 height={40}
               /> */}
-              <div>
-                <p className="text-gray-900 font-semibold">{item.number}</p>
-                <p className="text-gray-500 text-sm">{item.type}</p>
+                      <div>
+                        <p className="text-gray-900 font-semibold">{item.number}</p>
+                        <p className="text-gray-500 text-sm">{item.type}</p>
+                      </div>
+                    </div>
+
+                    {/* Action button */}
+                    <button onClick={() => handleUseClick(item.number, item.type)} className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]">
+                      Use
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Action button */}
-            <button onClick={() => handleUseClick(item.number, item.type)} className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]">
-              Use
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-
-      </CustomModal>
+          </CustomModal>
         </form>
       </div>
     </div>

@@ -44,6 +44,7 @@ export const useAuthStore = create((set) => ({
   isLoggedIn: !!Cookies.get('token'), // Check if token cookie exists on initialization
   user: JSON.parse(Cookies.get('user') || null),
   token: Cookies.get('token') || null,
+  isAddingToCart: false, // Add cart loading state
 
   setLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
 
@@ -52,7 +53,7 @@ export const useAuthStore = create((set) => ({
     set({ user });
   },
 
-
+  setAddingToCart: (loading) => set({ isAddingToCart: loading }), // Add cart loading action
 
   setAuthCookie: (token, user, expirationDate) => {
 

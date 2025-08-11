@@ -103,7 +103,7 @@ const LiveChatPage = () => {
       };
 
       const response = await axios.get(
-        "https://ajiroba.onrender.com/v1/admin/messages/",
+        "https://staging.ajiroba.ng/v1/admin/messages/",
         { headers },
       );
 
@@ -291,11 +291,11 @@ const LiveChatPage = () => {
                                 <div className="w-10 rounded-full">
                                   <Image
                                     alt="Admin Avatar"
-                                  /*   src={
-                                      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                    } */
-                                      src={message?.image?  `https://ajiroba.onrender.com${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-                                 }
+                                    /*   src={
+                                        "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                                      } */
+                                    src={message?.image ? `https://staging.ajiroba.ng${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                                    }
                                     width={24}
                                     height={24}
                                   />
@@ -306,11 +306,11 @@ const LiveChatPage = () => {
                               className={`bubble ${message.type === "admin" ? "bubble-bottom-left" : "bubbleright bubbleright-bottom-right"} mb-2 `}
                             >
                               {message.text}
-                            {/*   {message.image && (
+                              {/*   {message.image && (
                                 <div className="mt-2 flex justify-end">
                                   <Image
                                     alt="Admin Avatar"
-                                    src={`https://ajiroba.onrender.com${message?.image}`}
+                                    src={`https://staging.ajiroba.ng${message?.image}`}
                                     width={24}
                                     height={24}
                                     className="w-24 h-24 object-cover rounded-md border"

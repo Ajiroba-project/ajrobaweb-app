@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { InputField } from '../../recharge/components/FormField'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ChangePass } from './YupValidation'
@@ -16,6 +16,75 @@ import Cookies from 'js-cookie'
 
 export const ChangePassword = () => {
   const [success, setSuccess] = useState(false)
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    feedback: '',
+    color: 'text-gray-400',
+    strengthText: ''
+  })
+
+  // Password strength checker
+  const checkPasswordStrength = (password: string) => {
+    if (!password) {
+      return { score: 0, feedback: '', color: 'text-gray-400', strengthText: '' };
+    }
+
+    let score = 0;
+    let feedback = [];
+
+    // Length check
+    if (password.length >= 6) score += 1;
+    else feedback.push('At least 6 characters');
+
+    // Uppercase check
+    if (/[A-Z]/.test(password)) score += 1;
+    else feedback.push('One uppercase letter');
+
+    // Lowercase check
+    if (/[a-z]/.test(password)) score += 1;
+    else feedback.push('One lowercase letter');
+
+    // Number check
+    if (/\d/.test(password)) score += 1;
+    else feedback.push('One number');
+
+    // Special character check
+    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) score += 1;
+    else feedback.push('One special character');
+
+    // No common patterns
+    const commonPatterns = ['123', 'abc', 'qwerty', 'password', 'admin', 'user'];
+    if (!commonPatterns.some(pattern => password.toLowerCase().includes(pattern))) score += 1;
+    else feedback.push('No common patterns');
+
+    // No repeating characters
+    if (!/(.)\1{3,}/.test(password)) score += 1;
+    else feedback.push('No repeating characters');
+
+    let color = 'text-red-500';
+    let strengthText = '';
+
+    if (score >= 6) {
+      color = 'text-green-500';
+      strengthText = 'Strong';
+    } else if (score >= 4) {
+      color = 'text-yellow-500';
+      strengthText = 'Medium';
+    } else if (score >= 2) {
+      color = 'text-orange-500';
+      strengthText = 'Weak';
+    } else {
+      color = 'text-red-500';
+      strengthText = 'Very Weak';
+    }
+
+    return {
+      score,
+      feedback: feedback.join(', '),
+      color,
+      strengthText
+    };
+  };
 
   const { editPassword, setEditPassword, setSuccessModal } = userProfile(
     state => ({
@@ -31,11 +100,24 @@ export const ChangePassword = () => {
     reset,
     register,
     handleSubmit,
+    watch,
     formState: { errors }
   } = useForm({
     mode: 'all',
     resolver: yupResolver(ChangePass)
   })
+
+  // Watch the new password field for real-time strength checking
+  const newPassword = watch('newpass');
+
+  useEffect(() => {
+    if (newPassword) {
+      const strength = checkPasswordStrength(newPassword);
+      setPasswordStrength(strength);
+    } else {
+      setPasswordStrength({ score: 0, feedback: '', color: 'text-gray-400', strengthText: '' });
+    }
+  }, [newPassword]);
 
   const Closefunc = () => {
     setEditPassword()
@@ -194,7 +276,32 @@ const userToken =  Cookies.get('token') as string;
                 register={register}
                 errors={errors}
               />
-              <p className='text-xs italic'>minimum of 6 characters</p>
+              {newPassword && (
+                <div className='mt-2'>
+                  <div className='flex items-center gap-2 mb-1'>
+                    <span className='text-xs font-medium'>Password Strength:</span>
+                    <span className={`text-xs font-bold ${passwordStrength.color}`}>
+                      {passwordStrength.strengthText}
+                    </span>
+                  </div>
+                  <div className='w-full bg-gray-200 rounded-full h-2'>
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        passwordStrength.score >= 6 ? 'bg-green-500' :
+                        passwordStrength.score >= 4 ? 'bg-yellow-500' :
+                        passwordStrength.score >= 2 ? 'bg-orange-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${(passwordStrength.score / 7) * 100}%` }}
+                    ></div>
+                  </div>
+                  {passwordStrength.feedback && (
+                    <p className={`text-xs mt-1 ${passwordStrength.color}`}>
+                      Missing: {passwordStrength.feedback}
+                    </p>
+                  )}
+                </div>
+              )}
+              <p className='text-xs italic'>Password must be at least 6 characters with uppercase, lowercase, number, and special character</p>
             </div>
             <div>
               <InputField

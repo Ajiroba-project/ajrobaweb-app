@@ -125,18 +125,18 @@ export const DataDetails = () => {
 
   const dataplanurl = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/data_plans/${selectedNetwork}/`;
 
-    const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(dataplanurl, "get_data_plans", userToken);
+  const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(dataplanurl, "get_data_plans", userToken);
 
   // Transform API response into data plan format
 
-// console.log(dataPlansData, 'dataPlansData')
+  // console.log(dataPlansData, 'dataPlansData')
 
   const dataPlan = dataPlansData?.data?.map((plan: { plan: string; code: number }) => `${plan.plan} -₦${plan.code}`) || [];
 
 
   // console.log(dataPlan, 'dataPlannew')
   // const network = providersList
-   const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE'  ]
+  const network = ['MTN', 'AIRTEL', 'GLO', '9MOBILE']
   // const dataPlan = ["1day 100MB -₦100", "60dayS 1TB -₦20,000"];
 
   const sumbitForm = (data: DataProps) => {
@@ -167,57 +167,57 @@ export const DataDetails = () => {
           onSubmit={handleSubmit(sumbitForm)}
         >
           <div className="w-full max-w-[350px]">
-      <SelectField
-            name="datanetwork"
-            register={register}
-            errors={errors}
-            options={network}
-            label="Network Provider"
-            showlabel={false}
-            value={watch("datanetwork")} // Ensure value updates
-            onChange={(e) => setValue("datanetwork", e.target.value)} // Update manually
-            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
-          />
+            <SelectField
+              name="datanetwork"
+              register={register}
+              errors={errors}
+              options={network}
+              label="Network Provider"
+              showlabel={false}
+              value={watch("datanetwork")} // Ensure value updates
+              onChange={(e) => setValue("datanetwork", e.target.value)} // Update manually
+              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+            />
           </div>
 
 
-<div className="w-full max-w-[350px]">
-<SelectField
-           name="datadata"
-            register={register}
-            errors="errors"
-            options={dataPlan}
-            label="Data Bundle"
-            showlabel={false}
-            className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
-          />
-</div>
+          <div className="w-full max-w-[350px]">
+            <SelectField
+              name="datadata"
+              register={register}
+              errors="errors"
+              options={dataPlan}
+              label="Data Bundle"
+              showlabel={false}
+              className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+            />
+          </div>
 
 
 
-   <div className="w-full max-w-[350px]">
- <InputField
-            name="dataphone"
-            register={register}
-            errors={errors}
-            type="text"
-            placeholder="Phone Number"
+          <div className="w-full max-w-[350px]">
+            <InputField
+              name="dataphone"
+              register={register}
+              errors={errors}
+              type="text"
+              placeholder="Phone Number"
 
-          />
-   </div>
+            />
+          </div>
 
 
 
- <div className="w-full max-w-[350px]">
- <InputField
-            name="dataamount"
-            register={register}
-            errors={errors}
-            type="text"
-            placeholder="Amount"
-          />
+          <div className="w-full max-w-[350px]">
+            <InputField
+              name="dataamount"
+              register={register}
+              errors={errors}
+              type="text"
+              placeholder="Amount"
+            />
 
-   </div>
+          </div>
 
 
           <p
@@ -231,8 +231,8 @@ export const DataDetails = () => {
             <DefaultButton
               text="Proceed"
               type="submit"
-              handleClick={() => {}}
-              className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg "
+              handleClick={() => { }}
+              className="my-10 w-full text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
             />
           </div>
 
@@ -241,7 +241,7 @@ export const DataDetails = () => {
               <div className="flex justify-between items-center">
                 <Image src={Brand} alt="brand-logo" />
                 <h2 className=" font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize">
-                  {"Airtime Recharge"}
+                  {"Beneficiaries"}
                 </h2>
               </div>
               <p

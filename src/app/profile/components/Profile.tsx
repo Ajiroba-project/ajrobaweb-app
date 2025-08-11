@@ -5,12 +5,16 @@ import photo from '../../asset/image/photo.png';
 import { ProfileContent } from './ProfileContent';
 import { IoIosCamera } from 'react-icons/io';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
-import { LuMenuSquare } from 'react-icons/lu';
+import { LuMenu } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
+import { useRouter, usePathname } from 'next/navigation';
+
 
 export const Profile = () => {
   const [sideNav, setSideNav] = useState<boolean>(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const {
     activeMenu,
@@ -41,7 +45,7 @@ export const Profile = () => {
 
   // const [userToken, setUserToken] = useState<string | null>(null);
 
- /*  const userToken =  Cookies.get('token') as string; */
+  /*  const userToken =  Cookies.get('token') as string; */
 
   const [userToken, setUserToken] = useState(Cookies.get('token'))
 
@@ -59,10 +63,25 @@ export const Profile = () => {
     }
   }, [isLoggedIn, userInfo, setProfileurl]);
 
+  useEffect(() => {
+    setactiveMenu('my profile');
+  }, [setactiveMenu]);
+
   const userData = isLoggedIn ? userInfo?.data : userDetails;
+
+  // console.log(userData, 'userData')
+  // console.log(profileurl, 'profileurl')
+
   const userphoto = profileurl || userDetails?.profile_image_url || '';
 
-  const menu = ['my profile', 'auction win', 'my order', 'wallet', 'community'];
+  const menu = [
+    { name: 'my profile', path: '/profile' },
+    { name: 'auction wins', path: '/auction-wins' },
+    { name: 'my order', path: '/my-order' },
+    { name: 'wallet', path: '/wallet' },
+    { name: 'community', path: '/community' }
+  ];
+
 
   return (
     <section className="relative flex gap-5 ">
@@ -70,29 +89,28 @@ export const Profile = () => {
         className={`absolute left-0 top-0 cursor-pointer text-[#f25e26] lg:hidden `}
         onClick={() => setSideNav(!sideNav)}
       >
-        <LuMenuSquare className="text-2xl" />
+        <LuMenu className="text-2xl" />
       </span>
       <section
-        className={`${
-          sideNav
-            ? 'fixed right-0 top-0 h-full w-fit flex-col bg-white  px-4 pt-[4rem] lg:h-fit lg:w-[20dvw] lg:pt-0 '
-            : 'hidden lg:relative lg:flex lg:h-fit'
-        } z-40   lg:flex lg:h-fit  lg:w-[20dvw] lg:bg-transparent lg:pt-0 lg:relative`}
+        className={`${sideNav
+          ? 'fixed right-0 top-0 h-full w-fit flex-col bg-white  px-4 pt-[4rem] lg:h-fit lg:w-[20dvw] lg:pt-0 '
+          : 'hidden lg:relative lg:flex lg:h-fit'
+          } z-40   lg:flex lg:h-fit  lg:w-[20dvw] lg:bg-transparent lg:pt-0 lg:relative`}
       >
         <div className="flex flex-col justify-center lg:w-full">
           <p className="w-max">Hello, {userData?.first_name || userData?.firstname} </p>
           <h3 className="my-5 w-full text-xl font-semibold lg:text-2xl font-Poppins text-[#111111]">
             {activeMenu === 'my profile'
               ? 'Profile Details'
-              : activeMenu === 'auction win'
-              ? 'Auction Wins'
-              : activeMenu === 'my order'
-              ? 'My Order'
-              : activeMenu === 'wallet'
-              ? 'My Wallet'
-              : 'Community'}
+              : activeMenu === 'auction wins'
+                ? 'Auction Wins'
+                : activeMenu === 'my order'
+                  ? 'My Order'
+                  : activeMenu === 'wallet'
+                    ? 'My Wallet'
+                    : 'Community'}
           </h3>
-          <div className={`${activeMenu === 'my order' ||  activeMenu === 'wallet'  ||  activeMenu === 'wallet' || activeMenu === 'community'  ? 'border rounded  flex flex-col  px-2' : ' flex flex-col  px-2'}`}>
+          <div className={`${activeMenu === 'my order' || activeMenu === 'wallet' || activeMenu === 'wallet' || activeMenu === 'community' || activeMenu === 'auction wins' || activeMenu === 'my profile' ? 'border rounded  flex flex-col  px-2' : ' flex flex-col  px-2'}`}>
             <div className="relative justify-center flex items-center mt-2 ">
               <Image
                 src={userphoto}
@@ -115,12 +133,10 @@ export const Profile = () => {
                 {menu.map((val, index) => (
                   <li
                     key={index}
-                    className={`w-full cursor-pointer rounded-lg px-3 py-2 capitalize hover:bg-[#F25E26] hover:text-white ${
-                      activeMenu === val ? 'bg-[#FCDFD4] ' : null
-                    }`}
-                    onClick={() => setactiveMenu(val)}
+                    className={`w-full cursor-pointer rounded-lg px-3 py-2 capitalize hover:bg-[#F25E26] hover:text-white ${pathname.includes(val.path) ? 'bg-[#FCDFD4]' : ''}`}
+                    onClick={() => router.push(val.path)}
                   >
-                    {val}
+                    {val.name}
                   </li>
                 ))}
               </ul>
@@ -129,7 +145,7 @@ export const Profile = () => {
         </div>
       </section>
 
-    {/*   <section className="span-2 flex w-full flex-col lg:items-center"> */}
+      {/*   <section className="span-2 flex w-full flex-col lg:items-center"> */}
       <section className="span-2 flex w-full flex-col lg:items-center">
         <div className="z-auto  flex justify-end items-end w-full">
           {activeMenu === 'my profile' ? (
@@ -140,6 +156,7 @@ export const Profile = () => {
         </div>
         <div className="mt-5 flex lg:mx-12  ">
           <ProfileContent />
+          {/* <h1>Profile Content on My Wallet</h1> */}
         </div>
       </section>
     </section>

@@ -22,7 +22,7 @@ import { Axios } from "axios";
 import { toast } from "react-toastify";
 import rice from "../asset/image/rice2.jpeg";
 import { DefaultButton } from "./Button";
-import { useGetPointData } from "@/hooks/useGetData";
+import { useGetDatanew, useGetPointData } from "@/hooks/useGetData";
 import { SetStateAction } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -33,6 +33,11 @@ import Input from "../component/Input";
 import InputAction from "./InputAction";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import verify from "../asset/verify.svg";
+import Loading from "./Loading";
+import Link from "next/link";
+import Brand from "../asset/logo.svg";
+import RaffleTicket from "./RaffleTicket";
+
 
 interface cardDetails {
   cardInfo: Array<{
@@ -46,6 +51,7 @@ interface cardDetails {
   }>;
   currentPage: number;
   cardsNum: number;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 interface BidInfoResponse {
@@ -90,7 +96,7 @@ function parseStartsIn(startsIn = "0 Days, 0 Hr: 3 Mins Left") {
 }
 
 // Countdown Timer component
-const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
+const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left", date = "May 4  4:30 AM" }) => {
   const {
     totalMinutes: initialTotalMinutes,
     daysLeft: initialDaysLeft,
@@ -98,7 +104,11 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     minutesLeft: initialMinutesLeft,
   } = parseStartsIn(startsIn);
 
-  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes);
+
+  /* console.log(startsIn, 'startsin') */
+
+  // Convert total minutes to seconds for the countdown
+  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -108,22 +118,33 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
     return () => clearInterval(timer);
   }, []);
 
-  const minutesLeft = timeLeft % 60;
-  const hoursLeft = Math.floor(timeLeft / 60) % 24;
-  const daysLeft = Math.floor(timeLeft / 1440);
+  // Convert seconds back to days, hours, and minutes for display
+  const totalSeconds = timeLeft;
+  const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
+  const hoursLeft = Math.floor((totalSeconds % 86400) / 3600);
+  const daysLeft = Math.floor(totalSeconds / 86400);
 
   // Progress should be 0% when timeLeft is 0 or when the total time is 0
   const progress =
-    initialTotalMinutes > 0 ? (timeLeft / initialTotalMinutes) * 100 : 0;
+    initialTotalMinutes > 0 ? (timeLeft / (initialTotalMinutes * 60)) * 100 : 0;
 
   return (
     <div className="mb-3">
-      <p className="text-xs capitalize mb-2 ">
-        <span className="font-medium">{daysLeft}</span> dy:{" "}
-        <span className="font-medium">{hoursLeft}</span> Hr:{" "}
-        <span className="font-medium">{minutesLeft}</span> Min{" "}
-        <span className="font-medium">Left</span>
-      </p>
+      <div className="flex flex-row justify-between mt-4">
+        <div className="">
+          <p className="text-xs capitalize mb-2 ">
+            <span className="font-medium">{daysLeft}</span> dy:{" "}
+            <span className="font-medium">{hoursLeft}</span> Hr:{" "}
+            <span className="font-medium">{minutesLeft}</span> Min{" "}
+            <span className="font-medium">Left</span>
+          </p>
+        </div>
+        <div>
+          <p className="text-xs capitalize mb-2 ">
+            {date}
+          </p>
+        </div>
+      </div>
       <div className="border-[#B7B7B7] h-2.5 w-full rounded-full border ">
         <div
           className="h-2 rounded-full bg-[#F25E26]"
@@ -135,30 +156,59 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left" }) => {
 };
 
 // Auction Component
-export const AuctionComp = ({ cardInfo }: any) => {
+export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange = () => { } }: cardDetails) => {
   const router = useRouter();
+  const [loadingdata, setLoadingData] = useState<boolean>(false);
+
+  // Update parent's loading state whenever our local loading state changes
+
+  // console.log(cardInfo, 'cardInfo')
+
+
+  useEffect(() => {
+    if (typeof onLoadingChange === 'function') {
+      onLoadingChange(loadingdata);
+    }
+  }, [loadingdata, onLoadingChange]);
 
   const userToken = Cookies.get("token") as string;
 
   const [bidopen, setbidopen] = useState(false);
-
   const [bidData, setBidData] = useState<BidInfoResponse | null>(null);
   const [viewticket, setViewTicket] = useState(false);
   const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null);
-
   const [makepayment, setmakepayment] = useState(false);
   const [successbid, setSuccessbid] = useState(false);
 
   const tkn_: string = Cookies.get("token") as string;
 
- /*  const {
-    data: pointinfo,
-    isLoading: pointsLoading,
-    error: pointerror,
-  } = useGetPointData("/api/getpoints", "get_point_details", userToken); */
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
+
+
+  // console.log(userInfo, 'userInfoooo')
+
+
+  const AjirobaLogo = () => (
+    <div className=" mb-4">
+      <Link href={'/'} className={``}   >
+        <Image src={Brand} alt='brand-logo' />
+      </Link>
+
+    </div>
+  );
+
+  // console.log(userInfo?.data?.my_wallet[0]?.balance, 'userInfo')
+
+  /*  const {
+     data: pointinfo,
+     isLoading: pointsLoading,
+     error: pointerror,
+   } = useGetPointData("/api/getpoints", "get_point_details", userToken); */
 
   const handleSuccessbidpayment = (data: any) => {
-  /*   console.log(data, "datatatat"); */
+    /*   console.log(data, "datatatat"); */
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||
@@ -177,18 +227,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
 
-        /*    onClose: () => {
-                        if (
-                            data?.data?.message &&
-                            data.data.message.includes(
-                                "Order placed successfully. Order Code",
-                            )
-                        ) {
-                            router.push("/profile");
-                        } else {
-                            router.push("/paymentpage");
-                        }
-                    }, */
+
       });
       reset();
     } else if (
@@ -269,6 +308,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
     isSuccess: bidpaymentsuccess,
     mutate: bidpaymentmutate,
     status: bidpaymentstatus,
+    isLoading: bidpaymentloading,
   } = useMutateData(
     "bidpayment",
     handleSuccessbidpayment,
@@ -319,7 +359,7 @@ export const AuctionComp = ({ cardInfo }: any) => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      setBidData(data?.data); // Store the API response in bidData for modal usage
+      
 
       setbidopen(false); // Open modal after successful API response
       setmakepayment(false);
@@ -354,18 +394,18 @@ export const AuctionComp = ({ cardInfo }: any) => {
 
       const payWithMethod = paymentMethod === "wallet_balance" ? "wallet_balance" : "wallet_point";
 
-const payload = {
-  auction: auctionId,
-  ticket_quantity: ticketCount,
-  total_amount: Number(totalAmount),
-  pay_with: payWithMethod,
-};
+      const payload = {
+        auction: auctionId,
+        ticket_quantity: ticketCount,
+        total_amount: Number(totalAmount),
+        pay_with: payWithMethod,
+      };
 
-bidpaymentmutate({
-  url: "/api/bidpayment",
-  payload: { payload: payload, token: userToken },
-  token: userToken,
-});
+      bidpaymentmutate({
+        url: "/api/bidpayment",
+        payload: { payload: payload, token: userToken },
+        token: userToken,
+      });
       resetpayment();
     } else if (
       data?.data?.status === 400 ||
@@ -373,6 +413,7 @@ bidpaymentmutate({
       data.status === 400 ||
       data.status === 409
     ) {
+      setBidData(null)
       setbidopen(false);
       setmakepayment(false);
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
@@ -486,6 +527,7 @@ bidpaymentmutate({
     }
 
     try {
+      setLoadingData(true);
       const response = await fetch("/api/bidinfo", {
         method: "GET",
         headers: {
@@ -496,14 +538,19 @@ bidpaymentmutate({
       });
 
       if (!response.ok) {
+        setLoadingData(false);
         console.error("Error in the request:", response);
+        toast.error("Failed to retrieve bid info", {
+          position: "top-right",
+          progress: 4,
+        });
         return;
       }
 
       const data = await response.json();
 
       if (data.data.status === "failed") {
-        console.log("Failed:", data.data);
+        setLoadingData(false);
         toast.error(`${data.data.message}`, {
           position: "top-right",
           progress: 4,
@@ -514,21 +561,21 @@ bidpaymentmutate({
         }, 2000);
       } else if (data.data.status === "success") {
         setbidopen(true);
-        /*    console.log("Success:", data?.data?.data); */
         setBidData(data?.data?.data);
         setTicketPrice(Number(data?.data?.data?.ticket_price));
-
-        // Display a success toast message if needed
-        /*     toast.success("Bid information retrieved successfully!", {
-                position: "top-right",
-                progress: 4
-            }); */
+        setLoadingData(false);
       } else {
+        setLoadingData(false);
         console.warn("Unknown status:", data.data.status);
+        toast.error("Unknown response status", {
+          position: "top-right",
+          progress: 4,
+        });
       }
 
       return data;
     } catch (error) {
+      setLoadingData(false);
       console.error("Error during fetch:", error);
       toast.error("An unexpected error occurred. Please try again.", {
         position: "top-right",
@@ -555,7 +602,7 @@ bidpaymentmutate({
     setTotalAmount((prevTotal) => prevTotal + ticketPrice);
   };
 
-  // Handler to decrease ticket count, ensuring count doesn’t go below 1
+  // Handler to decrease ticket count, ensuring count doesn't go below 1
   const handleDecrease = () => {
     if (ticketCount > 1) {
       setTicketCount((prevCount) => prevCount - 1);
@@ -607,10 +654,19 @@ bidpaymentmutate({
     });
   };
 
-  const handlePay = () => {};
+  const handlePay = () => { };
+
+  // // Set loading to false by default
+  // useEffect(() => {
+  //   setLoadingData(false);
+  // }, []);
+
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
 
   return (
     <>
+      {/*  {loadingdata && <Loading />} */}
       {cardInfo && (
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -620,16 +676,16 @@ bidpaymentmutate({
                   id: any;
                   images: { image: any }[];
                   name:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<any, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<AwaitedReactNode>
-                    | null
-                    | undefined;
+                  | string
+                  | number
+                  | bigint
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | Promise<AwaitedReactNode>
+                  | null
+                  | undefined;
                   ticket_price: {
                     toLocaleString: () =>
                       | string
@@ -645,6 +701,7 @@ bidpaymentmutate({
                   };
                   reviews: any;
                   starts_in: string | undefined;
+                  start_date?: string | undefined;
                 },
                 index: Key | null | undefined,
               ) => (
@@ -678,6 +735,10 @@ bidpaymentmutate({
                       </div>
                     </div>
 
+                    {/*   {
+                      console.log(value, 'value')
+                    }
+ */}
                     <div
                       className="flex justify-center items-center m-3"
                       onClick={() =>
@@ -686,7 +747,7 @@ bidpaymentmutate({
                     >
                       <div className="bg-transparent p-0">
                         <Image
-                          src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                          src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                           width={100}
                           height={100}
                           alt="human hair"
@@ -733,7 +794,12 @@ bidpaymentmutate({
 
                     {/*      <div className="bg-[#F6F6F6] px-4 "> */}
                     <div className="bg-[#f6f6f6] px-4 ">
-                      <CountdownTimer startsIn={value?.starts_in} />
+                      {/*   {
+                        console.log(value, 'value')
+                      } */}
+                      <CountdownTimer startsIn={value?.starts_in} date={value?.start_date || 'June 6 4:30 AM'} />
+
+
                     </div>
                   </div>
                 </motion.div>
@@ -744,11 +810,15 @@ bidpaymentmutate({
           <ModalComponent
             content={
               <div className="flex flex-col  px-6 py-4">
-                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
+                <AjirobaLogo />
+
+                <div onClick={() => setbidopen(false)} className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
                   Back
                 </div>
 
                 <div className="flex justify-between flex-wrap py-2">
+
+                  {/* {console.log(bidData, 'bidData')} */}
                   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
                       <span className="font-Poppins">{bidData?.category}</span>
@@ -768,8 +838,14 @@ bidpaymentmutate({
 
                 <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
                   <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-                    <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-
+                    <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
+                 
+                      <Image
+                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        alt={bidData?.name || "Product Image"}
+                        fill
+                        className="object-cover rounded-md"
+                      />
 
                       <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
 
@@ -779,6 +855,8 @@ bidpaymentmutate({
                           <span className="text-sm font-bold">
                             ₦ {ticketPrice}
                           </span>
+
+
                         </div>
                       </div>
                     </div>
@@ -803,7 +881,7 @@ bidpaymentmutate({
                           Ticket Price (₦)
                         </label>
                         <div className="flex items-center">
-                         {/*  <button
+                          {/*  <button
                             className="px-2 py-1 bg-gray-200 rounded"
 
                             disabled={ticketCount <= 1}
@@ -812,9 +890,12 @@ bidpaymentmutate({
                           </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
-                            {ticketPrice}
+                            {ticketPrice.toLocaleString('en-NG', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
+                            })}
                           </span>
-                        {/*   <button
+                          {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
 
                           >
@@ -849,7 +930,7 @@ bidpaymentmutate({
                     </div>
 
                     <div className="flex justify-end">
-                     {/*  <button
+                      {/*  <button
                         onClick={() => {
                           return (
                             setbidopen(!bidopen), setViewTicket(!viewticket)
@@ -867,9 +948,12 @@ bidpaymentmutate({
                       </label>
                       <input
                         type="text"
-                        value={`₦ ${totalAmount.toLocaleString()}`}
+                        value={`₦${totalAmount.toLocaleString('en-NG', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}`}
                         readOnly
-                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                        className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
                       />
                     </div>
 
@@ -881,7 +965,7 @@ bidpaymentmutate({
                           setmakepayment(!makepayment), setbidopen(!bidopen)
                         );
                       }}
-                      className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
+                      className="my-10 w-full bg-[#FCDFD4] hover:bg-[#F25E26] hover:text-white p-3 rounded-lg"
                     />
                   </div>
                 </div>
@@ -895,96 +979,95 @@ bidpaymentmutate({
 
           <ModalComponent
             content={
-              <div className="flex flex-col  px-6 py-4">
-                <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
-                  Back
-                </div>
+              <div className="flex flex-col px-6 py-4">
+                <AjirobaLogo />
+
 
                 <div className="flex justify-between flex-wrap py-2">
-                  <div>
+                  {/*   <div>
                     <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
                       <span className="font-Poppins">{ticketData?.data?.category}</span>
 
                       <span>|</span>
                       <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
                     </div>
+                  </div> */}
+
+                  <div onClick={() => setbidopen(false)} className=" text-red-500 font-Poppins cursor-pointer mb-4">
+                    Back
                   </div>
 
                   <div>
-                    <span className="font-Poppins font-medium">
-                      Raffle Drawww
-                    </span>
+                    <div>
+                      <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
+                        <span className="font-Poppins">{ticketData?.data?.category}</span>
+
+                        <span>|</span>
+                        <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex gap-4 justify-center items-center ">
-                  <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                    <div className="flex flex-col items-center w-full sm:w-1/2">
-                      <label className="font-Poppins text-gray-700 mb-4">
-                        Ticket Price (₦)
-                      </label>
-                      <div className="flex items-center">
-                       {/*  <button
-                          className="px-2 py-1 bg-gray-200 rounded"
 
-                          disabled={true}
-                        >
-                          -
-                        </button> */}
-                        <span className="mx-4 font-bold text-sm"> {ticketData?.data?.ticket_price}</span>
-                       {/*  <button
-                          className="px-2 py-1 bg-gray-200 rounded"
-
-                          disabled={true}
-                        >
-                          +
-                        </button> */}
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col items-center w-full sm:w-1/2">
-                      <label className="font-Poppins text-gray-700 mb-4">
-                        No of Ticket
-                      </label>
-                      <div className="flex items-center">
-                        <button
-                          className="px-2 py-1 bg-gray-200 rounded"
-                          /*   onClick={handleDecrease} */
-                          disabled={true}
-                        >
-                          -
-                        </button>
-                        <span className="mx-4 font-bold text-sm">{ticketData?.data?.ticket_quantity}</span>
-                        <button
-                          className="px-2 py-1 bg-orange-500 text-white rounded"
-                          /*  onClick={handleIncrease} */
-                          disabled={true}
-                        >
-                          +
-                        </button>
-                      </div>
+                {/* Ticket Info Row */}
+                <div className="flex flex-row items-center justify-between gap-8 my-8">
+                  {/* Ticket Price */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">Ticket Price (₦)</label>
+                    <div className="flex items-center">
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
+                      <input
+                        type="text"
+                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        }) ?? 0}
+                        readOnly
+                        className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
+                      />
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>+</button>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="font-Poppins text-gray-700">
-                      Amount (₦)
-                    </label>
+                  {/* No of Ticket */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">No of Ticket</label>
+                    <div className="flex items-center">
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
+                      <input
+                        type="text"
+                        value={ticketData?.data?.ticket_quantity ?? 0}
+                        readOnly
+                        className="mx-4 w-12 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
+                      />
+                      <button className="px-2 py-1 bg-gray-200 rounded" disabled>+</button>
+                    </div>
+                  </div>
+
+                  {/* Amount */}
+                  <div className="flex flex-col items-center">
+                    <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      /*  value={`₦ ${totalAmount.toLocaleString()}`} */
-                      value={ticketData?.data?.ticket_amount}
+                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      }) ?? 0}
                       readOnly
-                      className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
+                      className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
+                      style={{ color: '#888' }}
                     />
                   </div>
                 </div>
 
+                {/*  <div className="flex flex-col justify-center items-center">
+                  <h1 className="text-center font-bold text-lg">
+                    Raffle Drawww
+                  </h1>
+                </div> */}
 
-{
-
-
-                <div  className="mt-6">
+                <div className="mt-6">
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
                       <tr className="bg-[#FCDFD4] text-left">
@@ -1000,51 +1083,72 @@ bidpaymentmutate({
                       </tr>
                     </thead>
                     <tbody className="mt-8">
-{
-ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; ticket_number: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }, index: number)=>{
-  return (
-    <tr key={index + 1}>
-    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-      {index + 1}
-    </td>
-    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-      {item?.ticket_type}
-    </td>
-    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-      {item?.ticket_number}
-    </td>
-  </tr>
-  )
-})
-}
-
-                      {/* <tr>
-                        <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                          {index + 1}
-                        </td>
-                        <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                          {item?.ticket_type}
-                        </td>
-                        <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
-                          {item?.ticket_number}
-                        </td>
-                      </tr> */}
-
-
+                      {
+                        // Sample data when ticketData is not available
+                        (ticketData?.data?.ticket_details || [
+                          { ticket_type: "Regular", ticket_number: "RT-001" },
+                          { ticket_type: "VIP", ticket_number: "VT-002" },
+                          { ticket_type: "Regular", ticket_number: "RT-003" }
+                        ]).map((item: { ticket_type: string; ticket_number: string }, index: number) => {
+                          return (
+                            <tr key={index + 1}>
+                              <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                {index + 1}
+                              </td>
+                              <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                                {item?.ticket_type}
+                              </td>
+                              <td
+                                className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium cursor-pointer underline"
+                                onClick={() => {
+                                  setSelectedTicket(item);
+                                  setShowTicketModal(true);
+                                }}
+                              >
+                                {item?.ticket_number}
+                              </td>
+                            </tr>
+                          )
+                        })
+                      }
                     </tbody>
                   </table>
                 </div>
-
-
-}
-
               </div>
             }
             isModalOpen={viewticket}
             showModal={() => setViewTicket(!viewticket)}
             handleOk={() => setViewTicket(false)}
             handleCancel={() => setViewTicket(false)}
+
+      
           />
+
+          {showTicketModal && selectedTicket && (
+            <ModalComponent
+              isModalOpen={showTicketModal}
+              showModal={() => setShowTicketModal(false)}
+              handleOk={() => setShowTicketModal(false)}
+              handleCancel={() => setShowTicketModal(false)}
+
+              width={1000}
+
+              content={
+
+
+
+                <RaffleTicket
+                  ticket_number={selectedTicket.ticket_number || 'N/A'}
+                  ticket_price={selectedTicket.ticket_price || 'N/A'}
+                  purchase_date={selectedTicket.purchase_date || 'N/A'}
+                  product={selectedTicket.product || 'N/A'}
+                  raffle_date={selectedTicket.raffle_date || 'N/A'}
+                  raffle_time={selectedTicket.raffle_time || 'N/A'}
+                />
+
+              }
+            />
+          )}
 
           <ModalComponent
             content={
@@ -1076,6 +1180,7 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                           onChange={() =>
                             handlePaymentSelection("wallet_balance")
                           }
+                          className="accent-[#F25E26]"
                         />
                         <label className="ml-2" htmlFor="wallet_balance">
                           Wallet
@@ -1083,7 +1188,10 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          #230000
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}
                         </small>
                       </div>
                     </div>
@@ -1098,6 +1206,7 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                           onChange={() =>
                             handlePaymentSelection("wallet_point")
                           }
+                          className="accent-[#F25E26]"
                         />
                         <label className="ml-2" htmlFor="wallet_point">
                           Pay With Wallet And Ajiroba Point
@@ -1105,11 +1214,16 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          #23,000 (Wallet) And #200 (Ajiroba Points)
+                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
                   </form>
+
+
                 </div>
 
                 <form
@@ -1133,8 +1247,9 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                     </div>
 
                     <button
-                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] '
-                                    }`}
+                      className={`w-full mt-8 px-12 py-2 text-sm font-bold rounded bg-[#FCDFD4] text-[#2A2A2A] ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F25E26] hover:text-white'
+                        }`}
+                      disabled={!paymentMethod}
                     >
                       {status === "pending" ? "..." : "Pay"}
                     </button>
@@ -1156,7 +1271,7 @@ ticketData?.data?.ticket_details?.map((item: { ticket_type: string | number | bi
                 </div>
                 <div className="flex flex-col justify-center items-center">
                   <h1 className="text-center font-bold text-lg">
-                    Successfully
+                    Successful
                   </h1>
                   <p className="text-center font-normal text-sm">
                     You have entered into raffle draw for this product. Good

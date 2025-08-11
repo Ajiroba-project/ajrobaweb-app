@@ -61,7 +61,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
             <div className="py-2">
               <div className="flex items-center justify-center">
                 <Image
-                  src={`https://ajiroba.onrender.com/media/${value?.image}`}
+                  src={`https://staging.ajiroba.ng/media/${value?.image}`}
                   alt="product"
                   className=""
                   width={100}
@@ -113,29 +113,28 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
             onClick={handleFirstPage}
             disabled={currentPage === 1}
           >
-            <IoIosArrowBack size={20}  />
+            <IoIosArrowBack size={20} />
           </button>
           {Array(totalPages)
             .fill(0)
             .map((_, index) => (
               <button
                 key={index}
-                className={`px-6 py-4 ${
-                  currentPage === index + 1
+                className={`px-6 py-4 ${currentPage === index + 1
                     ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
                     : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
-                }  font-bold rounded`}
+                  }  font-bold rounded`}
                 onClick={() => setCurrentPage(index + 1)}
               >
                 {index + 1}
               </button>
             ))}
           <button
-  className="px-4 py-4 bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-bold cursor-pointer"
+            className="px-4 py-4 bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-bold cursor-pointer"
             onClick={handleLastPage}
             disabled={currentPage === totalPages}
           >
-          <IoIosArrowForward size={20}  />
+            <IoIosArrowForward size={20} />
           </button>
         </div>
       </div>

@@ -18,7 +18,7 @@ import { Community } from "./component/Community";
 import { Products, categories } from "./static-data";
 import { Header } from "./component/Header";
 import { Footer } from "./component/Footer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./globals.css";
 import { Suspense } from "react";
 import { CircularPagination } from "./component/Pagination";
@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
 import { AuctionComp } from "./component/AuctionComp";
+import Loading from "./component/Loading";
 
 type AuctionData = {
   id: string;
@@ -59,12 +60,13 @@ const Page = () => {
   const [cardsPerPage] = useState<number>(4);
   const [filteredCatData, setFilteredCatData] = useState<any>([]);
   const [filteredAuctionData, setFilteredAuctionData] = useState<any>([]);
+  const [loadingdata, setLoadingData] = useState<boolean>(false);
 
   const totalPages = Math.ceil(Products.length / cardsPerPage);
   const catCount = Math.ceil(categories.length / cardsPerPage);
   const router = useRouter();
 
-        const { setHeaderNav, headerNav } = userNavStore(state => ({
+  const { setHeaderNav, headerNav } = userNavStore(state => ({
     setHeaderNav: state.setHeaderNav,
     headerNav: state.headerNav,
   }));
@@ -81,6 +83,7 @@ const Page = () => {
       ["get categoriesdetails"],
       true,
     );
+
   const { data: featuredproductInfo, isLoading: featuredproducLoading } =
     useQueryData<AuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`,
@@ -101,16 +104,9 @@ const Page = () => {
     );
 
   useEffect(() => {
-
-
-
-     if (headerNav !== 'Home') {
-        setHeaderNav('Home');
+    if (headerNav !== 'Home') {
+      setHeaderNav('Home');
     }
-
-
-
-
 
     if (categoriesInfo?.data) {
       const filteredCat = categoriesInfo.data.slice(
@@ -119,7 +115,7 @@ const Page = () => {
       );
       setFilteredCatData(filteredCat);
     }
-  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, ]);
+  }, [categoriesInfo, categoryCurrentPage, cardsPerPage, headerNav, setHeaderNav]);
 
   useEffect(() => {
     if (auctionInfo?.data) {
@@ -139,184 +135,221 @@ const Page = () => {
     setAuctionCurrentPage(pageNumber);
   };
 
+  const onAuctionLoadingChange = useCallback((loading: any) => {
+    setLoadingData(loading);
+  }, []);
+
   return (
     <>
-      <Suspense >
-         <header className="fixed z-50 w-full">
+      <Suspense>
+        {/* Fixed Header - Responsive */}
+        <header className="fixed z-50 w-full">
           <Header />
         </header>
 
-        <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh] " >
-           <section>
-            <div className="">
+        {/* Main Content - Responsive Padding */}
+        <main className="w-full overflow-x-hidden pt-[13vh] md:pt-[16vh] lg:pt-[20vh]">
+          
+          {/* Hero Section - Full Width */}
+          <section className="w-full">
+            <div className="w-full">
               <Hero />
             </div>
           </section>
 
-          <section className="container my-[3rem] flex flex-col gap-4 px-12" >
-            <div className="flex items-center justify-between">
-              <SubHeading title="Today" />
-
-              <div className="flex items-center">
-                <CircularPagination
-                  pageCount={totalPages}
-                  onPageChange={({ selected }) => handleAuctionChange(selected)}
-                  className="flex items-center"
-                />
+          {/* Auction Sales Section - Responsive Container */}
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+            <div className="max-w-7xl mx-auto">
+              {/* Header with Pagination - Mobile Stack */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+                <div className="flex flex-col gap-2">
+                  <SubHeading title="Today" />
+                  <Heading title="Auction Sales" />
+                </div>
+                
+                {/* Pagination - Hidden on Mobile if Space Issue */}
+                <div className="flex items-center justify-center sm:justify-end">
+                  <CircularPagination
+                    pageCount={totalPages}
+                    onPageChange={({ selected }) => handleAuctionChange(selected)}
+                    className="flex items-center scale-75 sm:scale-100"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <Heading title="Auction Sales" />
-            </div>
-            <div className="">
-            {/*   <AuctionCard
-                cardInfo={filteredAuctionData}
-                currentPage={0}
-                cardsNum={0}
-              /> */}
-              <AuctionComp
-
-              cardInfo={filteredAuctionData}
-                currentPage={0}
-                cardsNum={0}
-              />
-            {/*   <AuctionComp cardInfo={[]} currentPage={0} cardsNum={0}/> */}
-            </div>
-          </section>
-
-          <section className="container flex flex-col  gap-4 px-12">
-            <div>
-              <SubHeading title="How it works" />
-            </div>
-            <HIW />
-
-            <p className="font-Poppins  cursor-pointer text-lg font-semibold text-[#F25E26] underline lg:ml-5">
-              Read more
-            </p>
-          </section>
-
-          <section className="container my-28 flex flex-col  gap-4 px-12">
-            <div className="flex items-center justify-between">
-              <SubHeading title="Categories" />
-              <div className="relative flex items-center">
-                <CircularPagination
-                  pageCount={totalPages}
-                  onPageChange={({ selected }) => handleAuctionChange(selected)}
-                  className="flex items-center"
-                />
-              </div>
-            </div>
-
-            <div className="">
-              <Heading title="Shop by Categories" />
-            </div>
-
-            <div className="flex flex-col justify-center">
-             {/*   <CategoryFeatureCard cardInfo={filteredCatData} /> */}
-             <CatFeatCard cardInfo={filteredCatData} />
-
-              {/* <CatFeatCard cardInfo={[]} /> */}
-              <div className="flex justify-center pt-8">
-                <DefaultButton
-                  text="View all Categories"
-                  type="button"
-                  handleClick={() => router.push("/categories")}
-                  className=" text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+              {/* Auction Content */}
+              <div className="w-full">
+                {loadingdata && <Loading />}
+                <AuctionComp
+                  cardInfo={filteredAuctionData}
+                  currentPage={0}
+                  cardsNum={0}
+                  onLoadingChange={onAuctionLoadingChange}
                 />
               </div>
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4 px-12">
-            <div>
-              <SubHeading title="Featured" />
-            </div>
-            <div>
-              <Heading title="Featured Products" />
-            </div>
-            <div className="flex flex-col items-center  ">
+          {/* How It Works Section - Responsive Container */}
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col gap-4 mb-6">
+                <SubHeading title="How it works" />
+              </div>
+              
+              <HIW />
 
-              <ProductCardMain cardInfo={featuredproductInfo?.data}  />
-              <div className="flex justify-center pt-5">
-
-                <DefaultButton
-                  text="View all Deals"
-                  type="button"
-                  handleClick={() =>
-                    router.push(
-                      `/categories/${"featured products"}?feat_id=${featuredproductInfo?.data[0]?.id}`,
-                    )
-                  }
-                  className=" font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-                />
+              <div className="flex justify-center sm:justify-start mt-6">
+                <p 
+                  className="font-Poppins cursor-pointer text-base sm:text-lg font-semibold text-[#F25E26] underline hover:text-[#E84526] transition-colors duration-200"
+                  onClick={() => router.push('/raffle')}
+                >
+                  Read more
+                </p>
               </div>
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4 px-12">
-            <div>
-              <SubHeading title="Deals" />
-            </div>
-            <div>
-              <Heading title="Shop from Top Deals Collection" />
-            </div>
-            <div className="flex flex-col items-center">
-             {/*  <TopDealsCard cardInfo={topdeals?.data} /> */}
-               <ProductCardMain cardInfo={topdeals?.data}  />
-              <div className="flex justify-center pt-4">
+          {/* Categories Section - Responsive Container */}
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+            <div className="max-w-7xl mx-auto">
+              {/* Header with Pagination - Mobile Stack */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+                <div className="flex flex-col gap-2">
+                  <SubHeading title="Categories" />
+                  <Heading title="Shop by Categories" />
+                </div>
+                
+                <div className="flex items-center justify-center sm:justify-end">
+                  <CircularPagination
+                    pageCount={totalPages}
+                    onPageChange={({ selected }) => handleAuctionChange(selected)}
+                    className="flex items-center scale-75 sm:scale-100"
+                  />
+                </div>
+              </div>
 
-                 <DefaultButton
-                  text="View all Deals"
-                  type="button"
-                   handleClick={() =>
-                    router.push(
-                      `/categories/${"top deals"}?top_id=${topdeals?.data[0]?.id}`,
-                    )
-                  }
-                  className=" font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-                />
+              {/* Categories Content */}
+              <div className="w-full">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="w-full">
+                    <CatFeatCard cardInfo={filteredCatData} />
+                  </div>
+                  
+                  <div className="flex justify-center pt-4">
+                    <DefaultButton
+                      text="View all Categories"
+                      type="button"
+                      handleClick={() => router.push("/categories")}
+                      className="text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition-all duration-300 hover:bg-[#E84526] hover:text-white hover:shadow-lg transform hover:scale-105"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          <section className="bg-[#F6F6F6]">
-            <div>
+          {/* Featured Products Section - Responsive Container */}
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col gap-4 mb-6">
+                <SubHeading title="Featured" />
+                <Heading title="Featured Products" />
+              </div>
+              
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-full">
+                  <ProductCardMain cardInfo={featuredproductInfo?.data} />
+                </div>
+                
+                <div className="flex justify-center pt-2">
+                  <DefaultButton
+                    text="View all Deals"
+                    type="button"
+                    handleClick={() =>
+                      router.push(
+                        `/categories/${"featured products"}?feat_id=${featuredproductInfo?.data[0]?.id}`,
+                      )
+                    }
+                    className="font-Poppins font-normal text-sm px-4 py-2 rounded-lg bg-[#FCDFD4] transition-all duration-300 hover:bg-[#F25E26] hover:text-white hover:shadow-lg transform hover:scale-105"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Top Deals Section - Responsive Container */}
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col gap-4 mb-6">
+                <SubHeading title="Deals" />
+                <Heading title="Shop from Top Deals Collection" />
+              </div>
+              
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-full">
+                  <ProductCardMain cardInfo={topdeals?.data} />
+                </div>
+                
+                <div className="flex justify-center pt-2">
+                  <DefaultButton
+                    text="View all Deals"
+                    type="button"
+                    handleClick={() =>
+                      router.push(
+                        `/categories/${"top deals"}?top_id=${topdeals?.data[0]?.id}`,
+                      )
+                    }
+                    className="font-Poppins font-normal text-sm px-4 py-2 rounded-lg bg-[#FCDFD4] transition-all duration-300 hover:bg-[#F25E26] hover:text-white hover:shadow-lg transform hover:scale-105"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Community Section - Full Width Background */}
+          <section className="w-full bg-[#F6F6F6] py-8 md:py-12 lg:py-16">
+            <div className="w-full">
               <Community />
             </div>
           </section>
 
-          <section className="container my-28 flex flex-col  gap-4 px-12">
-            <div>
-              <SubHeading title="Top Product" />
-            </div>
-            <div>
-              <Heading title="This Week Top Product" />
-            </div>
-            <div className="flex flex-col items-center">
-              {/* <TopWeakCard cardInfo={topweak?.data?.slice(0, 8)} /> */}
-                 <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
-              <div className="flex justify-center pt-5">
-
-                 <DefaultButton
-                  text="View all Deals"
-                  type="button"
-                   handleClick={() =>
-                    router.push(
-                      `/categories/${"This Week Top Product"}?top_id=${topdeals?.data[0]?.id}`,
-                    )
-                  }
-                  className=" font-Poppins font-normal text-sm  px-4 py-2 rounded-lg bg-[#FCDFD4]  transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
-                />
+          {/* Top Week Products Section - Responsive Container */}
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col gap-4 mb-6">
+                <SubHeading title="Top Product" />
+                <Heading title="This Week Top Product" />
+              </div>
+              
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-full">
+                  <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
+                </div>
+                
+                <div className="flex justify-center pt-2">
+                  <DefaultButton
+                    text="View all Deals"
+                    type="button"
+                    handleClick={() =>
+                      router.push(
+                        `/categories/${"This Week Top Product"}?top_id=${topdeals?.data[0]?.id}`,
+                      )
+                    }
+                    className="font-Poppins font-normal text-sm px-4 py-2 rounded-lg bg-[#FCDFD4] transition-all duration-300 hover:bg-[#F25E26] hover:text-white hover:shadow-lg transform hover:scale-105"
+                  />
+                </div>
               </div>
             </div>
           </section>
 
-        {/*   <section className="bg-[#F25E26]"> */}
-        <section className="">
+          {/* Banner Section - Full Width */}
+          <section className="w-full">
             <Banner />
           </section>
         </main>
+
+        {/* Footer - Full Width */}
         <Footer />
       </Suspense>
     </>

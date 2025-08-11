@@ -89,8 +89,9 @@ export const ProductCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }))
 
 
@@ -108,7 +109,7 @@ export const ProductCard = ({ cardInfo }: any) => {
   const router = useRouter()
 
 
-    const getSessionKey = () => {
+  const getSessionKey = () => {
     let sessionKey = Cookies.get('session_key');
 
     if (!sessionKey) {
@@ -120,7 +121,7 @@ export const ProductCard = ({ cardInfo }: any) => {
   };
 
 
-    const userToken = Cookies.get("token") as string || ''
+  const userToken = Cookies.get("token") as string || ''
 
 
 
@@ -135,19 +136,20 @@ export const ProductCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
       const result = data?.data?.message?.split('added to cart.')[0].trim();
 
-          setCardAddCartState(result);
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
+      setCardAddCartState(result);
+      setCardCartState(!cardCartState);
+      const timeoutID = setTimeout(() => {
+        setCardCartState(false);
+      }, 5000);
 
-    return () => clearTimeout(timeoutID);
-     /*  refetch(); */
+      return () => clearTimeout(timeoutID);
+      /*  refetch(); */
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -166,7 +168,7 @@ export const ProductCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-    /*   refetch(); */
+      /*   refetch(); */
     } else {
 
       toast.error(`${data?.data?.detail}`, {
@@ -179,14 +181,15 @@ export const ProductCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-     /*  refetch(); */
+      /*  refetch(); */
     }
   };
 
   const handleError = (error?: any) => {
-    console.log(error, "errr",  "daaaattt");
+    setAddingToCart(false) // Hide loading on error
+    console.log(error, "errr", "daaaattt");
 
-    toast.error(`${  error || "An Error Occured"}`, {
+    toast.error(`${error || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -196,7 +199,7 @@ export const ProductCard = ({ cardInfo }: any) => {
       progress: undefined,
       theme: "light",
     });
-   /*  refetch(); */
+    /*  refetch(); */
   };
 
 
@@ -208,24 +211,25 @@ export const ProductCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
-      /*   const sessionKey = getSessionKeyForProduct(data.id); */
-      const sessionKey = getSessionKey();
+    setAddingToCart(true) // Show loading before API call
+    /*   const sessionKey = getSessionKeyForProduct(data.id); */
+    const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
       quantity: Number(1),
-   session_key: sessionKey,
+      session_key: sessionKey,
     };
 
- /*    console.log(data, 'dattaaa')
-    console.log(payload, 'payload')
- */
+    /*    console.log(data, 'dattaaa')
+       console.log(payload, 'payload')
+    */
 
-     /*    console.log(payload, 'payload') */
-     mutate({
-       url: "/api/addtocart/",
-       payload: { payload: payload, tkn: userToken },
-       token: userToken,
-     });
+    /*    console.log(payload, 'payload') */
+    mutate({
+      url: "/api/addtocart/",
+      payload: { payload: payload, tkn: userToken },
+      token: userToken,
+    });
 
 
     // reset();
@@ -254,7 +258,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                   alt='product'
                   className='w-fit bg-contain '
                 /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
               </div>
               {/* cart */}
@@ -262,8 +266,8 @@ export const ProductCard = ({ cardInfo }: any) => {
                 <>
                   <IoCartOutline
                     className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-              /*       onClick={() => handleCartNotification(value)} */
-                 onClick={()=> onSubmit(value)}
+                    /*       onClick={() => handleCartNotification(value)} */
+                    onClick={() => onSubmit(value)}
                   />
                   {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
@@ -333,8 +337,9 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }))
 
 
@@ -357,7 +362,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
 
 
 
-    const getSessionKey = () => {
+  const getSessionKey = () => {
     let sessionKey = Cookies.get('session_key');
 
     if (!sessionKey) {
@@ -369,7 +374,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   };
 
 
-    const userToken = Cookies.get("token") as string || ''
+  const userToken = Cookies.get("token") as string || ''
 
 
 
@@ -384,19 +389,20 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
       const result = data?.data?.message?.split('added to cart.')[0].trim();
 
-          setCardAddCartState(result);
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
+      setCardAddCartState(result);
+      setCardCartState(!cardCartState);
+      const timeoutID = setTimeout(() => {
+        setCardCartState(false);
+      }, 5000);
 
-    return () => clearTimeout(timeoutID);
-     /*  refetch(); */
+      return () => clearTimeout(timeoutID);
+      /*  refetch(); */
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -415,7 +421,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-    /*   refetch(); */
+      /*   refetch(); */
     } else {
 
       toast.error(`${data?.data?.detail}`, {
@@ -428,14 +434,15 @@ export const TopDealsCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-     /*  refetch(); */
+      /*  refetch(); */
     }
   };
 
   const handleError = (error?: any) => {
-    console.log(error, "errr",  "daaaattt");
+    setAddingToCart(false) // Hide loading on error
+    console.log(error, "errr", "daaaattt");
 
-    toast.error(`${  error || "An Error Occured"}`, {
+    toast.error(`${error || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -445,7 +452,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
       progress: undefined,
       theme: "light",
     });
-   /*  refetch(); */
+    /*  refetch(); */
   };
 
 
@@ -457,24 +464,25 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
-      /*   const sessionKey = getSessionKeyForProduct(data.id); */
-      const sessionKey = getSessionKey();
+    setAddingToCart(true) // Show loading before API call
+    /*   const sessionKey = getSessionKeyForProduct(data.id); */
+    const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
       quantity: Number(1),
-   session_key: sessionKey,
+      session_key: sessionKey,
     };
 
- /*    console.log(data, 'dattaaa')
-    console.log(payload, 'payload')
- */
+    /*    console.log(data, 'dattaaa')
+       console.log(payload, 'payload')
+    */
 
-        // console.log(payload, 'payload')
-     mutate({
-       url: "/api/addtocart/",
-       payload: { payload: payload, tkn: userToken },
-       token: userToken,
-     });
+    // console.log(payload, 'payload')
+    mutate({
+      url: "/api/addtocart/",
+      payload: { payload: payload, tkn: userToken },
+      token: userToken,
+    });
 
 
     // reset();
@@ -503,7 +511,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                   alt='product'
                   className='w-fit bg-contain '
                 /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
               </div>
               {/* cart */}
@@ -511,8 +519,8 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                 <>
                   <IoCartOutline
                     className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-                  /*   onClick={() => handleCartNotification(value)} */
-                     onClick={()=> onSubmit(value)}
+                    /*   onClick={() => handleCartNotification(value)} */
+                    onClick={() => onSubmit(value)}
                   />
                   {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
@@ -582,8 +590,9 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn } = useAuthStore(state => ({
-    isLoggedIn: state.isLoggedIn
+  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }))
 
   const handleCartNotification = (value: any) => {
@@ -601,7 +610,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
 
 
 
-    const getSessionKey = () => {
+  const getSessionKey = () => {
     let sessionKey = Cookies.get('session_key');
 
     if (!sessionKey) {
@@ -613,7 +622,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   };
 
 
-    const userToken = Cookies.get("token") as string || ''
+  const userToken = Cookies.get("token") as string || ''
 
 
 
@@ -628,19 +637,20 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
       const result = data?.data?.message?.split('added to cart.')[0].trim();
 
-          setCardAddCartState(result);
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
+      setCardAddCartState(result);
+      setCardCartState(!cardCartState);
+      const timeoutID = setTimeout(() => {
+        setCardCartState(false);
+      }, 5000);
 
-    return () => clearTimeout(timeoutID);
-     /*  refetch(); */
+      return () => clearTimeout(timeoutID);
+      /*  refetch(); */
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -659,7 +669,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-    /*   refetch(); */
+      /*   refetch(); */
     } else {
 
       toast.error(`${data?.data?.detail}`, {
@@ -672,14 +682,15 @@ export const TopWeakCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-     /*  refetch(); */
+      /*  refetch(); */
     }
   };
 
   const handleError = (error?: any) => {
-    console.log(error, "errr",  "daaaattt");
+    setAddingToCart(false) // Hide loading on error
+    console.log(error, "errr", "daaaattt");
 
-    toast.error(`${  error || "An Error Occured"}`, {
+    toast.error(`${error || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -689,7 +700,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
       progress: undefined,
       theme: "light",
     });
-   /*  refetch(); */
+    /*  refetch(); */
   };
 
 
@@ -701,24 +712,25 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
-      /*   const sessionKey = getSessionKeyForProduct(data.id); */
-      const sessionKey = getSessionKey();
+    setAddingToCart(true) // Show loading before API call
+    /*   const sessionKey = getSessionKeyForProduct(data.id); */
+    const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
       quantity: Number(1),
-   session_key: sessionKey,
+      session_key: sessionKey,
     };
 
- /*    console.log(data, 'dattaaa')
-    console.log(payload, 'payload')
- */
+    /*    console.log(data, 'dattaaa')
+       console.log(payload, 'payload')
+    */
 
-   /*      console.log(payload, 'payload') */
-     mutate({
-       url: "/api/addtocart/",
-       payload: { payload: payload, tkn: userToken },
-       token: userToken,
-     });
+    /*      console.log(payload, 'payload') */
+    mutate({
+      url: "/api/addtocart/",
+      payload: { payload: payload, tkn: userToken },
+      token: userToken,
+    });
 
 
     // reset();
@@ -747,7 +759,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                   alt='product'
                   className='w-fit bg-contain '
                 /> */}
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
               </div>
               {/* cart */}
@@ -755,8 +767,8 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                 <>
                   <IoCartOutline
                     className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
-                 /*    onClick={() => handleCartNotification(value)} */
-                    onClick={()=> onSubmit(value)}
+                    /*    onClick={() => handleCartNotification(value)} */
+                    onClick={() => onSubmit(value)}
                   />
                   {isLoggedIn && (
                     <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
@@ -843,10 +855,10 @@ export const CategoryCard = () => {
           >
             <div className='rounded-t-2xl bg-[#F6F6F6]'>
               <div className='relative w-full md:h-80 lg:h-64 h-48 '>
-                {/* {value?.image[0]?.image && console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`, 'value?.image')} */}
+                {/* {value?.image[0]?.image && console.log(`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`, 'value?.image')} */}
                 {value?.image[0]?.image &&
                   <Image
-                    src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+                    src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
                     alt="product"
                     layout="fill"
                     className="fixed-size-image"
@@ -975,7 +987,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
 
               <div className='flex items-center justify-center mb-4'>
 
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
 
               </div>
@@ -1122,7 +1134,7 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
 
               <div className='flex items-center justify-center mb-4'>
 
-                <Image src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
+                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
                   height={100} />
 
               </div>
@@ -1221,7 +1233,7 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
           >
 
             {/*  {
-              console.log(`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`)
+              console.log(`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`)
             } */}
 
             <div className='relative flex items-center justify-center h-[300px] w-[300px]'>
@@ -1230,7 +1242,7 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
               <div
                 className='absolute inset-0 bg-cover bg-center'
                 style={{
-                  backgroundImage: `url(https://ajiroba.onrender.com/media/${value?.image[0]?.image})`,
+                  backgroundImage: `url(https://staging.ajiroba.ng/media/${value?.image[0]?.image})`,
                 }}
               ></div>
 
@@ -1253,6 +1265,9 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
 export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
   const images_ = [foodstufficon, fashionandbeauty, phonessvg, motherandchild];
 
+
+  // console.log(cardInfo, 'cardInfo')
+
   const router = useRouter()
 
   return (
@@ -1274,7 +1289,7 @@ export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
             <div className="w-full h-60 overflow-hidden relative rounded-lg">
               {/* Background image */}
               <Image width={50} height={50}
-                src={`https://ajiroba.onrender.com/media/${value?.image[0]?.image}`}
+                src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
                 alt={value.name}
                 className="object-cover w-full h-full rounded-lg"
               />
@@ -1309,11 +1324,10 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<number | null>(null); // Use index or id for hover state
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn } = useAuthStore((state) => ({
+  const { isLoggedIn, setAddingToCart } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }));
-
-
 
 
   const getSessionKey = () => {
@@ -1340,7 +1354,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
   const router = useRouter();
 
-    const userToken = Cookies.get("token") as string || ''
+  const userToken = Cookies.get("token") as string || ''
 
 
 
@@ -1355,19 +1369,24 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
       const result = data?.data?.message?.split('added to cart.')[0].trim();
 
-          setCardAddCartState(result);
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
+      setCardAddCartState(result);
+      setCardCartState(!cardCartState);
+      const timeoutID = setTimeout(() => {
+        setCardCartState(false);
+      }, 5000);
 
-    return () => clearTimeout(timeoutID);
-     /*  refetch(); */
+      /*   refetch(); */
+
+
+   /*    window.location.reload(); */
+      return () => clearTimeout(timeoutID);
+
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -1386,7 +1405,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-    /*   refetch(); */
+      /*   refetch(); */
     } else {
 
       toast.error(`${data?.data?.detail}`, {
@@ -1399,14 +1418,15 @@ export const ProductCardMain = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-     /*  refetch(); */
+      /*  refetch(); */
     }
   };
 
   const handleError = (error?: any) => {
+    setAddingToCart(false) // Hide loading on error
     // console.log(error, "errr",  "daaaattt");
 
-    toast.error(`${  error || "An Error Occured"}`, {
+    toast.error(`${error || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -1416,38 +1436,39 @@ export const ProductCardMain = ({ cardInfo }: any) => {
       progress: undefined,
       theme: "light",
     });
-   /*  refetch(); */
+    /*  refetch(); */
   };
 
 
 
-  const { mutate: mutate, status: likedstatus } = useMutateData(
+  const { mutate: mutate, status: likedstatus, } = useMutateData(
     "addtocart",
     handleSuccess,
     handleError,
   );
 
   const onSubmit = (data: CommentFormValues) => {
-      /*   const sessionKey = getSessionKeyForProduct(data.id); */
-      const sessionKey = getSessionKey();
+    setAddingToCart(true) // Show loading before API call
+    /*   const sessionKey = getSessionKeyForProduct(data.id); */
+    const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
       quantity: Number(1),
-   session_key: sessionKey,
+      session_key: sessionKey,
     };
 
- /*    console.log(data, 'dattaaa')
-    console.log(payload, 'payload')
- */
+    /*    console.log(data, 'dattaaa')
+       console.log(payload, 'payload')
+    */
 
     // console.log(userToken, 'userToken')
 
     /*     console.log(payload, 'payload') */
-     mutate({
-       url: "/api/addtocart/",
-       payload: { payload: payload, tkn: userToken },
-       token: userToken,
-     });
+    mutate({
+      url: "/api/addtocart/",
+      payload: { payload: payload, tkn: userToken },
+      token: userToken,
+    });
 
 
     // reset();
@@ -1473,8 +1494,8 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                     {hoverState === index && ( // Only show the cart icon for the hovered card
                       <IoCartOutline
                         className="absolute right-2 top-2 rounded-full bg-white p-2 text-4xl text-black hover:text-[#ffffff] hover:bg-[#E84526]"
-                       /*  onClick={() => handleCartNotification(value)} */
-                       onClick={()=> onSubmit(value)}
+                        /*  onClick={() => handleCartNotification(value)} */
+                        onClick={() => onSubmit(value)}
                       />
                     )}
 
@@ -1501,7 +1522,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                     >
                       <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
                         <Image
-                          src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                          src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                           width={100}
                           height={100}
                           alt="image"
@@ -1561,8 +1582,9 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>("");
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn } = useAuthStore((state) => ({
+  const { isLoggedIn, setAddingToCart } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
+    setAddingToCart: state.setAddingToCart
   }));
 
   const getSessionKey = () => {
@@ -1577,7 +1599,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   };
 
 
-    const userToken = Cookies.get("token") as string || ''
+  const userToken = Cookies.get("token") as string || ''
 
   const {
     register,
@@ -1590,19 +1612,20 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   });
 
   const handleSuccess = (data?: any) => {
+    setAddingToCart(false) // Hide loading when done
 
     if (data.status === 200 || data.status === 201) {
 
       const result = data?.data?.message?.split('added to cart.')[0].trim();
 
-          setCardAddCartState(result);
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
+      setCardAddCartState(result);
+      setCardCartState(!cardCartState);
+      const timeoutID = setTimeout(() => {
+        setCardCartState(false);
+      }, 5000);
 
-    return () => clearTimeout(timeoutID);
-     /*  refetch(); */
+      return () => clearTimeout(timeoutID);
+      /*  refetch(); */
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -1621,10 +1644,10 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-    /*   refetch(); */
+      /*   refetch(); */
     } else {
 
-      toast.error(`${ data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -1634,14 +1657,14 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
         progress: undefined,
         theme: "light",
       });
-     /*  refetch(); */
+      /*  refetch(); */
     }
   };
 
   const handleError = (error?: any) => {
-    console.log(error, "errr",  "daaaattt");
+    console.log(error, "errr", "daaaattt");
 
-    toast.error(`${  error || "An Error Occured"}`, {
+    toast.error(`${error || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -1651,7 +1674,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
       progress: undefined,
       theme: "light",
     });
-   /*  refetch(); */
+    /*  refetch(); */
   };
 
 
@@ -1663,24 +1686,25 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   );
 
   const onSubmit = (data: CommentFormValues) => {
-      const sessionKey = getSessionKey();
+    setAddingToCart(true) // Show loading before API call
+    const sessionKey = getSessionKey();
     const payload = {
       product_id: data.id,
       quantity: Number(1),
-   session_key: sessionKey,
+      session_key: sessionKey,
     };
 
 
-      /*   console.log(payload, 'payload') */
+    /*   console.log(payload, 'payload') */
 
-     /*  console.log(userToken, 'userToken') */
+    /*  console.log(userToken, 'userToken') */
 
 
-     mutate({
-       url: "/api/addtocart/",
-       payload: { payload: payload, tkn: userToken },
-       token: userToken,
-     });
+    mutate({
+      url: "/api/addtocart/",
+      payload: { payload: payload, tkn: userToken },
+      token: userToken,
+    });
 
 
     // reset();
@@ -1715,175 +1739,173 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
 
   const [hoverStates, setHoverStates] = useState<{ [key: number]: boolean }>({});
 
-const handleMouseEnter = (index: number) => {
-  setHoverStates((prevState) => ({ ...prevState, [index]: true }));
-};
+  const handleMouseEnter = (index: number) => {
+    setHoverStates((prevState) => ({ ...prevState, [index]: true }));
+  };
 
-const handleMouseLeave = (index: number) => {
-  setHoverStates((prevState) => ({ ...prevState, [index]: false }));
-};
+  const handleMouseLeave = (index: number) => {
+    setHoverStates((prevState) => ({ ...prevState, [index]: false }));
+  };
 
   return (
     <>
 
 
       {cardInfo && (
-    <div
-      className={`${poppins.className} my-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6`}
-    >
-      {cardInfo?.map((value: any, index: number) => (
-        <div key={index}>
-          <motion.div
-            onMouseEnter={() => handleMouseEnter(index)}
-            onMouseLeave={() => handleMouseLeave(index)}
-            className="flex flex-col h-full shadow-lg"
-          >
-            <motion.div
-              className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
-              whileHover={{
-                backgroundColor: "#E0E0E0", // Background color change
-              }}
-            >
-              <div className="flex justify-end cursor-pointer">
-                {hoverStates[index] ? (
-                  <IoCartOutline
-                    className="hover:text-[#ffffff] hover:bg-[#E84526] rounded-full absolute right-2 top-2 p-2 text-4xl text-black"
-                   /*  onClick={() => handleCartNotification(value)} */
-                         onClick={()=> onSubmit(value)}
-                  />
-                ) : (
-                  ""
-                )}
+        <div
+          className={`${poppins.className} my-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6`}
+        >
+          {cardInfo?.map((value: any, index: number) => (
+            <div key={index}>
+              <motion.div
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={() => handleMouseLeave(index)}
+                className="flex flex-col h-full shadow-lg"
+              >
+                <motion.div
+                  className="bg-[#F6F6F6] p-4 rounded-t-lg relative"
+                  whileHover={{
+                    backgroundColor: "#E0E0E0", // Background color change
+                  }}
+                >
+                  <div className="flex justify-end cursor-pointer">
+                    {hoverStates[index] ? (
+                      <IoCartOutline
+                        className="hover:text-[#ffffff] hover:bg-[#E84526] rounded-full absolute right-2 top-2 p-2 text-4xl text-black"
+                        /*  onClick={() => handleCartNotification(value)} */
+                        onClick={() => onSubmit(value)}
+                      />
+                    ) : (
+                      ""
+                    )}
 
-                {cardCartState && (
-                  <div
-                    className={`${
-                      cardAddCartState === value.name
-                        ? "absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white"
-                        : "hidden"
-                    }`}
+                    {cardCartState && (
+                      <div
+                        className={`${cardAddCartState === value.name
+                          ? "absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center align-bottom text-white"
+                          : "hidden"
+                          }`}
+                      >
+                        <div className="bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium">
+                          <p>{value.name}</p>
+                          <p>Has been added to cart</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <motion.div
+                    className="flex justify-center items-center m-3"
+                    whileHover={{ scale: 1.1 }} // Enlarge the image on hover
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                   >
-                    <div className="bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium">
-                      <p>{value.name}</p>
-                      <p>Has been added to cart</p>
+                    <div
+                      onClick={() =>
+                        router?.push(`/categories/productdetails/${value.id}`)
+                      }
+                      className="p-0"
+                    >
+                      {hoverStates[index] ? (
+                        <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
+                          <Image
+                            src={`https://staging.ajiroba.ng/media/${value?.image}`}
+                            width={100}
+                            height={100}
+                            alt="image"
+                            className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"
+                          />
+                        </div>
+                      ) : (
+                        <Image
+                          src={`https://staging.ajiroba.ng/media/${value?.image}`}
+                          width={100}
+                          height={100}
+                          alt="human hair"
+                          className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
+                        />
+                      )}
+                    </div>
+                  </motion.div>
+                </motion.div>
+
+                <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
+                  <div className="mt-2 mb-1 p-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className=" text-[#353131] text-pretty text-base font-normal font-Poppins">
+                          {value?.name}
+                        </p>
+
+                        <p className=" text-[#A09F9F] text-pretty text-sm font-normal font-Poppins mt-2">
+                          {value?.description
+                            ? value?.description
+                            : "No Description"}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                )}
-              </div>
 
-              <motion.div
-                className="flex justify-center items-center m-3"
-                whileHover={{ scale: 1.1 }} // Enlarge the image on hover
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                <div
-                  onClick={() =>
-                    router?.push(`/categories/productdetails/${value.id}`)
-                  }
-                  className="p-0"
-                >
-                  {hoverStates[index] ? (
-                    <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
-                      <Image
-                        src={`https://ajiroba.onrender.com/media/${value?.image}`}
-                        width={100}
-                        height={100}
-                        alt="image"
-                        className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"
-                      />
+                  <div className="p-4 flex justify-between items-center">
+                    <div className="justify-start">
+                      <p className="text-xl font-medium">
+                        &#8358; {value?.previousPrice?.toLocaleString('en-US')}
+                        <span className=""></span>
+                      </p>
+
+                      <p className="text-sm font-normal text-gray-500 line-through">
+                        &#8358; {value?.price?.toLocaleString('en-US')}
+                      </p>
                     </div>
-                  ) : (
-                    <Image
-                      src={`https://ajiroba.onrender.com/media/${value?.image}`}
-                      width={100}
-                      height={100}
-                      alt="human hair"
-                      className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
-                    />
-                  )}
+
+                    <div className="p-4">
+                      <p className="flex justify-end text-left gap-1">
+                        {Array.from({ length: value?.rating }, (_, index) => (
+                          <span key={index}>
+                            <FaStar className="text-[#F25E26]" />
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
-            </motion.div>
-
-            <div className="rounded-b-lg border-t-4 bg-[#FFFFFF]">
-              <div className="mt-2 mb-1 p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className=" text-[#353131] text-pretty text-base font-normal font-Poppins">
-                      {value?.name}
-                    </p>
-
-                    <p className=" text-[#A09F9F] text-pretty text-sm font-normal font-Poppins mt-2">
-                      {value?.description
-                        ? value?.description
-                        : "No Description"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 flex justify-between items-center">
-                <div className="justify-start">
-                  <p className="text-xl font-medium">
-                    &#8358; {value?.previousPrice?.toLocaleString('en-US')}
-                    <span className=""></span>
-                  </p>
-
-                  <p className="text-sm font-normal text-gray-500 line-through">
-                    &#8358; {value?.price?.toLocaleString('en-US')}
-                  </p>
-                </div>
-
-                <div className="p-4">
-                  <p className="flex justify-end text-left gap-1">
-                    {Array.from({ length: value?.rating }, (_, index) => (
-                      <span key={index}>
-                        <FaStar className="text-[#F25E26]" />
-                      </span>
-                    ))}
-                  </p>
-                </div>
-              </div>
             </div>
-          </motion.div>
+          ))}
         </div>
-      ))}
-    </div>
-  )}
+      )}
 
-       <div className="flex justify-center items-center mb-20 mt-12 ">
-            <div className="flex justify-center mt-4 gap-3">
+      <div className="flex justify-center items-center mb-20 mt-12 ">
+        <div className="flex justify-center mt-4 gap-3">
+          <button
+            className="px-4 py-4 bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-bold cursor-pointer"
+            onClick={handleFirstPage}
+            disabled={currentPage === 1}
+          >
+            <IoIosArrowBack size={20} />
+          </button>
+          {Array(totalPages)
+            .fill(0)
+            .map((_, index) => (
               <button
-                className="px-4 py-4 bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-bold cursor-pointer"
-                onClick={handleFirstPage}
-                disabled={currentPage === 1}
+                key={index}
+                className={`px-6 py-4 ${currentPage === index + 1
+                  ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
+                  : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
+                  }  font-bold rounded`}
+                onClick={() => setCurrentPage(index + 1)}
               >
-                <IoIosArrowBack size={20} />
+                {index + 1}
               </button>
-              {Array(totalPages)
-                .fill(0)
-                .map((_, index) => (
-                  <button
-                    key={index}
-                    className={`px-6 py-4 ${
-                      currentPage === index + 1
-                        ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
-                        : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
-                    }  font-bold rounded`}
-                    onClick={() => setCurrentPage(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              <button
-                className="px-4 py-4 bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-bold cursor-pointer"
-                onClick={handleLastPage}
-                disabled={currentPage === totalPages}
-              >
-                <IoIosArrowForward size={20} />
-              </button>
-            </div>
-          </div>
+            ))}
+          <button
+            className="px-4 py-4 bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-bold cursor-pointer"
+            onClick={handleLastPage}
+            disabled={currentPage === totalPages}
+          >
+            <IoIosArrowForward size={20} />
+          </button>
+        </div>
+      </div>
     </>
   );
 };
@@ -1922,11 +1944,10 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                   <div className="flex justify-end cursor-pointer">
                     {cardCartState && (
                       <div
-                        className={`${
-                          cardAddCartState === value.name
-                            ? "absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center text-white"
-                            : "hidden"
-                        }`}
+                        className={`${cardAddCartState === value.name
+                          ? "absolute left-0 top-0 z-20 flex h-full w-full flex-col items-center justify-end bg-[#0000002a] pb-6 text-center text-white"
+                          : "hidden"
+                          }`}
                       >
                         <div className="bottom-0 mx-4 rounded-md bg-[#08B504] p-2 px-3 text-sm font-medium">
                           <p>{value.name}</p>
@@ -1940,18 +1961,17 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                     <div
                       onClick={() =>
                         router?.push(`/categories/${value.name}?cat_id=${value.id}`)
-                       /*   href={`/categories/${value.name}?cat_id=${value.id}`} */
+                        /*   href={`/categories/${value.name}?cat_id=${value.id}`} */
                       }
                       className="p-0"
                     >
                       <Image
                         width={100}
                         height={100}
-                        src={`https://ajiroba.onrender.com/media/${
-                          value?.images
-                            ? value?.images[0]?.image
-                            : value?.image[0]?.image
-                        }`}
+                        src={`https://staging.ajiroba.ng/media/${value?.images
+                          ? value?.images[0]?.image
+                          : value?.image[0]?.image
+                          }`}
                         alt="image"
                         className="cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent object-cover h-auto w-full"
                       />
@@ -1988,9 +2008,27 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
         </div>
       )}
 
-       {
-            ( isFetching ) && <Loading />
-        }
+      {
+        (isFetching) && <Loading />
+      }
     </>
   );
 };
+
+// Global Loading Overlay Component
+export const GlobalLoadingOverlay = () => {
+  const { isAddingToCart } = useAuthStore(state => ({
+    isAddingToCart: state.isAddingToCart
+  }))
+
+  if (!isAddingToCart) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg p-8 shadow-xl">
+        <Loading />
+        <p className="mt-4 text-center text-gray-700">Adding item to cart...</p>
+      </div>
+    </div>
+  )
+}

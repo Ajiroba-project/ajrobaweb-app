@@ -1,15 +1,14 @@
 import { useState } from "react";
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string;
-    type: string;
     name: string;
-    placeholder: string;
     register: any;
     errors?: any;
     className?: string;
     HiEye?: any;
     HiEyeSlash?: any;
+    maxLength?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -22,6 +21,8 @@ const Input: React.FC<InputProps> = ({
     className,
     HiEyeSlash,
     HiEye,
+    maxLength,
+    ...props
 }) => {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -42,6 +43,8 @@ const Input: React.FC<InputProps> = ({
                     placeholder={placeholder}
                     className={`px-8 h-12 focus:text-black border placeholder:text-sm rounded w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] ${className || ""}`}
                     {...register(name, { required: true })}
+                    maxLength={maxLength}
+                    {...props}
                 />
 
 

@@ -12,12 +12,12 @@ import {
 } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { SideMenu } from "../components/SideMenu";
-import { LuMenuSquare } from "react-icons/lu";
 import { stepperList } from "@/app/static-data";
 import { AirtimeDetails } from "../components/AirtimeDetails";
 import { AirtimePayment } from "../components/AirtimePayment";
 import { Receipt } from "../components/Receipt";
 import Loading from "@/app/component/Loading";
+import { LuMenu } from "react-icons/lu";
 
 const Reroute = () => {
   const router = useRouter();
@@ -121,7 +121,7 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
             className=" absolute left-4 top-5 cursor-pointer text-[#f25e26] lg:hidden"
             onClick={() => toggleSidebar(!sidebar)}
           >
-            <LuMenuSquare className="text-3xl" />
+            <LuMenu className="text-3xl" />
           </div>
         </section>
 

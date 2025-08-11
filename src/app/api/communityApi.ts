@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'https://ajiroba.onrender.com/v1/user';
+const API_BASE_URL = 'https://staging.ajiroba.ng/v1/user';
 
 // Function to get trending posts
 export const getTrendingPosts = async (authToken: string) => {

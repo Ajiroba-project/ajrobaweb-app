@@ -68,7 +68,7 @@ const Page = ({ params }: any) => {
   const selectedBrands = searchParams.get("selectedBrands");
   const min_max = searchParams.get("min_max");
 
-   const [cardCartState, setCardCartState] = useState<boolean>(false);
+  const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
   const { isLoggedIn } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
@@ -86,7 +86,7 @@ const Page = ({ params }: any) => {
   };
 
 
-    const userToken = Cookies.get("token") as string || ''
+  const userToken = Cookies.get("token") as string || ''
 
   const router = useRouter();
 
@@ -122,7 +122,7 @@ const Page = ({ params }: any) => {
     true,
   );
 
- /*  console.log(productdata, 'productdata') */
+  /*  console.log(productdata, 'productdata') */
 
   // useEffect(() => {
   //   if (paths.length > 0) {
@@ -131,7 +131,7 @@ const Page = ({ params }: any) => {
   // }, [paths]);
 
 
-    useEffect(() => {
+  useEffect(() => {
     if (paths.length > 0) {
       const newPath = paths[paths.length - 1];
       if (newPath !== path) {
@@ -145,12 +145,12 @@ const Page = ({ params }: any) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const images = [image4, image2];
 
-     const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Step 1: State to track the selected image
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Step 1: State to track the selected image
 
 
   const handleImageClick = (index: SetStateAction<number>) => {
     setSelectedImage(index);
-     setSelectedImageIndex(index);
+    setSelectedImageIndex(index);
   };
 
 
@@ -164,30 +164,30 @@ const Page = ({ params }: any) => {
 
       console.log(result, 'result')
 
-       toast(`${result} Has been added to cart`, {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce,
-      style: {
-        backgroundColor: "#08B504",
-        color: "#FFFFFF",
-      },
-    });
+      toast(`${result} Has been added to cart`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        style: {
+          backgroundColor: "#08B504",
+          color: "#FFFFFF",
+        },
+      });
 
-          setCardAddCartState(result);
-    setCardCartState(!cardCartState);
-    const timeoutID = setTimeout(() => {
-      setCardCartState(false);
-    }, 5000);
+      setCardAddCartState(result);
+      setCardCartState(!cardCartState);
+      const timeoutID = setTimeout(() => {
+        setCardCartState(false);
+      }, 5000);
 
-    return () => clearTimeout(timeoutID);
-     /*  refetch(); */
+      return () => clearTimeout(timeoutID);
+      /*  refetch(); */
     } else if (
       data.status === 403 ||
       data.status === 404 ||
@@ -206,10 +206,10 @@ const Page = ({ params }: any) => {
         progress: undefined,
         theme: "light",
       });
-    /*   refetch(); */
+      /*   refetch(); */
     } else {
 
-      toast.error(`${ data?.data?.detail}`, {
+      toast.error(`${data?.data?.detail}`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -219,14 +219,14 @@ const Page = ({ params }: any) => {
         progress: undefined,
         theme: "light",
       });
-     /*  refetch(); */
+      /*  refetch(); */
     }
   };
 
   const handleError = (error?: any) => {
-    console.log(error, "errr",  "daaaattt");
+    console.log(error, "errr", "daaaattt");
 
-    toast.error(`${  error || "An Error Occured"}`, {
+    toast.error(`${error || "An Error Occured"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -236,55 +236,41 @@ const Page = ({ params }: any) => {
       progress: undefined,
       theme: "light",
     });
-   /*  refetch(); */
+    /*  refetch(); */
   };
 
 
 
-  const { mutate: mutate, status: likedstatus } = useMutateData(
+  const { mutate: mutate, status: likedstatus, } = useMutateData(
     "addtocart",
-    handleSuccess,
-    handleError,
+    (data) => {
+      handleSuccess(data);
+      setIsAddingToCart(false);
+    },
+    (error) => {
+      handleError(error);
+      setIsAddingToCart(false);
+    }
   );
 
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
   const AddToCart = () => {
-      const sessionKey = getSessionKey();
+    setIsAddingToCart(true);
+    const sessionKey = getSessionKey();
     const payload = {
       product_id: product_id,
       quantity: Number(1),
-   session_key: sessionKey,
+      session_key: sessionKey,
     };
 
-
-      /*   console.log(payload, 'payload') */
-     mutate({
-       url: "/api/addtocart/",
-       payload: { payload: payload, tkn: userToken },
-       token: userToken,
-     });
-
-
-    // reset();
-  };
-
-
-  const notify = () => {
-    toast("🦄 ‘Mama Gold Rice’ has been added to cart", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce,
-      style: {
-        backgroundColor: "#08B504",
-        color: "#FFFFFF",
-      },
+    mutate({
+      url: "/api/addtocart/",
+      payload: { payload: payload, tkn: userToken },
+      token: userToken,
     });
   };
+
 
   if (error) {
     console.error("Error fetching product data:", error);
@@ -321,346 +307,204 @@ const Page = ({ params }: any) => {
     }
   };
 
-//   const CustomerReview = ({ data }: any) => {
-//     return (
-//       <div className="container py-4  ">
-//         <div>
-//           <h1 className="text-[#353131] font-Poppins font-medium text-lg text-center 2xl:text-start xl:text-start lg:text-start md:text-start ">
-//             Customer Review
-//           </h1>
-//         </div>
 
-//         <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
-//           <div className=" w-1/2">
-//             <p className="flex mt-4 items-center text-[#111111] text-sm gap-1">
-//               {Array.from(
-//                 {
-//                   length: data?.data?.product_reviews?.average_ratings,
-//                 },
-//                 (_, index) => (
-//                   <span key={index}>
-//                     <FaStar className="text-[#F25E26]" />
-//                   </span>
-//                 ),
-//               )}
-//               <span className="ml-4 text-[#2A2A2A] font-Poppins text-[8px] font-normal">
-//                 {" "}
-//                 ({data?.data?.product_reviews?.total_reviews}) Reviews
-//               </span>
-//             </p>
+  const CustomerReview = ({ data }: any) => {
+    // Step 2: Adding state to filter reviews by stars
+    const [selectedStars, setSelectedStars] = useState<number | null>(null);
 
-//             {data?.data?.rating_counts?.map(
-//               (
-//                 item: { stars: string; customers: number },
-//                 index: Key | null | undefined,
-//               ) => {
-//                 return (
-//                   <div key={index}>
-//                     <div key={index} className="flex gap-4 items-center py-2">
-//                       <div>
-//                         <span className="font-Poppins text-[16px] text-[#353131]">
-//                           {item.stars} stars
-//                         </span>
-//                       </div>
+    // Step 1: Sort stars from highest to lowest
+    const sortedRatings = [...data?.data?.rating_counts].sort(
+      (a: { stars: number }, b: { stars: number }) => b.stars - a.stars
+    );
 
-//                       <div className="flex-1">
-//                         <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-//                           <div
-//                             className="bg-[#E84526] h-2.5 rounded-full"
-//                             style={{
-//                               width: `${item.customers}%`,
-//                             }}
-//                           ></div>
-//                         </div>
-//                       </div>
-
-//                       <div>
-//                         <small className="font-Poppins text-[16px] text-[#353131]">
-//                           {item.customers}
-//                         </small>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 );
-//               },
-//             )}
-
-//             <div className="mt-4">
-//               <p>Filter By:</p>
-//             </div>
-
-//             <div className="flex gap-2 flex-wrap">
-//               <button className=" font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-normal rounded">
-//                 1 Star
-//               </button>
-
-//               <button className=" font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-normal rounded">
-//                 2 Star
-//               </button>
-
-//               <button className=" font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-normal rounded">
-//                 3 Star
-//               </button>
-
-//               <button className=" font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm bg-[#FFFFFF] hover:[#FCDFD4] text-[#111111] font-normal rounded">
-//                 4 Star
-//               </button>
-
-//               <button className=" font-Poppins mt-4 px-4 py-2 text-[16px] bg-[#F25E26] hover:[#FCDFD4] text-[#ffffff] font-bold rounded">
-//                 5 Star
-//               </button>
-//             </div>
-//           </div>
-
-//           <div className="w-1/2">
-//             {data?.data?.reviews.map(
-//               (item: any, key: Key | null | undefined) => {
-//                 const date = item?.date_created
-//                   ? parseISO(item.date_created)
-//                   : null;
-//                 const formattedDate = date
-//                   ? format(date, "dd/MM/yyyy")
-//                   : "Invalid Date";
-
-//                 return (
-//                   <div key={key} className="flex gap-2">
-//                     <div className="">
-//                       <Image
-//                         src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
-//                         height={40}
-//                         width={40}
-//                         alt="Profile Image"
-//                         className="rounded-full object-cover   "
-//                         style={{ borderRadius: "50%" }}
-//                       />
-//                     </div>
-
-//                     <div className="mb-8 flex-1 ">
-//                       <p className="text-[#2A2A2A] text-[16px] font-Poppins font-bold">{`${item.user.first_name}  ${item.user.last_name} `}</p>
-//                       <p className="flex mt-4 items-center text-[#2A2A2A] font-Poppins text-sm gap-1">
-//                         {Array.from({ length: item?.rating }, (_, index) => (
-//                           <span key={index}>
-//                             <FaStar className="text-[#F25E26]" />
-//                           </span>
-//                         ))}
-
-//                         {formattedDate}
-//                       </p>
-//                       <p className="font-Poppins font-normal text-[13px]">
-//                         {item.comment}
-//                       </p>
-//                     </div>
-//                   </div>
-//                 );
-//               },
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   };
-
-
-const CustomerReview = ({ data }: any) => {
-  // Step 2: Adding state to filter reviews by stars
-  const [selectedStars, setSelectedStars] = useState<number | null>(null);
-
-  // Step 1: Sort stars from highest to lowest
-  const sortedRatings = [...data?.data?.rating_counts].sort(
-    (a: { stars: number }, b: { stars: number }) => b.stars - a.stars
-  );
-
-  // Step 2: Filter reviews based on the selected star count
-  const filteredReviews = selectedStars
-    ? data?.data?.reviews.filter(
+    // Step 2: Filter reviews based on the selected star count
+    const filteredReviews = selectedStars
+      ? data?.data?.reviews.filter(
         (review: any) => review.rating === selectedStars
       )
-    : data?.data?.reviews;
+      : data?.data?.reviews;
 
 
     const [currentPage, setCurrentPage] = useState(1);
-const reviewsPerPage = 2; // Number of reviews per page
+    const reviewsPerPage = 2; // Number of reviews per page
 
-const totalReviews = filteredReviews.length;
-const totalPages = Math.ceil(totalReviews / reviewsPerPage);
+    const totalReviews = filteredReviews.length;
+    const totalPages = Math.ceil(totalReviews / reviewsPerPage);
 
-const indexOfLastReview = currentPage * reviewsPerPage;
-const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-const currentReviews = filteredReviews.slice(indexOfFirstReview, indexOfLastReview);
-
-
-const handlePageClick = (pageNumber: number) => {
-  setCurrentPage(pageNumber);
-};
+    const indexOfLastReview = currentPage * reviewsPerPage;
+    const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+    const currentReviews = filteredReviews.slice(indexOfFirstReview, indexOfLastReview);
 
 
-
-  return (
-    <div className="container py-4">
-      <div>
-        <h1 className="text-[#353131] font-Poppins font-medium text-lg text-center 2xl:text-start xl:text-start lg:text-start md:text-start">
-          Customer Review
-        </h1>
-      </div>
-
-      <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
-       <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
-
-          <p className="flex mt-4 items-center text-[#111111] text-sm gap-1">
-            {Array.from(
-              {
-                length: data?.data?.product_reviews?.average_ratings,
-              },
-              (_, index) => (
-                <span key={index}>
-                  <FaStar className="text-[#F25E26]" />
-                </span>
-              )
-            )}
-            <span className="ml-4 text-[#2A2A2A] font-Poppins text-[8px] font-normal">
-              ({data?.data?.product_reviews?.total_reviews}) Reviews
-            </span>
-          </p>
+    const handlePageClick = (pageNumber: number) => {
+      setCurrentPage(pageNumber);
+    };
 
 
-          {sortedRatings.map(
-            (
-              item: { stars: number; customers: number },
-              index: number
-            ) => (
-              <div key={index} className="flex gap-4 items-center py-2">
-                <div>
-                  <span className="font-Poppins text-[16px] text-[#353131]">
-                    {item.stars} stars
-                  </span>
-                </div>
 
-                <div className="flex-1">
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div
-                      className="bg-[#E84526] h-2.5 rounded-full"
-                      style={{
-                        width: `${item.customers}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div>
-                  <small className="font-Poppins text-[16px] text-[#353131]">
-                    {item.customers}
-                  </small>
-                </div>
-              </div>
-            )
-          )}
-
-
-          <div className="mt-4">
-            <p>Filter By:</p>
-          </div>
-
-
-          <div className="flex gap-2 flex-wrap">
-
-  {sortedRatings.map((item: { stars: number }) => (
-    <button
-      key={item.stars}
-      onClick={() => setSelectedStars(item.stars)}
-      className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-        selectedStars === item.stars
-          ? "bg-[#F25E26] text-white font-bold"
-          : "bg-white text-black font-normal"
-      } rounded`}
-    >
-      {item.stars} Star
-    </button>
-  ))}
-
-
-  <button
-    onClick={() => setSelectedStars(null)}
-    className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${
-      selectedStars === null
-        ? "bg-[#F25E26] text-white font-bold"
-        : "bg-white text-black font-normal"
-    } rounded`}
-  >
-    All Stars
-  </button>
-</div>
-
+    return (
+      <div className="container py-4">
+        <div>
+          <h1 className="text-[#353131] font-Poppins font-medium text-lg text-center 2xl:text-start xl:text-start lg:text-start md:text-start">
+            Customer Review
+          </h1>
         </div>
 
-       <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
-          {currentReviews.map((item: any, key: number) => {
-            const date = item?.date_created ? parseISO(item.date_created) : null;
-            const formattedDate = date
-              ? format(date, "dd/MM/yyyy")
-              : "Invalid Date";
+        <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col 2xl:items-start xl:items-start lg:items-start md:items-start items-center gap-12 mt-8">
+          <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
 
-            return (
-              <div key={key} className="flex gap-2">
-                <div className="">
-                  <Image
-                    src={`https://ajiroba.onrender.com${item?.user?.profile_image}`}
-                    height={40}
-                    width={40}
-                    alt="Profile Image"
-                    className="rounded-full object-cover"
-                    style={{ borderRadius: "50%" }}
-                  />
+            <p className="flex mt-4 items-center text-[#111111] text-sm gap-1">
+              {Array.from(
+                {
+                  length: data?.data?.product_reviews?.average_ratings,
+                },
+                (_, index) => (
+                  <span key={index}>
+                    <FaStar className="text-[#F25E26]" />
+                  </span>
+                )
+              )}
+              <span className="ml-4 text-[#2A2A2A] font-Poppins text-[8px] font-normal">
+                ({data?.data?.product_reviews?.total_reviews}) Reviews
+              </span>
+            </p>
+
+
+            {sortedRatings.map(
+              (
+                item: { stars: number; customers: number },
+                index: number
+              ) => (
+                <div key={index} className="flex gap-4 items-center py-2">
+                  <div>
+                    <span className="font-Poppins text-[16px] text-[#353131]">
+                      {item.stars} stars
+                    </span>
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                      <div
+                        className="bg-[#E84526] h-2.5 rounded-full"
+                        style={{
+                          width: `${item.customers}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <small className="font-Poppins text-[16px] text-[#353131]">
+                      {item.customers}
+                    </small>
+                  </div>
                 </div>
+              )
+            )}
 
-                <div className="mb-8 flex-1">
-                  <p className="text-[#2A2A2A] text-[16px] font-Poppins font-bold">{`${item.user.first_name}  ${item.user.last_name} `}</p>
-                  <p className="flex mt-4 items-center text-[#2A2A2A] font-Poppins text-sm gap-1">
-                    {Array.from({ length: item?.rating }, (_, index) => (
-                      <span key={index}>
-                        <FaStar className="text-[#F25E26]" />
-                      </span>
-                    ))}
 
-                    {formattedDate}
-                  </p>
-                  <p className="font-Poppins font-normal text-[13px]">
-                    {item.comment}
-                  </p>
+            <div className="mt-4">
+              <p>Filter By:</p>
+            </div>
+
+
+            <div className="flex gap-2 flex-wrap">
+
+              {sortedRatings.map((item: { stars: number }) => (
+                <button
+                  key={item.stars}
+                  onClick={() => setSelectedStars(item.stars)}
+                  className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === item.stars
+                    ? "bg-[#F25E26] text-white font-bold"
+                    : "bg-white text-black font-normal"
+                    } rounded`}
+                >
+                  {item.stars} Star
+                </button>
+              ))}
+
+
+              <button
+                onClick={() => setSelectedStars(null)}
+                className={`font-Poppins text-[16px] border border-[#D2D2D2] mt-4 px-4 py-2 text-sm ${selectedStars === null
+                  ? "bg-[#F25E26] text-white font-bold"
+                  : "bg-white text-black font-normal"
+                  } rounded`}
+              >
+                All Stars
+              </button>
+            </div>
+
+          </div>
+
+          <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
+            {currentReviews.map((item: any, key: number) => {
+              const date = item?.date_created ? parseISO(item.date_created) : null;
+              const formattedDate = date
+                ? format(date, "dd/MM/yyyy")
+                : "Invalid Date";
+
+              return (
+                <div key={key} className="flex gap-2">
+                  <div className="">
+                    <Image
+                      src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
+                      height={40}
+                      width={40}
+                      alt="Profile Image"
+                      className="rounded-full object-cover"
+                      style={{ borderRadius: "50%" }}
+                    />
+                  </div>
+
+                  <div className="mb-8 flex-1">
+                    <p className="text-[#2A2A2A] text-[16px] font-Poppins font-bold">{`${item.user.first_name}  ${item.user.last_name} `}</p>
+                    <p className="flex mt-4 items-center text-[#2A2A2A] font-Poppins text-sm gap-1">
+                      {Array.from({ length: item?.rating }, (_, index) => (
+                        <span key={index}>
+                          <FaStar className="text-[#F25E26]" />
+                        </span>
+                      ))}
+
+                      {formattedDate}
+                    </p>
+                    <p className="font-Poppins font-normal text-[13px]">
+                      {item.comment}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
 
             <div className="flex justify-end mt-4">
-                    <h1 className=" text-center 4 text-[#E84526]" >Pages</h1>
-        {Array.from({ length: totalPages }, (_, index) => {
-          const pageNumber = index + 1;
+              <h1 className=" text-center 4 text-[#E84526]" >Pages</h1>
+              {Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
 
-          return (
-          <div key={index} className="flex " >
-              <h1
-              key={pageNumber}
-              onClick={() => handlePageClick(pageNumber)}
-              className={` px-2 cursor-pointer ${
-                currentPage === pageNumber
-                /*   ? "bg-[#F25E26] text-white font-bold"
-                  : "bg-white text-black border border-gray-300" */
-                    ? " text-[#353131] font-bold"
-                  : " text-[#353131]"
-              }`}
-            >
-              {pageNumber}
-            </h1>
+                return (
+                  <div key={index} className="flex " >
+                    <h1
+                      key={pageNumber}
+                      onClick={() => handlePageClick(pageNumber)}
+                      className={` px-2 cursor-pointer ${currentPage === pageNumber
+                        /*   ? "bg-[#F25E26] text-white font-bold"
+                          : "bg-white text-black border border-gray-300" */
+                        ? " text-[#353131] font-bold"
+                        : " text-[#353131]"
+                        }`}
+                    >
+                      {pageNumber}
+                    </h1>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          );
-        })}
-      </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 
 
@@ -684,7 +528,7 @@ const handlePageClick = (pageNumber: number) => {
 
 
 
-    return (
+  return (
     <main>
       <Header />
       <ProductBreadcrumb
@@ -715,7 +559,7 @@ const handlePageClick = (pageNumber: number) => {
         }}
         className="text-[#363636] font-Poppins text-sm font-semibold"
       >
-        {productdata?.data?.category_name } | {productdata?.data?.subcategory_name }
+        {productdata?.data?.category_name} | {productdata?.data?.subcategory_name}
       </div>
 
       <section
@@ -733,7 +577,7 @@ const handlePageClick = (pageNumber: number) => {
                     <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
                       <Image
                         className=" images-map w-32 h-32 object-cover"
-                        src={`https://ajiroba.onrender.com/media/${image.image}`}
+                        src={`https://staging.ajiroba.ng/media/${image.image}`}
                         alt="Product Thumbnail"
                         onClick={() => handleImageClick(index)}
                         width={100}
@@ -745,13 +589,13 @@ const handlePageClick = (pageNumber: number) => {
                 </div>
               </div>
 
-                <div className="  flex  justify-center items-center px-12 2xl:mt-4 xl:mt-4 lg:mt-4 md:mt-4 mt-6 ">
+              <div className="  flex  justify-center items-center px-12 2xl:mt-4 xl:mt-4 lg:mt-4 md:mt-4 mt-6 ">
                 <div className="thumbnail-images w-auto     ">
                   <div className="main-image ">
-                   {/*  <Image
+                    {/*  <Image
                       src={
                         productdata?.data?.images?.[0]?.image
-                          ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                          ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                           : ""
                       }
                       alt="Product Image"
@@ -760,18 +604,18 @@ const handlePageClick = (pageNumber: number) => {
                       objectFit="cover"
                       className="object-cover"
                     /> */}
-                     {productdata?.data?.images?.[selectedImageIndex] ? ( // Check if the selected image exists
-                    <Image
-                      src={`https://ajiroba.onrender.com/media/${productdata.data.images[selectedImageIndex].image}`}
-                      alt="Product Image"
-                      width={400}
-                      height={400}
-                      objectFit="cover"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <p>No main image available</p> // Fallback if main image is not available
-                  )}
+                    {productdata?.data?.images?.[selectedImageIndex] ? ( // Check if the selected image exists
+                      <Image
+                        src={`https://staging.ajiroba.ng/media/${productdata.data.images[selectedImageIndex].image}`}
+                        alt="Product Image"
+                        width={400}
+                        height={400}
+                        objectFit="cover"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <p>No main image available</p> // Fallback if main image is not available
+                    )}
                   </div>
                 </div>
               </div>
@@ -848,10 +692,18 @@ const handlePageClick = (pageNumber: number) => {
                     <div className="flex justify-center items-center mt-4">
                       <button
                         onClick={AddToCart}
+                        disabled={isAddingToCart}
                         /* className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded" */
                         className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                       >
-                        Add to Cart
+                        {isAddingToCart ? (
+                          <div className="flex items-center justify-center">
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Adding to Cart...
+                          </div>
+                        ) : (
+                          'Add to Cart'
+                        )}
                       </button>
                     </div>
                   </div>
@@ -884,7 +736,7 @@ const handlePageClick = (pageNumber: number) => {
             </div>
 
             <div className="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col items-center gap-12 mt-8">
-               <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
+              <div className=" 2xl:w-1/2 xl:w-1/2 lg:w-1/2 md:w-1/2 w-auto">
                 <h1 className="text-[#363636] font-Poppins font-normal leading-[29px]">
                   {productdata?.data?.description}
                 </h1>
@@ -895,7 +747,7 @@ const handlePageClick = (pageNumber: number) => {
                   <Image
                     src={
                       productdata?.data?.images?.[0]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[0].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -909,7 +761,7 @@ const handlePageClick = (pageNumber: number) => {
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://ajiroba.onrender.com/media/${productdata.data.images[1].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -955,6 +807,10 @@ const handlePageClick = (pageNumber: number) => {
         )}
       </section>
       {productdatafetching && <Loading />}
+
+      {
+        isAddingToCart && <Loading />
+      }
     </main>
   );
 };

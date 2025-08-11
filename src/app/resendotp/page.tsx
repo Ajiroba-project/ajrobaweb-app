@@ -113,7 +113,7 @@ function Page() {
     };
 
     const { data, error, isError, isSuccess, mutate, status } = useMutateData(
-        "signup",
+        "resendotp",
         handleSuccess,
         handleError,
     );
@@ -121,7 +121,9 @@ function Page() {
 
 
     const sumbitForm = async (data: dataProps) => {
-        reset();
+        /*  console.log(data, "datatat") */
+
+
         mutate({
             url: "/api/resendotp",
             payload: data
@@ -131,7 +133,7 @@ function Page() {
     return (
         <>
             <div className="px-8">
-   {/*              <ToastContainer closeOnClick /> */}
+                {/*              <ToastContainer closeOnClick /> */}
                 <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />
@@ -139,7 +141,7 @@ function Page() {
                 </nav>
 
                 <AuthHero
-                    title="OTP"
+                    title="Resend OTP"
                     menu="No worries! An OTP will be sent to reset your password"
                 />
 

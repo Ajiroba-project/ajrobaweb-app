@@ -43,19 +43,48 @@ export const CarouselSwiper = () => {
       }}
     >
       <SwiperSlide>
-        <Image src={auction_one} alt='carousel' />
+        {/* Mobile: default size */}
+        <div className="relative w-auto h-auto block lg:hidden">
+          <Image src={auction_one} alt="carousel" />
+        </div>
+        {/* Desktop: fill container */}
+        <div className="relative w-full aspect-[16/6] hidden lg:block">
+          <Image src={auction_one} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        </div>
       </SwiperSlide>
 
       <SwiperSlide>
-        {' '}
-        <Image src={buyticket} alt='carousel' />
+        <div className="relative w-auto h-auto block lg:hidden">
+          <Image src={buyticket} alt="carousel" />
+        </div>
+        <div className="relative w-full aspect-[16/6] hidden lg:block">
+          <Image src={buyticket} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        </div>
       </SwiperSlide>
       <SwiperSlide>
-        {' '}
-        <Image src={auction_and_win} alt='carousel' />
+        <div className="relative w-auto h-auto block lg:hidden">
+          <Image src={auction_and_win} alt="carousel" />
+        </div>
+        <div className="relative w-full aspect-[16/6] hidden lg:block">
+          <Image src={auction_and_win} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        </div>
       </SwiperSlide>
-      <SwiperSlide>     <Image src={rafledraw} alt='carousel' /></SwiperSlide>
-       <SwiperSlide>     <Image src={recharge_and_win} alt='carousel' /></SwiperSlide>
+      <SwiperSlide>
+        <div className="relative w-auto h-auto block lg:hidden">
+          <Image src={rafledraw} alt="carousel" />
+        </div>
+        <div className="relative w-full aspect-[16/6] hidden lg:block">
+          <Image src={rafledraw} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        </div>
+      </SwiperSlide>
+      <SwiperSlide>
+        <div className="relative w-auto h-auto block lg:hidden">
+          <Image src={recharge_and_win} alt="carousel" />
+        </div>
+        <div className="relative w-full aspect-[16/6] hidden lg:block">
+          <Image src={recharge_and_win} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        </div>
+      </SwiperSlide>
     </Swiper>
   )
 }

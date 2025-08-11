@@ -14,10 +14,10 @@ import gmail from '@/app/asset/image/gmail.png'
 
 const LiveChatPage = () => {
 
-    const router = useRouter();
+  const router = useRouter();
 
   return (
-  <Fragment>
+    <Fragment>
       <Header />
       <main className="">
         <div className=" bg-[#F6F6F6] py-4">
@@ -39,64 +39,63 @@ const LiveChatPage = () => {
           </div>
         </div>
 
- <div    style={{
- margin: "0 auto",
-     width: "94%",
-     maxWidth: "100%",
-   }} className=" flex justify-center items-center bg-gray-50 ">
-      <div className="bg-white  gap-12 flex flex-col md:flex-row items-center p-8 w-full ">
+        <div style={{
+          margin: "0 auto",
+          width: "94%",
+          maxWidth: "100%",
+        }} className=" flex justify-center items-center bg-gray-50 ">
+          <div className="bg-white  gap-12 flex flex-col md:flex-row items-center p-8 w-full ">
 
-        <div className="md:w-1/2 w-full mb-6 md:mb-0 text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-Poppins font-semibold mb-3 text-[#111111]">
-            We &apos; re Here to Help:
-          </h1>
-          <h2 className="text-base font-semibold font-Poppins text-[#E84526] mb-4">
-            Ajiroba Technologies Live Chat
-          </h2>
-          <p className="text-[#353131] text-sm font-Poppins mb-6 leading-relaxed">
-            For immediate assistance, click the &apos;Chat Now&apos; button below to connect
-            with one of our support representatives or check out our comprehensive
-            self-help resources. We &apos; re here to help with any questions or issues you may have.
-          </p>
+            <div className="md:w-1/2 w-full mb-6 md:mb-0 text-center md:text-left">
+              <h1 className="text-3xl md:text-4xl font-Poppins font-semibold mb-3 text-[#111111]">
+                We &apos; re Here to Help:
+              </h1>
+              <h2 className="text-base font-semibold font-Poppins text-[#E84526] mb-4">
+                Ajiroba Technologies Live Chat
+              </h2>
+              <p className="text-[#353131] text-sm font-Poppins mb-6 leading-relaxed">
+                For immediate assistance, click the &apos;Chat Now&apos; button below to connect
+                with one of our support representatives or check out our comprehensive
+                self-help resources. We &apos; re here to help with any questions or issues you may have.
+              </p>
 
-          <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-            <button onClick={() =>{router.push("/mainlivechat")}}
-            className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
-          >
-            Chat Now
-          </button>
-                     <button onClick={() =>{router.push("/selfhelp")}}
-            className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:[#FCDFD4] text-[#2A2A2A]  font-semibold rounded"
-          >
-            Self Help
-          </button>
-          </div>
+              <div className="flex justify-center md:justify-start flex-wrap space-x-4">
+                <button onClick={() => { router.push("/mainlivechat") }}
+                  className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
+                >
+                  Chat Now
+                </button>
+                <button onClick={() => { router.push("/selfhelp") }}
+                  className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:[#FCDFD4] text-[#2A2A2A]  font-semibold rounded"
+                >
+                  Self Help
+                </button>
+              </div>
 
-          <div className="flex justify-center md:justify-start space-x-4 mt-6">
-            <a href="#" aria-label="WhatsApp">
+              <div className="flex justify-center md:justify-start space-x-4 mt-6">
+                <a href="/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                  <FaWhatsapp color='#60d669' className="h-8 w-8" />
+                </a>
+                <a href="/" target="_blank" rel="noopener noreferrer" aria-label="Messenger">
+                  <Image src={mesager} alt="livechathome" className="h-8 w-8" />
+                </a>
+                <a href="/e" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <Image src={ing} alt="livechathome" className="h-6 w-6 mt-1" />
+                </a>
+                <a href="/" aria-label="Gmail">
+                  <Image src={gmail} alt="livechathome" className="h-8 w-8" />
+                </a>
+              </div>
+            </div>
 
-              <FaWhatsapp color='#60d669'   className="h-8 w-8"/>
-            </a>
-            <a href="#" aria-label="Messenger">
-               <Image src={mesager} alt="livechathome" className="h-8 w-8" />
-            </a>
-            <a href="#" aria-label="Instagram">
-              <Image src={ing} alt="livechathome" className=" h-6 w-6 mt-1" />
-            </a>
-            <a href="#" aria-label="Gmail">
-        <Image src={gmail} alt="livechathome" className=" h-8 w-8" />
-            </a>
+            {/* Right Section */}
+            <div className="md:w-1/2 w-full flex justify-center">
+
+
+              <Image src={livechathome} alt="livechathome" className="livechathome " />
+            </div>
           </div>
         </div>
-
-        {/* Right Section */}
-        <div className="md:w-1/2 w-full flex justify-center">
-
-
-           <Image src={livechathome} alt="livechathome" className="livechathome " />
-        </div>
-      </div>
-    </div>
 
 
       </main>
@@ -108,7 +107,7 @@ const LiveChatPage = () => {
 export default function Searchbar() {
   return (
     <Suspense>
-      <LiveChatPage  />
+      <LiveChatPage />
     </Suspense>
   )
 }

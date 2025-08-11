@@ -23,7 +23,7 @@ export const Footer = () => {
             <Link href='/'>
               <Image src={Brand} alt='brand-logo' />
             </Link>
-            <p className={`text-sm italic text-[#F6F6F6]  ${poppins.className}`}>
+            <p className={`text-sm !italic text-[#F6F6F6]  ${poppins.className}`}>
               ... Your foremost consumer auction platform
             </p>
             <div className='header-socials flex gap-3'>
@@ -84,12 +84,12 @@ export const Footer = () => {
                   className='flex cursor-pointer items-center gap-2 py-2 text-base hover:text-[#F25E26]'
                 >
                   {val.icon}{' '}
-                  <Link
-                    href={val.links}
+                  <p
+                    /* href={val.links} */
                     className={`text-sm font-normal text-[#FEFEFEE5] hover:text-[#F25E26] ${poppins.className}`}
                   >
                     {val.name}
-                  </Link>
+                  </p>
                 </li>
               ))}
             </ul>

@@ -53,7 +53,7 @@ export const ElectricityDetails = () => {
     setElectricityStepper: state.setElectricityStepper,
   }));
 
-   const plan = ['prepaid', 'postpaid']
+  const plan = ['prepaid', 'postpaid']
 
   const userToken = (Cookies.get("token") as string) || "";
 
@@ -112,14 +112,14 @@ export const ElectricityDetails = () => {
 
   const providersList = discosdata?.data?.map((provider: { id: any; }) => provider.id) || [];
 
-// console.log(providersList, "providersList")
+  // console.log(providersList, "providersList")
 
   const customerId = watch("iucnumber");
   const selectedNetwork = watch("decoder");
 
   const extractedContent = selectedNetwork?.match(/\((.*?)\)/)?.[1] || '';
 
-// console.log(extractedContent, 'extractedContent');
+  // console.log(extractedContent, 'extractedContent');
 
 
   // console.log(selectedNetwork, 'selectedNetwork')
@@ -148,33 +148,33 @@ export const ElectricityDetails = () => {
 
 
   // Debounce the customerId to delay API call
-const debouncedCustomerId = useDebounce(customerId, 1000); // 800ms delay
+  const debouncedCustomerId = useDebounce(customerId, 1000); // 800ms delay
 
 
- const customerdetailsurl =
-  debouncedCustomerId && selectedNetwork
-    ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${extractedContent}`
-    : "";
+  const customerdetailsurl =
+    debouncedCustomerId && selectedNetwork
+      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${extractedContent}`
+      : "";
 
-// Call API only when the user stops typing (debounced value changes)
-const { data: customerdetailsData, isLoading: customerdetailssLoading } =
-  useGetDatanew(
-    debouncedCustomerId ? customerdetailsurl : "",
-    "get_customer_details",
-    userToken
-  );
+  // Call API only when the user stops typing (debounced value changes)
+  const { data: customerdetailsData, isLoading: customerdetailssLoading } =
+    useGetDatanew(
+      debouncedCustomerId ? customerdetailsurl : "",
+      "get_customer_details",
+      userToken
+    );
 
 
-// console.log(customerdetailsData, "customerdetailsData")
+  // console.log(customerdetailsData, "customerdetailsData")
 
 
   const sumbitForm = (data: DataProps) => {
-      // console.log("data=>", data);
+    // console.log("data=>", data);
     //  console.log(errors, 'eeeee')
-     setElectricityDetails(data)
-     setElectricityStepper(1)
-  // console.log(customerdetailsData, "customerdetailsData");
-     setElectricityCustomerDetails(customerdetailsData?.data?.data);
+    setElectricityDetails(data)
+    setElectricityStepper(1)
+    // console.log(customerdetailsData, "customerdetailsData");
+    setElectricityCustomerDetails(customerdetailsData?.data?.data);
   };
 
   const router = useRouter();
@@ -189,7 +189,7 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
     <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
       <Formtitle
         className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
-        title="Buy Electricity Bills"
+        title="Recharge your electricity with ease"
         subtitle="Enjoy your best TV programs by purchasing your subscription on our platform"
       />
       <div className="">
@@ -199,7 +199,7 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
         >
 
 
-    <div className="w-full max-w-[350px]">
+          <div className="w-full max-w-[350px]">
             <SelectField
               name="decoder"
               register={register}
@@ -215,18 +215,18 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
 
 
 
- <div className="w-full max-w-[350px]">
-                               <SelectField
+          <div className="w-full max-w-[350px]">
+            <SelectField
               name='meter'
-             register={register}
-             errors='errors'
-             options={plan}
-             label='Meter type'
-             showlabel={false}
-            value={watch("meter")}
+              register={register}
+              errors='errors'
+              options={plan}
+              label='Meter type'
+              showlabel={false}
+              value={watch("meter")}
               onChange={(e) => setValue("meter", e.target.value)}
               className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
-           />
+            />
           </div>
 
 
@@ -244,7 +244,7 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
             />
           </div>
 
-        {/*   <div className="w-full max-w-[350px]">
+          {/*   <div className="w-full max-w-[350px]">
             <SelectField
               name="bundle"
               register={register}
@@ -257,28 +257,28 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
           </div> */}
 
 
-           <div className="w-full max-w-[350px]">
- <InputField
-            name="elecamount"
-            register={register}
-            errors={errors}
-            type="text"
-            placeholder="Amount"
-          />
+          <div className="w-full max-w-[350px]">
+            <InputField
+              name="elecamount"
+              register={register}
+              errors={errors}
+              type="text"
+              placeholder="Amount"
+            />
 
-   </div>
+          </div>
 
 
-   <div className="w-full max-w-[350px]">
- <InputField
-            name="elecphone"
-            register={register}
-            errors={errors}
-            type="text"
-            placeholder="Phone Number"
+          <div className="w-full max-w-[350px]">
+            <InputField
+              name="elecphone"
+              register={register}
+              errors={errors}
+              type="text"
+              placeholder="Phone Number"
 
-          />
-   </div>
+            />
+          </div>
 
 
           <p
@@ -292,8 +292,8 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
             <DefaultButton
               text="Proceed"
               type="submit"
-              handleClick={() => {}}
-              className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg "
+              handleClick={() => { }}
+              className="my-10 w-full text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] px-4 py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
             />
           </div>
 
@@ -304,7 +304,7 @@ const { data: customerdetailsData, isLoading: customerdetailssLoading } =
               <div className="flex justify-between items-center">
                 <Image src={Brand} alt="brand-logo" />
                 <h2 className=" font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize">
-                  {"Airtime Recharge"}
+                  {"Beneficiaries"}
                 </h2>
               </div>
               <p

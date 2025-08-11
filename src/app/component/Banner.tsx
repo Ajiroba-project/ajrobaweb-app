@@ -35,7 +35,7 @@ export const Banner = () => {
     <div className='pb-4'>
       <DefaultButton
         text='Start Bid'
-        className='w-fit font-Poppins font-normal rounded-lg bg-[#FCDFD4] p-2 px-8 text-black'
+        className='w-fit font-Poppins font-normal hover:bg-[#E84526] hover:text-white hover:shadow-lg rounded-lg bg-[#FCDFD4] p-2 px-8 text-black'
         handleClick={() => router.push("/auction")}
         type={'button'}
       />

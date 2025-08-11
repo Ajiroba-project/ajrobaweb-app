@@ -39,6 +39,7 @@ interface MutationHookResult {
     status: string | null;
     onSuccess: SuccessCallback | undefined;
     otp?: any;
+    isLoading?: boolean;
 }
 
 export const useMutateData = (title: string, onSuccess?: SuccessCallback, onError?: ErrorCallback): MutationHookResult => {
@@ -62,7 +63,8 @@ export const useMutateData = (title: string, onSuccess?: SuccessCallback, onErro
     mutateAsync: mutation.mutateAsync,
     reset: mutation.reset,
     status: mutation.status,
-    onSuccess: onSuccess
+    onSuccess: onSuccess,
+    isLoading: mutation.isPending
   };
 }
 

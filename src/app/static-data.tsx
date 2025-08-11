@@ -37,16 +37,16 @@ export const headerMenu = [
   },
   {
     name: 'Auction Deals',
-    path: 'auction'
+    path: '/auction'
   },
 
   {
     name: 'Categories',
-    path: 'categories'
+    path: '/categories'
   },
   {
     name: 'Recharge',
-    path: 'recharge'
+    path: '/recharge'
   },
   {
     name: 'Account',
@@ -56,9 +56,9 @@ export const headerMenu = [
       { name: 'Sign In', path: '/signin' },
       { name: 'Sign Out', path: '#' },
       { name: 'Profile', path: '/profile' },
-      { name: 'Wallet', path: '/profile' },
-      { name: 'Referral Code', path: '/profile' },
-      { name: 'Community', path: '/profile' }
+      { name: 'Wallet', path: '/wallet' },
+      { name: 'Referral Code', path: '/referral' },
+      { name: 'Community', path: '/community' }
     ]
   },
   {
@@ -458,7 +458,7 @@ export const quickLinks = [
     links: '/categories'
   },
   {
-    name: 'Ralfle Draw Process',
+    name: 'Raffle Draw Process',
     links: '/raffle'
   }
 ]
@@ -497,8 +497,7 @@ export const getInTouch = [
 
 export const marqueeInfo = [
   'Follow us on all our social media platforms : www.ajiroba.com.',
-  'Buy a ticket now and stand a chance to win ',
-  'your preferred goods in our raffle draw.'
+  'Buy a ticket now and stand a chance to win your preferred goods in our raffle draw. ',
 ]
 
 
@@ -743,18 +742,18 @@ export const faq = [
   {
     question: 'How does raffle draw work on your platform?',
     answer: [
-        "1. Create a profile and provide the basic KYC.",
-        "2. Fund your wallet.",
-        "3. Check the list of items we have on sale by raffle.",
-        "4. Select your item of choice",
-        "5. Make payment through your wallet for ticket for the item (s) you have selected",
-        "6. You confirm your order",
-        "7. Then you submit",
-        "8. You are immidiately in the raffle draw pool",
-        "9. At the specified time for the item you selected, a raffle draw will take place",
-        "10. You get a prompt to watch the raffle draw life",
-        "11. If your ticket wins, you will get a winning confirmation advice/letter sent to your registered email and also to your dashboard on the platform",
-        "12. You can specify your preferred mode of redeeming your winning"
+      "1. Create a profile and provide the basic KYC.",
+      "2. Fund your wallet.",
+      "3. Check the list of items we have on sale by raffle.",
+      "4. Select your item of choice",
+      "5. Make payment through your wallet for ticket for the item (s) you have selected",
+      "6. You confirm your order",
+      "7. Then you submit",
+      "8. You are immidiately in the raffle draw pool",
+      "9. At the specified time for the item you selected, a raffle draw will take place",
+      "10. You get a prompt to watch the raffle draw life",
+      "11. If your ticket wins, you will get a winning confirmation advice/letter sent to your registered email and also to your dashboard on the platform",
+      "12. You can specify your preferred mode of redeeming your winning"
     ]
   },
   {
@@ -788,7 +787,7 @@ export const faq = [
       'How can I contact customer support if I have further questions or concerns?',
     answer: ["You can reach our customer support through",
       "+234-9169-881-005",
-       "support@ajiroba.com"]
+      "support@ajiroba.com"]
   }
 ]
 
@@ -837,12 +836,12 @@ export const stepperList = [
   {
     name: 'Payment',
     icons: <BsCreditCard2Back />,
-     step: 0
+    step: 0
   },
   {
     name: 'Receipts',
     icons: <IoReceiptOutline />,
-     step: 0
+    step: 0
   }
 ]
 
@@ -893,7 +892,7 @@ export const transactions = [
     type: 'received'
   },
 
-    {
+  {
 
     logo: '',
 
@@ -904,7 +903,7 @@ export const transactions = [
     status: ['completed'],
     type: 'received'
   },
-    {
+  {
 
     logo: '',
 
@@ -917,7 +916,7 @@ export const transactions = [
   }
 
   ,
-    {
+  {
 
     logo: '',
 
@@ -933,39 +932,33 @@ export const transactions = [
 export const raffle = [
   {
     name: 'live raffle draw',
-    video: raf,
+    video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     description:
       'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
     title: 'rice',
     host: 'ajiroba',
     date: '4 Aug 2024',
-
     price: "300"
   },
   {
-
     name: 'live raffle draw',
-    video: raf,
+    video: 'https://www.youtube.com/embed/3JZ_D3ELwOQ',
     description:
       'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
     title: 'rice',
     host: 'ajiroba-2',
     date: '4 Aug 2024',
-
     price: "300"
   },
   {
-
     name: 'live raffle draw',
-    video: raf,
+    video: 'https://www.youtube.com/embed/V-_O7nl0Ii0',
     description:
       'Mama Gold Rice: Premium quality, long-grain rice known for its delicious taste and distinctive aroma. Aged to perfection, it guarantees a fluffy and flavorful result...',
     title: 'rice',
     host: 'ajiroba-3',
     date: '4 Aug 2024',
-
     price: "300"
-
   }
 ]
 
@@ -983,14 +976,14 @@ export const raffleWinner = [
     product: "50kg Bag of Semo",
     winner: "09023233443",
     ticket: "500",
-     number: 2
+    number: 2
   },
   {
     sn: 2,
     product: "50kg Bag of Rice",
     winner: "09023233443",
     ticket: "500",
-     number: 3
+    number: 3
   }
 ]
 

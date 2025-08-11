@@ -40,7 +40,20 @@ export const ChangePass = yup.object().shape({
   newpass: yup
     .string()
     .required('Password is required')
-    .min(6, "Can't be lesser than 6 digits"),
+    .min(6, 'Password must be at least 6 characters long')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/,
+      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+    )
+    .test('no-common-patterns', 'Password cannot contain common patterns like "123", "abc", "qwerty"', (value) => {
+      if (!value) return true;
+      const commonPatterns = ['123', 'abc', 'qwerty', 'password', 'admin', 'user'];
+      return !commonPatterns.some(pattern => value.toLowerCase().includes(pattern));
+    })
+    .test('no-repeating-characters', 'Password cannot have more than 3 consecutive repeating characters', (value) => {
+      if (!value) return true;
+      return !/(.)\1{3,}/.test(value);
+    }),
   confirmpass: yup
     .string()
     .oneOf([yup.ref('newpass')], 'Passwords must match')

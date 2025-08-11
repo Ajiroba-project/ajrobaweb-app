@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
+import AuthMiddleware from '@/hooks/useAuthCart'
 
 const Page = () => {
   const router = useRouter();
@@ -22,14 +23,17 @@ const Page = () => {
 
   const tkn_: string = Cookies.get("token") as string;
 
+  
+  AuthMiddleware(router)
+
   const fetchCartItems = async () => {
     setLoading(true);
 
     let sessionKey = Cookies.get("session_key");
 
-    console.log(sessionKey, "session key")
+    /*  console.log(sessionKey, "session key") */
 
-      if (!sessionKey) {
+    if (!sessionKey) {
       sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
       Cookies.set('session_key', sessionKey, { expires: 7 }); // Store session key in cookies for 7 days
     }
@@ -45,7 +49,7 @@ const Page = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://ajiroba.onrender.com/v1/commerce/cart/?session_key=${sessionKey}`,
+      url: `https://staging.ajiroba.ng/v1/commerce/cart/?session_key=${sessionKey}`,
       headers: headers,
     };
 
@@ -54,7 +58,7 @@ const Page = () => {
       .then((response) => {
         setCartItemsn(response.data?.data[0]?.items);
         // console.log(response.data?.data[0]?.items, "cart items");
-  //  localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items));
+        //  localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items));
 
       })
       .catch((error) => {
@@ -87,7 +91,7 @@ const Page = () => {
   const handleIncrement = async (id: number, quantity: number) => {
     // const sessionKey = Cookies.get("session_key");
 
-       let sessionKey = Cookies.get("session_key");
+    let sessionKey = Cookies.get("session_key");
 
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
@@ -97,7 +101,7 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
     try {
-      const response =   await axios.put("https://ajiroba.onrender.com/v1/commerce/increase_item_quantity/", {
+      const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/increase_item_quantity/", {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
@@ -105,8 +109,8 @@ const Page = () => {
         headers: headers,
       });
 
-         const successMessage = response.data?.message || "Item quantity increased successfully!";
-       toast.success(`${successMessage}`, {
+      const successMessage = response.data?.message || "Item quantity increased successfully!";
+      toast.success(`${successMessage}`, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -119,8 +123,8 @@ const Page = () => {
       })
       fetchCartItems(); // Refresh cart items after updating
     } catch (error: any) {
-         const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-    toast.error(`${errorMessage}`, {
+      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
+      toast.error(`${errorMessage}`, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -138,7 +142,7 @@ const Page = () => {
   const handleDecrement = async (id: number, quantity: number) => {
     // const sessionKey = Cookies.get("session_key");
 
-       let sessionKey = Cookies.get("session_key");
+    let sessionKey = Cookies.get("session_key");
 
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
@@ -148,7 +152,7 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
     try {
-      const response =   await axios.put("https://ajiroba.onrender.com/v1/commerce/decrease_item_quantity/", {
+      const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/decrease_item_quantity/", {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
@@ -156,8 +160,8 @@ const Page = () => {
         headers: headers,
       });
 
-         const successMessage = response.data?.message || "Item quantity increased successfully!";
-       toast.success(`${successMessage}`, {
+      const successMessage = response.data?.message || "Item quantity increased successfully!";
+      toast.success(`${successMessage}`, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -170,8 +174,8 @@ const Page = () => {
       })
       fetchCartItems(); // Refresh cart items after updating
     } catch (error: any) {
-         const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-    toast.error(`${errorMessage}`, {
+      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
+      toast.error(`${errorMessage}`, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -186,60 +190,60 @@ const Page = () => {
   };
 
   // Function to delete a cart item
-const handleDelete = async (id: number, quantity: number) => {
-  let sessionKey = Cookies.get("session_key");
+  const handleDelete = async (id: number, quantity: number) => {
+    let sessionKey = Cookies.get("session_key");
 
-  let headers: { [key: string]: string } = {
-    "Content-Type": "application/json",
+    let headers: { [key: string]: string } = {
+      "Content-Type": "application/json",
+    };
+
+    if (tkn_) {
+      headers["Authorization"] = `token ${tkn_}`;
+    }
+
+
+    try {
+      const response = await axios.delete("https://staging.ajiroba.ng/v1/commerce/remove_from_cart/", {
+        data: {
+          cart_item_id: id,
+          session_key: sessionKey || null,  // Ensure the session_key is not empty
+          quantity: quantity
+        },
+        headers: headers,
+      });
+
+
+      const successMessage = response.data?.message || "Item removed successfully!";
+      toast.success(`${successMessage}`, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        onClose: () => router.push('/cart'),
+      });
+
+      fetchCartItems(); // Refresh cart items after updating
+    } catch (error: any) {
+
+      const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
+      toast.error(`${errorMessage}`, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+
+      setError("Error removing item");
+    }
   };
-
-  if (tkn_) {
-    headers["Authorization"] = `token ${tkn_}`;
-  }
-
-
-  try {
-    const response = await axios.delete("https://ajiroba.onrender.com/v1/commerce/remove_from_cart/", {
-      data: {
-        cart_item_id: id,
-        session_key: sessionKey || null,  // Ensure the session_key is not empty
-        quantity: quantity
-      },
-      headers: headers,
-    });
-
-
-    const successMessage = response.data?.message || "Item removed successfully!";
-    toast.success(`${successMessage}`, {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-      onClose: () => router.push('/cart'),
-    });
-
-    fetchCartItems(); // Refresh cart items after updating
-  } catch (error: any) {
-
-    const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
-    toast.error(`${errorMessage}`, {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
-
-    setError("Error removing item");
-  }
-};
 
 
   const calculateTotalPrice = (price: number, quantity: number) => {
@@ -266,90 +270,90 @@ const handleDelete = async (id: number, quantity: number) => {
           <div className="product-image-gallery container py-8 grid 2xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 xl:grid-col-2 grid-cols-1">
             <div>
               <div className="border rounded border-[#D2D2D2] px-4 py-4">
-       <p>Cart ({cartItemsn?.length || 0})</p>
+                <p>Cart ({cartItemsn?.length || 0})</p>
 
 
                 {
 
 
 
-                   loading ? (
-    <p>Loading cart items...</p>
-  ) : error ? (
-    <p className="text-red-500">{error}</p>
-  ) : cartItemsn && cartItemsn.length > 0 ? (
-    paginatedCartInfo?.map((item) => (
-      <div
-        key={item.id}
-        className="border rounded border-[#D2D2D2] px-4 py-2 my-4"
-      >
-        <div className="flex justify-between flex-wrap 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col gap-4">
-          <div>
-            <Image
-              className="w-100 h-100 object-cover"
-              src={`https://ajiroba.onrender.com/media/${item?.product?.images[0]?.image}`}
-              alt="Product Thumbnail"
-              height={100}
-              width={100}
-            />
+                  loading ? (
+                    <p>Loading cart items...</p>
+                  ) : error ? (
+                    <p className="text-red-500">{error}</p>
+                  ) : cartItemsn && cartItemsn.length > 0 ? (
+                    paginatedCartInfo?.map((item) => (
+                      <div
+                        key={item.id}
+                        className="border rounded border-[#D2D2D2] px-4 py-2 my-4"
+                      >
+                        <div className="flex justify-between flex-wrap 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col gap-4">
+                          <div>
+                            <Image
+                              className="w-100 h-100 object-cover"
+                              src={`https://staging.ajiroba.ng/media/${item?.product?.images[0]?.image}`}
+                              alt="Product Thumbnail"
+                              height={100}
+                              width={100}
+                            />
 
-            <div className="flex items-center mt-2">
-              <button
-                onClick={() => handleDecrement(item.id, item.quantity)}
-                className="px-2  bg-white text-[#111111] rounded border border-[#DEDEDE]"
-              >
-                -
-              </button>
-              <input
-                type="text"
-                value={item.quantity}
-                readOnly
-                className="w-12 text-center  border-gray-300"
-              />
-              <button
-                onClick={() => handleIncrement(item.id, item.quantity)}
-                className="px-2  bg-[#E36414] text-white rounded border-[#E36414]"
-              >
-                +
-              </button>
-            </div>
-          </div>
+                            <div className="flex items-center mt-2">
+                              <button
+                                onClick={() => handleDecrement(item.id, item.quantity)}
+                                className="px-2  bg-white text-[#111111] rounded border border-[#DEDEDE]"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="text"
+                                value={item.quantity}
+                                readOnly
+                                className="w-12 text-center  border-gray-300"
+                              />
+                              <button
+                                onClick={() => handleIncrement(item.id, item.quantity)}
+                                className="px-2  bg-[#E36414] text-white rounded border-[#E36414]"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
 
-          <div className="flex justify-center items-center flex-col 2xl:w-3/12 xl:w-3/12 lg:w-3/12 md:w-3/12 w-auto">
-            <p className="text-[#111111]  font-Poppins font-medium text-base mt-4">
-              {item?.product?.name}
-            </p>
+                          <div className="flex justify-center items-center flex-col 2xl:w-3/12 xl:w-3/12 lg:w-3/12 md:w-3/12 w-auto">
+                            <p className="text-[#111111]  font-Poppins font-medium text-base mt-4">
+                              {item?.product?.name}
+                            </p>
 
-            <h1 className="text-[#b4a3a3] text-sm  mt-4">Food Stuff . In Stock</h1>
-          </div>
+                            <h1 className="text-[#b4a3a3] text-sm  mt-4">Food Stuff . In Stock</h1>
+                          </div>
 
-          <div>
-            <h1 className="text-[#111111] font-Poppins text-xl mt-2 font-semibold">
-              N{" "}
-              {calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString()}
-            </h1>
-            <h1 className="text-[#111111] text-lg mt-2 line-through">
-              N {item?.product?.price?.toLocaleString()}
-            </h1>
+                          <div>
+                            <h1 className="text-[#111111] font-Poppins text-xl mt-2 font-semibold">
+                              N{" "}
+                              {calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString()}
+                            </h1>
+                            <h1 className="text-[#111111] text-lg mt-2 line-through">
+                              N {item?.product?.price?.toLocaleString()}
+                            </h1>
 
-            <div
-              className="flex items-center gap-2 mt-8 cursor-pointer"
-              onClick={() => handleDelete(item.id, item.quantity)}
-            >
-              <RiDeleteBin6Line color="#E84526" />
-              <h1 className="text-[#E84526]">Delete</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    ))
-  ) : (
-    <div className="text-center py-4">
-      <p>Your cart is empty.</p>
-    </div>
-  )
+                            <div
+                              className="flex items-center gap-2 mt-8 cursor-pointer"
+                              onClick={() => handleDelete(item.id, item.quantity)}
+                            >
+                              <RiDeleteBin6Line color="#E84526" />
+                              <h1 className="text-[#E84526]">Delete</h1>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-4">
+                      <p>Your cart is empty.</p>
+                    </div>
+                  )
 
-  }
+                }
               </div>
             </div>
 
@@ -397,11 +401,10 @@ const handleDelete = async (id: number, quantity: number) => {
                 .map((_, index) => (
                   <button
                     key={index}
-                    className={`px-6 py-4 ${
-                      currentPage === index + 1
-                        ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
-                        : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
-                    }  font-bold rounded`}
+                    className={`px-6 py-4 ${currentPage === index + 1
+                      ? "bg-[#F6F6F6] rounded border border-[#F25E26] text-[#F25E26] font-Poppins font-normal text-base "
+                      : "bg-[#F6F6F6] rounded border border-[#B7B7B7]  text-[#D2D2D2] font-Poppins font-normal text-base "
+                      }  font-bold rounded`}
                     onClick={() => setCurrentPage(index + 1)}
                   >
                     {index + 1}

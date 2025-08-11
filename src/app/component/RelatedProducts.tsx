@@ -51,7 +51,7 @@ export const RelatedProducts = ({ cardInfo }: cardDetails) => {
                             <div className='flex items-center justify-center'>
                                 {/*   <Image src={value.image} alt='product' className='w-fit' /> */}
                                 <Image
-                                    src={`https://ajiroba.onrender.com/media/${value?.images[0]?.image}`}
+                                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                                     alt="product"
                                     className=""
                                     width={100}
