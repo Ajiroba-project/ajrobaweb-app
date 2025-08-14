@@ -140,19 +140,6 @@ const LiveChatPage = () => {
         );
 
         setMessages([...NewMessage]);
-
-        toast.success(`${response.data.message || "Success"}`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        reset();
       } else {
         alert("Failed to send message: " + response.data.message);
       }
@@ -395,6 +382,9 @@ const LiveChatPage = () => {
               </div>
             </div>
 
+
+            
+
             <div className="md:w-1/2 w-full flex justify-center" style={{
               height: ' min-content',
               overflow: 'scroll',
@@ -603,6 +593,12 @@ const LiveChatPage = () => {
                 </div>
               </div>
             </div>
+
+
+
+
+
+
           </div>
         </div>
       </main>
