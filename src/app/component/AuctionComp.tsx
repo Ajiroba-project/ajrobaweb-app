@@ -758,7 +758,9 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                   </div>
 
                   <div>
-                    <div className="bg-[#F6F6F6] px-4 py-4 ">
+                    <div className="bg-[#F6F6F6] px-4 py-4 cursor-pointer"   onClick={() =>
+                        router.push(`/auction/productdetails/${value.id}`)
+                      }>
                       <div className="flex justify-between items-center">
                         <div>
                           <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
