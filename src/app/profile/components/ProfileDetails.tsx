@@ -117,7 +117,7 @@ const tkn_: string = Cookies.get('token') as string;
           </div>
         </div>
       ) : (
-        <ProfileForm />
+        <ProfileForm userData={userData} />
       )}
 
       {isFetching && <Loading />}

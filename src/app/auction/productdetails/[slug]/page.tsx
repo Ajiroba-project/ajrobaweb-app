@@ -1122,9 +1122,15 @@ const Page = ({ params }: any) => {
   const handleBidClick = async (productId: any) => {
     if (!userToken) {
       console.error("Token is undefined");
-      toast.error("Please Signin", {
+      toast.error("Please sign in before you can bid", {
         position: "top-right",
-        progress: 4,
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
       return;
     }

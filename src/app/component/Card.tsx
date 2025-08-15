@@ -89,9 +89,10 @@ export const ProductCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+  const { isLoggedIn, setAddingToCart, triggerCartRefresh } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
-    setAddingToCart: state.setAddingToCart
+    setAddingToCart: state.setAddingToCart,
+    triggerCartRefresh: state.triggerCartRefresh
   }))
 
 
@@ -206,11 +207,74 @@ export const ProductCard = ({ cardInfo }: any) => {
 
   const { mutate: mutate, status: likedstatus } = useMutateData(
     "addtocart",
-    handleSuccess,
+    (data?: any) => {
+      setAddingToCart(false) // Hide loading when done
+
+      if (data.status === 200 || data.status === 201) {
+
+        const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+        setCardAddCartState(result);
+        setCardCartState(!cardCartState);
+        triggerCartRefresh(); // Trigger cart count refresh
+        const timeoutID = setTimeout(() => {
+          setCardCartState(false);
+        }, 5000);
+
+        return () => clearTimeout(timeoutID);
+        /*  refetch(); */
+      } else if (
+        data.status === 403 ||
+        data.status === 404 ||
+        data.status === 401 ||
+        data.status === 409 ||
+        data.status === 500
+      ) {
+
+        toast.error(`${data?.data?.message || data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*   refetch(); */
+      } else {
+
+        toast.error(`${data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*  refetch(); */
+      }
+    },
     handleError,
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    if (!userToken) {
+      toast.error("Please sign in before you can add items to cart", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
@@ -337,9 +401,10 @@ export const TopDealsCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+  const { isLoggedIn, setAddingToCart, triggerCartRefresh } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
-    setAddingToCart: state.setAddingToCart
+    setAddingToCart: state.setAddingToCart,
+    triggerCartRefresh: state.triggerCartRefresh
   }))
 
 
@@ -459,11 +524,74 @@ export const TopDealsCard = ({ cardInfo }: any) => {
 
   const { mutate: mutate, status: likedstatus } = useMutateData(
     "addtocart",
-    handleSuccess,
+    (data?: any) => {
+      setAddingToCart(false) // Hide loading when done
+
+      if (data.status === 200 || data.status === 201) {
+
+        const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+        setCardAddCartState(result);
+        setCardCartState(!cardCartState);
+        triggerCartRefresh(); // Trigger cart count refresh
+        const timeoutID = setTimeout(() => {
+          setCardCartState(false);
+        }, 5000);
+
+        return () => clearTimeout(timeoutID);
+        /*  refetch(); */
+      } else if (
+        data.status === 403 ||
+        data.status === 404 ||
+        data.status === 401 ||
+        data.status === 409 ||
+        data.status === 500
+      ) {
+
+        toast.error(`${data?.data?.message || data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*   refetch(); */
+      } else {
+
+        toast.error(`${data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*  refetch(); */
+      }
+    },
     handleError,
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    if (!userToken) {
+      toast.error("Please sign in before you can add items to cart", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
@@ -590,9 +718,10 @@ export const TopWeakCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
-  const { isLoggedIn, setAddingToCart } = useAuthStore(state => ({
+  const { isLoggedIn, setAddingToCart, triggerCartRefresh } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
-    setAddingToCart: state.setAddingToCart
+    setAddingToCart: state.setAddingToCart,
+    triggerCartRefresh: state.triggerCartRefresh
   }))
 
   const handleCartNotification = (value: any) => {
@@ -707,11 +836,74 @@ export const TopWeakCard = ({ cardInfo }: any) => {
 
   const { mutate: mutate, status: likedstatus } = useMutateData(
     "addtocart",
-    handleSuccess,
+    (data?: any) => {
+      setAddingToCart(false) // Hide loading when done
+
+      if (data.status === 200 || data.status === 201) {
+
+        const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+        setCardAddCartState(result);
+        setCardCartState(!cardCartState);
+        triggerCartRefresh(); // Trigger cart count refresh
+        const timeoutID = setTimeout(() => {
+          setCardCartState(false);
+        }, 5000);
+
+        return () => clearTimeout(timeoutID);
+        /*  refetch(); */
+      } else if (
+        data.status === 403 ||
+        data.status === 404 ||
+        data.status === 401 ||
+        data.status === 409 ||
+        data.status === 500
+      ) {
+
+        toast.error(`${data?.data?.message || data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*   refetch(); */
+      } else {
+
+        toast.error(`${data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*  refetch(); */
+      }
+    },
     handleError,
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    if (!userToken) {
+      toast.error("Please sign in before you can add items to cart", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
@@ -1324,9 +1516,10 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<number | null>(null); // Use index or id for hover state
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn, setAddingToCart } = useAuthStore((state) => ({
+  const { isLoggedIn, setAddingToCart, triggerCartRefresh } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
-    setAddingToCart: state.setAddingToCart
+    setAddingToCart: state.setAddingToCart,
+    triggerCartRefresh: state.triggerCartRefresh
   }));
 
 
@@ -1443,11 +1636,78 @@ export const ProductCardMain = ({ cardInfo }: any) => {
 
   const { mutate: mutate, status: likedstatus, } = useMutateData(
     "addtocart",
-    handleSuccess,
+    (data?: any) => {
+      setAddingToCart(false) // Hide loading when done
+
+      if (data.status === 200 || data.status === 201) {
+
+        const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+        setCardAddCartState(result);
+        setCardCartState(!cardCartState);
+        triggerCartRefresh(); // Trigger cart count refresh
+        const timeoutID = setTimeout(() => {
+          setCardCartState(false);
+        }, 5000);
+
+        /*   refetch(); */
+
+
+     /*    window.location.reload(); */
+        return () => clearTimeout(timeoutID);
+
+      } else if (
+        data.status === 403 ||
+        data.status === 404 ||
+        data.status === 401 ||
+        data.status === 409 ||
+        data.status === 500
+      ) {
+
+        toast.error(`${data?.data?.message || data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*   refetch(); */
+      } else {
+
+        toast.error(`${data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*  refetch(); */
+      }
+    },
     handleError,
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    if (!userToken) {
+      toast.error("Please sign in before you can add items to cart", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     setAddingToCart(true) // Show loading before API call
     /*   const sessionKey = getSessionKeyForProduct(data.id); */
     const sessionKey = getSessionKey();
@@ -1582,9 +1842,10 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
   const [hoverState, setHoverState] = useState<string>("");
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn, setAddingToCart } = useAuthStore((state) => ({
+  const { isLoggedIn, setAddingToCart, triggerCartRefresh } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
-    setAddingToCart: state.setAddingToCart
+    setAddingToCart: state.setAddingToCart,
+    triggerCartRefresh: state.triggerCartRefresh
   }));
 
   const getSessionKey = () => {
@@ -1681,11 +1942,74 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
 
   const { mutate: mutate, status: likedstatus } = useMutateData(
     "addtocart",
-    handleSuccess,
+    (data?: any) => {
+      setAddingToCart(false) // Hide loading when done
+
+      if (data.status === 200 || data.status === 201) {
+
+        const result = data?.data?.message?.split('added to cart.')[0].trim();
+
+        setCardAddCartState(result);
+        setCardCartState(!cardCartState);
+        triggerCartRefresh(); // Trigger cart count refresh
+        const timeoutID = setTimeout(() => {
+          setCardCartState(false);
+        }, 5000);
+
+        return () => clearTimeout(timeoutID);
+        /*  refetch(); */
+      } else if (
+        data.status === 403 ||
+        data.status === 404 ||
+        data.status === 401 ||
+        data.status === 409 ||
+        data.status === 500
+      ) {
+
+        toast.error(`${data?.data?.message || data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*   refetch(); */
+      } else {
+
+        toast.error(`${data?.data?.detail}`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        /*  refetch(); */
+      }
+    },
     handleError,
   );
 
   const onSubmit = (data: CommentFormValues) => {
+    if (!userToken) {
+      toast.error("Please sign in before you can add items to cart", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     setAddingToCart(true) // Show loading before API call
     const sessionKey = getSessionKey();
     const payload = {

@@ -139,7 +139,7 @@ function Page() {
   };
 
   const handleError = (error: any) => {
-    toast.error(`${"An Error Occured"}`, {
+    toast.error(`${"An Error Occurred"}`, {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
@@ -158,21 +158,6 @@ function Page() {
   );
 
   const sumbitForm = (data: dataProps) => {
-    // Validate email before submission
-    const emailIsValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email);
-    if (!emailIsValid) {
-      toast.error("Please enter a valid email address", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return;
-    }
     mutate({
       url: "/api/auth",
       payload: data,
@@ -200,7 +185,7 @@ function Page() {
 
   return (
     <>
-      <div className="px-4">
+      <div className="px-4 py-8">
         <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
           <Link href={"/"}>
             <Image src={Brand} alt="brand-logo" />
@@ -238,7 +223,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs  text-red-700">
-                  {errors?.first_name?.message}
+                  {errors?.first_name?.message && String(errors.first_name.message)}
                 </div>
               </div>
 
@@ -261,7 +246,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.last_name?.message}
+                  {errors?.last_name?.message && String(errors.last_name.message)}
                 </div>
               </div>
 
@@ -285,7 +270,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.email?.message}
+                  {errors?.email?.message && String(errors.email.message)}
                 </div>
               </div>
 
@@ -314,7 +299,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.phone?.message}
+                  {errors?.phone?.message && String(errors.phone.message)}
                 </div>
               </div>
 
@@ -348,7 +333,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.password?.message}
+                  {errors?.password?.message && String(errors.password.message)}
                 </div>
               </div>
 
@@ -392,7 +377,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.address?.message}
+                  {errors?.address?.message && String(errors.address.message)}
                 </div>
               </div>
 
@@ -429,7 +414,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.state?.message}
+                  {errors?.state?.message && String(errors.state.message)}
                 </div>
               </div>
 
@@ -466,7 +451,7 @@ function Page() {
                   )}
                 />
                 <div className="text-xs text-red-700">
-                  {errors?.lga?.message}
+                  {errors?.lga?.message && String(errors.lga.message)}
                 </div>
               </div>
 
@@ -530,7 +515,7 @@ function Page() {
               <div></div>
 
               <div className="text-xs text-red-700">
-                {errors?.gender?.message}
+                {errors?.gender?.message && String(errors.gender.message)}
               </div>
             </div>
 
@@ -538,9 +523,10 @@ function Page() {
               <div className="grid grid-cols-1  mt-4">
                 <DefaultButton
                   type="submit"
-                  className="w-auto rounded-lg  bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
+                  className="w-auto rounded-lg  bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                   text={status === "pending" ? "loading..." : "Create Account"}
                   handleClick={() => console.log("clcikeddd")}
+                  disabled={status === "pending"}
                 />
               </div>
             </div>
@@ -562,7 +548,7 @@ function Page() {
               </span>
             </div>
             <div className="text-xs text-red-700 text-center">
-              {errors?.agree_terms?.message}
+              {errors?.agree_terms?.message && String(errors.agree_terms.message)}
             </div>
 
             <div className="flex justify-center items-center mt-4">
