@@ -261,7 +261,10 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const [previousNotificationCount, setPreviousNotificationCount] = useState(0);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
+  const [showDesktopNav, setShowDesktopNav] = useState(false);
+  const [navigationWidth, setNavigationWidth] = useState(0);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const navigationRef = useRef<HTMLElement>(null);
   
   const { isLoggedIn, clearAuthCookies, cartCount, setCartCount, cartRefreshTrigger } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -286,6 +289,14 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       hoverTimeoutRef.current = null;
     }
     setHoveredMenu(index);
+    
+    // Force a small delay to ensure the DOM is updated for positioning calculations
+    setTimeout(() => {
+      // This triggers a re-render to recalculate positioning if needed
+      if (hoveredMenu !== index) {
+        setHoveredMenu(index);
+      }
+    }, 10);
   };
 
   const handleMenuLeave = () => {
@@ -294,57 +305,64 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     }, 150); // 150ms delay before closing
   };
 
-  // Improved positioning logic for all screen sizes
-  const getDropdownPosition = (index: number) => {
-    if (!windowWidth) return 'left-0'; // Default for SSR
+  // Smart dropdown positioning that prevents overflow
+  const getSmartDropdownPosition = (index: number, menuRef?: HTMLElement) => {
+    if (!windowWidth) return { position: 'left-0', transform: '' }; // Default for SSR
     
-    const totalItems = headerMenu.length;
-    const isMedium = windowWidth >= 768 && windowWidth < 1024;
-    const isLarge = windowWidth >= 1024 && windowWidth < 1280;
-    const isXLarge = windowWidth >= 1280;
+    // Get the menu item element to calculate its position
+    const menuItems = document.querySelectorAll('[data-menu-index]');
+    const currentMenuItem = menuItems[index] as HTMLElement;
     
-    // For medium screens (768-1024px) - be more aggressive with right positioning
-    if (isMedium) {
-      if (index >= totalItems - 3) return 'right-0';
-      if (index >= Math.floor(totalItems * 0.6)) return 'right-0';
-      return 'left-0';
+    if (!currentMenuItem) return { position: 'left-0', transform: '' };
+    
+    const rect = currentMenuItem.getBoundingClientRect();
+    const dropdownWidth = windowWidth < 768 ? 160 : windowWidth < 1024 ? 176 : windowWidth < 1280 ? 192 : 208; // Dropdown width in pixels
+    
+    // Calculate available space on right and left
+    const spaceOnRight = windowWidth - rect.right;
+    const spaceOnLeft = rect.left;
+    
+    // If dropdown would overflow on right, position it to the left
+    if (spaceOnRight < dropdownWidth && spaceOnLeft > dropdownWidth) {
+      return { position: 'right-0', transform: '' };
     }
     
-    // For large screens (1024-1280px)
-    if (isLarge) {
-      if (index >= totalItems - 2) return 'right-0';
-      return 'left-0';
+    // If there's not enough space on either side, center it and make it fit
+    if (spaceOnRight < dropdownWidth && spaceOnLeft < dropdownWidth) {
+      const availableWidth = Math.min(windowWidth - 32, 320); // Max width with padding
+      return { 
+        position: 'left-1/2', 
+        transform: 'transform -translate-x-1/2',
+        maxWidth: `max-w-[${availableWidth}px]`
+      };
     }
     
-    // For extra large screens (1280px+)
-    if (isXLarge) {
-      if (index >= totalItems - 2) return 'right-0';
-      return 'left-0';
-    }
-    
-    // Default fallback
-    return 'left-0';
+    // Default to left positioning
+    return { position: 'left-0', transform: '' };
   };
 
-  // Dynamic dropdown width based on screen size
-  const getDropdownWidth = () => {
+  // Responsive dropdown width with max constraints
+  const getResponsiveDropdownWidth = () => {
     if (!windowWidth) return 'w-44'; // Default for SSR
     
-    if (windowWidth < 1024) return 'w-40'; // Smaller on medium screens
-    if (windowWidth < 1280) return 'w-44'; // Medium on large screens
-    return 'w-48'; // Larger on XL screens
+    if (windowWidth < 768) return 'w-40 max-w-[160px]';
+    if (windowWidth < 1024) return 'w-44 max-w-[176px]';
+    if (windowWidth < 1280) return 'w-48 max-w-[192px]';
+    return 'w-52 max-w-[208px]';
   };
 
-  // Additional safety check for medium screens
-  const getSafeDropdownClass = (index: number) => {
-    const baseClasses = `absolute top-full bg-white shadow-lg rounded-md border border-gray-200 py-2 z-[60] ${getDropdownWidth()} ${getDropdownPosition(index)} min-w-max transform translate-y-0`;
+  // Smart dropdown classes that adapt to viewport boundaries
+  const getAdaptiveDropdownClass = (index: number) => {
+    const { position, transform, maxWidth } = getSmartDropdownPosition(index);
+    const width = getResponsiveDropdownWidth();
     
-    // Add responsive max-width constraints for medium screens
-    if (windowWidth >= 768 && windowWidth < 1024) {
-      return `${baseClasses} max-w-[180px]`;
-    }
+    // Base classes with proper text handling
+    const baseClasses = 'absolute top-full bg-white shadow-lg rounded-md border border-gray-200 py-2 z-[60]';
+    const textClasses = maxWidth ? 'break-words' : 'whitespace-nowrap'; // Allow text wrapping only when width is constrained
+    const responsiveClasses = maxWidth || width;
+    const positionClasses = `${position} ${transform || ''}`;
     
-    return `${baseClasses} max-w-xs`;
+    return `${baseClasses} ${textClasses} ${responsiveClasses} ${positionClasses}`.trim();
   };
 
   const hamburgerfunc = () => {
@@ -407,15 +425,79 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     };
   }, []);
 
-  // Track window width for responsive positioning
+  // Calculate if navigation fits in available space
+  const calculateNavigationFit = useCallback(() => {
+    if (!navigationRef.current || typeof window === 'undefined') return;
+
+    // Always show desktop nav if window is very wide
+    if (window.innerWidth >= 1200) {
+      setShowDesktopNav(true);
+      return;
+    }
+
+    const headerContainer = navigationRef.current.closest('[class*="flex"]');
+    if (!headerContainer) return;
+
+    // Get all elements in header to calculate available space
+    const logoContainer = headerContainer.querySelector('[class*="flex-shrink-0"]:first-child');
+    const rightActionsContainer = headerContainer.querySelector('[class*="flex-shrink-0"]:last-child');
+
+    if (!logoContainer || !rightActionsContainer) return;
+
+    const headerWidth = headerContainer.clientWidth;
+    const logoWidth = logoContainer.clientWidth;
+    const rightActionsWidth = rightActionsContainer.clientWidth;
+    
+    // Account for padding, gaps, and search box when desktop nav is visible
+    const padding = 80;
+    const searchBoxWidth = showDesktopNav ? 192 : 0; // Approximate search box width
+    
+    // Calculate available space for navigation
+    const availableSpace = headerWidth - logoWidth - rightActionsWidth - padding - searchBoxWidth;
+    
+    // Calculate current navigation width (temporarily show it to measure)
+    const tempShow = !showDesktopNav;
+    if (tempShow) {
+      navigationRef.current.style.visibility = 'hidden';
+      navigationRef.current.style.position = 'absolute';
+      navigationRef.current.style.display = 'flex';
+    }
+    
+    const navWidth = navigationRef.current.scrollWidth;
+    setNavigationWidth(navWidth);
+    
+    if (tempShow) {
+      navigationRef.current.style.visibility = '';
+      navigationRef.current.style.position = '';
+      navigationRef.current.style.display = '';
+    }
+    
+    // Show desktop navigation only if it fits comfortably
+    const shouldShowDesktop = availableSpace > navWidth + 60; // Extra buffer for safety
+    setShowDesktopNav(shouldShowDesktop);
+  }, [showDesktopNav]);
+
+  // Track window width and navigation fit
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
+      // Close any open dropdowns on resize to prevent positioning issues
+      if (hoveredMenu !== null) {
+        setHoveredMenu(null);
+      }
+      
+      // Recalculate navigation fit after a short delay to ensure layout is complete
+      setTimeout(calculateNavigationFit, 100);
     };
 
-    // Set initial width
+    // Set initial width and calculate fit
     if (typeof window !== 'undefined') {
       setWindowWidth(window.innerWidth);
+      // Initial calculation with multiple attempts to ensure DOM is ready
+      setTimeout(calculateNavigationFit, 100);
+      setTimeout(calculateNavigationFit, 300);
+      setTimeout(calculateNavigationFit, 500);
+      
       window.addEventListener('resize', handleResize);
     }
 
@@ -424,7 +506,30 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
         window.removeEventListener('resize', handleResize);
       }
     };
-  }, []);
+  }, [hoveredMenu, calculateNavigationFit]);
+
+  // Recalculate when navigation items might change
+  useEffect(() => {
+    calculateNavigationFit();
+  }, [isLoggedIn, calculateNavigationFit]);
+
+  // Force recalculation when component mounts and layout is ready
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      calculateNavigationFit();
+    });
+
+    if (navigationRef.current) {
+      observer.observe(navigationRef.current.parentElement!, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style']
+      });
+    }
+
+    return () => observer.disconnect();
+  }, [calculateNavigationFit]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -659,15 +764,15 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     <>
       <section className='relative w-full'>
         {/* Top Bar - Responsive */}
-        <div className='bg-[#2A2A2A] p-2 sm:p-3 text-xs sm:text-sm text-white'>
-          <div className='flex items-center justify-between gap-2 sm:gap-3 px-2 sm:px-4 lg:px-7 max-w-full'>
+        <div className='bg-[#2A2A2A] p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
+          <div className='flex items-center justify-between gap-1 sm:gap-2 md:gap-3 px-1 sm:px-2 md:px-4 lg:px-7 max-w-full'>
             {/* Marquee - Takes available space */}
             <div className='flex-1 min-w-0 overflow-hidden'>
               <AuctionMarquee info={marqueeInfo} />
             </div>
             
             {/* Social Icons - Hidden on mobile, shown on larger screens */}
-            <div className='hidden md:flex gap-2 lg:gap-3 flex-shrink-0'>
+            <div className='hidden md:flex gap-1 lg:gap-2 xl:gap-3 flex-shrink-0'>
               {socialIcon.map((val, index) => (
                 <div key={index} className='w-3 lg:w-4 flex-shrink-0'>
                   <Image src={val.icon} alt={'socials'} className='w-full h-auto' />
@@ -680,12 +785,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
         {/* Main Header - Responsive */}
         <div className='relative bg-white shadow-md overflow-visible'>
           {/* Mobile Menu Overlay */}
-          {isOpen && (
-            <div className='fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden' onClick={hamburgerfunc} />
+          {isOpen && !showDesktopNav && (
+            <div className='fixed inset-0 bg-black bg-opacity-50 z-40' onClick={hamburgerfunc} />
           )}
 
           <div className='relative z-50'>
-            <div className='flex w-full items-center justify-between gap-2 sm:gap-4 p-2 sm:p-3 lg:p-4 px-2 sm:px-4 lg:px-7 max-w-full overflow-visible'>
+            <div className='flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 px-2 sm:px-4 lg:px-7 max-w-full overflow-visible'>
               
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>
@@ -694,20 +799,24 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                 </Link>
               </div>
 
-              {/* Center Section - Navigation (Desktop & Medium) */}
-              <div className='hidden md:flex items-center flex-1 justify-center relative'>
-                <nav className='flex items-center gap-2 md:gap-3 lg:gap-6 xl:gap-8 relative'>
+              {/* Center Section - Navigation (Dynamic Responsive) */}
+              <div className={`${showDesktopNav ? 'flex' : 'hidden'} items-center flex-1 justify-center relative overflow-visible`}>
+                <nav 
+                  ref={navigationRef}
+                  className='flex items-center gap-1 md:gap-2 lg:gap-4 xl:gap-6 relative max-w-full overflow-visible'
+                >
                   {headerMenu?.map((val, index) => (
                     <div
                       key={index}
                       className='relative'
+                      data-menu-index={index}
                       onMouseEnter={() => handleMenuEnter(index)}
                       onMouseLeave={handleMenuLeave}
                     >
                       {val.submenu ? (
                         <div className='relative'>
                           <span 
-                            className='flex items-center gap-1 cursor-pointer font-Poppins text-sm xl:text-base font-medium text-[#A09F9F] hover:text-[#F25E26] transition-colors duration-200'
+                            className='flex items-center gap-1 cursor-pointer font-Poppins text-xs md:text-sm lg:text-sm xl:text-base font-medium text-[#A09F9F] hover:text-[#F25E26] transition-colors duration-200 whitespace-nowrap'
                             onClick={() => setHoveredMenu(hoveredMenu === index ? null : index)}
                           >
                             {val.name}
@@ -719,7 +828,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           {/* Dropdown Menu */}
                           {hoveredMenu === index && (
                             <div 
-                              className={getSafeDropdownClass(index)}
+                              className={getAdaptiveDropdownClass(index)}
                               style={{ 
                                 display: 'block',
                                 visibility: 'visible',
@@ -748,11 +857,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                                         ? SignoutFunc()
                                         : router.push(`${subItem.path}`)
                                     }
-                                    className={`w-full text-left font-Poppins text-[#2A2A2A] hover:bg-[#FCDFD4] hover:text-[#F25E26] transition-colors duration-200 ${
-                                      windowWidth >= 768 && windowWidth < 1024 
-                                        ? 'px-3 py-1.5 text-xs' 
-                                        : 'px-4 py-2 text-sm'
-                                    }`}
+                                    className='w-full text-left font-Poppins text-[#2A2A2A] hover:bg-[#FCDFD4] hover:text-[#F25E26] transition-colors duration-200 px-3 py-2 text-sm min-w-0 truncate'
                                   >
                                     {subItem.name}
                                   </button>
@@ -764,7 +869,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       ) : (
                         <Link
                           href={isRootPath ? val.path : `${val.path}`}
-                          className={`font-Poppins text-sm xl:text-base font-medium hover:text-[#F25E26] transition-colors duration-200 ${
+                          className={`font-Poppins text-xs md:text-sm lg:text-sm xl:text-base font-medium hover:text-[#F25E26] transition-colors duration-200 whitespace-nowrap ${
                             pathname === val.path ? 'text-[#F25E26]' : 'text-[#A09F9F]'
                           }`}
                         >
@@ -779,14 +884,14 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
               {/* Right Section - Actions */}
               <div className='flex items-center gap-2 sm:gap-3 flex-shrink-0'>
                 
-                {/* Desktop Search */}
-                <div className='hidden md:block w-64 lg:w-72 xl:w-80'>
+                {/* Desktop Search - Show when desktop nav is visible */}
+                <div className={`${showDesktopNav ? 'block' : 'hidden'} w-40 md:w-48 lg:w-64 xl:w-72 flex-shrink-0`}>
                   <Search />
                 </div>
 
-                {/* Mobile Search Button */}
+                {/* Mobile Search Button - Show when desktop nav is hidden */}
                 <button 
-                  className='md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2 hover:bg-gray-100 rounded-full transition-colors duration-200`}
                   onClick={() => setShowMobileSearch(!showMobileSearch)}
                 >
                   <CiSearch className='text-xl text-[#A09F9F]' />
@@ -829,9 +934,9 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                   )}
                 </button>
 
-                {/* Mobile Menu Toggle */}
+                {/* Mobile Menu Toggle - Show when desktop nav is hidden */}
                 <button 
-                  className='md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2 hover:bg-gray-100 rounded-full transition-colors duration-200`}
                   onClick={hamburgerfunc}
                 >
                   {isOpen ? (
@@ -846,7 +951,9 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
           {/* Mobile Navigation Menu */}
           <div
-            className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 md:hidden ${
+            className={`fixed top-0 right-0 h-full w-72 sm:w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+              !showDesktopNav ? 'block' : 'hidden'
+            } ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
@@ -935,11 +1042,11 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           </div>
 
           {/* Mobile Search Overlay */}
-          {showMobileSearch && (
-            <div className='md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40'>
-              <div className='p-4'>
-                <div className='flex items-center gap-3'>
-                  <div className='flex-1'>
+          {showMobileSearch && !showDesktopNav && (
+            <div className='absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40'>
+              <div className='p-3 sm:p-4'>
+                <div className='flex items-center gap-2 sm:gap-3'>
+                  <div className='flex-1 min-w-0'>
                     <Search isMobile={true} onClose={() => setShowMobileSearch(false)} />
                   </div>
                   <button 
@@ -962,7 +1069,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             
             {/* Notification Side Panel */}
             <div 
-              className='w-full max-w-2xl bg-white shadow-2xl h-full overflow-hidden'
+              className='w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl bg-white shadow-2xl h-full overflow-hidden'
               role="dialog"
               aria-labelledby="notification-title"
               aria-modal="true"

@@ -84,7 +84,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
     let tag;
     if (isOpen) tag = ["open"];
-    else if (isClosed) tag = ["close", 'redeem items', 'winning advise'];
+    else if (isClosed) tag = ["close", 'redeem items', 'Download winning Advice'];
     else tag = ["unknown"];
 
     return { ...item, tag: tag };
@@ -96,7 +96,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   // const openProducts = auctioninfo?.data?.data?.closed.map(
   //   (item: { id: any }) => {
-  //     return { ...item, tag: ["closed", 'redeem items', 'winning advise'] }; // Add tag as an array with "open" for consistency
+  //     return { ...item, tag: ["closed", 'redeem items', 'Download winning Advice'] }; // Add tag as an array with "open" for consistency
   //   },
   // );
 
@@ -184,7 +184,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     }
 
 
-    if (option === "winning advise") {
+    if (option === "Download winning Advice") {
       /*   console.log(transaction, "transaction") */
       setSelectedTransaction(transaction);
       setIsWinningAdvice(true);
@@ -646,8 +646,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                               } else {
                                 handleOptionClick("Redeem", val);
                               }
-                            } else if (value === "winning advise") {
-                              handleOptionClick("winning advise", val);
+                            } else if (value === "Download winning Advice") {
+                              handleOptionClick("Download winning Advice", val);
                             }
                           }}
                           className={`text-xs ${!val.won || value === "close" ? "opacity-50 cursor-not-allowed" : ""
@@ -659,7 +659,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                                   ? val.redeemed
                                     ? "bg-green-700 text-white cursor-pointer" // Style for Download Voucher
                                     : "bg-blue-700 text-white cursor-pointer"  // Style for Redeem Items
-                                  : value === "winning advise"
+                                  : value === "Download winning Advice"
                                     ? "bg-[#F25E26] text-white cursor-pointer"
                                     : "bg-[#F25E26] text-white"
                             } rounded-xl px-2.5 py-1`}
