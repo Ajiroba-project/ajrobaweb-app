@@ -31,6 +31,7 @@ type ConfirmationModalProps = {
 
 const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
   const [loadingverify, setloadingverify] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [showModalUp, setShowModalUp] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState("");
   const [paymentReference, setPaymentReference] = useState("");
@@ -54,7 +55,19 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
        console.log(event.data?.data, "paymentReference"); */
     if (event.data?.data?.status === 'success' && paymentReference) {
       startVerificationLoop(paymentReference);
-    }
+    } 
+     /*  if (event.data?.data?.status === 'success' && paymentReference) {
+        // Payment already confirmed by gateway - no need to verify
+        toast.success("Payment successful! Your wallet has been credited.", {
+          closeButton: true,
+          onClose: () => {
+            window.location.reload();
+          }
+        });
+      } else if (event.data?.data?.status === 'pending' && paymentReference) {
+        // Payment is pending - start verification loop
+        startVerificationLoop(paymentReference);
+      } */
   };
 
   const Modal = ({ url, onClose }: { url: string; onClose: () => void }) => {
@@ -96,6 +109,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         return;
       }
 
+      setIsProcessing(true);
       const tkn_: string = Cookies.get("token") as string;
       const payload = { amount: Number(amount) };
 
@@ -127,6 +141,8 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       }
     } catch (error) {
       toast.error("An error occurred during the payment process.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -145,7 +161,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       );
 
 
-      const res = response.data;
+  /*     const res = response.data; */
 
 
 
@@ -179,7 +195,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     }
   };
 
-  const startVerificationLoop = (reference: string) => {
+  /* const startVerificationLoop = (reference: string) => {
     // Clear any existing verification interval
     if (verificationInterval) {
       clearInterval(verificationInterval);
@@ -216,6 +232,63 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       cleanup();
     }, 2 * 60 * 1000); // 2 minutes total timeout
   };
+ */
+
+
+
+  const startVerificationLoop = (reference: string) => {
+    if (verificationInterval) {
+      clearInterval(verificationInterval);
+    }
+  
+    const maxAttempts = 5;
+    let attempts = 0;
+    let backoffTime = 2000;
+    let isCompleted = false;
+  
+    const intervalId = setInterval(async () => {
+      if (isCompleted) {
+        clearInterval(intervalId);
+        return;
+      }
+  
+      attempts++;
+  
+      if (attempts > maxAttempts) {
+        clearInterval(intervalId);
+        cleanup();
+        toast.error("Payment verification timed out. Please check your wallet balance.");
+        return;
+      }
+  
+      try {
+        await verifyWalletPayment(reference, () => {
+          // Success case
+          isCompleted = true;
+          clearInterval(intervalId);
+          cleanup();
+        });
+      } catch (error) {
+        // Failure case - don't stop the loop, let it retry
+        console.error("Verification attempt failed:", error);
+        
+        // Only stop if it's a critical error (like 500 server error)
+        if (axios.isAxiosError(error) && error.response?.status === 500) {
+          isCompleted = true;
+          clearInterval(intervalId);
+          cleanup();
+          toast.error("Server error occurred. Please try again later.");
+          return;
+        }
+        
+        // For other errors, continue retrying
+        backoffTime = Math.min(backoffTime * 2, 30000);
+      }
+    }, backoffTime);
+  
+    setVerificationInterval(intervalId);
+  };
+
 
   const router = useRouter();
 
@@ -230,20 +303,22 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
           <p className="text-center">
 
-            You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            You are going to deposit the amount of ₦ {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <div className="flex w-full gap-5 flex-col">
             <DefaultButton
-              text="Continue"
+              text={isProcessing ? "Processing..." : "Continue "}
               type="button"
-              className="w-full rounded-md bg-[#E84526] p-3 text-white"
+              className="w-full rounded-md bg-[#E84526] p-3 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E84526]/90 transition-colors duration-200"
               handleClick={handleContinue}
+              disabled={isProcessing}
             />
             <DefaultButton
               text="Back"
               type="button"
-              className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526]"
+              className="w-full rounded-md border-2 border-[#E84526] p-3 text-[#E84526] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E84526] hover:text-white transition-colors duration-200"
               handleClick={cleanup}
+              disabled={isProcessing}
             />
           </div>
         </div>

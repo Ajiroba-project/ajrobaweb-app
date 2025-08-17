@@ -611,7 +611,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       setNotificationCount(0);
       setPreviousNotificationCount(0);
     } else if (notificationsData) {
-      console.log('Unexpected response structure:', notificationsData);
+      console.log('');
     }
   }, [notificationsData, previousNotificationCount]);
 

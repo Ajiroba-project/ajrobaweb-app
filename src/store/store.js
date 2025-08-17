@@ -192,7 +192,7 @@ export const DataPurchase = create(
     }),
     {
       name: "data-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
   )
 );
@@ -214,7 +214,7 @@ export const AirtimePurchase = create(
     }),
     {
       name: "airtime-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
   )
 );
@@ -244,7 +244,7 @@ export const CablePurchase = create(
     }),
     {
       name: "cable-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
   )
 )
@@ -258,7 +258,6 @@ export const ElectricityPurchase = create(
       ElectricityDetails: {
         decoder: '',
         meter: '',
-        iucnumber: '',
         elecamount: '',
         elecphone: '',
         amount: ''
@@ -278,7 +277,7 @@ export const ElectricityPurchase = create(
     }),
     {
       name: "electicity-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
 
   )

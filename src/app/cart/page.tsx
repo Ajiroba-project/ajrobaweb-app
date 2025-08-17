@@ -13,6 +13,7 @@ import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import AuthMiddleware from '@/hooks/useAuthCart'
+import { useAuthStore } from '@/store/store';
 
 const Page = () => {
   const router = useRouter();
@@ -22,6 +23,9 @@ const Page = () => {
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
 
   const tkn_: string = Cookies.get("token") as string;
+  const { triggerCartRefresh } = useAuthStore(state => ({
+    triggerCartRefresh: state.triggerCartRefresh,
+  }));
 
   
   AuthMiddleware(router)
@@ -31,7 +35,7 @@ const Page = () => {
 
     let sessionKey = Cookies.get("session_key");
 
-    /*  console.log(sessionKey, "session key") */
+    /*   console.log(sessionKey, "session key")  */
 
     if (!sessionKey) {
       sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
@@ -122,6 +126,7 @@ const Page = () => {
         onClose: () => router.push('/cart')
       })
       fetchCartItems(); // Refresh cart items after updating
+      triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
       toast.error(`${errorMessage}`, {
@@ -173,6 +178,7 @@ const Page = () => {
         onClose: () => router.push('/cart')
       })
       fetchCartItems(); // Refresh cart items after updating
+      triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
       toast.error(`${errorMessage}`, {
@@ -227,6 +233,7 @@ const Page = () => {
       });
 
       fetchCartItems(); // Refresh cart items after updating
+      triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
 
       const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";

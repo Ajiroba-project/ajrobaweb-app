@@ -13,7 +13,6 @@ import "./style.css";
 import { FaStar } from "react-icons/fa6";
 import { RelatedProducts } from "@/app/component/RelatedProducts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
 import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
@@ -70,8 +69,9 @@ const Page = ({ params }: any) => {
 
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
-  const { isLoggedIn } = useAuthStore((state) => ({
+  const { isLoggedIn, triggerCartRefresh } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
+    triggerCartRefresh: state.triggerCartRefresh,
   }));
 
   const getSessionKey = () => {
@@ -158,35 +158,27 @@ const Page = ({ params }: any) => {
   const handleSuccess = (data?: any) => {
 
     if (data.status === 200 || data.status === 201) {
-
-      const result = data?.data?.message?.split('added to cart.')[0].trim();
-
-
-      console.log(result, 'result')
-
-      toast(`${result} Has been added to cart`, {
-        position: "top-center",
+      toast.success(`${data?.data?.message || "Item added to cart successfully"}`, {
+        position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        style: {
-          backgroundColor: "#08B504",
-          color: "#FFFFFF",
-        },
-      });
+        theme: "light",
+      })
 
-      setCardAddCartState(result);
-      setCardCartState(!cardCartState);
+      // Trigger cart refresh to update header count immediately
+      triggerCartRefresh();
+
       const timeoutID = setTimeout(() => {
         setCardCartState(false);
       }, 5000);
 
+      router.push("/cart");
       return () => clearTimeout(timeoutID);
+     
       /*  refetch(); */
     } else if (
       data.status === 403 ||
@@ -690,21 +682,29 @@ const Page = ({ params }: any) => {
                     </h1>
 
                     <div className="flex justify-center items-center mt-4">
-                      <button
-                        onClick={AddToCart}
-                        disabled={isAddingToCart}
-                        /* className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-Nunito font-semibold rounded" */
-                        className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                      >
-                        {isAddingToCart ? (
-                          <div className="flex items-center justify-center">
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                            Adding to Cart...
-                          </div>
-                        ) : (
-                          'Add to Cart'
-                        )}
-                      </button>
+                      {isLoggedIn ? (
+                        <button
+                          onClick={AddToCart}
+                          disabled={isAddingToCart}
+                          className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+                        >
+                          {isAddingToCart ? (
+                            <div className="flex items-center justify-center">
+                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                              Adding to Cart...
+                            </div>
+                          ) : (
+                            'Add to Cart'
+                          )}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => router.push('/signin')}
+                          className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#E84526] text-white py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#FCDFD4] hover:text-[#2A2A2A] hover:transition-all"
+                        >
+                         Add to Cart
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
