@@ -373,8 +373,8 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
                 icon={success}
                 handleEvent={handleSuccess}
                 title="Successful"
-                subtitle={'Your statement has been generated. Click on the link below to download'}
-                buttontext="Download"
+                subtitle={'Your statement has been generated.'}
+                buttontext="OK"
                 buttonclass="w-full rounded-md bg-[#FCDFD4] p-3 hover:bg-[#f25e26] hover:text-white"
               />
             </div>

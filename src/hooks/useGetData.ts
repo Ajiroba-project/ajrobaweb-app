@@ -519,3 +519,38 @@ export const useGetBanksData = (url: string, queryKey: string, token: string): U
     refetchOnWindowFocus: false
   });
 };
+
+// New function for statement of account
+const fetchStatementData = async (
+  url: string,
+  userToken: string,
+  startDate: string,
+  endDate: string
+): Promise<ApiResponse> => {
+  const response = await Axios.get<ApiResponse>(url, {
+    headers: {
+      Authorization: `Token ${userToken}`
+    },
+    params: {
+      start_date: startDate,
+      end_date: endDate
+    }
+  })
+  return response.data
+}
+
+export const useGetStatementData = (
+  url: string,
+  queryKey: string,
+  userToken: string,
+  startDate: string,
+  endDate: string,
+  isEnabled: boolean
+): UseQueryResult<ApiResponse, Error> => {
+  return useQuery({
+    queryKey: [queryKey, url, startDate, endDate],
+    queryFn: () => fetchStatementData(url, userToken, startDate, endDate),
+    enabled: isEnabled && !!startDate && !!endDate,
+    refetchOnWindowFocus: false
+  })
+}

@@ -16,7 +16,8 @@ import { RelatedProducts } from "@/app/component/RelatedProducts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
-import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
+// import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
+import { RelatedAuctionDetails } from "@/app/component/RelatedAuctionDetails";
 import { RelatedProductsAuction } from '@/app/component/RelatedProductsAuction'
 import Loading from "@/app/component/Loading";
 import Cookies from "js-cookie";
@@ -278,9 +279,29 @@ const Page = ({ params }: any) => {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Step 1: State to track the selected image
 
+  // Debug effect to monitor selectedImageIndex changes
+  useEffect(() => {
+  /*   console.log('selectedImageIndex changed to:', selectedImageIndex);
+    console.log('Available images:', productdatanew?.data?.images); */
+    if (productdatanew?.data?.images?.[selectedImageIndex]) {
+      console.log('');
+    }
+  }, [selectedImageIndex, productdatanew?.data?.images]);
+
+  // Set initial selected image when product data loads
+  useEffect(() => {
+    if (productdatanew?.data?.images && productdatanew.data.images.length > 0) {
+      setSelectedImageIndex(0);
+      /* console.log('Setting initial selectedImageIndex to 0'); */
+    }
+  }, [productdatanew?.data?.images]);
+
   const handleImageClick = (index: SetStateAction<number>) => {
+   /*  console.log('Image clicked, index:', index);
+    console.log('Current selectedImageIndex:', selectedImageIndex); */
     setSelectedImage(index);
     setSelectedImageIndex(index);
+   /*  console.log('Setting selectedImageIndex to:', index); */
   };
 
   const notify = () => {
@@ -846,10 +867,10 @@ const Page = ({ params }: any) => {
 
 
 
-  const handleOrderbutton = () => {
-    let pin = Cookies.get("nvd");
-    console.log("yes....", pin);
-  };
+  // const handleOrderbutton = () => {
+  //   let pin = Cookies.get("nvd");
+  //   console.log("yes....", pin);
+  // };
 
   const CustomerReview = ({ data }: any) => {
     const [selectedStars, setSelectedStars] = useState<number | null>(null);
@@ -1153,7 +1174,7 @@ const Page = ({ params }: any) => {
       const data = await response.json();
 
       if (data.data.status === "failed") {
-        console.log("Failed:", data.data);
+        console.log("Failed:");
         toast.error(`${data.data.message}`, {
           position: "top-right",
           progress: 4,
@@ -1237,12 +1258,19 @@ const Page = ({ params }: any) => {
                 <div className=" flex gap-8 flex-col ">
                   {productdatanew?.data?.images?.map(
                     (image: any, index: number) => (
-                      <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
+                      <div 
+                        key={index} 
+                        className={`thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center cursor-pointer transition-all duration-200 ${
+                          selectedImageIndex === index 
+                            ? 'ring-2 ring-[#F25E26] scale-105' 
+                            : 'hover:scale-105'
+                        }`}
+                        onClick={() => handleImageClick(index)}
+                      >
                         <Image
-                          className=" images-map w-32 h-32 object-cover"
+                          className=" images-map w-32 h-32 object-cover rounded-lg"
                           src={`https://staging.ajiroba.ng/media/${image.image}`}
                           alt="Product Thumbnail"
-                          onClick={() => handleImageClick(index)}
                           width={100}
                           height={100}
                           objectFit="cover"
@@ -1259,6 +1287,15 @@ const Page = ({ params }: any) => {
                     {productdatanew?.data?.images?.[selectedImageIndex] ? (
                       <Image
                         src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[selectedImageIndex].image}`}
+                        alt="Product Image"
+                        width={400}
+                        height={400}
+                        objectFit="cover"
+                        className="object-cover"
+                      />
+                    ) : productdatanew?.data?.images?.[0] ? (
+                      <Image
+                        src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -1583,7 +1620,7 @@ const Page = ({ params }: any) => {
         </div>
 
         {productdatanew?.data?.related_products && (
-          <RelatedProductsDetails
+          <RelatedAuctionDetails
             cardInfo={productdatanew?.data?.related_products}
           />
         )}
@@ -2567,9 +2604,7 @@ const Page = ({ params }: any) => {
       
           />
 
-          {/*   {
-              console.log(selectedTicket, 'selectedTicket')
-            } */}
+     
 
 {showTicketModal && selectedTicket && (
             <ModalComponent

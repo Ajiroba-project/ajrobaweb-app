@@ -147,6 +147,19 @@ const Page = ({ params }: any) => {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Step 1: State to track the selected image
 
+  // Debug effect to monitor selectedImageIndex changes
+  useEffect(() => {
+    if (productdata?.data?.images?.[selectedImageIndex]) {
+      console.log('');
+    }
+  }, [selectedImageIndex, productdata?.data?.images]);
+
+  // Set initial selected image when product data loads
+  useEffect(() => {
+    if (productdata?.data?.images && productdata.data.images.length > 0) {
+      setSelectedImageIndex(0);
+    }
+  }, [productdata?.data?.images]);
 
   const handleImageClick = (index: SetStateAction<number>) => {
     setSelectedImage(index);
@@ -566,12 +579,19 @@ const Page = ({ params }: any) => {
               <div>
                 <div className=" flex gap-8 flex-col ">
                   {productdata?.data?.images?.map((image, index) => (
-                    <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
+                    <div 
+                      key={index} 
+                      className={`thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center cursor-pointer transition-all duration-200 ${
+                        selectedImageIndex === index 
+                          ? 'ring-2 ring-[#F25E26] scale-105' 
+                          : 'hover:scale-105'
+                      }`}
+                      onClick={() => handleImageClick(index)}
+                    >
                       <Image
-                        className=" images-map w-32 h-32 object-cover"
+                        className=" images-map w-32 h-32 object-cover rounded-lg"
                         src={`https://staging.ajiroba.ng/media/${image.image}`}
                         alt="Product Thumbnail"
-                        onClick={() => handleImageClick(index)}
                         width={100}
                         height={100}
                         objectFit="cover"
@@ -584,19 +604,7 @@ const Page = ({ params }: any) => {
               <div className="  flex  justify-center items-center px-12 2xl:mt-4 xl:mt-4 lg:mt-4 md:mt-4 mt-6 ">
                 <div className="thumbnail-images w-auto     ">
                   <div className="main-image ">
-                    {/*  <Image
-                      src={
-                        productdata?.data?.images?.[0]?.image
-                          ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
-                          : ""
-                      }
-                      alt="Product Image"
-                      width={400}
-                      height={400}
-                      objectFit="cover"
-                      className="object-cover"
-                    /> */}
-                    {productdata?.data?.images?.[selectedImageIndex] ? ( // Check if the selected image exists
+                    {productdata?.data?.images?.[selectedImageIndex] ? (
                       <Image
                         src={`https://staging.ajiroba.ng/media/${productdata.data.images[selectedImageIndex].image}`}
                         alt="Product Image"
@@ -605,8 +613,17 @@ const Page = ({ params }: any) => {
                         objectFit="cover"
                         className="object-cover"
                       />
+                    ) : productdata?.data?.images?.[0] ? (
+                      <Image
+                        src={`https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`}
+                        alt="Product Image"
+                        width={400}
+                        height={400}
+                        objectFit="cover"
+                        className="object-cover"
+                      />
                     ) : (
-                      <p>No main image available</p> // Fallback if main image is not available
+                      <p>No main image available</p>
                     )}
                   </div>
                 </div>

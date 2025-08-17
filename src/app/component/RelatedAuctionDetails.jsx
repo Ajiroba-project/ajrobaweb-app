@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
 
-export const RelatedProductsDetails = ({ cardInfo }) => {
+export const RelatedAuctionDetails = ({ cardInfo }) => {
 
 
     const star = [1, 2, 3, 4, 5]
@@ -34,7 +34,7 @@ export const RelatedProductsDetails = ({ cardInfo }) => {
                 className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF]  `}
             >
                 {paginatedCardInfo?.map((value, index) => (
-                    <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='w-[25%] cursor-pointer border border-white shadow-sm ' key={index}>
+                    <div onClick={() => router.push(`/auction/productdetails/${value.id}`)} className='w-[25%] border border-white shadow-sm ' key={index}>
                         {/*   {console.log(value, 'value')} */}
                         <div className='py-2'>
                             <div className='flex items-center justify-center'>

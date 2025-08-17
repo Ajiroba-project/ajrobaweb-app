@@ -995,7 +995,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
   });
 
   const handleSuccess = (data?: any) => {
-    console.log(data, 'data')
+ /*    console.log(data, 'data') */
       setComment('');
       setCommentImage('');
       setSelectedImage(null);
@@ -1051,7 +1051,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
   };
 
   const handleError = (error?: any) => {
-      console.log(error, 'errr', data, 'daaaattt');
+      console.log(error, 'errr');
       setComment('');
       setCommentImage('');
       setSelectedImage(null);
@@ -1202,10 +1202,10 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
 
   // Conditionally render posts based on active tab
   if (activeTab === 'Liked') {
-    console.log(trendingrinfo?.data?.data?.liked_posts, 'liked_posts')
+    // console.log(trendingrinfo?.data?.data?.liked_posts, 'liked_posts')
       posts = trendingrinfo?.data?.data?.liked_posts || [];
   } else if (activeTab === 'Bookmarked') {
-    console.log(trendingrinfo?.data?.data?.bookmarked_posts, 'bookmarked_posts')
+  /*   console.log(trendingrinfo?.data?.data?.bookmarked_posts, 'bookmarked_posts') */
       posts = trendingrinfo?.data?.data?.bookmarked_posts || [];
   }
 
