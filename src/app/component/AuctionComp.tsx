@@ -779,7 +779,10 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                           </div>
                           <div>
                             <p className="text-pretty text-base font-Poppins font-medium text-[#F25E26]">
-                              &#8358;{value?.ticket_price.toLocaleString()}
+                              ₦{Number(value?.ticket_price ?? 0).toLocaleString('en-NG', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}
                             </p>
                           </div>
                         </div>

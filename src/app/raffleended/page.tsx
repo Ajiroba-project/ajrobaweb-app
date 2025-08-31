@@ -128,61 +128,64 @@ const Page = ({ params }: any) => {
     }
   }, [userToken, product_id, router]);
 
-  useEffect(() => {
-   /*  console.log('Page loaded, fetching raffle data'); */
+//   useEffect(() => {
+//    /*  console.log('Page loaded, fetching raffle data'); */
     
-    const fetchData = async () => {
-      try {
-        const data = await fetchWithAuth(
-          `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
-        );
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    };
+//     const fetchData = async () => {
+//       try {
+//         const data = await fetchWithAuth(
+//           `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
+//         );
+//       } catch (error) {
+//         console.error("Failed to fetch data:", error);
+//       }
+//     };
 
-    fetchData();
-  }, [product_id, fetchWithAuth]);
+//     fetchData();
+//   }, [product_id, fetchWithAuth]);
 
-  // Check raffle timing every second
-  useEffect(() => {
-    if (!productdatanew?.start_date || !productdatanew?.start_time) return;
+//   // Check raffle timing every second
+//   useEffect(() => {
+//     if (!productdatanew?.start_date || !productdatanew?.start_time) return;
 
-    const interval = setInterval(() => {
-      checkRaffleAboutToStart();
-    }, 1000);
+//     const interval = setInterval(() => {
+//       checkRaffleAboutToStart();
+//     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [productdatanew]);
+//     return () => clearInterval(interval);
+//   }, [productdatanew]);
 
-  // Check enforced time every second
-  useEffect(() => {
-    // console.log('Enforced time useEffect triggered:', { enforceTime, raffleStartTime });
+//   // Check enforced time every second
+//   useEffect(() => {
+//     // console.log('Enforced time useEffect triggered:', { enforceTime, raffleStartTime });
     
-    if (enforceTime === 0 || raffleStartTime === 0) {
-     /*  console.log('Enforced time or raffle start time is 0, not starting interval'); */
-      return;
-    }
+//     if (enforceTime === 0 || raffleStartTime === 0) {
+//      /*  console.log('Enforced time or raffle start time is 0, not starting interval'); */
+//       return;
+//     }
 
-    // console.log('Starting enforced time interval');
-    const interval = setInterval(() => {
-      checkEnforcedTime();
-    }, 1000);
+//     // console.log('Starting enforced time interval');
+//     const interval = setInterval(() => {
+//       checkEnforcedTime();
+//     }, 1000);
 
-    return () => {
- /*      console.log('Clearing enforced time interval'); */
-      clearInterval(interval);
-    };
-  }, [enforceTime, raffleStartTime]);
+//     return () => {
+//  /*      console.log('Clearing enforced time interval'); */
+//       clearInterval(interval);
+//     };
+//   }, [enforceTime, raffleStartTime]);
 
 
 
-  useEffect(() => {
-    const filtered = raffle.filter((val) => val.host === params.id);
-    setData(filtered);
-  }, [params.id]);
+//   useEffect(() => {
+//     const filtered = raffle.filter((val) => val.host === params.id);
+//     setData(filtered);
+//   }, [params.id]);
 
   // Handle video end event
+  
+  
+  
   const handleVideoEnded = () => {
     setVideoWatched(true);
     
@@ -225,49 +228,49 @@ const Page = ({ params }: any) => {
     }
   };
 
-  // Check if raffle is about to start (within 5 seconds)
-  const checkRaffleAboutToStart = () => {
-    if (!productdatanew?.start_date || !productdatanew?.start_time) return;
+  // // Check if raffle is about to start (within 5 seconds)
+  // const checkRaffleAboutToStart = () => {
+  //   if (!productdatanew?.start_date || !productdatanew?.start_time) return;
 
-    const now = new Date();
-    const startDate = new Date(productdatanew.start_date + " " + productdatanew.start_time);
-    const timeUntilStart = startDate.getTime() - now.getTime();
+  //   const now = new Date();
+  //   const startDate = new Date(productdatanew.start_date + " " + productdatanew.start_time);
+  //   const timeUntilStart = startDate.getTime() - now.getTime();
     
-    // If raffle starts in 5 seconds or less, show countdown
-    if (timeUntilStart <= 5000 && timeUntilStart > 0) {
-      setShowCountdown(true);
-      startCountdown();
-    }
-  };
+  //   // If raffle starts in 5 seconds or less, show countdown
+  //   if (timeUntilStart <= 5000 && timeUntilStart > 0) {
+  //     setShowCountdown(true);
+  //     startCountdown();
+  //   }
+  // };
 
-  // Check if enforced time has passed
-  const checkEnforcedTime = () => {
-    if (enforceTime === 0 || raffleStartTime === 0) return;
+  // // Check if enforced time has passed
+  // const checkEnforcedTime = () => {
+  //   if (enforceTime === 0 || raffleStartTime === 0) return;
     
-    const now = Date.now();
-    const timeSinceRaffleStarted = now - raffleStartTime;
-    const remaining = Math.max(0, enforceTime - timeSinceRaffleStarted);
-    setRemainingEnforceTime(remaining);
+  //   const now = Date.now();
+  //   const timeSinceRaffleStarted = now - raffleStartTime;
+  //   const remaining = Math.max(0, enforceTime - timeSinceRaffleStarted);
+  //   setRemainingEnforceTime(remaining);
     
-    // Check if we're in the enforced period
-    if (timeSinceRaffleStarted >= 0 && timeSinceRaffleStarted < enforceTime) {
-      // We're in the enforced period, show countdown
-      // console.log('In enforced period, remaining time:', remaining);
-    } else if (timeSinceRaffleStarted >= enforceTime) {
-      // Enforced time has passed, redirect to winners page
-    /*   console.log('Redirecting due to enforced time completion'); */
-      router.push(`/raffle/${product_id}/winners`);
-    }
+  //   // Check if we're in the enforced period
+  //   if (timeSinceRaffleStarted >= 0 && timeSinceRaffleStarted < enforceTime) {
+  //     // We're in the enforced period, show countdown
+  //     // console.log('In enforced period, remaining time:', remaining);
+  //   } else if (timeSinceRaffleStarted >= enforceTime) {
+  //     // Enforced time has passed, redirect to winners page
+  //   /*   console.log('Redirecting due to enforced time completion'); */
+  //     router.push(`/raffle/${product_id}/winners`);
+  //   }
     
-    // console.log('Enforced time check:', {
-    //   enforceTime,
-    //   raffleStartTime: new Date(raffleStartTime).toLocaleString(),
-    //   now: new Date(now).toLocaleString(),
-    //   timeSinceRaffleStarted,
-    //   remaining,
-    //   shouldRedirect: timeSinceRaffleStarted >= enforceTime
-    // });
-  };
+  //   // console.log('Enforced time check:', {
+  //   //   enforceTime,
+  //   //   raffleStartTime: new Date(raffleStartTime).toLocaleString(),
+  //   //   now: new Date(now).toLocaleString(),
+  //   //   timeSinceRaffleStarted,
+  //   //   remaining,
+  //   //   shouldRedirect: timeSinceRaffleStarted >= enforceTime
+  //   // });
+  // };
 
   // Start countdown timer
   const startCountdown = () => {
@@ -396,12 +399,12 @@ const Page = ({ params }: any) => {
       </header>
       <div className="w-full bg-[#F6F6F6] pt-[20vh]">
         <div className="container flex flex-col">
-          <p
+         {/*  <p
             onClick={() => router.back()}
             className="cursor-pointer text-[#F25E26] underline"
           >
             Back
-          </p>
+          </p> */}
           <div className="mb-3 text-center">
             <HeadingText title="Live Raffle Draw" />
           </div>
@@ -513,6 +516,16 @@ const Page = ({ params }: any) => {
                   `}</style>
                 </div>
               </div>
+            </div>
+
+
+            <div className="flex flex-col justify-center mb-8">
+              <DefaultButton
+                handleClick={() => router.push("/auction")}
+                text="Back to Auction"
+                type="button"
+                className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
+              />
             </div>
 
          {/*    {raffleended ? (

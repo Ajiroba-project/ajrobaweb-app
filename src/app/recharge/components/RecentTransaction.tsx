@@ -165,7 +165,7 @@ export const RecentTransaction = () => {
                           </div>
                         </div>
                         <div>
-                          <p className="text-xl font-semibold">₦{val.amount}</p>
+                          <p className="text-xl font-semibold">₦{Number(val?.amount ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         </div>
                       </div>
                     </Fragment>

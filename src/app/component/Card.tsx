@@ -369,7 +369,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                     {/* price */}
                     <div className='justify-start'>
                       <p className=' text-xl font-medium'>
-                        &#8358;{(value?.price).toLocaleString()}
+                        ₦{Number(value?.price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className=' '></span>
                       </p>
                     </div>
@@ -383,7 +383,7 @@ export const ProductCard = ({ cardInfo }: any) => {
                     </p>
                   </div>
                   <p className='text-sm font-normal text-gray-500 line-through '>
-                    &#8358;{(value?.discount).toLocaleString()}
+                    ₦{Number(value?.discount ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
               </div>
@@ -686,7 +686,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                     {/* price */}
                     <div className='justify-start'>
                       <p className='text-xl font-medium'>
-                        &#8358;{(value?.price).toLocaleString()}
+                        ₦{Number(value?.price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className=' '></span>
                       </p>
                     </div>
@@ -700,7 +700,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                     </p>
                   </div>
                   <p className='text-sm font-normal text-gray-500 line-through '>
-                    &#8358;{(value?.discount).toLocaleString()}
+                    ₦{Number(value?.discount ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
               </div>
@@ -998,7 +998,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                     {/* price */}
                     <div className='justify-start'>
                       <p className=' text-xl font-medium'>
-                        &#8358;{(value?.price).toLocaleString()}
+                        ₦{Number(value?.price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className=' '></span>
                       </p>
                     </div>
@@ -1012,7 +1012,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                     </p>
                   </div>
                   <p className='text-sm font-normal text-gray-500 line-through '>
-                    &#8358;{(value?.discount).toLocaleString()}
+                    ₦{Number(value?.discount ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
               </div>
@@ -1198,8 +1198,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
                     <p className=' text-xs font-normal '>
                       ticket price: &nbsp;
                       <span className=' text-pretty text-base font-medium text-[#F25E26]'>
-
-                        &#8358;{(value?.ticket_price).toLocaleString()}
+                        ₦{Number(value?.ticket_price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </p>
                   </div>
@@ -1345,8 +1344,7 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
                     <p className=' text-xs font-normal '>
                       ticket price: &nbsp;
                       <span className=' text-pretty text-base font-medium text-[#F25E26]'>
-
-                        &#8358;{(value?.ticket_price).toLocaleString()}
+                        ₦{Number(value?.ticket_price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </p>
                   </div>
@@ -1807,11 +1805,11 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                   <div className="p-4 flex justify-between items-center">
                     <div className="justify-start">
                       <p className="text-xl font-medium">
-                        &#8358;{value?.discount?.toLocaleString()}
+                        ₦{Number(value?.discount ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
 
                       <p className="text-sm font-normal text-gray-500 line-through">
-                        &#8358;{value?.price?.toLocaleString()}
+                        ₦{Number(value?.price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </div>
 
@@ -2172,12 +2170,12 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                   <div className="p-4 flex justify-between items-center">
                     <div className="justify-start">
                       <p className="text-xl font-medium">
-                        &#8358; {value?.previousPrice?.toLocaleString('en-US')}
+                        ₦{Number(value?.previousPrice ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         <span className=""></span>
                       </p>
 
                       <p className="text-sm font-normal text-gray-500 line-through">
-                        &#8358; {value?.price?.toLocaleString('en-US')}
+                        ₦{Number(value?.price ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </div>
 

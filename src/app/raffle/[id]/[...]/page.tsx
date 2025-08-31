@@ -260,7 +260,15 @@ const Page = ({ params }: any) => {
                         } p-3 text-2xl font-semibold capitalize lg:w-max`}
                       key={header}
                     >
-                      {header}
+                      {header === "Ticket Number" ? (
+                        <div className="flex flex-col items-center">
+                           <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
+                          <span>{header} </span>
+                         
+                        </div>
+                      ) : (
+                        header
+                      )}
                     </th>
                   ))}
                 </tr>
@@ -345,7 +353,15 @@ const Page = ({ params }: any) => {
                         } p-3 text-2xl font-semibold capitalize lg:w-max`}
                       key={header}
                     >
-                      {header}
+                     {header === "Ticket Number" ? (
+                        <div className="flex flex-col items-center">
+                           <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
+                          <span>{header} </span>
+                         
+                        </div>
+                      ) : (
+                        header
+                      )}
                     </th>
                   ))}
                 </tr>
@@ -371,7 +387,9 @@ const Page = ({ params }: any) => {
                     </td>
                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-                        {val.phone_number}
+                        {val.phone_number
+                          ? val.phone_number.slice(0, -3) + '***'
+                          : ''}
                       </p>
                     </td>
                   </tr>

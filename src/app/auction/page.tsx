@@ -152,9 +152,11 @@ const AuctionPage = () => {
           </div>
 
           {/* Date Input */}
+          
           <div>
+            <span className=' font-Poppins py-8 mb-4'>Auction Calendar</span>
             {isAuctionActive ? (
-              <div>
+              <div className='mt-2'>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     desktopModeMediaQuery="@media (min-width: 0px)"
