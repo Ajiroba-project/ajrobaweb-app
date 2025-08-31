@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { raffleWinner } from "@/app/static-data";
 import { DefaultButton } from "@/app/component/Button";
 import { useRouter } from "next/navigation";
@@ -63,6 +63,38 @@ const Page = ({ params }: any) => {
   );
   const [loadingdata, setLoadingData] = useState(false);
   const [showWinners, setShowWinners] = useState(false);
+  const [postRollCountdown, setPostRollCountdown] = useState<number | null>(null);
+  const [isThanksOpen, setIsThanksOpen] = useState(false);
+  const [redirectCancelled, setRedirectCancelled] = useState(false);
+
+  // Delay before showing the thanks modal so users can view winners, and countdown length
+  const winnersViewDelayMs = 10000; // 10s after winners appear
+  const countdownSeconds = 5; // 5s countdown once modal appears
+  const reminderDelayMs = 30000; // Reopen modal 30s after user chooses to stay
+
+  // Refs for timers so we can reliably clear/cancel them
+  const showModalTimeoutRef = useRef<number | null>(null);
+  const redirectTimeoutRef = useRef<number | null>(null);
+  const countdownIntervalRef = useRef<number | null>(null);
+
+  const clearAllTimers = () => {
+    if (showModalTimeoutRef.current) window.clearTimeout(showModalTimeoutRef.current);
+    if (redirectTimeoutRef.current) window.clearTimeout(redirectTimeoutRef.current);
+    if (countdownIntervalRef.current) window.clearInterval(countdownIntervalRef.current);
+  };
+
+  const openModalWithCountdown = () => {
+    if (redirectCancelled) return;
+    setIsThanksOpen(true);
+    setPostRollCountdown(countdownSeconds);
+    countdownIntervalRef.current = window.setInterval(() => {
+      setPostRollCountdown((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
+    }, 1000);
+    redirectTimeoutRef.current = window.setTimeout(() => {
+      if (redirectCancelled) return;
+      router.push(`/raffleended`);
+    }, countdownSeconds * 1000);
+  };
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auction_tickets/?auction_id=${product_id}`;
 
@@ -115,7 +147,7 @@ const Page = ({ params }: any) => {
         /*  setProductDataNew(data); */
         // console.log(data, "data");
 
-        console.log("data")
+      /*   console.log("data") */
       })
 
       /*   console.log(data, "data"); */
@@ -136,22 +168,61 @@ const Page = ({ params }: any) => {
     return () => clearTimeout(timer);
   }, []);
 
+  // After winners appear, wait a bit, then show a dismissible countdown modal
+  useEffect(() => {
+    if (!showWinners) return;
+    if (redirectCancelled) return;
+
+    showModalTimeoutRef.current = window.setTimeout(() => {
+      if (redirectCancelled) return;
+      openModalWithCountdown();
+    }, winnersViewDelayMs);
+
+    return () => {
+      clearAllTimers();
+    };
+  }, [showWinners, router, product_id, redirectCancelled]);
+
+  const handleStayHere = () => {
+    setRedirectCancelled(true);
+    setIsThanksOpen(false);
+    setPostRollCountdown(null);
+    clearAllTimers();
+
+    // Reopen the modal after a short reminder delay
+    showModalTimeoutRef.current = window.setTimeout(() => {
+      // Allow redirect again on next showing
+      setRedirectCancelled(false);
+      openModalWithCountdown();
+    }, reminderDelayMs);
+  };
+
+  const handleWatchRecap = () => {
+    router.push(`/raffleended`);
+  };
+
   const thead = ["S/N", "Product", `Ticket Number`, "Phone Number"];
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Set the number of items per page
 
+  // Determine which dataset to show: all tickets while rolling, only winners after
+  const displayedData = useMemo(() => {
+    const list = (productdatanew?.data as any[]) || [];
+    if (!showWinners) return list;
+    return list.filter((t: any) => t?.won === true || t?.won === "true");
+  }, [productdatanew?.data, showWinners]);
+
+  // Reset page when switching view
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [showWinners]);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // Calculate current items to display
-  const currentItems = productdatanew?.data?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  const currentItems = displayedData?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(
-    (productdatanew?.data?.length || 0) / itemsPerPage,
-  );
+  const totalPages = Math.ceil((displayedData?.length || 0) / itemsPerPage);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -205,7 +276,7 @@ const Page = ({ params }: any) => {
 
                     <td className=" text-center h-[16px]">
                       <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-                        {productdatanew?.data?.[index]?.product || "Loading..."}
+                        {val?.product || "Loading..."}
                       </p>
                     </td>
                     {/*    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
@@ -218,9 +289,7 @@ const Page = ({ params }: any) => {
                     </td>
                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-                        {showWinners
-                          ? productdatanew?.data?.[index]?.phone_number || "N/A"
-                          : "*********"}
+                        {showWinners ? val?.phone_number || "N/A" : "*********"}
                       </p>
                     </td>
                   </tr>
@@ -390,6 +459,23 @@ const Page = ({ params }: any) => {
                 className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
               />
             </div>
+
+            {postRollCountdown !== null && isThanksOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="relative flex flex-col items-center justify-center w-80 h-96 rounded-xl bg-gradient-to-b from-[#FDECE9] to-white shadow-[0_4px_6px_rgba(0,0,0,0.1),0_10px_20px_rgba(0,0,0,0.1)] border-[4px] border-[#EA7000]">
+                  <div className="absolute -top-8 flex items-center justify-center w-16 h-16 rounded-full bg-[#FDECE9] border-[4px] border-white shadow-md">
+                    <span role="img" aria-label="emoji" className="text-3xl">👍</span>
+                  </div>
+                  <h3 className="mt-12 text-lg font-semibold text-gray-800">Thanks for Joining</h3>
+                  <p className="mt-1 text-sm text-gray-500">Redirecting to recap in</p>
+                  <div className="text-7xl font-bold text-[#1B1B1A] mt-4">{postRollCountdown}</div>
+                  <div className="mt-6 flex gap-3">
+                    <button onClick={handleStayHere} className="rounded-lg border border-[#EA7000] text-[#EA7000] px-3 py-2 text-sm hover:bg-[#FDECE9]">Stay here</button>
+                    <button onClick={handleWatchRecap} className="rounded-lg bg-[#EA7000] text-white px-3 py-2 text-sm hover:bg-[#F25E26]">Watch recap</button>
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

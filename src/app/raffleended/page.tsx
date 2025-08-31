@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { raffle } from "@/app/static-data";
 import { useRouter } from "next/navigation";
-import { HeadingText } from "../../component/Heading";
-import { DefaultButton } from "../../component/Button";
+import { HeadingText } from "../component/Heading";
+import { DefaultButton } from "../component/Button";
 import Cookies from "js-cookie";
 import ModalComponent from "@/app/component/ModalComponent";
 import { Footer } from "@/app/component/Footer";
@@ -408,14 +408,14 @@ const Page = ({ params }: any) => {
         </div>
       </div>
       <section className="relative mb-[5rem] mt-7 flex flex-col items-center justify-center">
-        {loadingdata ? (
+       {/*  {loadingdata ? (
           <div className="flex flex-col items-center justify-center min-h-[306px]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25E26]"></div>
             <p className="mt-4 text-gray-600">Loading raffle data...</p>
           </div>
         ) : showCountdown ? (
           <FinalCountdown />
-        ) : (
+        ) : ( */}
           <>
             <div className="relative z-auto mb-4 w-full">
               {/* Enforced Time Display - Only show during the enforced period */}
@@ -479,7 +479,7 @@ const Page = ({ params }: any) => {
                     }}
                     className="rounded-lg shadow-md"
                   >
-                    <source src="/ajirobaadvideo.mp4" type="video/mp4" />
+                    <source src="/ajirobaraffleendedvideo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   {/* Overlay to prevent progress bar interaction */}
@@ -515,7 +515,7 @@ const Page = ({ params }: any) => {
               </div>
             </div>
 
-            {raffleended ? (
+         {/*    {raffleended ? (
               <div className="text-center">
                 <p className="text-lg text-gray-600 mb-4">Raffle has ended</p>
                 <DefaultButton
@@ -539,9 +539,9 @@ const Page = ({ params }: any) => {
                   handleClick={handleVideoControl}
                 />
               </div>
-            )}
+            )} */}
           </>
-        )}
+    {/*     )} */}
       </section>
 
       {/* Countdown Modal for raffle start */}

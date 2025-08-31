@@ -1411,10 +1411,23 @@ const Page = ({ params }: any) => {
                     {productdatanew?.data?.starts_in === "Raffle Started" ? (
                       <div className="flex justify-center items-center mt-4">
                         <button
-                          onClick={() =>
-                            /*         router.push(`/raffle/${product_id}/winners`) */
-                            router.push(`/raffle/${product_id}`)
-                          }
+                          onClick={() => {
+                            // Check if user has bid before allowing access to raffle
+                            if (productdatanew?.data?.bidded === "false") {
+                              toast.error("You need to bid first before you can watch the raffle! But, Unfortunately, The bidding start time has been reached, you can't enter the raffle again.", {
+                                position: "top-center",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                              });
+                            } else {
+                              router.push(`/raffle/${product_id}`);
+                            }
+                          }}
                           className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                         >
                           Raffle Started, Watch Live Raffle
@@ -1440,7 +1453,23 @@ const Page = ({ params }: any) => {
                           {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
                             <button
                               /*         onClick={() => setmakepayment(!makepayment)} */
-                              onClick={() => handleBidClick(product_id)}
+                              onClick={() => {
+                                // Check if raffle has started before allowing bid
+                                if (productdatanew?.data?.starts_in === "Raffle Started") {
+                                  toast.error("The bidding start time has been reached, you can't enter the raffle again.", {
+                                    position: "top-center",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "light",
+                                  });
+                                } else {
+                                  handleBidClick(product_id);
+                                }
+                              }}
                               className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                             >
                               Bid
@@ -1454,7 +1483,23 @@ const Page = ({ params }: any) => {
                             </button> */
                             <button
                             /*         onClick={() => setmakepayment(!makepayment)} */
-                            onClick={() => handleBidClick(product_id)}
+                            onClick={() => {
+                              // Check if raffle has started before allowing bid
+                              if (productdatanew?.data?.starts_in === "Raffle Started") {
+                                toast.error("The bidding start time has been reached, you can't enter the raffle again.", {
+                                  position: "top-center",
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                  theme: "light",
+                                });
+                              } else {
+                                handleBidClick(product_id);
+                              }
+                            }}
                             className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                           >
                             Bid
@@ -2415,7 +2460,7 @@ const Page = ({ params }: any) => {
                 Successfully
               </h1>
               <p className="text-center font-normal text-sm">
-                You have entered into raffle draw for this product. Good
+                You have entered into raffle draw for this product. Good mmmm
                 luck
               </p>
             </div>
@@ -2426,6 +2471,8 @@ const Page = ({ params }: any) => {
                 /*  text={status === 'pending' ? 'loading...' : "Save"} */
                 className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
                 type="submit"
+
+                handleClick={()=> setSuccessbid(!successbid)}
               />
               <button
                 onClick={() => {

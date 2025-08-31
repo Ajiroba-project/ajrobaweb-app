@@ -37,6 +37,7 @@ import Loading from "./Loading";
 import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import RaffleTicket from "./RaffleTicket";
+import { Package } from "lucide-react";
 
 
 interface cardDetails {
@@ -667,7 +668,9 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
   return (
     <>
       {/*  {loadingdata && <Loading />} */}
-      {cardInfo && (
+      {
+      
+      cardInfo && cardInfo.length > 0 ? (
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {cardInfo?.map(
@@ -1287,6 +1290,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     /*  text={status === 'pending' ? 'loading...' : "Save"} */
                     className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
                     type="submit"
+                    handleClick={()=> setSuccessbid(!successbid)}
                   />
                   <button
                     onClick={() => {
@@ -1309,7 +1313,16 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
             handleCancel={() => setSuccessbid(false)}
           />
         </section>
-      )}
+      )
+      
+      : (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+          <Package className="w-12 h-12 text-gray-400 mx-auto" aria-hidden="true" />
+          <p className="mt-4 text-lg font-Poppins">No auctions available right now</p>
+        </div>
+      )
+      
+      }
     </>
   );
 };
