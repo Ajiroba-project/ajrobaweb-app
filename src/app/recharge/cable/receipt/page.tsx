@@ -19,6 +19,7 @@ import Receipt from "./receiptpdf/Receipt";
 import ReceiptPDF from "./receiptpdf/Receipt";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const WrappedPage = () => {
   const router = useRouter();
@@ -184,7 +185,7 @@ const WrappedPage = () => {
             Transaction Amount
           </p>
           <p className="text-2xl font-semibold font-Poppins">
-            ₦{transdata?.data?.amount || 0}
+            {formatCurrency(transdata?.data?.amount)}
           </p>
         </div>
         <section style={{ margin: "0 auto", width: "90%" }}>

@@ -37,6 +37,8 @@ import Loading from "./Loading";
 import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import RaffleTicket from "./RaffleTicket";
+import { Package } from "lucide-react";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 
 interface cardDetails {
@@ -667,7 +669,9 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
   return (
     <>
       {/*  {loadingdata && <Loading />} */}
-      {cardInfo && (
+      {
+      
+      cardInfo && cardInfo.length > 0 ? (
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {cardInfo?.map(
@@ -758,7 +762,9 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                   </div>
 
                   <div>
-                    <div className="bg-[#F6F6F6] px-4 py-4 ">
+                    <div className="bg-[#F6F6F6] px-4 py-4 cursor-pointer"   onClick={() =>
+                        router.push(`/auction/productdetails/${value.id}`)
+                      }>
                       <div className="flex justify-between items-center">
                         <div>
                           <p className="font-Poppins text-[#000000] text-pretty text-sm font-normal">
@@ -774,7 +780,10 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                           </div>
                           <div>
                             <p className="text-pretty text-base font-Poppins font-medium text-[#F25E26]">
-                              &#8358;{value?.ticket_price.toLocaleString()}
+                            
+                              {
+                                formatCurrency(value?.ticket_price)
+                              }
                             </p>
                           </div>
                         </div>
@@ -890,11 +899,8 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                           </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
-                            {ticketPrice.toLocaleString('en-NG', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2
-                            })}
-                          </span>
+                              { formatCurrency(ticketPrice) }
+                          </span> 
                           {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
 
@@ -948,10 +954,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       </label>
                       <input
                         type="text"
-                        value={`₦${totalAmount.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}`}
+                        value={formatCurrency(totalAmount)}
                         readOnly
                         className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
                       />
@@ -1019,10 +1022,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
                       <input
                         type="text"
-                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        }) ?? 0}
+                        value={formatCurrency(ticketData?.data?.ticket_price)}
                         readOnly
                         className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
                       />
@@ -1050,10 +1050,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      }) ?? 0}
+                      value={formatCurrency(ticketData?.data?.ticket_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}
@@ -1188,10 +1185,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })}
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
                         </small>
                       </div>
                     </div>
@@ -1214,10 +1208,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance )} (Wallet) And {formatCurrency(userInfo?.data?.my_wallet[0]?.point)} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
@@ -1285,6 +1276,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     /*  text={status === 'pending' ? 'loading...' : "Save"} */
                     className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
                     type="submit"
+                    handleClick={()=> setSuccessbid(!successbid)}
                   />
                   <button
                     onClick={() => {
@@ -1307,7 +1299,16 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
             handleCancel={() => setSuccessbid(false)}
           />
         </section>
-      )}
+      )
+      
+      : (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+          <Package className="w-12 h-12 text-gray-400 mx-auto" aria-hidden="true" />
+          <p className="mt-4 text-lg font-Poppins">No auctions available right now</p>
+        </div>
+      )
+      
+      }
     </>
   );
 };

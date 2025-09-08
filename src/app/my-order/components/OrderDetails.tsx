@@ -376,6 +376,7 @@ export const OrderDetails = () => {
   const [allordeerFilter, setAllorderFilter] = useState<any[]>([]);
   const [pendingFilter, setPendingFilter] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
   const itemsPerPage = 2; // Number of items per page
 
   const { isLoggedIn, user, token } = useAuthStore(state => ({
@@ -391,6 +392,85 @@ export const OrderDetails = () => {
 
   const { data: orderinfo, isLoading: ordersLoading, error: ordererror } = useGetOrderData('/api/getallorders', "get_order_details", userToken);
 
+  // CSV Export function for all transaction types
+  const exportToCSV = async () => {
+    if (ordersLoading) {
+      alert('Please wait, data is still loading...');
+      return;
+    }
+
+    if (!orderinfo?.data?.data?.data) {
+      alert('No data available to export');
+      return;
+    }
+
+    setIsExporting(true);
+
+    let dataToExport: any[] = [];
+    let fileName = '';
+
+    // Determine which data to export based on current pipeline
+    if (pipeline === orderSwitch[0]) {
+      dataToExport = orderinfo.data.data.data.all_orders || [];
+      fileName = 'all_transactions';
+    } else if (pipeline === orderSwitch[1]) {
+      dataToExport = orderinfo.data.data.data.completed_order || [];
+      fileName = 'completed_transactions';
+    } else if (pipeline === orderSwitch[2]) {
+      dataToExport = orderinfo.data.data.data.pending_order || [];
+      fileName = 'pending_transactions';
+    } else {
+      // Fallback to all orders if pipeline is not recognized
+      dataToExport = orderinfo.data.data.data.all_orders || [];
+      fileName = 'transactions';
+    }
+
+    if (!Array.isArray(dataToExport) || dataToExport.length === 0) {
+      alert(`No ${pipeline} transactions available to export`);
+      return;
+    }
+
+    try {
+      // Prepare CSV data with better field mapping
+      const csvHeaders = ['Order ID', 'Product Details', 'Amount', 'Date', 'Status', 'Customer Name', 'Reference'];
+      const csvData = dataToExport.map((transaction: any) => [
+        transaction.order_id || transaction.id || 'N/A',
+        transaction.product_name || transaction.products[0].name || transaction.product_name || 'N/A',
+        transaction.amount || transaction.total_price || transaction.total_amount || 'N/A',
+        transaction.created_at || transaction.date || transaction.order_date || 'N/A',
+        transaction.delivery_status || transaction.status || 'N/A',
+        transaction.customer_name || transaction.full_name || 'N/A',
+        transaction.reference || 'N/A'
+      ]);
+
+      // Create CSV content
+      const csvContent = [
+        csvHeaders.join(','),
+        ...csvData.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      ].join('\n');
+
+      // Create and download CSV file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${fileName}_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the URL object
+      URL.revokeObjectURL(url);
+      
+      alert(`Successfully exported ${dataToExport.length} ${pipeline} transactions to CSV`);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      alert('Error exporting CSV. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -437,12 +517,27 @@ export const OrderDetails = () => {
     <section className='mb-6 flex  flex-col w-full overflow-x-scroll overflow-y-scroll'>
       <div className='flex lg:justify-between lg:flex-row flex-col justify-center lg:my-0 my-4'>
         <h3 className='mb-1.5 text-xl font-Poppins text-[#101928] font-semibold'>Transactions</h3>
-        <IconButton
-          type='button'
-          text='export Csv'
-          className='flex items-center gap-2 rounded-lg bg-[#F25E26] p-1 capitalize text-white w-fit justify-items-center'
-          icon={<MdOutlineFileDownload className='text-base font-Poppins' />}
-        />
+        <div className='flex flex-col items-end gap-1'>
+          <IconButton
+            type='button'
+            text={isExporting ? 'Exporting...' : `Export ${pipeline.charAt(0).toUpperCase() + pipeline.slice(1)} CSV`}
+            className='flex items-center gap-2 rounded-lg bg-[#F25E26] p-1 capitalize text-white w-fit justify-items-center'
+            icon={<MdOutlineFileDownload className='text-base font-Poppins' />}
+            handleClick={exportToCSV}
+            disabled={isExporting}
+          />
+          <span className='text-xs text-gray-500 font-Poppins'>
+            Exports current view ({(() => {
+              if (pipeline === orderSwitch[0]) {
+                return orderinfo?.data?.data?.data?.all_orders?.length || 0;
+              } else if (pipeline === orderSwitch[1]) {
+                return orderinfo?.data?.data?.data?.completed_order?.length || 0;
+              } else {
+                return orderinfo?.data?.data?.data?.pending_order?.length || 0;
+              }
+            })()} {pipeline} transactions)
+          </span>
+        </div>
       </div>
       <Pipeline props={orderSwitch} setProps={setPipeline} start={pipeline} />
 

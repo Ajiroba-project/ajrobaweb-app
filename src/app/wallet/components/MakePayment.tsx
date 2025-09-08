@@ -7,6 +7,7 @@ import { useMutateData } from '@/hooks/useMutateData'
 import { useForm } from 'react-hook-form'
 import { CreateNewPin } from './YupValidation'
 import { userProfile } from '@/store/store'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 export const MakePayment = ({ handleClick, createPin, setCreatePin, amount, onConfirm, onCancel }: any) => {
   const { successModal, setSuccessModal } = userProfile(state => ({
@@ -70,7 +71,7 @@ export const MakePayment = ({ handleClick, createPin, setCreatePin, amount, onCo
                 <div className="bg-white p-6 rounded-md shadow-lg max-w-md w-full text-center">
                   <p className="text-md text-gray-700">
                     {/*    You are going to deposit the amount of <span className="font-bold">₦ {amount}</span> */}
-                    You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    You are going to deposit the amount of N { formatCurrency(amount) }
                   </p>
                   <div className="mt-6">
                     <button

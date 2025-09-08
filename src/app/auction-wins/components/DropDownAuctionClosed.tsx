@@ -74,8 +74,9 @@ const DropDownAuction: React.FC<DropdownProps> = ({ onOptionClick, value, transa
                 <div className='absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg'>
                     <ul className='list-none p-2'>
                         <li
-                            onClick={() => handleOptionClick('Delete')}
-                            className='p-2 cursor-pointer hover:bg-gray-100'
+                /*             onClick={() => handleOptionClick('Delete')} */
+                            className='p-2  hover:bg-gray-100 cursor-not-allowed'
+                            tabIndex={-1}
                         >
                             Delete
                         </li>

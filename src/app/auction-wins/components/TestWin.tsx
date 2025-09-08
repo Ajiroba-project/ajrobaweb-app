@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useAuthStore } from "@/store/store";
 import { useGetDatanew } from "@/hooks/useGetData";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 export type WinningAdviceModalProps = {
     isOpen: boolean;
@@ -88,10 +89,10 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black/40 px-2 py-4 overflow-y-auto"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black/40 p-2 sm:p-4 overflow-y-auto"
             onClick={onClose}
         >
-            <div className="flex flex-col gap-4 w-full max-w-[850px]">
+            <div className="flex flex-col gap-2 sm:gap-4 w-full max-w-[850px] min-h-full sm:min-h-auto">
                 <div
                     ref={modalRef}
                     className="relative bg-white shadow-2xl"
@@ -122,7 +123,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                     </button>
 
                     {/* PAGE 1 */}
-                    <div className="bg-white rounded-lg shadow-lg mb-8 p-0" style={{ border: '6px dotted #F25E26' }}>
+                    <div className="bg-white rounded-lg shadow-lg mb-4 sm:mb-8 p-0 w-full overflow-hidden" style={{ border: '6px dotted #F25E26' }}>
                         {/* Background watermark */}
                         <div
                             className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -138,7 +139,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             AJIROBA
                         </div>
 
-                        <div className="relative z-10 p-6">
+                        <div className="relative z-10 p-3 sm:p-6">
                             {/* Header with Logo */}
                             <div className="flex items-center mb-6">
                                 <div className="flex items-center">
@@ -151,7 +152,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             {/* Title with borders */}
                             <div className="border-t-2 border-b-2 border-black py-2 mb-6">
                                 <h1 className="text-xl font-black text-center text-black tracking-wide">
-                                    RAFFLE DRAW WINNING ADVICE LETTER
+                                RAFFLE WINNING ADVICE
                                 </h1>
                             </div>
 
@@ -175,35 +176,43 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                                     This is to confirm that you have won in our raffle draw. Below are the details of your winning:
                                 </p>
 
-                                <div className="space-y-2 ml-4 sm:ml-8 flex flex-col">
+                                <div className="space-y-2 ml-2 sm:ml-4 md:ml-8 flex flex-col">
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
-                                        <span className="text-sm min-w-[160px] text-black">Item Won:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.prize}</span>
+                                        <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[160px] text-black">Item Won:</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{adviceData.prize}</span>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
-                                        <span className="text-sm min-w-[160px] text-black">Product ID:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.productId}</span>
+                                        <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[160px] text-black">Product ID:</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{adviceData.productId}</span>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
-                                        <span className="text-sm min-w-[160px] text-black">Your Winning Ticket:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.ticketNumber}</span>
+                                        <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[160px] text-black">Your Winning Ticket:</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{adviceData.ticketNumber}</span>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
-                                        <span className="text-sm min-w-[160px] text-black">Raffle Draw Date:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.drawDate}</span>
+                                        <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[160px] text-black">Raffle Draw Date:</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">
+                                            {adviceData.drawDate
+                                                ? (() => {
+                                                    const dateObj = new Date(adviceData.drawDate);
+                                                    if (isNaN(dateObj.getTime())) return adviceData.drawDate;
+                                                    return dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                                                })()
+                                                : ""}
+                                        </span>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
-                                        <span className="text-sm min-w-[160px] text-black">Raffle Draw Time:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.raffleDrawTime}</span>
+                                        <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[160px] text-black">Raffle Draw Time:</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{adviceData.raffleDrawTime}</span>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
-                                        <span className="text-sm min-w-[160px] text-black">Estimated Market Value of Item:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-sm text-black sm:ml-1">{adviceData.estimated_value}</span>
+                                        <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[180px] text-black">Estimated Market Value of Item:</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{formatCurrency(adviceData.estimated_value)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -237,64 +246,87 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             </div>
 
                             {/* Footer Contact Info */}
-                            <div className="flex flex-wrap items-start gap-4 sm:gap-6 bg-[#F1F1F1] rounded-md p-3 text-xs">
-
-                                {/* Customer careline */}
-                                <div className="flex flex-col pr-4 sm:pr-6 border-r border-gray-400">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <PhoneCall size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Customer careline</span>
+                            <div className="flex items-center justify-between bg-[#F1F1F1] rounded-md p-2 sm:p-3 text-xs overflow-x-auto">
+                                
+                                {/* Contact Information Row */}
+                                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                                    {/* Customer careline */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4 border-r border-gray-400">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <PhoneCall size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Customer careline</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">07038808512</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">07038808512</div>
-                                </div>
 
-                                {/* Email */}
-                                <div className="flex flex-col pr-4 sm:pr-6 border-r border-gray-400">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <MailIcon size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Email</span>
+                                    {/* Email */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4 border-r border-gray-400">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <MailIcon size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Email</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">support@ajiroba.com</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">support@ajiroba.com</div>
-                                </div>
 
-                                {/* Instagram */}
-                                <div className="flex flex-col pr-4 sm:pr-6 border-r border-gray-400">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <BsInstagram size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Instagram</span>
+                                    {/* Instagram */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4 border-r border-gray-400">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <BsInstagram size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Instagram</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">@ajiroba.com</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">@ajiroba.com</div>
-                                </div>
 
-                                {/* Website */}
-                                <div className="flex flex-col pr-2 sm:pr-4">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <GlobeIcon size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Website</span>
+                                    {/* Website */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <GlobeIcon size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Website</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">www.ajiroba.com</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">www.ajiroba.com</div>
-                                </div>
 
-                                {/* App Store Buttons */}
-                                <div className="flex flex-col gap-1 ml-0 sm:ml-4 mt-4 sm:mt-0">
+                                    <div className="flex  gap-1 ml-2 sm:ml-4 flex-shrink-0">
                                     {/* Google Play Store */}
-                                    <div className="flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded text-[10px]">
-                                        <SmartphoneIcon size={16} className="text-white" />
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-black text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-[8px] sm:text-[10px]">
+                                        <SmartphoneIcon size={12} className="text-white flex-shrink-0" />
                                         <div className="flex flex-col leading-tight">
-                                            <div className="text-[8px] opacity-80">GET IT ON</div>
-                                            <div className="text-[10px] font-semibold">Google Play</div>
+                                            <div className="text-[6px] sm:text-[8px] opacity-80">GET IT ON</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">Google Play</div>
                                         </div>
                                     </div>
 
                                     {/* App Store */}
-                                    <div className="flex items-center gap-2 bg-white text-black px-3 py-1.5 rounded border border-gray-300 text-[10px]">
-                                        <BsApple size={16} className="text-black" />
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white text-black px-2 sm:px-3 py-1 sm:py-1.5 rounded border border-gray-300 text-[8px] sm:text-[10px]">
+                                        <BsApple size={12} className="text-black flex-shrink-0" />
                                         <div className="flex flex-col leading-tight">
-                                            <div className="text-[8px] opacity-70">Download on the</div>
-                                            <div className="text-[10px] font-semibold">App Store</div>
+                                            <div className="text-[6px] sm:text-[8px] opacity-70">Download on the</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">App Store</div>
                                         </div>
                                     </div>
                                 </div>
+                                </div>
+
+                                
+                               {/*  <div className="flex flex-col gap-1 ml-2 sm:ml-4 flex-shrink-0">
+                               
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-black text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-[8px] sm:text-[10px]">
+                                        <SmartphoneIcon size={12} className="text-white flex-shrink-0" />
+                                        <div className="flex flex-col leading-tight">
+                                            <div className="text-[6px] sm:text-[8px] opacity-80">GET IT ON</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">Google Play</div>
+                                        </div>
+                                    </div>
+
+                                
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white text-black px-2 sm:px-3 py-1 sm:py-1.5 rounded border border-gray-300 text-[8px] sm:text-[10px]">
+                                        <BsApple size={12} className="text-black flex-shrink-0" />
+                                        <div className="flex flex-col leading-tight">
+                                            <div className="text-[6px] sm:text-[8px] opacity-70">Download on the</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">App Store</div>
+                                        </div>
+                                    </div>
+                                </div> */}
 
                             </div>
 
@@ -318,7 +350,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                     </button>
 
                     {/* PAGE 2 */}
-                    <div className="bg-white rounded-lg shadow-lg p-0" style={{ border: '6px dotted #F25E26' }}>
+                    <div className="bg-white rounded-lg shadow-lg p-0 w-full overflow-hidden" style={{ border: '6px dotted #F25E26' }}>
                         {/* Background watermark */}
                         <div
                             className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -334,7 +366,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             AJIROBA
                         </div>
 
-                        <div className="relative z-10 p-6">
+                        <div className="relative z-10 p-3 sm:p-6">
                             {/* Header with Logo */}
                             <div className="flex items-center mb-6">
                                 <div className="flex items-center">
@@ -345,34 +377,34 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             </div>
 
                             {/* Title */}
-                            <div className="mb-8">
-                                <h1 className="text-xl font-black text-black">
+                            <div className="mb-6 sm:mb-8">
+                                <h1 className="text-lg sm:text-xl font-black text-black">
                                     STEPS FOR REDEEMING YOUR PRODUCT
                                 </h1>
                             </div>
 
                             {/* Steps */}
-                            <div className="space-y-4 mb-8">
+                            <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                                 <div className="flex">
-                                    <span className="text-sm font-medium text-black mr-2">1.</span>
-                                    <span className="text-sm text-black">Login to you dashboard.</span>
+                                    <span className="text-xs sm:text-sm font-medium text-black mr-2">1.</span>
+                                    <span className="text-xs sm:text-sm text-black">Login to you dashboard.</span>
                                 </div>
                                 <div className="flex">
-                                    <span className="text-sm font-medium text-black mr-2">2.</span>
-                                    <span className="text-sm text-black">Proceed to your profile, and select &quot;Auction Wins&quot;</span>
+                                    <span className="text-xs sm:text-sm font-medium text-black mr-2">2.</span>
+                                    <span className="text-xs sm:text-sm text-black">Proceed to your profile, and select &quot;Auction Wins&quot;</span>
                                 </div>
                                 <div className="flex">
-                                    <span className="text-sm font-medium text-black mr-2">3.</span>
-                                    <span className="text-sm text-black">Select &quot;download winning advice&quot; button to download your winning letter.</span>
+                                    <span className="text-xs sm:text-sm font-medium text-black mr-2">3.</span>
+                                    <span className="text-xs sm:text-sm text-black">Select &quot;download winning advice&quot; button to download your winning letter.</span>
                                 </div>
                             </div>
 
                             {/* Spacer for content */}
-                            <div style={{ height: '200px' }}></div>
+                            <div className="h-24 sm:h-32 md:h-48"></div>
 
                             {/* Bottom quote */}
-                            <div className="text-center mb-6">
-                                <p className="text-sm italic text-black">
+                            <div className="text-center mb-4 sm:mb-6">
+                                <p className="text-xs sm:text-sm italic text-black">
                                     ...The more ticket you buy, the more your chances of winning
                                 </p>
                             </div>
@@ -383,64 +415,87 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             </div>
 
                             {/* Footer Contact Info */}
-                            <div className="flex flex-wrap items-start gap-4 sm:gap-6 bg-[#F1F1F1] rounded-md p-3 text-xs">
-
-                                {/* Customer careline */}
-                                <div className="flex flex-col pr-4 sm:pr-6 border-r border-gray-400">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <PhoneCall size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Customer careline</span>
+                            <div className="flex items-center justify-between bg-[#F1F1F1] rounded-md p-2 sm:p-3 text-xs overflow-x-auto">
+                                
+                                {/* Contact Information Row */}
+                                <div className="flex items-center gap-1 sm:gap-4 min-w-0 flex-1">
+                                    {/* Customer careline */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4 border-r border-gray-400">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <PhoneCall size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Customer careline</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">07038808512</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">07038808512</div>
-                                </div>
 
-                                {/* Email */}
-                                <div className="flex flex-col pr-4 sm:pr-6 border-r border-gray-400">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <MailIcon size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Email</span>
+                                    {/* Email */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4 border-r border-gray-400">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <MailIcon size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Email</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">support@ajiroba.com</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">support@ajiroba.com</div>
-                                </div>
 
-                                {/* Instagram */}
-                                <div className="flex flex-col pr-4 sm:pr-6 border-r border-gray-400">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <BsInstagram size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Instagram</span>
+                                    {/* Instagram */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4 border-r border-gray-400">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <BsInstagram size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Instagram</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">@ajiroba.com</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">@ajiroba.com</div>
-                                </div>
 
-                                {/* Website */}
-                                <div className="flex flex-col pr-4 sm:pr-6">
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <GlobeIcon size={12} className="text-black" />
-                                        <span className="text-black underline underline-offset-2">Website</span>
+                                    {/* Website */}
+                                    <div className="flex flex-col min-w-0 pr-2 sm:pr-4">
+                                        <div className="flex items-center gap-1 mb-1">
+                                            <GlobeIcon size={10} className="text-black flex-shrink-0" />
+                                            <span className="text-black underline underline-offset-2 text-[10px] sm:text-xs">Website</span>
+                                        </div>
+                                        <div className="text-[#2A2A2A] font-semibold text-[10px] sm:text-xs">www.ajiroba.com</div>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">www.ajiroba.com</div>
-                                </div>
 
-                                {/* App Store Buttons */}
-                                <div className="flex flex-col gap-1 ml-0 sm:ml-4 mt-4 sm:mt-0">
+                                    <div className="flex  gap-1 ml-2 sm:ml-4 flex-shrink-0">
                                     {/* Google Play Store */}
-                                    <div className="flex items-center gap-2 bg-black text-white px-3 py-1.5 rounded text-[10px]">
-                                        <SmartphoneIcon size={16} className="text-white" />
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-black text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-[8px] sm:text-[10px]">
+                                        <SmartphoneIcon size={12} className="text-white flex-shrink-0" />
                                         <div className="flex flex-col leading-tight">
-                                            <div className="text-[8px] opacity-80">GET IT ON</div>
-                                            <div className="text-[10px] font-semibold">Google Play</div>
+                                            <div className="text-[6px] sm:text-[8px] opacity-80">GET IT ON</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">Google Play</div>
                                         </div>
                                     </div>
 
                                     {/* App Store */}
-                                    <div className="flex items-center gap-2 bg-white text-black px-3 py-1.5 rounded border border-gray-300 text-[10px]">
-                                        <BsApple size={16} className="text-black" />
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white text-black px-2 sm:px-3 py-1 sm:py-1.5 rounded border border-gray-300 text-[8px] sm:text-[10px]">
+                                        <BsApple size={12} className="text-black flex-shrink-0" />
                                         <div className="flex flex-col leading-tight">
-                                            <div className="text-[8px] opacity-70">Download on the</div>
-                                            <div className="text-[10px] font-semibold">App Store</div>
+                                            <div className="text-[6px] sm:text-[8px] opacity-70">Download on the</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">App Store</div>
                                         </div>
                                     </div>
                                 </div>
+                                </div>
+
+                                {/* App Store Buttons */}
+                                {/* <div className="flex flex-col gap-1 ml-2 sm:ml-4 flex-shrink-0">
+                                    
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-black text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded text-[8px] sm:text-[10px]">
+                                        <SmartphoneIcon size={12} className="text-white flex-shrink-0" />
+                                        <div className="flex flex-col leading-tight">
+                                            <div className="text-[6px] sm:text-[8px] opacity-80">GET IT ON</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">Google Play</div>
+                                        </div>
+                                    </div>
+
+                                 
+                                    <div className="flex items-center gap-1 sm:gap-2 bg-white text-black px-2 sm:px-3 py-1 sm:py-1.5 rounded border border-gray-300 text-[8px] sm:text-[10px]">
+                                        <BsApple size={12} className="text-black flex-shrink-0" />
+                                        <div className="flex flex-col leading-tight">
+                                            <div className="text-[6px] sm:text-[8px] opacity-70">Download on the</div>
+                                            <div className="text-[8px] sm:text-[10px] font-semibold">App Store</div>
+                                        </div>
+                                    </div>
+                                </div> */}
 
                             </div>
                         </div>

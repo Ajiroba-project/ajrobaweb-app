@@ -378,7 +378,9 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
                 buttonclass="w-full rounded-md bg-[#FCDFD4] p-3 hover:bg-[#f25e26] hover:text-white"
               />
             </div>
-          )}
+          )
+        
+        }
     </div>
   );
 };

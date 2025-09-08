@@ -23,6 +23,7 @@ import Image from "next/image";
 import { PrintReceipt } from "./PrintReceipt";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type ConfirmationModalProps = {
   amount: string;
@@ -230,7 +231,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
           <p className="text-center">
 
-            You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            You are going to deposit the amount of N { formatCurrency(amount) }
           </p>
           <div className="flex w-full gap-5 flex-col">
             <DefaultButton

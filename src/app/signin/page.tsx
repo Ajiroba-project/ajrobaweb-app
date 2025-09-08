@@ -78,7 +78,7 @@ function Page() {
 
     if (data.status === 200) {
       toast.success(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -106,7 +106,7 @@ function Page() {
       reset()
     } else if (data.status === 404) {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -115,10 +115,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-      reset()
+
     } else if (data.status === 401) {
       toast.error(`${'Incorrect login details'}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -127,10 +127,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-      reset()
+
     } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -140,10 +140,10 @@ function Page() {
         theme: "light",
         /* onClose: () => router.push("/otpverification"), */
       });
-      reset()
+
     } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -153,13 +153,13 @@ function Page() {
         theme: "light",
         onClose: () => router.push("/otpverification"),
       });
-      reset()
+
     }
 
 
     else {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -168,7 +168,7 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-      reset()
+
     }
   }
 
@@ -184,14 +184,14 @@ function Page() {
       progress: undefined,
       theme: 'light'
     })
-    reset()
+
   }
 
   // Modified success handler to handle remember me
   const handleSuccessWithRememberMe = (data: any) => {
     if (data.status === 200) {
       toast.success(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -217,7 +217,7 @@ function Page() {
       reset()
     } else if (data.status === 404) {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -226,10 +226,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-      reset()
+
     } else if (data.status === 401) {
       toast.error(`${'Incorrect login details'}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -238,10 +238,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-      reset()
+
     } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -250,10 +250,10 @@ function Page() {
         progress: undefined,
         theme: "light",
       });
-      reset()
+
     } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -263,10 +263,10 @@ function Page() {
         theme: "light",
         onClose: () => router.push("/otpverification"),
       });
-      reset()
+
     } else {
       toast.error(`${data?.data?.message}`, {
-        position: 'bottom-center',
+        position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -275,7 +275,7 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-      reset()
+
     }
   }
 

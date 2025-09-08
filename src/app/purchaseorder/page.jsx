@@ -228,7 +228,7 @@ const WrappedPage = () => {
               <div className="flex items-center gap-4">
                 <Image width={30} height={30} src={purchasecheck} alt="purchasecheck" />
                 <p className="font-Poppins text-base text-[#2A2A2A] font-medium">
-                  Your purchase Order is successful!
+                  Your purchase Order is successful! 
                 </p>
               </div>
 

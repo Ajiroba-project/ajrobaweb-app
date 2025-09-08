@@ -14,16 +14,27 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  const formatWithCommas = (numericString: string): string => {
+    const digitsOnly = numericString.replace(/\D/g, '');
+    if (digitsOnly === '') return '';
+    const numberValue = parseInt(digitsOnly, 10);
+    if (isNaN(numberValue)) return '';
+    return numberValue.toLocaleString('en-NG');
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    const inputValue = e.target.value;
+    const formatted = formatWithCommas(inputValue);
+    setValue(formatted);
     setError('');
   };
 
   const handleNextClick = () => {
-    if (value.trim() === '') {
+    const rawNumericValue = value.replace(/,/g, '').trim();
+    if (rawNumericValue === '') {
       setError('Please enter an amount before proceeding.');
     } else {
-      handleNext(value);
+      handleNext(rawNumericValue);
     }
   };
 
@@ -50,9 +61,9 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
               <div
                 className='flex cursor-pointer rounded-md bg-gray-300 px-2 py-1'
                 key={index}
-                onClick={() => setValue(val)}
+                onClick={() => setValue(Number(val).toLocaleString('en-NG'))}
               >
-                <p className='text-sm'>{val}</p>
+                <p className='text-sm'>₦{Number(val).toLocaleString('en-NG')}</p>
               </div>
             ))}
           </div>

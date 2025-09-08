@@ -40,10 +40,10 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
   }, [createPin]);
 
   const CreateNewPin = yup.object().shape({
-
   newpass: yup
     .string()
     .required('Pin is required')
+    .matches(/^\d+$/, 'Pin must contain only digits')
     .min(6, "Can't be lesser than 6 digits"),
   confirmpass: yup
     .string()
@@ -189,6 +189,10 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
                   register={register}
                   errors={errors}
                   classname="w-full p-3 border outline-[#FCDFD4] rounded-lg focus:outline-[#f25e26]"
+                  inputMode="numeric"
+                  maxLength={6}
+                  onKeyDown={(e: any) => { if (!/[0-9]|Backspace|Tab|ArrowLeft|ArrowRight|Delete/.test(e.key)) e.preventDefault(); }}
+                  onInput={(e: any) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0,6); }}
                 />
                 <InputField
                   label={"Confirm Pin"}
@@ -197,6 +201,10 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
                   register={register}
                   errors={errors}
                   classname="w-full p-3 border outline-[#FCDFD4] rounded-lg focus:outline-[#f25e26]"
+                  inputMode="numeric"
+                  maxLength={6}
+                  onKeyDown={(e: any) => { if (!/[0-9]|Backspace|Tab|ArrowLeft|ArrowRight|Delete/.test(e.key)) e.preventDefault(); }}
+                  onInput={(e: any) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0,6); }}
                 />
 
                 <DefaultButton

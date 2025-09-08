@@ -13,6 +13,8 @@ import axios from "axios";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import AuthMiddleware from '@/hooks/useAuthCart'
+import { useAuthStore } from '@/store/store';
+import  Loading  from "../component/Loading";
 
 const Page = () => {
   const router = useRouter();
@@ -22,6 +24,9 @@ const Page = () => {
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
 
   const tkn_: string = Cookies.get("token") as string;
+  const { triggerCartRefresh } = useAuthStore(state => ({
+    triggerCartRefresh: state.triggerCartRefresh,
+  }));
 
   
   AuthMiddleware(router)
@@ -31,7 +36,7 @@ const Page = () => {
 
     let sessionKey = Cookies.get("session_key");
 
-    /*  console.log(sessionKey, "session key") */
+    /*   console.log(sessionKey, "session key")  */
 
     if (!sessionKey) {
       sessionKey = `session_${Math.random().toString(36).substr(2, 9)}`; // Generate a unique session key
@@ -122,6 +127,7 @@ const Page = () => {
         onClose: () => router.push('/cart')
       })
       fetchCartItems(); // Refresh cart items after updating
+      triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
       toast.error(`${errorMessage}`, {
@@ -173,6 +179,7 @@ const Page = () => {
         onClose: () => router.push('/cart')
       })
       fetchCartItems(); // Refresh cart items after updating
+      triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
       toast.error(`${errorMessage}`, {
@@ -227,6 +234,7 @@ const Page = () => {
       });
 
       fetchCartItems(); // Refresh cart items after updating
+      triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
 
       const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
@@ -253,6 +261,11 @@ const Page = () => {
   const grandTotal = cartItemsn?.reduce((total, item) => {
     return total + calculateTotalPrice(item?.product?.discount, item.quantity);
   }, 0);
+
+
+  if (loading) {
+   return <Loading />
+  }
 
   return (
     <Suspense fallback={<>Loading...</>}>
@@ -358,7 +371,7 @@ const Page = () => {
             </div>
 
             <div className="mt-4 container justify-center flex xl:block md:block lg:block 2xl:block">
-              <div className="border rounded border-[#D2D2D2] px-4 shadow py-4">
+           {  cartItemsn?.length > 0 &&  <div className="border rounded border-[#D2D2D2] px-4 shadow py-4">
                 <h1 className="text-[#2A2A2A] text-base font-Poppins">Cart SUMMARY</h1>
 
                 <div className="flex items-center flex-wrap gap-4">
@@ -383,7 +396,7 @@ const Page = () => {
                 <div className="mt-4">
                   <small className="  text-[#F25E26]">Excluding delivery charges</small>
                 </div>
-              </div>
+              </div> }
             </div>
           </div>
 

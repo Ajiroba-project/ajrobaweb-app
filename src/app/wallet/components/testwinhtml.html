@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffle Draw Winning Advice Letter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .page {
+            background: white;
+            border: 6px dotted #F25E26;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            font-weight: bold;
+            color: #F25E26;
+            opacity: 0.05;
+            font-family: Arial, sans-serif;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            padding: 24px 24px 8px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #F25E26;
+        }
+
+        .title-section {
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            padding: 8px 0;
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 900;
+            text-align: center;
+            color: black;
+            letter-spacing: 0.05em;
+        }
+
+        .date-section {
+            margin-bottom: 16px;
+        }
+
+        .date-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: black;
+        }
+
+        .dear-section {
+            margin-bottom: 16px;
+        }
+
+        .dear-text {
+            font-size: 14px;
+            color: black;
+        }
+
+        .underline-field {
+            border-bottom: 2px dotted #6b7280;
+            display: inline-block;
+            min-width: 300px;
+            padding-bottom: 4px;
+            margin-left: 4px;
+        }
+
+        .main-content {
+            margin-bottom: 16px;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            color: black;
+        }
+
+        .details-section {
+            margin-left: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            min-width: 160px;
+            color: black;
+        }
+
+        .detail-value {
+            border-bottom: 2px dotted #6b7280;
+            flex: 1;
+            min-width: 200px;
+            padding-bottom: 4px;
+            font-size: 14px;
+            color: black;
+        }
+
+        .instructions {
+            margin-bottom: 16px;
+        }
+
+        .instructions-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: black;
+        }
+
+        .congratulations {
+            margin-bottom: 24px;
+        }
+
+        .congratulations-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: black;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .signature-text {
+            font-size: 14px;
+            color: black;
+        }
+
+        .page-number {
+            font-size: 14px;
+            font-weight: 500;
+            color: black;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 24px;
+            background-color: #f1f1f1;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 12px;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            padding-right: 24px;
+            border-right: 1px solid #9ca3af;
+        }
+
+        .contact-item:last-of-type {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .contact-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .contact-label {
+            color: black;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .contact-value {
+            color: #2a2a2a;
+            font-weight: 600;
+        }
+
+        .app-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-left: 16px;
+            margin-top: 16px;
+        }
+
+        .app-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .google-play {
+            background-color: black;
+            color: white;
+        }
+
+        .app-store {
+            background-color: white;
+            color: black;
+            border: 1px solid #d1d5db;
+        }
+
+        .app-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .app-subtitle {
+            font-size: 8px;
+            opacity: 0.8;
+        }
+
+        .app-title {
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .page2-title {
+            margin-bottom: 32px;
+        }
+
+        .page2-title h1 {
+            font-size: 20px;
+            font-weight: 900;
+            color: black;
+        }
+
+        .steps-section {
+            margin-bottom: 32px;
+        }
+
+        .step-item {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            font-size: 14px;
+            font-weight: 500;
+            color: black;
+            margin-right: 8px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: black;
+        }
+
+        .spacer {
+            height: 200px;
+        }
+
+        .bottom-quote {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .quote-text {
+            font-size: 14px;
+            font-style: italic;
+            color: black;
+        }
+
+        .page-end {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .details-section {
+                margin-left: 16px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .detail-label {
+                min-width: auto;
+            }
+
+            .detail-value {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .footer-contact {
+                gap: 16px;
+            }
+
+            .contact-item {
+                padding-right: 16px;
+            }
+
+            .app-buttons {
+                margin-left: 0;
+                margin-top: 16px;
+            }
+        }
+
+        /* Icon styles - using Unicode symbols as fallbacks */
+        .icon {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+        }
+
+        .icon-phone::before { content: "📞"; }
+        .icon-mail::before { content: "✉️"; }
+        .icon-instagram::before { content: "📷"; }
+        .icon-globe::before { content: "🌐"; }
+        .icon-smartphone::before { content: "📱"; }
+        .icon-apple::before { content: "🍎"; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PAGE 1 -->
+        <div class="page">
+            <div class="watermark">AJIROBA</div>
+            <div class="content">
+                <!-- Header with Logo -->
+                <div class="header">
+                    <div class="logo">AJIROBA</div>
+                </div>
+
+                <!-- Title with borders -->
+                <div class="title-section">
+                    <h1 class="title">RAFFLE DRAW WINNING ADVICE LETTER</h1>
+                </div>
+
+                <!-- Date -->
+                <div class="date-section">
+                    <p class="date-text">Date: {{date}}</p>
+                </div>
+
+                <!-- Dear Section -->
+                <div class="dear-section">
+                    <p class="dear-text">
+                        Dear: <span class="underline-field">{{name}}</span>
+                    </p>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <p class="intro-text">
+                        This is to confirm that you have won in our raffle draw. Below are the details of your winning:
+                    </p>
+
+                    <div class="details-section">
+                        <div class="detail-row">
+                            <span class="detail-label">Item Won:</span>
+                            <span class="detail-value">{{prize}}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Product ID:</span>
+                            <span class="detail-value">{{product_id}}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Your Winning Ticket:</span>
+                            <span class="detail-value">{{ticket_number}}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Raffle Draw Date:</span>
+                            <span class="detail-value">{{draw_date}}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Raffle Draw Time:</span>
+                            <span class="detail-value">{{raffle_draw_time}}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Estimated Market Value of Item:</span>
+                            <span class="detail-value">{{estimated_value}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions">
+                    <p class="instructions-text">
+                        Kindly proceed to your Ajiroba dashboard to redeem your winning (you can check page 2 of this letter for steps to redeem your winning) For any clarification, kindly contact us via the channels at the bottom of this letter.
+                    </p>
+                </div>
+
+                <div class="congratulations">
+                    <p class="congratulations-text">
+                        Thank you for patronising us. Keep buying tickets, keep winning!!!<br>
+                        <strong>CONGRATULATIONS!!</strong>
+                    </p>
+                </div>
+
+                <!-- Signature Section -->
+                <div class="signature-section">
+                    <div>
+                        <p class="signature-text">
+                            <strong>For:</strong> Ajiroba Technologies Ltd<br>
+                            <strong>MRS AYOOLA A</strong><br>
+                            The Yeye Ajiroba and MD/CEO
+                        </p>
+                    </div>
+                    <div>
+                        <p class="page-number">Page 1</p>
+                    </div>
+                </div>
+
+                <!-- Footer Contact Info -->
+                <div class="footer-contact">
+                    <!-- Customer careline -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-phone"></span>
+                            <span class="contact-label">Customer careline</span>
+                        </div>
+                        <div class="contact-value">07038808512</div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-mail"></span>
+                            <span class="contact-label">Email</span>
+                        </div>
+                        <div class="contact-value">support@ajiroba.com</div>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-instagram"></span>
+                            <span class="contact-label">Instagram</span>
+                        </div>
+                        <div class="contact-value">@ajiroba.com</div>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-globe"></span>
+                            <span class="contact-label">Website</span>
+                        </div>
+                        <div class="contact-value">www.ajiroba.com</div>
+                    </div>
+
+                    <!-- App Store Buttons -->
+                    <div class="app-buttons">
+                        <!-- Google Play Store -->
+                        <div class="app-button google-play">
+                            <span class="icon icon-smartphone"></span>
+                            <div class="app-text">
+                                <div class="app-subtitle">GET IT ON</div>
+                                <div class="app-title">Google Play</div>
+                            </div>
+                        </div>
+
+                        <!-- App Store -->
+                        <div class="app-button app-store">
+                            <span class="icon icon-apple"></span>
+                            <div class="app-text">
+                                <div class="app-subtitle">Download on the</div>
+                                <div class="app-title">App Store</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="page">
+            <div class="watermark">AJIROBA</div>
+            <div class="content">
+                <!-- Header with Logo -->
+                <div class="header">
+                    <div class="logo">AJIROBA</div>
+                </div>
+
+                <!-- Title -->
+                <div class="page2-title">
+                    <h1>STEPS FOR REDEEMING YOUR PRODUCT</h1>
+                </div>
+
+                <!-- Steps -->
+                <div class="steps-section">
+                    <div class="step-item">
+                        <span class="step-number">1.</span>
+                        <span class="step-text">Login to your dashboard.</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2.</span>
+                        <span class="step-text">Proceed to your profile, and select "Auction Wins"</span>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3.</span>
+                        <span class="step-text">Select "download winning advice" button to download your winning letter.</span>
+                    </div>
+                </div>
+
+                <!-- Spacer for content -->
+                <div class="spacer"></div>
+
+                <!-- Bottom quote -->
+                <div class="bottom-quote">
+                    <p class="quote-text">
+                        ...The more ticket you buy, the more your chances of winning
+                    </p>
+                </div>
+
+                <!-- Page number -->
+                <div class="page-end">
+                    <p class="page-number">Page 2</p>
+                </div>
+
+                <!-- Footer Contact Info (same as page 1) -->
+                <div class="footer-contact">
+                    <!-- Customer careline -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-phone"></span>
+                            <span class="contact-label">Customer careline</span>
+                        </div>
+                        <div class="contact-value">07038808512</div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-mail"></span>
+                            <span class="contact-label">Email</span>
+                        </div>
+                        <div class="contact-value">support@ajiroba.com</div>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-instagram"></span>
+                            <span class="contact-label">Instagram</span>
+                        </div>
+                        <div class="contact-value">@ajiroba.com</div>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="contact-item">
+                        <div class="contact-header">
+                            <span class="icon icon-globe"></span>
+                            <span class="contact-label">Website</span>
+                        </div>
+                        <div class="contact-value">www.ajiroba.com</div>
+                    </div>
+
+                    <!-- App Store Buttons -->
+                    <div class="app-buttons">
+                        <!-- Google Play Store -->
+                        <div class="app-button google-play">
+                            <span class="icon icon-smartphone"></span>
+                            <div class="app-text">
+                                <div class="app-subtitle">GET IT ON</div>
+                                <div class="app-title">Google Play</div>
+                            </div>
+                        </div>
+
+                        <!-- App Store -->
+                        <div class="app-button app-store">
+                            <span class="icon icon-apple"></span>
+                            <div class="app-text">
+                                <div class="app-subtitle">Download on the</div>
+                                <div class="app-title">App Store</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -794,7 +794,7 @@ const Page = ({ params }: any) => {
                                             />
                                         </div>
 
-                                        <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
+                                       {/*  <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
                                             Delivery Estimation
                                         </p>
 
@@ -802,7 +802,7 @@ const Page = ({ params }: any) => {
                                             {productdata?.data
                                                 ?.delivery_estimation ||
                                                 "NA"}
-                                        </h1>
+                                        </h1> */}
 
                                         {productdata?.data?.starts_in ===
                                             "Raffle Ended" ? (

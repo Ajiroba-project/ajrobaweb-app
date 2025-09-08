@@ -13,6 +13,11 @@ type inputProps = {
   classname?: any
   value?: string
   isdisabled?: boolean
+  inputMode?: any
+  maxLength?: number
+  onKeyDown?: any
+  onInput?: any
+  onPaste?: any
 }
 type selectProps = {
   name: inputProps['name']
@@ -51,7 +56,12 @@ export const InputField = ({
   errors,
   classname,
   value,
-  isdisabled
+  isdisabled,
+  inputMode,
+  maxLength,
+  onKeyDown,
+  onInput,
+  onPaste
 }: inputProps) => {
   const [toggle, setToggle] = useState(false)
 
@@ -71,6 +81,11 @@ export const InputField = ({
           className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] border border-[#A09F9F]  text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
           {...register(name, { required: true })}
           disabled={isdisabled}
+          inputMode={inputMode}
+          maxLength={maxLength}
+          onKeyDown={onKeyDown}
+          onInput={onInput}
+          onPaste={onPaste}
         />
 
         {type === 'password' || type === 'Password' ? (

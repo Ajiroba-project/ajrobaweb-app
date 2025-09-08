@@ -142,6 +142,9 @@ export const WalletTransaction = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5;
     const currentData = transactions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  /*   console.log(currentData, 'cccccddd') */
+
     const totalPages = Math.ceil(transactions.length / pageSize);
 
     const handlePageChange = (newPage: number) => setCurrentPage(newPage);
@@ -175,10 +178,10 @@ export const WalletTransaction = () => {
               {/* Left: Icon and Description */}
               <div className="flex items-center gap-3 w-full sm:w-1/2">
                 <div className={`flex items-center justify-center rounded-full p-2
-                  ${val.description === 'Purchase Product'
+                  ${val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet"
                     ? 'bg-emerald-200'
                     : 'bg-amber-200'}`}>
-                  {val.description === 'Purchase Product' ? (
+                  {val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet" ? (
                     <GoArrowUpRight className="text-lg font-semibold text-green-700" />
                   ) : (
                     <GoArrowDownLeft className="text-lg font-semibold text-amber-700" />

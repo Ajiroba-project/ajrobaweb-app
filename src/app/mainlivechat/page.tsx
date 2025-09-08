@@ -38,6 +38,7 @@ const LiveChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isEndingChat, setIsEndingChat] = useState(false);
 
   const userToken = (Cookies.get("token") as string) || "";
 
@@ -140,19 +141,6 @@ const LiveChatPage = () => {
         );
 
         setMessages([...NewMessage]);
-
-        toast.success(`${response.data.message || "Success"}`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        reset();
       } else {
         alert("Failed to send message: " + response.data.message);
       }
@@ -262,6 +250,9 @@ const LiveChatPage = () => {
 
 
   const EndChat = async () => {
+    if (isEndingChat) return; // Prevent multiple calls
+    
+    setIsEndingChat(true);
     try {
       const headers = {
         Authorization: `token ${userToken}`,
@@ -287,8 +278,10 @@ const LiveChatPage = () => {
         });
       } else {
         alert("Failed to end chat: " + response.data.message);
+        setIsEndingChat(false);
       }
     } catch (error) {
+      setIsEndingChat(false);
       if (error instanceof AxiosError) {
         console.error("Error ending chat:", error);
         toast.error(`${error.response?.data?.detail || "An Error Occurred"}`, {
@@ -395,6 +388,9 @@ const LiveChatPage = () => {
               </div>
             </div>
 
+
+            
+
             <div className="md:w-1/2 w-full flex justify-center" style={{
               height: ' min-content',
               overflow: 'scroll',
@@ -435,9 +431,14 @@ const LiveChatPage = () => {
                         <div>
                           <button
                             onClick={() => EndChat()}
-                            className="bg-[#EF5E4A] text-white text-sm px-4 py-2 rounded-lg hover:bg-red-500"
+                            disabled={isEndingChat}
+                            className={`text-white text-sm px-4 py-2 rounded-lg ${
+                              isEndingChat 
+                                ? "bg-gray-400 cursor-not-allowed" 
+                                : "bg-[#EF5E4A] hover:bg-red-500"
+                            }`}
                           >
-                            End Chat
+                            {isEndingChat ? "Ending..." : "End Chat"}
                           </button>
                         </div>
                       </div>
@@ -603,6 +604,12 @@ const LiveChatPage = () => {
                 </div>
               </div>
             </div>
+
+
+
+
+
+
           </div>
         </div>
       </main>

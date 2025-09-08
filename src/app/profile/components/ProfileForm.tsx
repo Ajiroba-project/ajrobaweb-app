@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { InputField} from '@/app/recharge/components/FormField';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from '../../component/Modal';
 import { DefaultButton } from '@/app/component/Button';
 import { userProfile } from '@/store/store';
@@ -23,7 +23,7 @@ type ProfileFormValues = {
   last_name: string;
   email: string;
   Phone: string;
-  gender?: boolean;
+  gender: boolean;
   pass?: string;
   address: string;
   state: string;
@@ -31,7 +31,11 @@ type ProfileFormValues = {
   residential?: string;
 }
 
-export const ProfileForm: React.FC = () => {
+interface ProfileFormProps {
+  userData?: any;
+}
+
+export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
   const {
     successModal,
     setSuccessModal,
@@ -60,8 +64,22 @@ export const ProfileForm: React.FC = () => {
     state: yup.string().required('State is required'),
     lga: yup.string().required('Local Government Area is required'),
     gender: yup.boolean().required("Gender is required"),
+    residential: yup.string().optional(),
   });
 
+
+  // Prepare default values from userData
+  const defaultValues = {
+    first_name: userData?.first_name || userData?.firstname || '',
+    last_name: userData?.last_name || userData?.lastname || '',
+    email: userData?.email || '',
+    Phone: userData?.phone || '',
+    gender: userData?.gender !== undefined ? Boolean(userData?.gender) : false,
+    address: userData?.address || '',
+    state: userData?.state || '',
+    lga: userData?.lga || '',
+    residential: userData?.residential || userData?.residency || '',
+  };
 
   const {
     reset,
@@ -69,13 +87,14 @@ export const ProfileForm: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
+    setValue,
+  } = useForm<ProfileFormValues>({
     mode: "all",
     resolver: yupResolver(ProfileSchema),
+    defaultValues,
   });
 
-
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState(userData?.state || "");
   const [lgas, setLgas] = useState<string[]>([]);
 
   const handleStateChange = (value: string) => {
@@ -83,6 +102,16 @@ export const ProfileForm: React.FC = () => {
     const selectedState = state_and_LGA.find(state => state.state === value);
     setLgas(selectedState ? selectedState.lgas : []);
   };
+
+  // Initialize LGAs when component mounts with existing userData
+  useEffect(() => {
+    if (userData?.state) {
+      const selectedStateData = state_and_LGA.find(state => state.state === userData.state);
+      if (selectedStateData) {
+        setLgas(selectedStateData.lgas);
+      }
+    }
+  }, [userData]);
 
 
   const handleSuccess = (data: any) => {
@@ -272,7 +301,7 @@ export const ProfileForm: React.FC = () => {
         </div>
 
         <div className="text-xs text-red-700 py-1">
-          {errors?.gender?.message}
+          {errors?.gender?.message && String(errors.gender.message)}
         </div>
 
         <div className='flex lg:items-center lg:flex-row flex-col py-2 lg:py-0'>
@@ -332,7 +361,7 @@ export const ProfileForm: React.FC = () => {
 
                 </select>
                 <div className='pt-1 text-xs text-rose-500'>
-                  {errors?.state?.message}
+                  {errors?.state?.message && String(errors.state.message)}
                 </div>
               </div>
 
@@ -371,7 +400,7 @@ export const ProfileForm: React.FC = () => {
 
                 </select>
                 <div className='pt-1 text-xs text-rose-500'>
-                  {errors?.lga?.message}
+                  {errors?.lga?.message && String(errors.lga.message)}
                 </div>
               </div>
 

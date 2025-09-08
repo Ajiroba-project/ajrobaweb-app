@@ -7,6 +7,7 @@ import {
   FaYoutube,
   FaFacebookF,
   FaLinkedinIn,
+  FaTiktok,
 } from 'react-icons/fa6'
 import { FaInstagram } from 'react-icons/fa'
 const lato = Lato({ subsets: ["latin"], weight: ["400", "900"], });
@@ -27,16 +28,16 @@ export const Footer = () => {
               ... Your foremost consumer auction platform
             </p>
             <div className='header-socials flex gap-3'>
-              <Link href='/'>
+              <Link href='https://www.facebook.com/share/1BvVA6ERkU/'>
                 <FaFacebookF className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
-              <Link href='/'>
+              <Link href='https://www.youtube.com/@AjirobaMedia'>
                 <FaYoutube className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
-              <Link href='/'>
-                <FaLinkedinIn className='rounded-lg bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
+              <Link href='https://www.tiktok.com/@ajiroba.tech?_t=ZS-8yexHRqXwIs&_r=1'>
+                <FaTiktok className='rounded-lg bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
-              <Link href='/'>
+              <Link href='https://www.instagram.com/ajirobatech?utm_source=qr&igsh=ODY5NWZtcmE0dDNk'>
                 <FaInstagram className='rounded-xl text-4xl text-white hover:text-[#F25E26]' />
               </Link>
             </div>

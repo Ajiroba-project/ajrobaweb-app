@@ -7,6 +7,7 @@ import { useState } from "react";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "900"] });
 
@@ -83,7 +84,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                   {/* price */}
                   <div className="justify-start">
                     <p className="w-max font-semibold">
-                      ₦&nbsp;{value.price}
+                      {formatCurrency(value.price)}
                       <span className="font-semibold "></span>
                     </p>
                   </div>
@@ -98,7 +99,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                   </p>
                 </div>
                 <p className="text-sm text-gray-500 line-through">
-                  ₦&nbsp;{value.previousPrice}
+                  {formatCurrency(value.previousPrice)}
                 </p>
               </div>
             </div>
@@ -224,7 +225,7 @@ export const AuctionCard = ({ cardInfo, currentPage }: cardDetails) => {
                   <p className="w-max text-sm">
                     ticket price:
                     <span className="font-semibold text-[#F25E26]">
-                      ₦200.00
+                      {formatCurrency(200.00)}
                     </span>
                   </p>
                 </div>

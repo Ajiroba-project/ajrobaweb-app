@@ -40,11 +40,13 @@ const storedUser = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : null;
 // const cookieStore = cookies()
 // const theme = cookieStore.get('theme')
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   isLoggedIn: !!Cookies.get('token'), // Check if token cookie exists on initialization
   user: JSON.parse(Cookies.get('user') || null),
   token: Cookies.get('token') || null,
   isAddingToCart: false, // Add cart loading state
+  cartCount: 0, // Add cart count state
+  cartRefreshTrigger: 0, // Add trigger to force cart refresh
 
   setLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
 
@@ -54,6 +56,10 @@ export const useAuthStore = create((set) => ({
   },
 
   setAddingToCart: (loading) => set({ isAddingToCart: loading }), // Add cart loading action
+
+  setCartCount: (count) => set({ cartCount: count }), // Add cart count setter
+
+  triggerCartRefresh: () => set((state) => ({ cartRefreshTrigger: state.cartRefreshTrigger + 1 })), // Add cart refresh trigger
 
   setAuthCookie: (token, user, expirationDate) => {
 
@@ -76,7 +82,7 @@ export const useAuthStore = create((set) => ({
   clearAuthCookies: () => {
     Cookies.remove('token');
     Cookies.remove('user');
-    set({ isLoggedIn: false, user: null }); // Update isLoggedIn and user state
+    set({ isLoggedIn: false, user: null, cartCount: 0 }); // Update isLoggedIn and user state, reset cart
   }
 }));
 
@@ -186,7 +192,7 @@ export const DataPurchase = create(
     }),
     {
       name: "data-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
   )
 );
@@ -208,7 +214,7 @@ export const AirtimePurchase = create(
     }),
     {
       name: "airtime-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
   )
 );
@@ -238,7 +244,7 @@ export const CablePurchase = create(
     }),
     {
       name: "cable-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
   )
 )
@@ -252,7 +258,6 @@ export const ElectricityPurchase = create(
       ElectricityDetails: {
         decoder: '',
         meter: '',
-        iucnumber: '',
         elecamount: '',
         elecphone: '',
         amount: ''
@@ -272,7 +277,7 @@ export const ElectricityPurchase = create(
     }),
     {
       name: "electicity-storage",
-      getStorage: () => localStorage,
+      storage: typeof window !== 'undefined' ? localStorage : undefined,
     }
 
   )

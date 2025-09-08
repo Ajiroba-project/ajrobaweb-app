@@ -16,7 +16,8 @@ import { RelatedProducts } from "@/app/component/RelatedProducts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { useQueryData } from "@/hooks/useQueryData";
 import { parseISO, format } from "date-fns";
-import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
+// import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
+import { RelatedAuctionDetails } from "@/app/component/RelatedAuctionDetails";
 import { RelatedProductsAuction } from '@/app/component/RelatedProductsAuction'
 import Loading from "@/app/component/Loading";
 import Cookies from "js-cookie";
@@ -37,6 +38,7 @@ import Link from "next/link";
 import Brand from '@/app/asset/logo.svg'
 import { useGetDatanew } from "@/hooks/useGetData";
 import RaffleTicket from "@/app/component/RaffleTicket";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface CardInfoItem {
   weight: string;
@@ -278,9 +280,29 @@ const Page = ({ params }: any) => {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Step 1: State to track the selected image
 
+  // Debug effect to monitor selectedImageIndex changes
+  useEffect(() => {
+  /*   console.log('selectedImageIndex changed to:', selectedImageIndex);
+    console.log('Available images:', productdatanew?.data?.images); */
+    if (productdatanew?.data?.images?.[selectedImageIndex]) {
+      console.log('');
+    }
+  }, [selectedImageIndex, productdatanew?.data?.images]);
+
+  // Set initial selected image when product data loads
+  useEffect(() => {
+    if (productdatanew?.data?.images && productdatanew.data.images.length > 0) {
+      setSelectedImageIndex(0);
+      /* console.log('Setting initial selectedImageIndex to 0'); */
+    }
+  }, [productdatanew?.data?.images]);
+
   const handleImageClick = (index: SetStateAction<number>) => {
+   /*  console.log('Image clicked, index:', index);
+    console.log('Current selectedImageIndex:', selectedImageIndex); */
     setSelectedImage(index);
     setSelectedImageIndex(index);
+   /*  console.log('Setting selectedImageIndex to:', index); */
   };
 
   const notify = () => {
@@ -846,10 +868,10 @@ const Page = ({ params }: any) => {
 
 
 
-  const handleOrderbutton = () => {
-    let pin = Cookies.get("nvd");
-    console.log("yes....", pin);
-  };
+  // const handleOrderbutton = () => {
+  //   let pin = Cookies.get("nvd");
+  //   console.log("yes....", pin);
+  // };
 
   const CustomerReview = ({ data }: any) => {
     const [selectedStars, setSelectedStars] = useState<number | null>(null);
@@ -1122,9 +1144,15 @@ const Page = ({ params }: any) => {
   const handleBidClick = async (productId: any) => {
     if (!userToken) {
       console.error("Token is undefined");
-      toast.error("Please Signin", {
+      toast.error("Please sign in before you can bid", {
         position: "top-right",
-        progress: 4,
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
       return;
     }
@@ -1147,7 +1175,7 @@ const Page = ({ params }: any) => {
       const data = await response.json();
 
       if (data.data.status === "failed") {
-        console.log("Failed:", data.data);
+        console.log("Failed:");
         toast.error(`${data.data.message}`, {
           position: "top-right",
           progress: 4,
@@ -1231,12 +1259,19 @@ const Page = ({ params }: any) => {
                 <div className=" flex gap-8 flex-col ">
                   {productdatanew?.data?.images?.map(
                     (image: any, index: number) => (
-                      <div key={index} className="thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center  ">
+                      <div 
+                        key={index} 
+                        className={`thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center cursor-pointer transition-all duration-200 ${
+                          selectedImageIndex === index 
+                            ? 'ring-2 ring-[#F25E26] scale-105' 
+                            : 'hover:scale-105'
+                        }`}
+                        onClick={() => handleImageClick(index)}
+                      >
                         <Image
-                          className=" images-map w-32 h-32 object-cover"
+                          className=" images-map w-32 h-32 object-cover rounded-lg"
                           src={`https://staging.ajiroba.ng/media/${image.image}`}
                           alt="Product Thumbnail"
-                          onClick={() => handleImageClick(index)}
                           width={100}
                           height={100}
                           objectFit="cover"
@@ -1253,6 +1288,15 @@ const Page = ({ params }: any) => {
                     {productdatanew?.data?.images?.[selectedImageIndex] ? (
                       <Image
                         src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[selectedImageIndex].image}`}
+                        alt="Product Image"
+                        width={400}
+                        height={400}
+                        objectFit="cover"
+                        className="object-cover"
+                      />
+                    ) : productdatanew?.data?.images?.[0] ? (
+                      <Image
+                        src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -1295,6 +1339,13 @@ const Page = ({ params }: any) => {
                     </h1>
 
 
+                    <p className="text-[#111111] text-base mt-4 ">Product ID</p>
+
+                    <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
+                      {`${productdatanew?.data?.id}` || "NA"}
+                    </h1>
+
+
                     <div className="flex flex-wrap flex-row justify-between">
                       <div>
                         <p className="text-[#111111] text-base mt-4 ">Auction Date</p>
@@ -1322,13 +1373,13 @@ const Page = ({ params }: any) => {
                       />
                     </div>
 
-                    <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
+                   {/*  <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
                       Delivery Estimation
                     </p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-semibold">
                       {productdatanew?.data?.delivery_estimation || "NA"}
-                    </h1>
+                    </h1> */}
 
                     {/*  {productdatanew?.data?.starts_in === "Raffle Ended" ? (
                       <div className="flex justify-center items-center mt-4">
@@ -1368,10 +1419,23 @@ const Page = ({ params }: any) => {
                     {productdatanew?.data?.starts_in === "Raffle Started" ? (
                       <div className="flex justify-center items-center mt-4">
                         <button
-                          onClick={() =>
-                            /*         router.push(`/raffle/${product_id}/winners`) */
-                            router.push(`/raffle/${product_id}`)
-                          }
+                          onClick={() => {
+                            // Check if user has bid before allowing access to raffle
+                            if (productdatanew?.data?.bidded === "false") {
+                              toast.error("You need to bid first before you can watch the raffle! But, Unfortunately, The bidding start time has been reached, you can't enter the raffle again.", {
+                                position: "top-center",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                              });
+                            } else {
+                              router.push(`/raffle/${product_id}`);
+                            }
+                          }}
                           className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                         >
                           Raffle Started, Watch Live Raffle
@@ -1397,7 +1461,23 @@ const Page = ({ params }: any) => {
                           {(productdatanew?.data?.starts_in !== "Raffle Ended") && (productdatanew?.data?.bidded === "false") ? (
                             <button
                               /*         onClick={() => setmakepayment(!makepayment)} */
-                              onClick={() => handleBidClick(product_id)}
+                              onClick={() => {
+                                // Check if raffle has started before allowing bid
+                                if (productdatanew?.data?.starts_in === "Raffle Started") {
+                                  toast.error("The bidding start time has been reached, you can't enter the raffle again.", {
+                                    position: "top-center",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "light",
+                                  });
+                                } else {
+                                  handleBidClick(product_id);
+                                }
+                              }}
                               className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                             >
                               Bid
@@ -1411,7 +1491,23 @@ const Page = ({ params }: any) => {
                             </button> */
                             <button
                             /*         onClick={() => setmakepayment(!makepayment)} */
-                            onClick={() => handleBidClick(product_id)}
+                            onClick={() => {
+                              // Check if raffle has started before allowing bid
+                              if (productdatanew?.data?.starts_in === "Raffle Started") {
+                                toast.error("The bidding start time has been reached, you can't enter the raffle again.", {
+                                  position: "top-center",
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                  theme: "light",
+                                });
+                              } else {
+                                handleBidClick(product_id);
+                              }
+                            }}
                             className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
                           >
                             Bid
@@ -1577,7 +1673,7 @@ const Page = ({ params }: any) => {
         </div>
 
         {productdatanew?.data?.related_products && (
-          <RelatedProductsDetails
+          <RelatedAuctionDetails
             cardInfo={productdatanew?.data?.related_products}
           />
         )}
@@ -1693,10 +1789,10 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })}
+                       
+                          {
+                            formatCurrency(userInfo?.data?.my_wallet[0]?.balance)
+                          }
                         </small>
                       </div>
                     </div>
@@ -1719,10 +1815,13 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                     {/*      ₦ */}
+                          {
+                       
+                         formatCurrency(userInfo?.data?.my_wallet[0]?.balance)
+                          } 
+                          
+                          (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
@@ -2054,10 +2153,10 @@ const Page = ({ params }: any) => {
                           </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
-                            {ticketPrice.toLocaleString('en-NG', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2
-                            })}
+                         
+                            {
+                              formatCurrency(ticketPrice)
+                            }
                           </span>
                           {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
@@ -2112,10 +2211,8 @@ const Page = ({ params }: any) => {
                       </label>
                       <input
                         type="text"
-                        value={`₦${totalAmount.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}`}
+                      
+                        value={formatCurrency(totalAmount)}
                         readOnly
                         className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
                       />
@@ -2284,10 +2381,8 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })}
+                     
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
                         </small>
                       </div>
                     </div>
@@ -2310,10 +2405,8 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                        
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)} (Wallet) And {formatCurrency(userInfo?.data?.my_wallet[0]?.point)} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
@@ -2372,7 +2465,7 @@ const Page = ({ params }: any) => {
                 Successfully
               </h1>
               <p className="text-center font-normal text-sm">
-                You have entered into raffle draw for this product. Good
+                You have entered into raffle draw for this product. Good mmmm
                 luck
               </p>
             </div>
@@ -2383,6 +2476,8 @@ const Page = ({ params }: any) => {
                 /*  text={status === 'pending' ? 'loading...' : "Save"} */
                 className="rounded-md bg-[#F25E26] p-2 px-4 text-white mb-4 mt-4"
                 type="submit"
+
+                handleClick={()=> setSuccessbid(!successbid)}
               />
               <button
                 onClick={() => {
@@ -2449,10 +2544,8 @@ const Page = ({ params }: any) => {
                       <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
                       <input
                         type="text"
-                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        }) ?? 0}
+                         
+                         value={formatCurrency(ticketData?.data?.ticket_price)}
                         readOnly
                         className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
                       />
@@ -2480,10 +2573,8 @@ const Page = ({ params }: any) => {
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      }) ?? 0}
+                   
+                      value={formatCurrency(ticketData?.data?.ticket_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}
@@ -2561,9 +2652,7 @@ const Page = ({ params }: any) => {
       
           />
 
-          {/*   {
-              console.log(selectedTicket, 'selectedTicket')
-            } */}
+     
 
 {showTicketModal && selectedTicket && (
             <ModalComponent

@@ -12,7 +12,14 @@ export async function POST(request) {
         // Conditionally add Authorization header
         if (body.tkn) {
             headers['Authorization'] = `token ${body.tkn}`;
+            
         }
+
+  /*       console.log({
+            "product_id": body.payload.product_id,
+            "quantity": body.payload.quantity,
+            "session_key": body.payload.session_key,
+        }, 'body', `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/add_to_cart/`) */
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/add_to_cart/?${cacheBuster}`, {
             method: "POST",
@@ -27,6 +34,8 @@ export async function POST(request) {
 
         const data = await res.json();
         const status = res.status;
+
+       /*  console.log(data, 'data') */
 
         return NextResponse.json({ data, status });
     } catch (error) {

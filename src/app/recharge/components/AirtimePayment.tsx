@@ -249,7 +249,7 @@ export const AirtimePayment = () => {
 
   const handleSuccessAirtime = (data: any) => {
 
-    /*  console.log(data, 'aitimeeeedatatat') */
+    /*   console.log(data, 'aitimeeeedatatat')  */
 
     if (
       data.status === 200 ||
@@ -311,7 +311,7 @@ export const AirtimePayment = () => {
       data.status === 400 ||
       data.status === 409
     ) {
-      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+      toast.error(`${data?.data?.message || "Unknown Error"} `, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
