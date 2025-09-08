@@ -19,6 +19,7 @@ import jsPDF from 'jspdf';
 import { BlobProviderParams, PDFDownloadLink } from "@react-pdf/renderer";
 import Receipt from "./receiptpdf/Receipt";
 import ReceiptPDF from "./receiptpdf/Receipt";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const WrappedPage = () => {
   const router = useRouter();
@@ -252,7 +253,7 @@ const WrappedPage = () => {
             Transaction Amount
           </p>
           <p className="text-3xl font-semibold font-Poppins">
-            ₦{transdata?.data?.amount || 0}
+            { formatCurrency(transdata?.data?.amount)}
           </p>
         </div>
         <section style={{ margin: "0 auto", width: "90%" }}>

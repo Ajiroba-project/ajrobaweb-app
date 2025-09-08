@@ -99,7 +99,7 @@ const Page = () => {
         // console.log(data, 'data', data?.status)
 
         if (data?.status === 400) {
-          router.push("/cart");
+          router.push("/my-order");
         } else {
           setCartItemsn(data);
           setLoading(false);
@@ -112,7 +112,7 @@ const Page = () => {
         // console.log(error, 'error', error.status);
 
         if (error.status === 400) {
-          router.push("/cart");
+          router.push("/my-order");
         } else {
           setError("Error loading cart items");
           setLoading(false);
@@ -730,7 +730,7 @@ const Page = () => {
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Confirm Payment</h2>
             <p className="mb-6">
-              Are you sure you want to proceed with payment of ₦{amount?.toLocaleString()}?
+              Are you sure you want to proceed with payment of {formatCurrency(amount)}?
             </p>
             
             <div className="flex gap-4 justify-end">
@@ -762,7 +762,7 @@ const Page = () => {
           <div className="xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]">
             <p className="text-center">
   
-              You are going to deposit the amount of ₦ {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              You are going to deposit the amount of {formatCurrency(amount)}
             </p>
             <div className="flex w-full gap-5 flex-col">
               <DefaultButton

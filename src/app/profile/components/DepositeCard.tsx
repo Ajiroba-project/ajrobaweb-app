@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import paystackbrand from '../../asset/image/paystack-icon.png';
 import { DefaultButton } from '../../component/Button';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 type DepositeProps = {
   handleNext?: any
@@ -15,28 +16,40 @@ export const DepositeCard = ({ handleClick, handleNext, requiredAmount }: Deposi
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  const formatWithCommas = (numericString: string): string => {
+    const digitsOnly = numericString.replace(/\D/g, '');
+    if (digitsOnly === '') return '';
+    const numberValue = parseInt(digitsOnly, 10);
+    if (isNaN(numberValue)) return '';
+    return numberValue.toLocaleString('en-NG');
+  };
+
+  const getRawDigits = (formatted: string): string => formatted.replace(/,/g, '').trim();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const digitsOnly = e.target.value.replace(/\D/g, '');
-    setValue(digitsOnly);
+    const inputValue = e.target.value;
+    const formatted = formatWithCommas(inputValue);
+    setValue(formatted);
     setError('');
   };
 
   const handleNextClick = () => {
-    if (value.trim() === '') {
+    const rawNumericValue = getRawDigits(value);
+    if (rawNumericValue === '') {
       setError('Please enter an amount before proceeding.');
       return;
     }
 
     if (requiredAmount !== undefined && requiredAmount !== null) {
       const required = Number(String(requiredAmount).replace(/[^\d]/g, ''));
-      const entered = Number(value);
+      const entered = Number(rawNumericValue);
       if (!Number.isNaN(required) && required > 0 && entered !== required) {
-        setError(`Amount must equal ₦${required}`);
+        setError(`Amount must equal ₦${required.toLocaleString('en-NG')}`);
         return;
       }
     }
 
-    handleNext(value);
+    handleNext(rawNumericValue);
   };
 
   return (
@@ -57,14 +70,13 @@ export const DepositeCard = ({ handleClick, handleNext, requiredAmount }: Deposi
             type='text'
             inputMode='numeric'
             onKeyDown={(e) => { if (!/[0-9]|Backspace|Tab|ArrowLeft|ArrowRight|Delete/.test(e.key)) e.preventDefault(); }}
-            onInput={(e: any) => { e.target.value = e.target.value.replace(/\D/g, ''); }}
             onChange={handleChange}
             value={value}
             className='w-full rounded-md border border-[#656565] p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#E84526] focus:border-transparent transition-all duration-200'
             placeholder='₦ Enter an Amount and press "Next"'
           />
           {requiredAmount !== undefined && (
-            <p className='text-xs text-gray-500 mt-1'>Required amount: ₦{String(requiredAmount).replace(/[^\d]/g, '')}</p>
+            <p className='text-xs text-gray-500 mt-1'>Required amount: ₦{Number(String(requiredAmount).replace(/[^\d]/g, '') || '0').toLocaleString('en-NG')}</p>
           )}
           {error && <p className='text-red-500 text-sm mt-1'>{error}</p>}
           
@@ -75,9 +87,9 @@ export const DepositeCard = ({ handleClick, handleNext, requiredAmount }: Deposi
                 <div
                   className='flex cursor-pointer rounded-md bg-gray-200 hover:bg-gray-300 px-2 py-1.5 sm:px-3 sm:py-2 transition-colors duration-200 border border-gray-300'
                   key={index}
-                  onClick={() => setValue(val)}
+                  onClick={() => setValue(Number(val).toLocaleString('en-NG'))}
                 >
-                  <p className='text-xs sm:text-sm text-gray-700 font-medium text-center w-full'>₦{val}</p>
+                  <p className='text-xs sm:text-sm text-gray-700 font-medium text-center w-full'>₦{Number(val).toLocaleString('en-NG')}</p>
                 </div>
               ))}
             </div>
@@ -94,8 +106,8 @@ export const DepositeCard = ({ handleClick, handleNext, requiredAmount }: Deposi
           <DefaultButton
             text='Next'
             type='button'
-            className={`w-full rounded-md p-2.5 sm:p-3 text-sm sm:text-base font-medium transition-all duration-200 ${requiredAmount !== undefined && String(requiredAmount).replace(/[^\d]/g, '') !== value ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#E84526] text-white hover:bg-[#E84526]/90'}`}
-            disabled={requiredAmount !== undefined && String(requiredAmount).replace(/[^\d]/g, '') !== value}
+            className={`w-full rounded-md p-2.5 sm:p-3 text-sm sm:text-base font-medium transition-all duration-200 ${requiredAmount !== undefined && String(requiredAmount).replace(/[^\d]/g, '') !== getRawDigits(value) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#E84526] text-white hover:bg-[#E84526]/90'}`}
+            disabled={requiredAmount !== undefined && String(requiredAmount).replace(/[^\d]/g, '') !== getRawDigits(value)}
             handleClick={handleNextClick}
           />
         </div>
@@ -119,7 +131,7 @@ const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: s
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
       <div className='xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
-        <p className='text-center'>You are going to make the payment of N {amount} for your purchase</p>
+          <p className='text-center'>You are going to make the payment of {formatCurrency(amount)} for your purchase</p>
         <div className='flex w-full gap-5 flex-col'>
           <DefaultButton
             text='Continue'

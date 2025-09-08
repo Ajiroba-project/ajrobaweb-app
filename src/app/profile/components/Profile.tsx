@@ -57,6 +57,9 @@ export const Profile = () => {
 
   const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
 
+
+  // console.log(userInfo, 'dddddd')
+
   useEffect(() => {
     if (isLoggedIn && userInfo?.profile_image_url) {
       setProfileurl(userInfo.profile_image_url);

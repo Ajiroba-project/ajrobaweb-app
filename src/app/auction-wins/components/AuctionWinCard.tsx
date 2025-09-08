@@ -75,6 +75,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   // console.log(auctioninfo, 'datatta')
 
+  // console.log(userInfo?.data?.address, 'userInfo')
+
   const productMain = auctioninfo?.data?.data?.all?.map((item: { id: any }) => {
     const isOpen = auctioninfo?.data?.data?.open?.some(
       (openItem: { id: any }) => openItem.id === item.id,
@@ -138,10 +140,14 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
   const [isValidatingAccount, setIsValidatingAccount] = useState(false);
   const [isProcessingCashout, setIsProcessingCashout] = useState(false);
   const [storedVoucherData, setStoredVoucherData] = useState<Record<string, any>>({});
+  const [expandedMerchants, setExpandedMerchants] = useState<Record<string, boolean>>({});
 
   const router = useRouter();
 
   const userToken = (Cookies.get("token") as string) || "";
+
+
+  
 
   const handleCloseModaldelete = () => {
     setisdeleteModalOpen(false);
@@ -309,10 +315,52 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     fetchMerchants();
   }, [isMerchantsModalOpen, userToken]);
 
-  // Filter merchants based on search query
-  const filteredMerchants = merchants.filter((merchant: any) =>
-    merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Helpers to filter merchants by user's address
+  const normalizeTokens = (text: string | undefined | null) => {
+    if (!text) return [] as string[];
+    const tokens = (text.toString().toLowerCase().match(/[a-z]+/g) || [])
+      .filter((t) => t.length >= 3);
+    // De-duplicate tokens
+    return Array.from(new Set(tokens));
+  };
+
+  const userAddressTokens = normalizeTokens(userInfo?.data?.address);
+  const searchTokens = normalizeTokens(searchQuery);
+
+  // Score merchants by how closely their stores match the user's address
+  const scoreMerchant = (merchant: any): number => {
+    if (!Array.isArray(merchant?.stores) || merchant.stores.length === 0) return 0;
+    let bestScore = 0;
+    for (const store of merchant.stores) {
+      const text = store?.toString().toLowerCase() || "";
+      let s = 0;
+      for (const tok of userAddressTokens) {
+        if (text.includes(tok)) s += 1;
+      }
+      if (s > bestScore) bestScore = s;
+    }
+    return bestScore;
+  };
+
+  const merchantsWithScores = merchants
+    // Only include merchants that have stores
+    .filter((m: any) => Array.isArray(m?.stores) && m.stores.length > 0)
+    // Keep only merchants that have at least one address token match
+    .map((m: any) => ({ ...m, __score: scoreMerchant(m) }))
+    .filter((m: any) => m.__score > 0)
+    // Sort by closeness to the user's address
+    .sort((a: any, b: any) => b.__score - a.__score);
+
+  // Apply search on name or stores
+  const filteredMerchants = merchantsWithScores.filter((merchant: any) => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    const nameMatch = merchant.name?.toString().toLowerCase().includes(q);
+    const storesMatch = Array.isArray(merchant.stores)
+      ? merchant.stores.some((s: string) => s.toString().toLowerCase().includes(q))
+      : false;
+    return nameMatch || storesMatch;
+  });
 
   const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string) => {
 
@@ -333,9 +381,12 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       });
 
       const responseData = await response.json();
+      console.log(responseData, 'rrrrrrr')
+
+
       if (responseData.status === "success") {
-        /*   console.log(data.data.data, "data.data.data")
-          console.log(data.data, "data.data") */
+           console.log(data.data.data, "data.data.data")
+          console.log(data.data, "data.data") 
 
         const temporaryData = {
           "status": "success",
@@ -368,9 +419,12 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
         /*     window.location.reload(); */
       } else {
+        console.log(responseData, "responseData")
+        console.log(responseData.message, "responseData.message")
         toast.error(responseData.message || "Failed to process gift card");
       }
     } catch (error) {
+      console.log(error, "error")
       toast.error("Error processing gift card");
     } finally {
       setIsProcessingGiftCard(false);
@@ -629,7 +683,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   <p className=" font-semibold">{val?.auction[0]?.name}</p>
                   <p>Ticket Number: {val?.ticket_number} </p>
                   <p>Ticket Price: {formatCurrency(val?.ticket_price)} </p>
-                 {/*  <p>Ticket Price: ₦{Number(val?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> */}
+                
                   <div className="mt-5 flex gap-3 flex-wrap">
 
 
@@ -874,7 +928,31 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                       }}
                     >
                       <p className="font-medium">{merchant.name}</p>
-                      <p className="text-sm text-gray-500">Code: {merchant.code}</p>
+                      <p className="text-sm text-gray-500 mb-1">Code: {merchant.code}</p>
+                      {Array.isArray(merchant.stores) && merchant.stores.length > 0 && (
+                        <div className="text-xs text-gray-600">
+                          {(expandedMerchants[merchant.code] ? merchant.stores : merchant.stores.slice(0, 3)).map((store: string, idx: number) => (
+                            <p key={idx} className="truncate">{store}</p>
+                          ))}
+                          {merchant.stores.length > 3 && (
+                            <button
+                              type="button"
+                              className="italic text-[#F25E26] mt-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setExpandedMerchants((prev) => ({
+                                  ...prev,
+                                  [merchant.code]: !prev[merchant.code],
+                                }));
+                              }}
+                            >
+                              {expandedMerchants[merchant.code]
+                                ? 'show less'
+                                : `and ${merchant.stores.length - 3} more...`}
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))
                 )}

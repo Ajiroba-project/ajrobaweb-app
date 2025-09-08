@@ -159,7 +159,7 @@ export const DataDetails = () => {
     <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
       <Formtitle
         title="Buy Data"
-        subtitle="We have different data plan that suite your needs"
+        subtitle="We have different data plans that suite your needs"
       />
       <div className="">
         <form

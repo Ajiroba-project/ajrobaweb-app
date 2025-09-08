@@ -489,7 +489,7 @@ export const getInTouch = [
     icon: <FiPhoneCall />
   },
   {
-    name: 'Support@goprus.com',
+    name: 'support@ajiroba.com',
     links: '',
     icon: <LuMail />
   }

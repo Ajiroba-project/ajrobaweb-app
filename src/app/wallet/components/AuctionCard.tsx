@@ -3,6 +3,7 @@ import React, { SetStateAction, useState, useEffect } from "react";
 import Image from "next/image";
 import { CiMenuKebab } from "react-icons/ci";
 import Dropdown from "./Dropdown";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 
 import DropDownAuction from "./DropDownAuction";
@@ -626,7 +627,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   <p className=" font-semibold">{val?.auction[0]?.name}</p>
                   <p>Ticket Number: {val?.ticket_number} </p>
 
-                  <p>Ticket Price: ₦{Number(val?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                  <p>Ticket Price: { formatCurrency(val?.ticket_price) }</p>
 
                   <div className="mt-5 flex gap-3 flex-wrap">
                     {/*      {val.tag &&

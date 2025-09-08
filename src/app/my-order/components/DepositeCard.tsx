@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import paystackbrand from '../../asset/image/paystack-icon.png';
 import { DefaultButton } from '../../component/Button';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 type DepositeProps = {
   handleNext?: any
@@ -91,7 +92,7 @@ const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: s
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
       <div className='xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
-        <p className='text-center'>You are going to make the payment of N {amount} for your purchase</p>
+        <p className='text-center'>You are going to make the payment of {formatCurrency(amount)} for your purchase</p>
         <div className='flex w-full gap-5 flex-col'>
           <DefaultButton
             text='Continue'

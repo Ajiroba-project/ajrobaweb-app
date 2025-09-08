@@ -38,6 +38,7 @@ import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import RaffleTicket from "./RaffleTicket";
 import { Package } from "lucide-react";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 
 interface cardDetails {
@@ -779,10 +780,10 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                           </div>
                           <div>
                             <p className="text-pretty text-base font-Poppins font-medium text-[#F25E26]">
-                              ₦{Number(value?.ticket_price ?? 0).toLocaleString('en-NG', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}
+                            
+                              {
+                                formatCurrency(value?.ticket_price)
+                              }
                             </p>
                           </div>
                         </div>
@@ -898,11 +899,8 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                           </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
-                            {ticketPrice.toLocaleString('en-NG', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2
-                            })}
-                          </span>
+                              { formatCurrency(ticketPrice) }
+                          </span> 
                           {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
 
@@ -956,10 +954,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       </label>
                       <input
                         type="text"
-                        value={`₦${totalAmount.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}`}
+                        value={formatCurrency(totalAmount)}
                         readOnly
                         className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
                       />
@@ -1027,10 +1022,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
                       <input
                         type="text"
-                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        }) ?? 0}
+                        value={formatCurrency(ticketData?.data?.ticket_price)}
                         readOnly
                         className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
                       />
@@ -1058,10 +1050,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      }) ?? 0}
+                      value={formatCurrency(ticketData?.data?.ticket_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}
@@ -1196,10 +1185,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })}
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
                         </small>
                       </div>
                     </div>
@@ -1222,10 +1208,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance )} (Wallet) And {formatCurrency(userInfo?.data?.my_wallet[0]?.point)} (Ajiroba Points)
                         </small>
                       </div>
                     </div>

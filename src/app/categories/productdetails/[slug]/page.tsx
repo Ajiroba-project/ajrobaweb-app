@@ -699,13 +699,13 @@ const Page = ({ params }: any) => {
 
                     <hr className="mt-4" />
 
-                    <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
+                   {/*  <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
                       Delivery Estimation
                     </p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-semibold">
                       {productdata?.data?.delivery_estimation || "NA"}
-                    </h1>
+                    </h1> */}
 
 
                  

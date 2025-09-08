@@ -38,6 +38,7 @@ import Link from "next/link";
 import Brand from '@/app/asset/logo.svg'
 import { useGetDatanew } from "@/hooks/useGetData";
 import RaffleTicket from "@/app/component/RaffleTicket";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface CardInfoItem {
   weight: string;
@@ -1372,13 +1373,13 @@ const Page = ({ params }: any) => {
                       />
                     </div>
 
-                    <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
+                   {/*  <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
                       Delivery Estimation
                     </p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-semibold">
                       {productdatanew?.data?.delivery_estimation || "NA"}
-                    </h1>
+                    </h1> */}
 
                     {/*  {productdatanew?.data?.starts_in === "Raffle Ended" ? (
                       <div className="flex justify-center items-center mt-4">
@@ -1788,10 +1789,10 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })}
+                       
+                          {
+                            formatCurrency(userInfo?.data?.my_wallet[0]?.balance)
+                          }
                         </small>
                       </div>
                     </div>
@@ -1814,10 +1815,13 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                     {/*      ₦ */}
+                          {
+                       
+                         formatCurrency(userInfo?.data?.my_wallet[0]?.balance)
+                          } 
+                          
+                          (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
@@ -2149,10 +2153,10 @@ const Page = ({ params }: any) => {
                           </button> */}
                           <span className="mx-4 font-bold text-sm">
                             {" "}
-                            {ticketPrice.toLocaleString('en-NG', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2
-                            })}
+                         
+                            {
+                              formatCurrency(ticketPrice)
+                            }
                           </span>
                           {/*   <button
                             className="px-2 py-1 bg-gray-200 rounded"
@@ -2207,10 +2211,8 @@ const Page = ({ params }: any) => {
                       </label>
                       <input
                         type="text"
-                        value={`₦${totalAmount.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        })}`}
+                      
+                        value={formatCurrency(totalAmount)}
                         readOnly
                         className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins font-bold"
                       />
@@ -2379,10 +2381,8 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })}
+                     
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
                         </small>
                       </div>
                     </div>
@@ -2405,10 +2405,8 @@ const Page = ({ params }: any) => {
                       </div>
                       <div className="ml-4">
                         <small className="text-[#A09F9F] text-sm">
-                          ₦{userInfo?.data?.my_wallet[0]?.balance?.toLocaleString('en-NG', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                          })} (Wallet) And {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()} (Ajiroba Points)
+                        
+                          {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)} (Wallet) And {formatCurrency(userInfo?.data?.my_wallet[0]?.point)} (Ajiroba Points)
                         </small>
                       </div>
                     </div>
@@ -2546,10 +2544,8 @@ const Page = ({ params }: any) => {
                       <button className="px-2 py-1 bg-gray-200 rounded" disabled>-</button>
                       <input
                         type="text"
-                        value={ticketData?.data?.ticket_price.toLocaleString('en-NG', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        }) ?? 0}
+                         
+                         value={formatCurrency(ticketData?.data?.ticket_price)}
                         readOnly
                         className="mx-4 w-20 text-center font-bold text-sm bg-gray-100 border border-gray-300 rounded"
                       />
@@ -2577,10 +2573,8 @@ const Page = ({ params }: any) => {
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={ticketData?.data?.ticket_amount?.toLocaleString('en-NG', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      }) ?? 0}
+                   
+                      value={formatCurrency(ticketData?.data?.ticket_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}

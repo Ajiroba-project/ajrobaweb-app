@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import paystackbrand from '../../asset/image/paystack-icon.png';
 import { DefaultButton } from '../../component/Button';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 type DepositeProps = {
   handleNext?: any
@@ -15,20 +16,31 @@ export const Deposite = ({ handleClick, handleNext }: DepositeProps) => {
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const formatWithCommas = (numericString: string): string => {
+    const digitsOnly = numericString.replace(/\D/g, '');
+    if (digitsOnly === '') return '';
+    const numberValue = parseInt(digitsOnly, 10);
+    if (isNaN(numberValue)) return '';
+    return numberValue.toLocaleString('en-NG');
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    const inputValue = e.target.value;
+    const formatted = formatWithCommas(inputValue);
+    setValue(formatted);
     setError('');
   };
 
   const handleNextClick = async () => {
-    if (value.trim() === '') {
+    const rawNumericValue = value.replace(/,/g, '').trim();
+    if (rawNumericValue === '') {
       setError('Please enter an amount before proceeding.');
       return;
     }
     
     setIsLoading(true);
     try {
-      await handleNext(value);
+      await handleNext(rawNumericValue);
     } catch (error) {
       console.error('Error proceeding:', error);
     } finally {
@@ -73,9 +85,9 @@ export const Deposite = ({ handleClick, handleNext }: DepositeProps) => {
                     : 'bg-gray-200 hover:bg-gray-300'
                 }`}
                 key={index}
-                onClick={() => !isLoading && setValue(val)}
+                onClick={() => !isLoading && setValue(Number(val).toLocaleString('en-NG'))}
               >
-                <p className='text-xs sm:text-sm font-medium text-gray-700'>₦{val}</p>
+                <p className='text-xs sm:text-sm font-medium text-gray-700'>₦{Number(val).toLocaleString('en-NG')}</p>
               </div>
             ))}
           </div>
@@ -117,7 +129,7 @@ const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: s
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
       <div className='xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
-        <p className='text-center'> You are going to deposit the amount of N {Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+        <p className='text-center'> You are going to deposit the amount of  {formatCurrency(amount)}</p>
 
         <div className='flex w-full gap-5 flex-col'>
           <DefaultButton

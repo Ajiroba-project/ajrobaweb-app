@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import paystackbrand from '../../asset/image/paystack-icon.png';
 import { DefaultButton } from '../../component/Button';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 type DepositeProps = {
   handleNext?: any
@@ -14,16 +15,27 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  const formatWithCommas = (numericString: string): string => {
+    const digitsOnly = numericString.replace(/\D/g, '');
+    if (digitsOnly === '') return '';
+    const numberValue = parseInt(digitsOnly, 10);
+    if (isNaN(numberValue)) return '';
+    return numberValue.toLocaleString('en-NG');
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    const inputValue = e.target.value;
+    const formatted = formatWithCommas(inputValue);
+    setValue(formatted);
     setError('');
   };
 
   const handleNextClick = () => {
-    if (value.trim() === '') {
+    const rawNumericValue = value.replace(/,/g, '').trim();
+    if (rawNumericValue === '') {
       setError('Please enter an amount before proceeding.');
     } else {
-      handleNext(value);
+      handleNext(rawNumericValue);
     }
   };
 
@@ -50,9 +62,9 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
               <div
                 className='flex cursor-pointer rounded-md bg-gray-300 px-2 py-1'
                 key={index}
-                onClick={() => setValue(val)}
+                onClick={() => setValue(Number(val).toLocaleString('en-NG'))}
               >
-                <p className='text-sm'>{val}</p>
+                <p className='text-sm'>₦{Number(val).toLocaleString('en-NG')}</p>
               </div>
             ))}
           </div>
@@ -91,7 +103,7 @@ const ConfirmationModal = ({ onClose, amount }: { onClose: () => void, amount: s
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-4'>
       <div className='xs:w-[15em] flex h-auto w-[20em] flex-col gap-6 rounded-md bg-white p-6 md:w-[25em] lg:w-[30em]'>
-        <p className='text-center'>You are going to make the payment of N {amount} for your purchase</p>
+            <p className='text-center'>You are going to make the payment of {formatCurrency(amount)} for your purchase</p>
         <div className='flex w-full gap-5 flex-col'>
           <DefaultButton
             text='Continue'

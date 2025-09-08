@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import jsPDF from 'jspdf';
 import { ReceiptTable } from './component/ReceiptTable';
 import html2canvas from 'html2canvas';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 const WrappedPage = () => {
   const router = useRouter();
@@ -251,7 +252,7 @@ const WrappedPage = () => {
         <div className='flex flex-col items-center py-8'>
           <p className='brand3 text-[#A09F9F] font-Poppins text-[12px]'>Transaction Amount</p>
           <p className='text-2xl font-semibold font-Poppins'>
-            ₦{Number(productInfo?.data[0]?.amount).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(productInfo?.data[0]?.amount)}
           </p>
         </div>
         <section>

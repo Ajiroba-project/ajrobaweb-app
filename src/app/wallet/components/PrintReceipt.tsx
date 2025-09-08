@@ -11,6 +11,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import Cookies from "js-cookie";
 import Brand from '../../asset/ajirobalogo.png'
+import { formatCurrency } from "@/utils/formatCurrency";
 
 
 declare module "jspdf" {
@@ -114,12 +115,14 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     try {
       // Fetch data from API
       const result = await refetch();
+
+     /*  console.log("API Response:", result?.data?.results) */
       
       if (result.data && result.data.results) {
         if (format === "pdf") {
-          await generatePDF(result.data.results);
+           await generatePDF(result.data.results); 
         } else {
-          generateExcel(result.data.results);
+          generateExcel(result.data.results); 
         }
         setdownload(true);
       } else {
@@ -159,6 +162,12 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 14;
 
+    // Helpers
+    const replaceNaira = (text: string | number | undefined | null) => {
+      const str = (text ?? '').toString();
+      return str.replace(/\u20A6|₦/g, 'NGN ');
+    };
+
     // Header with AJÍRÓBA® logo and title
     try {
       // Convert the logo image to base64 and add it to the PDF
@@ -184,13 +193,30 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     doc.setFont('helvetica', 'normal');
     doc.text("Wallet Statement", pageWidth / 2, 35, { align: 'center' });
 
-    // User and Report Information (Left Column)
+    // User and Report Information (Left Column) with wrapping
     doc.setFontSize(10);
-    doc.text(`Name: ${data.details?.name || 'N/A'}`, margin, 45);
-    doc.text(`Address: ${data.details?.address || 'N/A'}`, margin, 51);
-    doc.text(`Report Time: ${data.details?.report_time || 'N/A'}`, margin, 57);
-    doc.text(`Start Date: ${data.details?.start_date || 'N/A'}`, margin, 63);
-    doc.text(`End Date: ${data.details?.end_date || 'N/A'}`, margin, 69);
+    let infoY = 45;
+    const leftMaxWidth = (pageWidth - margin * 2) - (70 + 10); // page width minus margins and right box width + padding
+
+    const nameLines = doc.splitTextToSize(`Name: ${data.details?.name || 'N/A'}`, leftMaxWidth);
+    doc.text(nameLines, margin, infoY);
+    infoY += 6 * nameLines.length;
+
+    const addrLines = doc.splitTextToSize(`Address: ${data.details?.address || 'N/A'}`, leftMaxWidth);
+    doc.text(addrLines, margin, infoY);
+    infoY += 6 * addrLines.length;
+
+    const rptTimeLines = doc.splitTextToSize(`Report Time: ${data.details?.report_time || 'N/A'}`, leftMaxWidth);
+    doc.text(rptTimeLines, margin, infoY);
+    infoY += 6 * rptTimeLines.length;
+
+    const startLines = doc.splitTextToSize(`Start Date: ${data.details?.start_date || 'N/A'}`, leftMaxWidth);
+    doc.text(startLines, margin, infoY);
+    infoY += 6 * startLines.length;
+
+    const endLines = doc.splitTextToSize(`End Date: ${data.details?.end_date || 'N/A'}`, leftMaxWidth);
+    doc.text(endLines, margin, infoY);
+    infoY += 6 * endLines.length;
 
     // Financial Summary Box (Right Column)
     const boxX = pageWidth - margin - 70;
@@ -204,17 +230,34 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     doc.setDrawColor(200, 200, 200);
     doc.rect(boxX, boxY, boxWidth, boxHeight);
     
-    // Financial summary text
+    // Financial summary text (wrap inside the box and replace Naira sign)
     doc.setFontSize(10);
-    doc.text(`Wallet Balance: ₦${(data.details?.account_balance || 0).toLocaleString()}`, boxX + 5, boxY + 10);
-    doc.text(`Total Credit: ₦${(data.details?.total_credit || 0).toLocaleString()}`, boxX + 5, boxY + 18);
-    doc.text(`Total Debit: ₦${(data.details?.total_debit || 0).toLocaleString()}`, boxX + 5, boxY + 26);
+    const boxTextWidth = boxWidth - 10;
+    const balLines = doc.splitTextToSize(
+      `Wallet Balance:  ${replaceNaira(formatCurrency(data.details?.account_balance))}`,
+      boxTextWidth
+    );
+    const crLines = doc.splitTextToSize(
+      `Total Credit:  ${replaceNaira(formatCurrency(data.details?.total_credit))}`,
+      boxTextWidth
+    );
+    const drLines = doc.splitTextToSize(
+      `Total Debit:  ${replaceNaira(formatCurrency(data.details?.total_debit))}`,
+      boxTextWidth
+    );
+    let boxTextY = boxY + 10;
+    doc.text(balLines, boxX + 5, boxTextY);
+    boxTextY += 8 * balLines.length;
+    doc.text(crLines, boxX + 5, boxTextY);
+    boxTextY += 8 * crLines.length;
+    doc.text(drLines, boxX + 5, boxTextY);
 
     // Disclaimer
     doc.setFontSize(8);
     doc.setFont('helvetica', 'italic');
     doc.text(
-      "This electronically generated receipt is provided for informational purposes only and is not a legally binding document.",
+      "",
+     /*  "This electronically generated receipt is provided for informational purposes only and is not a legally binding document.", */
       margin,
       boxY + boxHeight + 15
     );
@@ -240,7 +283,7 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     doc.autoTable({
       startY: tableStartY,
       head: [[
-        "S/N", "Txn ID", "Date & Time", "Narration", "Class", "Biller", "Beneficiary", "DR (₦)", "CR (₦)", "Balance (₦)", "Channel", "Status"
+        "S/N", "Txn ID", "Date & Time", "Narration", "Class", "Biller", "Beneficiary", "DR (Naira)", "CR (Naira)", "Balance (Naira)", "Channel", "Status"
       ]],
       body: data.data?.map((item: any, index: number) => [
         index + 1,
@@ -250,9 +293,9 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
         item.statement.class || '',
         item.statement.biller || '',
         item.statement.benefiaciary || item.statement.beneficiary || '',
-        item.statement.amount_dr > 0 ? item.statement.amount_dr.toLocaleString() : '',
-        item.statement.amount_cr > 0 ? item.statement.amount_cr.toLocaleString() : '',
-        item.statement.account_balance ? item.statement.account_balance.toLocaleString() : '',
+        item.statement.amount_dr > 0 ? replaceNaira(item.statement.amount_dr.toLocaleString()) : '',
+        item.statement.amount_cr > 0 ? replaceNaira(item.statement.amount_cr.toLocaleString()) : '',
+        item.statement.account_balance ? replaceNaira(item.statement.account_balance.toLocaleString()) : '',
         item.statement.channel || '',
         item.statement.status || ''
       ]) || [],
@@ -284,7 +327,7 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
         0: { halign: 'center' }, // S/N
         1: { halign: 'left' }, // Txn ID
         2: { halign: 'left' }, // Date & Time
-        3: { halign: 'left' }, // Narration
+        3: { halign: 'left', cellWidth: 'wrap' }, // Narration
         4: { halign: 'center' }, // Class
         5: { halign: 'left' }, // Biller
         6: { halign: 'left' }, // Beneficiary
@@ -297,13 +340,13 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
         0: { cellWidth: 10, halign: 'center' }, // S/N
         1: { cellWidth: 30, halign: 'left' }, // Txn ID
         2: { cellWidth: 25, halign: 'left' }, // Date & Time
-        3: { cellWidth: 35, halign: 'left' }, // Narration
+        3: { cellWidth: 40, halign: 'left' }, // Narration (slightly wider for wrapping)
         4: { cellWidth: 12, halign: 'center' }, // Class
         5: { cellWidth: 25, halign: 'left' }, // Biller
         6: { cellWidth: 25, halign: 'left' }, // Beneficiary
-        7: { cellWidth: 20, halign: 'right' }, // DR (₦)
-        8: { cellWidth: 20, halign: 'right' }, // CR (₦)
-        9: { cellWidth: 25, halign: 'right' }, // Balance (₦)
+        7: { cellWidth: 22, halign: 'right' }, // DR (NGN)
+        8: { cellWidth: 22, halign: 'right' }, // CR (NGN)
+        9: { cellWidth: 27, halign: 'right' }, // Balance (NGN)
         10: { cellWidth: 15, halign: 'center' }, // Channel
         11: { cellWidth: 15, halign: 'center' }  // Status
       },
@@ -334,9 +377,9 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
       ["Start Date:", data.details?.start_date || 'N/A', "", "", "", "", "", "", "", "", ""],
       ["End Date:", data.details?.end_date || 'N/A', "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
-      ["Wallet Balance:", `₦${(data.details?.account_balance || 0).toLocaleString()}`, "", "", "", "", "", "", "", "", "", ""],
-      ["Total Credit:", `₦${(data.details?.total_credit || 0).toLocaleString()}`, "", "", "", "", "", "", "", "", "", ""],
-      ["Total Debit:", `₦${(data.details?.total_debit || 0).toLocaleString()}`, "", "", "", "", "", "", "", "", "", ""],
+      ["Wallet Balance:", `${formatCurrency(data.details?.account_balance)}`, "", "", "", "", "", "", "", "", "", ""],
+      ["Total Credit:", `${formatCurrency(data.details?.total_credit)}`, "", "", "", "", "", "", "", "", "", ""],
+      ["Total Debit:", `${formatCurrency(data.details?.total_debit)}`, "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", "", "", "", "", ""],
       ["AJÍRÓBA®", "", "", "", "", "", "", "", "", "", "", ""],

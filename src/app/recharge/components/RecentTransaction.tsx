@@ -4,13 +4,15 @@ import Cookies from "js-cookie";
 import { useGetDatanew } from "@/hooks/useGetData";
 import Loading from "@/app/component/Loading";
 import { useRouter } from 'next/navigation'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { formatCurrency } from "@/utils/formatCurrency";
+
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectValue,
+//   SelectContent,
+//   SelectItem,
+// } from "@/components/ui/select";
 
 export const RecentTransaction = () => {
   const userToken = Cookies.get("token") || "";
@@ -137,9 +139,31 @@ export const RecentTransaction = () => {
               ) : (
 
                 (viewAll ? getSortedTransactions() : allTransaction.slice(0, 5)).map((val, index) => {
-                  const transactionType = val.reference?.split("_")[0] || "unknown";
+
+                  let transactionType = "unknown";
+                  if (val.reference?.startsWith("BILL")) {
+                    if (val.description?.toLowerCase().includes("airtime")) {
+                      transactionType = "airtime";
+                    } else if (val.description?.toLowerCase().includes("data")) {
+                      transactionType = "data";
+                    }
+                    else if (val.description?.toLowerCase().includes("cable")) {
+                      transactionType = "cable";
+                    }
+                    else {
+                      transactionType = "data";
+                    }
+                  } else {
+                    transactionType = val.reference?.split("_")[0] || "unknown";
+                  }
+
+                /*   console.log(val, 'vvvvvvv') */
+
+                  // console.log(transactionType, 'transactionType')
 
                   const url = `/recharge/${transactionType}/receipt?ref=${val.reference}`;
+
+        /*           console.log(url, 'url') */
 
                   return (
                     <Fragment key={index}>
@@ -165,7 +189,7 @@ export const RecentTransaction = () => {
                           </div>
                         </div>
                         <div>
-                          <p className="text-xl font-semibold">₦{Number(val?.amount ?? 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                          <p className="text-xl font-semibold">{formatCurrency(val?.amount)}</p>
                         </div>
                       </div>
                     </Fragment>
