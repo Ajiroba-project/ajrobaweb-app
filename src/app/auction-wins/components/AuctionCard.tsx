@@ -754,7 +754,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
           icon={""}
           isOpen={isWinningAdviseModalOpen}
           onClose={() => setIsWinningAdviseModalOpen(false)}
-          title="Select means to redeem item"
+          title="Select means to redeem item" 
           handleEvent={() => setIsWinningAdviseModalOpen(false)}
         >
           <div className="flex flex-col p-4">

@@ -31,7 +31,7 @@ export const Footer = () => {
               <Link href='https://www.facebook.com/share/1BvVA6ERkU/'>
                 <FaFacebookF className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
-              <Link href='/'>
+              <Link href='https://www.youtube.com/@AjirobaMedia'>
                 <FaYoutube className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
               </Link>
               <Link href='https://www.tiktok.com/@ajiroba.tech?_t=ZS-8yexHRqXwIs&_r=1'>

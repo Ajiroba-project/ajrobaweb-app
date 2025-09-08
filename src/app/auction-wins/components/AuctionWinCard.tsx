@@ -381,14 +381,17 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       });
 
       const responseData = await response.json();
-      console.log(responseData, 'rrrrrrr')
+      /* console.log(responseData, 'rrrrrrr') */
 
 
       if (responseData.status === "success") {
-           console.log(data.data.data, "data.data.data")
-          console.log(data.data, "data.data") 
+   /*         console.log(data.data.data, "data.data.data")
+          console.log(data.data, "data.data")  */
 
-        const temporaryData = {
+
+          toast.warning(responseData.message);
+
+    /*     const temporaryData = {
           "status": "success",
           "message": "Voucher processed successfully",
           "data": {
@@ -409,22 +412,22 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
             "statusCode": "00",
             "message": "Successful"
           }
-        }
+        } */
 
 
-        localStorage.setItem("voucherData", JSON.stringify(temporaryData.data.data));
-        setVoucherData(temporaryData.data.data);
+       /*  localStorage.setItem("voucherData", JSON.stringify(temporaryData.data.data));
+        setVoucherData(temporaryData.data.data); */
         setIsMerchantsModalOpen(false);
-        setIsVoucherModalOpen(true);
+  /*       setIsVoucherModalOpen(true); */
 
         /*     window.location.reload(); */
       } else {
-        console.log(responseData, "responseData")
-        console.log(responseData.message, "responseData.message")
-        toast.error(responseData.message || "Failed to process gift card");
+      /*   console.log(responseData, "responseData")
+        console.log(responseData.message, "responseData.message") */
+        toast.error(responseData?.data?.message || responseData?.message || "Failed to process gift card");
       }
     } catch (error) {
-      console.log(error, "error")
+    /*   console.log(error, "error") */
       toast.error("Error processing gift card");
     } finally {
       setIsProcessingGiftCard(false);

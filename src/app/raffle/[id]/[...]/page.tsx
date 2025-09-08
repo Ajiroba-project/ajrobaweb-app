@@ -262,7 +262,7 @@ const Page = ({ params }: any) => {
                     >
                       {header === "Ticket Number" ? (
                         <div className="flex flex-col items-center">
-                           <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
+                           <span className="text-2xl text-[#F25E26] font-normal">(Winner)</span>
                           <span>{header} </span>
                          
                         </div>
@@ -388,7 +388,7 @@ const Page = ({ params }: any) => {
                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
                         {val.phone_number
-                          ? val.phone_number.slice(0, -3) + '***'
+                          ? val.phone_number.replace(/^(\d{3})\d{3}(\d{4})$/, '$1***$2')
                           : ''}
                       </p>
                     </td>
@@ -453,9 +453,13 @@ const Page = ({ params }: any) => {
               Back
             </p>
             <div className="mb-3 text-center">
-              <HeadingText title="Live Raffle Draw" />
+              <HeadingText title="Raffle Draw Winners" />
             </div>
           </div>
+        </div>
+
+        <div className="w-4/12 mx-auto flex justify-start">
+          <p className="mt-4 text-gray-600">{`Total Winners: ${displayedData?.length}`}</p>
         </div>
 
         {loadingdata ? (

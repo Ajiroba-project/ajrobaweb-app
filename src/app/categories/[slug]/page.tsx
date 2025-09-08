@@ -589,7 +589,7 @@ const CategoryPage = () => {
           overflow: 'scroll',
         }} > */}
         <div
-  className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8 h-[80vh] overflow-scroll"
+  className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8  overflow-scroll"
 >
           <SearchFilter />
         </div>
