@@ -100,6 +100,10 @@ function Page() {
   });
 
   const handleSuccess = (data: any) => {
+
+ /*    console.log(data, 'dddd')
+    console.log(data.status) */
+
     if (data.status === 201) {
       reset();
       toast.success(`${data?.data?.message}`, {
@@ -478,8 +482,14 @@ function Page() {
                 </small>
               </div>
 
+              <div className="flex flex-col gap-4">
+             <div>
+             <label className="text-sm" htmlFor="gender">
+                 Gender
+                </label>
+             </div>
               <div className="flex gap-4">
-                <div className="flex items-center">
+              <div className="flex items-center">
                   <input
                     type="radio"
                     id="male"
@@ -510,6 +520,7 @@ function Page() {
                     Female
                   </label>
                 </div>
+              </div>
               </div>
 
               <div></div>

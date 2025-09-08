@@ -1338,6 +1338,13 @@ const Page = ({ params }: any) => {
                     </h1>
 
 
+                    <p className="text-[#111111] text-base mt-4 ">Product ID</p>
+
+                    <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
+                      {`${productdatanew?.data?.id}` || "NA"}
+                    </h1>
+
+
                     <div className="flex flex-wrap flex-row justify-between">
                       <div>
                         <p className="text-[#111111] text-base mt-4 ">Auction Date</p>

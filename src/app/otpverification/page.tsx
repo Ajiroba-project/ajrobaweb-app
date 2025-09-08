@@ -85,6 +85,33 @@ function Page() {
         }
     };
 
+    const handlePaste = (
+        index: number,
+        event: React.ClipboardEvent<HTMLInputElement>,
+    ) => {
+        event.preventDefault();
+        const pastedText = event.clipboardData.getData('text') || '';
+        const digitsOnly = pastedText.replace(/\D/g, '');
+        if (!digitsOnly) return;
+
+        const maxLength = 6;
+        const remainingSlots = maxLength - index;
+        const toFill = digitsOnly.slice(0, remainingSlots);
+
+        for (let offset = 0; offset < toFill.length; offset++) {
+            const char = toFill[offset];
+            const targetIndex = index + offset;
+            setValue(`otp.${targetIndex}`, char);
+            const inputEl = inputRefs.current[targetIndex];
+            if (inputEl) {
+                inputEl.value = char;
+            }
+        }
+
+        const nextFocusIndex = Math.min(index + toFill.length, maxLength - 1);
+        inputRefs.current[nextFocusIndex]?.focus();
+    };
+
 
 
     const handleSuccess = (data: any) => {
@@ -206,6 +233,7 @@ function Page() {
                                         className="shadow-md border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
                                         onKeyDown={(e) => handleBackspace(index, e)}
                                         onKeyPress={handleKeyPress}
+                                        onPaste={(e) => handlePaste(index, e)}
                                         {...register(`otp.${index}`)}
                                         ref={(el) => {
                                             if (el) {

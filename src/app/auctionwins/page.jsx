@@ -21,10 +21,12 @@ import RaffleTicket from "../component/RaffleTicket";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import "./style.css";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const WrappedPage = () => {
   const router = useRouter();
   const contentRef = useRef(null);
+
   useAuthOrders(router);
   const searchParams = useSearchParams();
   const order_id = searchParams.get("orderId");
@@ -34,52 +36,41 @@ const WrappedPage = () => {
     user: state.user,
     token: state.token,
   }));
+  
   const userToken = token;
 
   const handleDownload = async () => {
     if (!contentRef.current) return;
 
     try {
-      // Store original styles
-      const originalStyles = {
-        width: contentRef.current.style.width,
-        height: contentRef.current.style.height,
-        overflow: contentRef.current.style.overflow,
-        position: contentRef.current.style.position,
-      };
+      const node = contentRef.current;
 
-      // Set fixed dimensions for capture
-      contentRef.current.style.width = '1200px';
-      contentRef.current.style.height = 'auto';
-      contentRef.current.style.overflow = 'visible';
-      contentRef.current.style.position = 'relative';
+      // Ensure images inside node are loaded
+      const images = node.querySelectorAll('img');
+      await Promise.all(Array.from(images).map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          setTimeout(resolve, 3000);
+        });
+      }));
 
-      const canvas = await html2canvas(contentRef.current, {
+      // Use the node's actual on-screen size, do not mutate styles
+      const rect = node.getBoundingClientRect();
+
+      const canvas = await html2canvas(node, {
         scale: 2,
         useCORS: true,
         logging: false,
-        windowWidth: 1200,
-        windowHeight: contentRef.current.scrollHeight,
-        onclone: (clonedDoc) => {
-          // Ensure all images are loaded in the cloned document
-          const images = clonedDoc.getElementsByTagName('img');
-          return Promise.all(Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(resolve => {
-              img.onload = resolve;
-              img.onerror = resolve;
-            });
-          }));
-        }
+        backgroundColor: '#ffffff',
+        windowWidth: Math.ceil(rect.width),
+        windowHeight: Math.ceil(rect.height),
+        scrollX: 0,
+        scrollY: -window.scrollY,
       });
 
-      // Restore original styles
-      contentRef.current.style.width = originalStyles.width;
-      contentRef.current.style.height = originalStyles.height;
-      contentRef.current.style.overflow = originalStyles.overflow;
-      contentRef.current.style.position = originalStyles.position;
-
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/png', 1.0);
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -89,22 +80,13 @@ const WrappedPage = () => {
       const imgWidth = 210; // A4 width in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      // Add content to PDF with proper scaling
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-      // If content is too long, add it to multiple pages
       if (imgHeight > 297) { // A4 height in mm
         const pageCount = Math.ceil(imgHeight / 297);
         for (let i = 1; i < pageCount; i++) {
           pdf.addPage();
-          pdf.addImage(
-            imgData,
-            'PNG',
-            0,
-            -(297 * i),
-            imgWidth,
-            imgHeight
-          );
+          pdf.addImage(imgData, 'PNG', 0, -(297 * i), imgWidth, imgHeight);
         }
       }
 
@@ -114,16 +96,7 @@ const WrappedPage = () => {
     }
   };
 
-  //   const {
-  //     data: productinfo,
-  //     isLoading: productLoading,
-  //     error: producterror,
-  //   } = useGetProductData(
-  //     "/api/productdetailsbyid",
-  //     userToken,
-  //     order_id,
-  //     "get_product_details"
-  //   );
+
 
   const userToken_ = Cookies.get("token")
 
@@ -226,7 +199,7 @@ const WrappedPage = () => {
               </div>
               <div>
                 <p className="font-Poppins text-base text-[#2A2A2A] font-medium">
-                  Your Purchase Order is successful!
+                  Your Purchase Order is successful! 
                 </p>
               </div>
             </div>
@@ -339,7 +312,8 @@ const WrappedPage = () => {
                   <div>
                     <p className="font-Poppins text-[#353131] text-sm md:text-base font-medium">
                       {/*       N {filteredItems[0]?.ticket_price} */}
-                      N {Number(filteredItems[0]?.ticket_price || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatCurrency(filteredItems[0]?.ticket_price)}
+
                     </p>
                   </div>
                 </div>
@@ -416,7 +390,7 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-sm sm:text-base text-[#2A2A2A] font-semibold">
-                    N {filteredItems[0]?.ticket_price}
+                    {formatCurrency(filteredItems[0]?.ticket_price)}
                   </p>
                 </div>
               </div>
@@ -432,7 +406,7 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-sm sm:text-base text-[#2A2A2A] font-semibold">
-                    N {0}
+                    {formatCurrency(0)}
                   </p>
                 </div>
               </div>
@@ -448,7 +422,7 @@ const WrappedPage = () => {
               <div className="flex items-center">
                 <div>
                   <p className="font-Poppins text-sm sm:text-base text-[#2A2A2A] font-semibold">
-                    N {filteredItems[0]?.ticket_price}
+                    {formatCurrency(filteredItems[0]?.ticket_price)}
                   </p>
                 </div>
               </div>

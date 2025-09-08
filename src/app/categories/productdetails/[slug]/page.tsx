@@ -122,7 +122,7 @@ const Page = ({ params }: any) => {
     true,
   );
 
-  /*  console.log(productdata, 'productdata') */
+  //  console.log(productdata, 'productdata') 
 
   // useEffect(() => {
   //   if (paths.length > 0) {
@@ -688,6 +688,15 @@ const Page = ({ params }: any) => {
                       {productdata?.data?.weight || "NA"}
                     </h1>
 
+
+                    <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
+                      Product ID
+                    </p>
+
+                    <h1 className="text-[#111111] font-Poppins text-base mt-2 font-semibold">
+                      {productdata?.data?.id || "NA"}
+                    </h1>
+
                     <hr className="mt-4" />
 
                     <p className="text-[#111111] font-Poppins font-medium text-base mt-4 ">
@@ -697,6 +706,9 @@ const Page = ({ params }: any) => {
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-semibold">
                       {productdata?.data?.delivery_estimation || "NA"}
                     </h1>
+
+
+                 
 
                     <div className="flex justify-center items-center mt-4">
                       {isLoggedIn ? (
@@ -778,8 +790,10 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
-                        : ""
+                        ? `https://staging.ajiroba.ng/media/${productdata?.data?.images[1].image}`
+                        : productdata?.data?.images?.[0]?.image
+                          ? `https://staging.ajiroba.ng/media/${productdata?.data?.images[0].image}`
+                          : ""
                     }
                     alt="Product Image"
                     width={200}
@@ -801,7 +815,7 @@ const Page = ({ params }: any) => {
           width: "80%",
         }}
       >
-        {productdata?.data?.reviews && <CustomerReview data={productdata} />}
+        {productdata?.data?.reviews && productdata.data.reviews.length > 0 && <CustomerReview data={productdata} />}
       </section>
 
       <section

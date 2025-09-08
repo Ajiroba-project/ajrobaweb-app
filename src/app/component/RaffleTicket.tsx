@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
 import Brand from '../asset/logo.svg';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 // A more accurate SVG logo component
 
@@ -42,7 +43,7 @@ const TicketCard = ({
                 <div className="flex justify-between items-center mb-1">
                     <span className="text-white text-xs md:text-sm">Ticket Price:</span>
                     <div className="bg-white text-gray-800 px-2 py-1 rounded text-xs md:text-sm font-medium w-28 md:w-40 text-center">
-                        {ticketPrice}
+                        {formatCurrency(ticketPrice)}
                     </div>
                 </div>
                 <div className="border-b-3 border-dashed border-white opacity-60"></div>
@@ -133,7 +134,7 @@ const TicketCardMobile = ({
                 <div className="flex justify-between items-center mb-1">
                     <span className="text-white text-[10px] md:text-[10px]">Ticket Price:</span>
                     <div className="bg-white text-gray-800 px-2 py-1 rounded text-[10px] md:text-[10px] font-medium w-28 md:w-40 text-center">
-                        {ticketPrice}
+                        {formatCurrency(ticketPrice)}
                     </div>
                 </div>
                 <div className="border-b-3 border-dashed border-white opacity-60"></div>
@@ -242,7 +243,19 @@ export default function RaffleTicket({
                                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-light">Raffle Draw</h2>
                                 <div className="relative inline-block mt-1">
                                     <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white relative z-10 tracking-tighter">Ticket</h1>
-                                    <div className="absolute left-[4rem] md:left-[6rem] right-[-0.5rem] bottom-[0.1rem] h-1.5 md:h-2 bg-black transform -skew-y-[8deg] z-0"></div>
+                                    <div 
+                                        className="absolute bg-black" 
+                                        style={{
+                                            left: '4rem',
+                                            right: '-0.5rem',
+                                            bottom: '0.1rem',
+                                            height: '0.375rem',
+                                            transform: 'skewY(-8deg)',
+                                            transformOrigin: 'left bottom',
+                                            zIndex: 0,
+                                            minWidth: '200px'
+                                        }}
+                                    ></div>
                                 </div>
                             </div>
 
@@ -259,7 +272,10 @@ export default function RaffleTicket({
 
                 {/* Divider */}
                 <div className="relative my-4 md:my-0 flex md:flex-col items-center justify-center px-4 md:px-0">
-                    <div className="w-full h-px md:h-full md:w-px bg-[repeating-linear-gradient(to_bottom,white,white_4px,transparent_4px,transparent_8px)]"></div>
+                    <div className="w-full h-px md:h-full md:w-px border-t border-dashed border-white md:border-t-0 md:border-l md:border-dashed" style={{
+                        backgroundImage: 'repeating-linear-gradient(to_bottom, white, white 4px, transparent 4px, transparent 8px)',
+                        backgroundSize: '1px 8px'
+                    }}></div>
                     <div className="absolute bg-gradient-to-r from-[#F26522] to-[#F7941D] p-1 rounded-full transform rotate-90 md:rotate-0">
                         <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
                     </div>
@@ -279,7 +295,19 @@ export default function RaffleTicket({
                             <h2 className="text-xl md:text-2xl font-light">Raffle Draw</h2>
                             <div className="relative inline-block mt-1">
                                 <h1 className="text-3xl md:text-4xl font-bold text-white relative z-10 tracking-tighter">Ticket</h1>
-                                <div className="absolute left-[2rem] right-[-1rem] bottom-[0.1rem] h-1 md:h-1.5 bg-black transform -skew-y-[8deg] z-0"></div>
+                                <div 
+                                    className="absolute bg-black" 
+                                    style={{
+                                        left: '2rem',
+                                        right: '-1rem',
+                                        bottom: '0.1rem',
+                                        height: '0.25rem',
+                                        transform: 'skewY(-8deg)',
+                                        transformOrigin: 'left bottom',
+                                        zIndex: 0,
+                                        minWidth: '100px'
+                                    }}
+                                ></div>
                             </div>
                         </div>
 

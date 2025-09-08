@@ -24,6 +24,7 @@ import Loading from "../component/Loading";
 import { Deposite } from "../profile/components/Deposite";
 import { DefaultButton, CustomizeButton } from "../component/Button";
 import { DepositeCard } from "../profile/components/DepositeCard";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type ConfirmationModalProps = {
   amount: string;
@@ -170,7 +171,7 @@ const Page = () => {
   const schema = yup.object().shape({
     password: yup
       .string()
-      .required("Password is required")
+      .required("Passcode is required")
       .min(6, "Can't be lesser than 6 digits"),
   });
 
@@ -213,7 +214,7 @@ const Page = () => {
           ) {
             // Clear cart count after successful order placement
             triggerCartRefresh();
-            router.push("/profile");
+            router.push("/my-order");
           } else {
             router.push("/paymentpage");
           }
@@ -560,7 +561,7 @@ const Page = () => {
           setPaymentUrl(payment_url);
           setShowModalUp(true);
   
-          toast.success(`Payment initiated successfully`, {
+          toast.success(`Payment initiated successfully, please wait for the payment to be verified`, {
             closeButton: false,
           });
         } else {
@@ -576,6 +577,8 @@ const Page = () => {
     // Fixed verification function that returns a promise with clear success/failure
     const verifyWalletPayment = async (reference: string): Promise<{ success: boolean; shouldStop: boolean; message?: string }> => {
       setloadingverify(true);
+
+      // console.log(reference, "reference");
       
       try {
         const tkn_: string = Cookies.get("token") as string;
@@ -587,6 +590,8 @@ const Page = () => {
             },
           }
         );
+
+        // console.log(response, "response")
   
         setloadingverify(false);
   
@@ -595,8 +600,10 @@ const Page = () => {
           toast.success(`${message}`, {
             closeButton: true,
             onClose: () => {
-              window.location.reload();
+               window.location.reload(); 
+            // console.log('yes....', message)
             }
+            
           });
           return { success: true, shouldStop: true, message };
         } else {
@@ -661,6 +668,7 @@ const Page = () => {
   
         try {
           const result = await verifyWalletPayment(reference);
+          /* console.log(result, "result"); */
           
           if (result.success) {
             // Payment verified successfully
@@ -923,7 +931,7 @@ const Page = () => {
 
                             <div className="ml-4">
                               <small className="text-[#A09F9F] text-sm">
-                                pay with the money in your wallet
+                                pay with Cards, USSD or bank transfer
                               </small>
                             </div>
                           </div>
@@ -1008,17 +1016,19 @@ const Page = () => {
                     </div>
                     <div>
                       <h1 className="text-[#111111] text-lg mt-4 font-bold ">
-                        N{cartItemsn?.["Order Summary"]?.total}
+                        {formatCurrency(cartItemsn?.["Order Summary"]?.total)}
                       </h1>
                     </div>
                   </div>
 
                   <button
-                    onClick={
-                      localStorage.getItem("pin_id") === "yes"
-                        ? handleOrderbutton
-                        : showConfirmOrder
-                    }
+                    onClick={() => {
+                      if (localStorage.getItem("pin_id") === "yes") {
+                        handleOrderbutton();
+                      } else {
+                        showConfirmOrder();
+                      }
+                    }}
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
                       ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
                       : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
@@ -1077,7 +1087,7 @@ const Page = () => {
                     </div>
                     <div>
                       <h1 className="text-[#111111] text-lg mt-4 font-bold ">
-                        N{cartItemsn?.["Order Summary"]?.total}
+                        {formatCurrency(cartItemsn?.["Order Summary"]?.total)}
                       </h1>
                     </div>
                   </div>
@@ -1155,7 +1165,7 @@ const Page = () => {
                     </div>
                     <div>
                       <h1 className="text-[#111111] text-lg mt-4 font-bold ">
-                        N{cartItemsn?.["Order Summary"]?.total}
+                        {formatCurrency(cartItemsn?.["Order Summary"]?.total)}
                       </h1>
                     </div>
                   </div>
@@ -1250,6 +1260,7 @@ const Page = () => {
               setDepositAmount(amount);
               setShowConfirmation(true);
             }}
+            requiredAmount={cartItemsn?.["Order Summary"]?.total}
             handleCancel={function (): void {
               throw new Error("Function not implemented.");
             }}

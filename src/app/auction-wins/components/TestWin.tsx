@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useAuthStore } from "@/store/store";
 import { useGetDatanew } from "@/hooks/useGetData";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 export type WinningAdviceModalProps = {
     isOpen: boolean;
@@ -151,7 +152,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             {/* Title with borders */}
                             <div className="border-t-2 border-b-2 border-black py-2 mb-6">
                                 <h1 className="text-xl font-black text-center text-black tracking-wide">
-                                    RAFFLE DRAW WINNING ADVICE LETTER
+                                RAFFLE WINNING ADVICE
                                 </h1>
                             </div>
 
@@ -193,7 +194,15 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
                                         <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[160px] text-black">Raffle Draw Date:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{adviceData.drawDate}</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">
+                                            {adviceData.drawDate
+                                                ? (() => {
+                                                    const dateObj = new Date(adviceData.drawDate);
+                                                    if (isNaN(dateObj.getTime())) return adviceData.drawDate;
+                                                    return dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                                                })()
+                                                : ""}
+                                        </span>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
@@ -203,7 +212,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-0">
                                         <span className="text-xs sm:text-sm min-w-[120px] sm:min-w-[180px] text-black">Estimated Market Value of Item:</span>
-                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{adviceData.estimated_value}</span>
+                                        <span className="border-b-2 border-dotted border-gray-500 w-full sm:flex-1 pb-1 text-xs sm:text-sm text-black sm:ml-1">{formatCurrency(adviceData.estimated_value)}</span>
                                     </div>
                                 </div>
                             </div>

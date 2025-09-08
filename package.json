@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "record:animate": "node scripts/record-animate.js --width=1920 --height=1080 --fps=30 --duration=15"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -66,9 +67,12 @@
     "daisyui": "^4.12.22",
     "eslint": "^8",
     "eslint-config-next": "14.2.0",
+    "ffmpeg-static": "^5.2.0",
     "postcss": "^8",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.13",
+    "puppeteer": "^19.0.0",
+    "puppeteer-screen-recorder": "^3.0.6",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"

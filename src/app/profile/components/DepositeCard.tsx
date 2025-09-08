@@ -7,31 +7,43 @@ type DepositeProps = {
   handleNext?: any
   handleCancel: () => void;
   handleClick: () => void;
+  requiredAmount?: number | string;
 };
 
-export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
+export const DepositeCard = ({ handleClick, handleNext, requiredAmount }: DepositeProps) => {
   const suggestions = ['500', '1000', '2000', '3000', '4000', '5000'];
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    const digitsOnly = e.target.value.replace(/\D/g, '');
+    setValue(digitsOnly);
     setError('');
   };
 
   const handleNextClick = () => {
     if (value.trim() === '') {
       setError('Please enter an amount before proceeding.');
-    } else {
-      handleNext(value);
+      return;
     }
+
+    if (requiredAmount !== undefined && requiredAmount !== null) {
+      const required = Number(String(requiredAmount).replace(/[^\d]/g, ''));
+      const entered = Number(value);
+      if (!Number.isNaN(required) && required > 0 && entered !== required) {
+        setError(`Amount must equal ₦${required}`);
+        return;
+      }
+    }
+
+    handleNext(value);
   };
 
   return (
     <section className='fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-[#000000d1] p-2 sm:p-4'>
       <div className='w-full max-w-[20em] sm:max-w-[25em] md:max-w-[30em] lg:max-w-[35em] flex h-auto flex-col gap-4 sm:gap-6 rounded-md bg-white p-4 sm:p-6 mx-4'>
         <div className='flex flex-col items-center justify-center pt-2 sm:pt-3 text-center'>
-          <p className='text-sm sm:text-base font-medium text-gray-800'>Payment Gateway</p>
+     {/*      <p className='text-sm sm:text-base font-medium text-gray-800'>Payment Gateway</p> */}
           <Image 
             src={paystackbrand} 
             alt={'icon'} 
@@ -43,11 +55,17 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
           <label className='block text-sm sm:text-base font-medium text-gray-700 text-left'>Amount (₦)</label>
           <input
             type='text'
+            inputMode='numeric'
+            onKeyDown={(e) => { if (!/[0-9]|Backspace|Tab|ArrowLeft|ArrowRight|Delete/.test(e.key)) e.preventDefault(); }}
+            onInput={(e: any) => { e.target.value = e.target.value.replace(/\D/g, ''); }}
             onChange={handleChange}
             value={value}
             className='w-full rounded-md border border-[#656565] p-2.5 sm:p-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#E84526] focus:border-transparent transition-all duration-200'
             placeholder='₦ Enter an Amount and press "Next"'
           />
+          {requiredAmount !== undefined && (
+            <p className='text-xs text-gray-500 mt-1'>Required amount: ₦{String(requiredAmount).replace(/[^\d]/g, '')}</p>
+          )}
           {error && <p className='text-red-500 text-sm mt-1'>{error}</p>}
           
           <div className='space-y-2'>
@@ -76,7 +94,8 @@ export const DepositeCard = ({ handleClick, handleNext }: DepositeProps) => {
           <DefaultButton
             text='Next'
             type='button'
-            className='w-full rounded-md bg-[#E84526] p-2.5 sm:p-3 text-sm sm:text-base font-medium text-white hover:bg-[#E84526]/90 transition-all duration-200'
+            className={`w-full rounded-md p-2.5 sm:p-3 text-sm sm:text-base font-medium transition-all duration-200 ${requiredAmount !== undefined && String(requiredAmount).replace(/[^\d]/g, '') !== value ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#E84526] text-white hover:bg-[#E84526]/90'}`}
+            disabled={requiredAmount !== undefined && String(requiredAmount).replace(/[^\d]/g, '') !== value}
             handleClick={handleNextClick}
           />
         </div>

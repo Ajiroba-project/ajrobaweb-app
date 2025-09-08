@@ -14,6 +14,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import AuthMiddleware from '@/hooks/useAuthCart'
 import { useAuthStore } from '@/store/store';
+import  Loading  from "../component/Loading";
 
 const Page = () => {
   const router = useRouter();
@@ -261,6 +262,11 @@ const Page = () => {
     return total + calculateTotalPrice(item?.product?.discount, item.quantity);
   }, 0);
 
+
+  if (loading) {
+   return <Loading />
+  }
+
   return (
     <Suspense fallback={<>Loading...</>}>
       <main>
@@ -365,7 +371,7 @@ const Page = () => {
             </div>
 
             <div className="mt-4 container justify-center flex xl:block md:block lg:block 2xl:block">
-              <div className="border rounded border-[#D2D2D2] px-4 shadow py-4">
+           {  cartItemsn?.length > 0 &&  <div className="border rounded border-[#D2D2D2] px-4 shadow py-4">
                 <h1 className="text-[#2A2A2A] text-base font-Poppins">Cart SUMMARY</h1>
 
                 <div className="flex items-center flex-wrap gap-4">
@@ -390,7 +396,7 @@ const Page = () => {
                 <div className="mt-4">
                   <small className="  text-[#F25E26]">Excluding delivery charges</small>
                 </div>
-              </div>
+              </div> }
             </div>
           </div>
 
