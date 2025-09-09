@@ -84,7 +84,7 @@ export const DataPayment = () => {
 
   const MakePurchase = () => {
     let pin = Cookies.get("nvd");
-    console.log("Make purchase");
+  /*   console.log("Make purchase"); */
   };
 
   const submitForm = (data: any) => {
@@ -123,7 +123,7 @@ export const DataPayment = () => {
 
   const handleSuccess = (data: any) => {
 
-    console.log(data, 'datata')
+    // console.log(data, 'datata')
     if (
       data.status === 200 ||
       data?.data?.status === 201 ||

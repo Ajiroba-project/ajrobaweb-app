@@ -140,8 +140,8 @@ export const DataDetails = () => {
   // const dataPlan = ["1day 100MB -₦100", "60dayS 1TB -₦20,000"];
 
   const sumbitForm = (data: DataProps) => {
-    console.log(errors, 'err')
-    console.log("data=>", data);
+   /*  console.log(errors, 'err')
+    console.log("data=>", data); */
     setDataDetails(data);
 
     setDataStepper(1);
