@@ -1218,7 +1218,7 @@ const Page = () => {
 
                 <div>
                   <p className="text-[#2A2A2A]">
-                    32, Ajiroba street,arepo,lagos
+                    32, Ajiroba street,Arepo,lagos
                   </p>
                 </div>
               </div>

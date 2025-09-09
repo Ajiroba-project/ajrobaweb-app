@@ -153,19 +153,19 @@ const ContactUsPage = () => {
           <div className='flex flex-col items-center gap-2'>
             <Image src={call} alt='call' />
             <p className='font-semibold'>Phone Number</p>
-            <p>+2349169881005</p>
+            <p>+2347038809512</p>
           </div>
 
           <div className='flex flex-col items-center gap-2'>
             <Image src={location} alt='location' />
             <p className='font-semibold'>Location</p>
-            <p>Head Office: 1 praiseHill Estate, Arepo Ogun State.</p>
+            <p>Head Office: 1 PraiseHill Estate, Arepo, Ogun State.</p>
           </div>
 
           <div className='flex flex-col items-center gap-2'>
             <Image src={message} alt='message' />
             <p className='font-semibold'>Email Address</p>
-            <p>support@goprus.com</p>
+            <p>support@ajiroba.com</p>
           </div>
         </div>
 
@@ -254,7 +254,7 @@ const ContactUsPage = () => {
               <DefaultButton
                 text={`${status === 'pending' ? 'Sending...' : 'Send Message'}`}
                 type='submit'
-                className='rounded-md bg-[#FCDFD4] p-4 px-8'
+                className='rounded-md bg-[#FCDFD4] p-4 px-8 hover:bg-[#F25E26] hover:text-white'
                 handleClick={() => { }}
               />
             </div>

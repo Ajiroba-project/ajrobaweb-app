@@ -219,7 +219,7 @@ const LiveChatPage = () => {
                   onClick={() => {
                     router.push("/selfhelp");
                   }}
-                  className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:[#FCDFD4] text-[#2A2A2A]  font-semibold rounded"
+                  className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:bg-[#F25E26] hover:text-white text-[#2A2A2A]  font-semibold rounded"
                 >
                   Self Help
                 </button>
