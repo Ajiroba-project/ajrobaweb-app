@@ -787,7 +787,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   value="delivery"
                   checked={selectedRedemption === "delivery"}
                   onChange={(e) => setSelectedRedemption(e.target.value)}
-                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26] accent-[#F25E26]"
                 />
                 <label htmlFor="delivery" className="text-gray-700">
                   By Delivery
@@ -802,7 +802,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   value="voucher"
                   checked={selectedRedemption === "voucher"}
                   onChange={(e) => setSelectedRedemption(e.target.value)}
-                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26] accent-[#F25E26]"
                 />
                 <label htmlFor="voucher" className="text-gray-700">
                   Gift Voucher
@@ -817,7 +817,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                   value="transfer"
                   checked={selectedRedemption === "transfer"}
                   onChange={(e) => setSelectedRedemption(e.target.value)}
-                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26] accent-[#F25E26]"
                 />
                 <label htmlFor="transfer" className="text-gray-700">
                   Cash Transfer

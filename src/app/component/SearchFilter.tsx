@@ -63,7 +63,7 @@ export const PriceFilter = () => {
             name="price1"
             value="<2000"
             id="under2000"
-            className="mr-3 text-sm text-[#504D4D] font-normal mb-3"
+            className="mr-3 text-sm text-[#504D4D] font-normal mb-3 accent-[#F25E26]"
             onChange={() => handlePriceSelection("<5000")}
           />
           <label
@@ -80,7 +80,7 @@ export const PriceFilter = () => {
             name="price1"
             value="₦5000-Above"
             id="₦5000-Above"
-            className="mr-3 text-sm text-[#504D4D] font-normal"
+            className="mr-3 text-sm text-[#504D4D] font-normal accent-[#F25E26]"
             onChange={() => handlePriceSelection(">5000")}
           />
           <label
@@ -362,6 +362,7 @@ export const RatingFilter = () => {
               value={item.tag}
               checked={selectedRatings.includes(item.id)}
               onChange={() => handleCheckboxChange(item)}
+              className="accent-[#F25E26]"
             />
             <div className="flex" >
               <div>

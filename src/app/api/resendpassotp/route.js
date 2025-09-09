@@ -20,7 +20,7 @@ export async function POST(request) {
 
         // Return JSON response with data and status
 
-        // console.log(data, status, 'res')
+         console.log(data, status, 'res')
         return NextResponse.json({ data, status });
 
 

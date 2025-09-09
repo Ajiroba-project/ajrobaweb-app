@@ -220,7 +220,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             {/* Instructions */}
                             <div className="mb-4">
                                 <p className="text-sm leading-relaxed text-black">
-                                    Kindly proceed to your Ajiroba dashboard to redeem your winning (you can check page 2 of this letter for steps to redeem your winning) For any clarification, kindly contact us via the channneels at the bottom of this letter.
+                                    Kindly proceed to your Ajiroba dashboard to redeem your winning (you can check page 2 of this letter for steps to redeem your winning) For any clarification, kindly contact us via the channels at the bottom of this letter.
                                 </p>
                             </div>
 
@@ -387,16 +387,31 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                             <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                                 <div className="flex">
                                     <span className="text-xs sm:text-sm font-medium text-black mr-2">1.</span>
-                                    <span className="text-xs sm:text-sm text-black">Login to you dashboard.</span>
+                                    <span className="text-xs sm:text-sm text-black">Login to your dashboard.</span>
                                 </div>
                                 <div className="flex">
                                     <span className="text-xs sm:text-sm font-medium text-black mr-2">2.</span>
-                                    <span className="text-xs sm:text-sm text-black">Proceed to your profile, and select &quot;Auction Wins&quot;</span>
+                                    <span className="text-xs sm:text-sm text-black">Click on profile under the account menu</span>
                                 </div>
+
                                 <div className="flex">
                                     <span className="text-xs sm:text-sm font-medium text-black mr-2">3.</span>
-                                    <span className="text-xs sm:text-sm text-black">Select &quot;download winning advice&quot; button to download your winning letter.</span>
+                                    <span className="text-xs sm:text-sm text-black">Click on Redeem item which is highlighted in the blue tab</span>
                                 </div>
+
+                                <div className="flex">
+                                    <span className="text-xs sm:text-sm font-medium text-black mr-2">4.</span>
+                                    <span className="text-xs sm:text-sm text-black">Select your preferred means of redemption (physical delivery, gift voucher or
+                                        cash transfer)</span>
+                                </div>
+
+                                <div className="flex">
+                                    <span className="text-xs sm:text-sm font-medium text-black mr-2">5.</span>
+                                    <span className="text-xs sm:text-sm text-black">Then follow the steps as directed by any of the redemption options you choose.</span>
+                                </div>
+
+
+                              
                             </div>
 
                             {/* Spacer for content */}

@@ -150,6 +150,7 @@ export const RatingFilter = () => {
               value={item.tag}
               checked={selectedRatings.includes(item.id)}
               onChange={() => handleCheckboxChange(item)}
+              className="accent-[#F25E26]"
             />
             <span className="ml-2 flex">{item.name}</span>
           </li>
@@ -205,7 +206,7 @@ export const PriceFilter = () => {
           name="price1"
           value="<2000"
           id="under2000"
-          className="mr-3"
+          className="mr-3 accent-[#F25E26]"
           onChange={() => handlePriceSelection("<5000")}
         />
         <label htmlFor="under5000">under 5000</label>
@@ -217,7 +218,7 @@ export const PriceFilter = () => {
           name="price1"
           value="₦5000-Above"
           id="₦5000-Above"
-          className="mr-3"
+          className="mr-3 accent-[#F25E26]"
           onChange={() => handlePriceSelection(">5000")}
         />
         <label htmlFor="₦5000-Above">₦5000 - Above</label>
