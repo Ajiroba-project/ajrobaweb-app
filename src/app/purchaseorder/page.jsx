@@ -215,7 +215,7 @@ const WrappedPage = () => {
             <p className="text-[#E84526] text-base">Back</p>
           </div>
 
-          <section className="w-full md:w-[80%] mx-auto">
+          <section className="w-full md:w-[80%] text-[#111111] mx-auto font-extrabold">
             <Title title="Purchase Order Details" />
           </section>
         </section>
@@ -228,7 +228,7 @@ const WrappedPage = () => {
               <div className="flex items-center gap-4">
                 <Image width={30} height={30} src={purchasecheck} alt="purchasecheck" />
                 <p className="font-Poppins text-base text-[#2A2A2A] font-medium">
-                  Your purchase Order is successful! 
+                  Your Purchase Order is successful! 
                 </p>
               </div>
 

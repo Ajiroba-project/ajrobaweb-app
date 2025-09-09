@@ -24,7 +24,7 @@ export const Receipt = () => {
         <div className='w-content'>
           <Formtitle
             title='Successful'
-            subtitle={`you have successfully made a payment`}
+            subtitle={`You have successfully made a payment`}
           />
           <DefaultButton
             text='View Reciept'

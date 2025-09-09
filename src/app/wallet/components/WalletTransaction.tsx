@@ -182,9 +182,9 @@ export const WalletTransaction = () => {
                     ? 'bg-emerald-200'
                     : 'bg-amber-200'}`}>
                   {val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet" ? (
-                    <GoArrowUpRight className="text-lg font-semibold text-green-700" />
+                    <GoArrowDownLeft className="text-lg font-semibold text-green-700" />
                   ) : (
-                    <GoArrowDownLeft className="text-lg font-semibold text-amber-700" />
+                    <GoArrowUpRight className="text-lg font-semibold text-amber-700" />
                   )}
                 </div>
                 <div className="flex flex-col justify-center">

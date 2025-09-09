@@ -19,6 +19,7 @@ import { useMutateData } from '@/hooks/useMutateNewData'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import Input from "./Input";
 import * as yup from "yup";
+import { formatCurrency } from '@/utils/formatCurrency'
 
 export const ElectricityPayment = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -391,7 +392,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
         <div className="flex items-center justify-center ">
           <Formtitle
             title="Payment"
-            subtitle="Please confirm your transactions details and make payment "
+            subtitle="You can make your payment with any of the payment options below "
           />
         </div>
 
@@ -400,29 +401,29 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
             <div>
               <h3 className="text-[#6E6E6E]">Name: </h3>
-              <p>{customerElectricityDetails ? customerElectricityDetails : 'NA'}</p>
+              <p className='font-semibold'>{customerElectricityDetails ? customerElectricityDetails : 'NA'}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Meter Number: </h3>
-              <p>{ElectricityDetails?.iucnumber ? ElectricityDetails?.iucnumber : 'NA'}</p>
+              <p className='font-semibold'>{ElectricityDetails?.iucnumber ? ElectricityDetails?.iucnumber : 'NA'}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Disco: </h3>
-              <p>{ElectricityDetails?.decoder ? ElectricityDetails?.decoder : 'NA'}</p>
+              <p className='font-semibold'>{ElectricityDetails?.decoder ? ElectricityDetails?.decoder : 'NA'}</p>
             </div>
 
               <div>
               <h3 className="text-[#6E6E6E]">Address: </h3>
-              <p>{ElectricityDetails?.elecphone ? ElectricityDetails?.elecphone : 'NA'}</p>
+              <p className='font-semibold'>{ElectricityDetails?.elecphone ? ElectricityDetails?.elecphone : 'NA'}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Amount:</h3>
-              <p>{ElectricityDetails?.elecamount ? ElectricityDetails?.elecamount : 'NA'}</p>
+              <p className='font-semibold'>{formatCurrency(ElectricityDetails?.elecamount)}</p>
             </div>
 
                <div>
               <h3 className="text-[#6E6E6E]">Phone Number:</h3>
-              <p>{ElectricityDetails?.elecphone ? ElectricityDetails?.elecphone : 'NA'}</p>
+              <p className='font-semibold'>{ElectricityDetails?.elecphone ? ElectricityDetails?.elecphone : 'NA'}</p>
             </div>
 
             <div className="my-5 flex flex-wrap w-full items-center justify-center gap-8">

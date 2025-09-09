@@ -5,14 +5,8 @@ import { useGetDatanew } from "@/hooks/useGetData";
 import Loading from "@/app/component/Loading";
 import { useRouter } from 'next/navigation'
 import { formatCurrency } from "@/utils/formatCurrency";
+import { MdSearch } from "react-icons/md";
 
-// import {
-//   Select,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectContent,
-//   SelectItem,
-// } from "@/components/ui/select";
 
 export const RecentTransaction = () => {
   const userToken = Cookies.get("token") || "";
@@ -42,6 +36,7 @@ export const RecentTransaction = () => {
   const [fullTransactionList, setFullTransactionList] = useState<Transaction[]>([]);
   const [viewAll, setViewAll] = useState(false);
   const [sortBy, setSortBy] = useState("Date");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // ✅ Update state when data is received
   useEffect(() => {
@@ -54,9 +49,21 @@ export const RecentTransaction = () => {
     }
   }, [recenttransdata]);
 
-  // Sorting function
+  // Filter + sort function (applies only in View All mode)
   const getSortedTransactions = () => {
     let txs = [...fullTransactionList];
+
+    // Apply search filter first
+    if (viewAll && searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      txs = txs.filter((t) => {
+        const desc = (t.description || "").toLowerCase();
+        const ref = (t.reference || "").toLowerCase();
+        const amt = String(t.amount ?? "").toLowerCase();
+        const date = t.date_created ? new Date(t.date_created).toLocaleString().toLowerCase() : "";
+        return desc.includes(q) || ref.includes(q) || amt.includes(q) || date.includes(q);
+      });
+    }
     switch (sortBy) {
       case "Date":
         txs.sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
@@ -76,24 +83,30 @@ export const RecentTransaction = () => {
 
   return (
     <section className="my-10 rounded bg-[#F6F6F6] p-7">
+      {viewAll && (
+        <div className="mb-3">
+          <button onClick={() => setViewAll(false)} className="text-[#F25E26]">Back</button>
+        </div>
+      )}
       <div className="rounded border-2 border-[#f25e26] p-4">
         {viewAll ? (
           <div className="flex justify-between items-center ">
-            <button onClick={() => setViewAll(false)} className="text-[#F25E26]">Back</button>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search..."
+                  className="w-[200px] sm:w-[260px] rounded-md border border-gray-300 pl-3 pr-9 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-transparent"
+                />
+                <MdSearch className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
             <div className="flex items-center gap-2 ">
               <span>Sort by:</span>
               <div style={{ zIndex: 10, position: "relative" }}>
-                {/*  <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Date">Date</SelectItem>
-                    <SelectItem value="Time">Time</SelectItem>
-                    <SelectItem value="Brand">Brand</SelectItem>
-                    <SelectItem value="Amount">Amount</SelectItem>
-                  </SelectContent>
-                </Select> */}
+                
 
                 <select
                   value={sortBy}
@@ -130,7 +143,7 @@ export const RecentTransaction = () => {
 
           {recenttransLoading ? (
             <div className="flex justify-center items-center py-6">
-              <Loading /> {/* Your existing loading component */}
+              <Loading /> 
             </div>
           ) : (
             <div className="my-4 flex flex-col gap-4">
@@ -157,13 +170,7 @@ export const RecentTransaction = () => {
                     transactionType = val.reference?.split("_")[0] || "unknown";
                   }
 
-                /*   console.log(val, 'vvvvvvv') */
-
-                  // console.log(transactionType, 'transactionType')
-
                   const url = `/recharge/${transactionType}/receipt?ref=${val.reference}`;
-
-        /*           console.log(url, 'url') */
 
                   return (
                     <Fragment key={index}>

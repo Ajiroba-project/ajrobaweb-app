@@ -244,7 +244,7 @@ export const ProfileForm: React.FC = () => {
                 id="male"
                 {...register("gender", { required: true })}
                 value="true"
-                className="mr-2 text-wdc-inactivebutton"
+                className="mr-2 text-wdc-inactivebutton accent-[#F25E26]"
               />
 
             </div>
@@ -263,7 +263,7 @@ export const ProfileForm: React.FC = () => {
                 id="female"
                 {...register("gender", { required: true })}
                 value="false"
-                className=" text-wdc-inactivebutton"
+                className=" text-wdc-inactivebutton accent-[#F25E26]"
               />
 
             </div>

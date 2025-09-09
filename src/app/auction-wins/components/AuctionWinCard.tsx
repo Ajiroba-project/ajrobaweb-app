@@ -136,6 +136,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
   const [selectedBank, setSelectedBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [accountName, setAccountName] = useState("");
+  const [validatedBankName, setValidatedBankName] = useState("");
   const [isLoadingBanks, setIsLoadingBanks] = useState(false);
   const [isValidatingAccount, setIsValidatingAccount] = useState(false);
   const [isProcessingCashout, setIsProcessingCashout] = useState(false);
@@ -221,6 +222,9 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       const data = await response.json();
       if (data.status === "success") {
         setAccountName(data.data.accountName);
+        // Map bank code to bank name from loaded banks
+        const found = banks.find((b: any) => b.code === selectedBank);
+        setValidatedBankName(found?.name || "");
         toast.success("Account details validated successfully");
       } else {
         toast.error(data.message || "Failed to validate account details");
@@ -814,7 +818,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   value="delivery"
                   checked={selectedRedemption === "delivery"}
                   onChange={(e) => setSelectedRedemption(e.target.value)}
-                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                  className="h-4 w-4 accent-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
                 />
                 <label htmlFor="delivery" className="text-gray-700">
                   By Delivery
@@ -829,7 +833,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   value="voucher"
                   checked={selectedRedemption === "voucher"}
                   onChange={(e) => setSelectedRedemption(e.target.value)}
-                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                  className="h-4 w-4 accent-[#F25E26] text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
                 />
                 <label htmlFor="voucher" className="text-gray-700">
                   Gift Voucher
@@ -844,7 +848,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   value="transfer"
                   checked={selectedRedemption === "transfer"}
                   onChange={(e) => setSelectedRedemption(e.target.value)}
-                  className="h-4 w-4 text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                  className="h-4 w-4 accent-[#F25E26] text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
                 />
                 <label htmlFor="transfer" className="text-gray-700">
                   Cash Transfer
@@ -1142,26 +1146,35 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
           icon={""}
           isOpen={isBankTransferModalOpen}
           onClose={() => setIsBankTransferModalOpen(false)}
-          title="Bank Transfer Details"
+          title=""
           handleEvent={() => setIsBankTransferModalOpen(false)}
         >
-          <div className="flex flex-col p-4">
-            <div className="space-y-4">
+          <div className="flex flex-col p-6">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900">Cash Transfer</h3>
+              <p className="text-sm text-gray-500 mt-1">Please Input Account Details Here</p>
+            </div>
+
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Select Bank</label>
-                <select
-                  value={selectedBank}
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#F25E26] focus:ring-[#F25E26]"
-                  disabled={isLoadingBanks}
-                >
-                  <option value="">Select a bank</option>
-                  {banks.map((bank: any) => (
-                    <option key={bank.code} value={bank.code}>
-                      {bank.name}
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-sm font-medium text-gray-700">Product Market Value</label>
+                <input
+                  type="text"
+                  value={formatCurrency(selectedTransaction?.cost_price)}
+                  disabled
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 shadow-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Account Name</label>
+                <input
+                  type="text"
+                  value={accountName}
+                  readOnly
+                  placeholder="Enter your Account Name"
+                  className="mt-1 block w-full rounded-md border border-gray-200 bg-gray-50 p-3 text-gray-900 shadow-sm"
+                />
               </div>
 
               <div>
@@ -1169,52 +1182,64 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                 <input
                   type="text"
                   value={accountNumber}
-                  onChange={(e) => setAccountNumber(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#F25E26] focus:ring-[#F25E26]"
-                  placeholder="Enter account number"
+                  onChange={(e) => {
+                    setAccountNumber(e.target.value);
+                    if (accountName) setAccountName("");
+                    if (validatedBankName) setValidatedBankName("");
+                  }}
+                  placeholder="Enter your Account Number"
                   maxLength={10}
+                  className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm focus:border-[#F25E26] focus:ring-[#F25E26]"
                 />
               </div>
 
-              {accountName && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Account Name</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Bank Name</label>
+                {!accountName ? (
+                  <select
+                    value={selectedBank}
+                    onChange={(e) => {
+                      setSelectedBank(e.target.value);
+                      if (accountName) setAccountName("");
+                      if (validatedBankName) setValidatedBankName("");
+                    }}
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm focus:border-[#F25E26] focus:ring-[#F25E26]"
+                    disabled={isLoadingBanks}
+                  >
+                    <option value="">Select bank</option>
+                    {banks.map((bank: any) => (
+                      <option key={bank.code} value={bank.code}>
+                        {bank.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
                   <input
                     type="text"
-                    value={accountName}
+                    value={validatedBankName}
                     readOnly
-                    className="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-200 bg-gray-50 p-3 text-gray-900 shadow-sm"
                   />
-                </div>
-              )}
+                )}
+              </div>
 
-              <div className="mt-6 flex justify-between gap-4 flex-wrap">
+              <div className="pt-2 flex justify-between gap-4">
                 <DefaultButton
                   text="Back"
-                  className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                  className="rounded-md border-2 border-[#F25E26] px-6 py-2 text-[#F25E26]"
                   type="button"
                   handleClick={() => {
                     setIsBankTransferModalOpen(false);
                     setIsWinningAdviseModalOpen(true);
                   }}
                 />
-                {!accountName ? (
-                  <DefaultButton
-                    text={isValidatingAccount ? "Validating..." : "Validate Account"}
-                    className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
-                    type="button"
-                    handleClick={validateAccountDetails}
-                    disabled={isValidatingAccount}
-                  />
-                ) : (
-                  <DefaultButton
-                    text={isProcessingCashout ? "Processing..." : "Confirm Transfer"}
-                    className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
-                    type="button"
-                    handleClick={handleCashout}
-                    disabled={isProcessingCashout}
-                  />
-                )}
+                <DefaultButton
+                  text={isValidatingAccount ? "Validating..." : (isProcessingCashout ? "Processing..." : (accountName ? "Send money" : "Validate Account"))}
+                  className="rounded-md bg-[#F25E26] px-6 py-2 text-white"
+                  type="button"
+                  handleClick={() => { if (!accountName) { validateAccountDetails(); } else { handleCashout(); } }}
+                  disabled={isValidatingAccount || isProcessingCashout}
+                />
               </div>
             </div>
           </div>

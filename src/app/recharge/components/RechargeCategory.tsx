@@ -85,7 +85,7 @@ const router = useRouter();
              /*      onClick={() => setUserNav(value.name)} */
              onClick={()=> router.push(`/recharge${value.path}`)}
                 >
-                  <p className='text-lg '>{value.name}</p>{' '}
+                  <p className='text-lg font-bold '>{value.name}</p>{' '}
                 </div>
               </div>
             </div>

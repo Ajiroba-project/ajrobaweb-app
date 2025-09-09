@@ -44,7 +44,7 @@ export const Footer = () => {
           </div>
 
           <div className='flex flex-col justify-start'>
-            <p className='text-lg'>Quick Links</p>
+            <p className='text-lg font-semibold'>Quick Links</p>
             <ul className='py-2 '>
               {quickLinks.map((val, index) => (
                 <li
@@ -62,7 +62,7 @@ export const Footer = () => {
             </ul>
           </div>
           <div className='flex flex-col justify-start'>
-            <p className='text-lg '>Our Company</p>
+            <p className='text-lg font-semibold'>Our Company</p>
             <ul className='py-2'>
               {ourCompany.map((val, index) => (
                 <li key={index} className='cursor-pointer py-2 text-base '>
@@ -77,7 +77,7 @@ export const Footer = () => {
             </ul>
           </div>
           <div>
-            <p className='text-lg'>Get In Touch </p>
+            <p className='text-lg font-semibold'>Get In Touch </p>
             <ul className='py-2'>
               {getInTouch.map((val, index) => (
                 <li

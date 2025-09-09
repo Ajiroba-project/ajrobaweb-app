@@ -19,6 +19,7 @@ import { useMutateData } from '@/hooks/useMutateNewData'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import Input from "./Input";
 import * as yup from "yup";
+import { formatCurrency } from '@/utils/formatCurrency'
 
 export const CablePayment = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -384,7 +385,7 @@ export const CablePayment = () => {
         <div className="flex items-center justify-center ">
           <Formtitle
             title="Payment"
-            subtitle="you can make your payment with any of the payment options below "
+            subtitle="You can make your payment with any of the payment options below "
           />
         </div>
 
@@ -393,24 +394,24 @@ export const CablePayment = () => {
 
             <div>
               <h3 className="text-[#6E6E6E]">Name: </h3>
-              <p>{customerCabledetails ? customerCabledetails : 'NA'}</p>
+              <p className='font-semibold'>{customerCabledetails ? customerCabledetails : 'NA'}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Operator: </h3>
-              <p>{CableDetails?.decoder ? CableDetails?.decoder : 'NA'}</p>
+              <p className='font-semibold'>{CableDetails?.decoder ? CableDetails?.decoder : 'NA'}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Package: </h3>
-              <p>{CableDetails?.bundle ? CableDetails?.bundle : 'NA'}</p>
+              <p className='font-semibold'>{CableDetails?.bundle ? CableDetails?.bundle : 'NA'}</p>
             </div>
 
             <div>
               <h3 className="text-[#6E6E6E]">Smart Card/IUC Number</h3>
-              <p>{CableDetails?.iucnumber ? CableDetails?.iucnumber : 'NA'}</p>
+              <p className='font-semibold'>{CableDetails?.iucnumber ? CableDetails?.iucnumber : 'NA'}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Amount</h3>
-              <p>{amount}</p>
+              <p className='font-semibold'>{formatCurrency(amount)}</p>
             </div>
 
             <div className="my-5 flex flex-wrap w-full items-center justify-center gap-8">

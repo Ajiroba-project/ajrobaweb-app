@@ -3,7 +3,7 @@ import React, { Fragment, Suspense, useState } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { HeadingText } from '../component/Heading'
-import { FaWhatsapp } from 'react-icons/fa6'
+import { FaInstagram, FaFacebook, FaWhatsapp, FaTiktok, FaFacebookF, FaYoutube } from 'react-icons/fa6'
 import { useRouter } from "next/navigation";
 import livechathome from '@/app/asset/image/livechathome.svg'
 import Image from 'next/image'
@@ -11,6 +11,7 @@ import Image from 'next/image'
 import mesager from '@/app/asset/image/messager.png'
 import ing from '@/app/asset/image/instagram.png'
 import gmail from '@/app/asset/image/gmail.png'
+import Link from 'next/link'
 
 const LiveChatPage = () => {
 
@@ -48,7 +49,7 @@ const LiveChatPage = () => {
 
             <div className="md:w-1/2 w-full mb-6 md:mb-0 text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-Poppins font-semibold mb-3 text-[#111111]">
-                We &apos; re Here to Help:
+                We&apos;re Here to Help:
               </h1>
               <h2 className="text-base font-semibold font-Poppins text-[#E84526] mb-4">
                 Ajiroba Technologies Live Chat
@@ -61,19 +62,19 @@ const LiveChatPage = () => {
 
               <div className="flex justify-center md:justify-start flex-wrap space-x-4">
                 <button onClick={() => { router.push("/mainlivechat") }}
-                  className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
+                  className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:bg-[#F25E26] hover:text-white text-[#2A2A2A] font-semibold font-Poppins rounded"
                 >
                   Chat Now
                 </button>
                 <button onClick={() => { router.push("/selfhelp") }}
-                  className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:[#FCDFD4] text-[#2A2A2A]  font-semibold rounded"
+                  className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:bg-[#F25E26] hover:text-white text-[#2A2A2A]  font-semibold rounded"
                 >
                   Self Help
                 </button>
               </div>
 
               <div className="flex justify-center md:justify-start space-x-4 mt-6">
-                <a href="/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+               {/*  <a href="/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                   <FaWhatsapp color='#60d669' className="h-8 w-8" />
                 </a>
                 <a href="/" target="_blank" rel="noopener noreferrer" aria-label="Messenger">
@@ -84,7 +85,22 @@ const LiveChatPage = () => {
                 </a>
                 <a href="/" aria-label="Gmail">
                   <Image src={gmail} alt="livechathome" className="h-8 w-8" />
-                </a>
+                </a> */}
+
+<div className='header-socials flex gap-3'>
+              <Link href='https://www.facebook.com/share/1BvVA6ERkU/'>
+                <FaFacebook className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
+              </Link>
+              <Link href='https://www.youtube.com/@AjirobaMedia'>
+                <FaYoutube className='rounded-full bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
+              </Link>
+              <Link href='https://www.tiktok.com/@ajiroba.tech?_t=ZS-8yexHRqXwIs&_r=1'>
+                <FaTiktok className='rounded-lg bg-white p-2  text-4xl text-black hover:bg-[#F25E26]' />
+              </Link>
+              <Link href='https://www.instagram.com/ajirobatech?utm_source=qr&igsh=ODY5NWZtcmE0dDNk'>
+                <FaInstagram className='rounded-xl text-2xl mt-2  hover:text-[#F25E26]' />
+              </Link>
+            </div>
               </div>
             </div>
 

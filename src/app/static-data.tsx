@@ -479,12 +479,12 @@ export const ourCompany = [
 ]
 export const getInTouch = [
   {
-    name: '1, Praisehill estate, Arepo, ogun State',
+    name: '1, Praisehill Estate, Arepo, Ogun State',
     links: '',
     icon: <IoLocationOutline />
   },
   {
-    name: '(+234) 9169 881 005',
+    name: '(+234) 7038 809 512',
     links: '',
     icon: <FiPhoneCall />
   },

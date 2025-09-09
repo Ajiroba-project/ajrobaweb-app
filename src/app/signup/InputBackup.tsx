@@ -430,7 +430,7 @@ function Page() {
                                         id="male"
                                         {...register("gender", { required: true })}
                                         value="true"
-                                        className="mr-2 text-wdc-inactivebutton"
+                                        className="mr-2 text-wdc-inactivebutton accent-[#F25E26]"
                                     />
                                     <label
                                         htmlFor="male"
@@ -446,7 +446,7 @@ function Page() {
                                         id="female"
                                         {...register("gender", { required: true })}
                                         value="false"
-                                        className="mr-2 text-wdc-inactivebutton"
+                                        className="mr-2 text-wdc-inactivebutton accent-[#F25E26]"
                                     />
                                     <label
                                         htmlFor="female"

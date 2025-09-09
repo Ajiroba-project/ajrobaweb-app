@@ -45,7 +45,7 @@ const AboutUsPage = () => {
     {
       name: 'Transparent',
       description:
-        'We always promise what we can deliver and deliver what we promise.  Our transactions are conducted without any form of biase in all our processes.'
+        'We always promise what we can deliver and deliver what we promise.  Our transactions are conducted without any form of basic in all our processes.'
     },
     {
       name: 'Customer-Centric',

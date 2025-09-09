@@ -531,6 +531,20 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     return () => observer.disconnect();
   }, [calculateNavigationFit]);
 
+  // Determine if a parent menu item should be highlighted as active
+  const isParentActive = (menuItem: any): boolean => {
+    try {
+      if (!menuItem) return false;
+      if (pathname === menuItem.path) return true;
+      if (Array.isArray(menuItem.submenu)) {
+        return menuItem.submenu.some((sub: any) => typeof sub?.path === 'string' && pathname?.startsWith(sub.path));
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
@@ -816,7 +830,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       {val.submenu ? (
                         <div className='relative'>
                           <span 
-                            className='flex items-center gap-1 cursor-pointer font-Poppins text-xs md:text-sm lg:text-sm xl:text-base font-medium text-[#A09F9F] hover:text-[#F25E26] transition-colors duration-200 whitespace-nowrap'
+                            className={`flex items-center gap-1 cursor-pointer font-Poppins text-xs md:text-sm lg:text-sm xl:text-base font-medium transition-colors duration-200 whitespace-nowrap ${isParentActive(val) ? 'text-[#F25E26]' : 'text-[#A09F9F] hover:text-[#F25E26]'}`}
                             onClick={() => setHoveredMenu(hoveredMenu === index ? null : index)}
                           >
                             {val.name}
@@ -869,9 +883,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       ) : (
                         <Link
                           href={isRootPath ? val.path : `${val.path}`}
-                          className={`font-Poppins text-xs md:text-sm lg:text-sm xl:text-base font-medium hover:text-[#F25E26] transition-colors duration-200 whitespace-nowrap ${
-                            pathname === val.path ? 'text-[#F25E26]' : 'text-[#A09F9F]'
-                          }`}
+                          className={`font-Poppins text-xs md:text-sm lg:text-sm xl:text-base font-medium transition-colors duration-200 whitespace-nowrap ${isParentActive(val) ? 'text-[#F25E26]' : 'text-[#A09F9F] hover:text-[#F25E26]'}`}
                         >
                           {val.name}
                         </Link>

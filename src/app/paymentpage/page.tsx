@@ -902,6 +902,7 @@ const Page = () => {
                                 onChange={() =>
                                   handlePaymentSelection("wallet")
                                 }
+                                className="accent-[#F25E26]"
                               />
                               <label className="ml-2" htmlFor="wallet">
                                 Wallet
@@ -923,6 +924,7 @@ const Page = () => {
                                 name="wallet"
                                 value="card"
                                 onChange={() => handlePaymentSelection("card")}
+                                className="accent-[#F25E26]"
                               />
                               <label className="ml-2" htmlFor="card">
                                 Pay with Cards, USSD or bank transfer
@@ -1216,7 +1218,7 @@ const Page = () => {
 
                 <div>
                   <p className="text-[#2A2A2A]">
-                    32, Ajiroba street,arepo,lagos
+                    32, Ajiroba street,Arepo,lagos
                   </p>
                 </div>
               </div>
