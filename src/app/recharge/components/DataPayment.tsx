@@ -20,6 +20,7 @@ import { useMutateData } from '@/hooks/useMutateNewData'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import Input from "./Input";
 import * as yup from "yup";
+import { formatCurrency } from '@/utils/formatCurrency'
 
 export const DataPayment = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -372,7 +373,7 @@ export const DataPayment = () => {
         <div className="flex items-center justify-center ">
           <Formtitle
             title="Payment"
-            subtitle="you can make your payment with any of the payment options below "
+            subtitle="You can make your payment with any of the payment options below "
           />
         </div>
 
@@ -380,20 +381,20 @@ export const DataPayment = () => {
           <form className="flex w-full flex-col items-start justify-start gap-4 py-10 ">
             <div>
               <h3 className="text-[#6E6E6E]">Network Provider</h3>
-              <p>{dataDetails?.datanetwork}</p>
+              <p className='font-semibold'>{dataDetails?.datanetwork}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Phone Number</h3>
-              <p>{dataDetails?.dataphone}</p>
+              <p className='font-semibold'>{dataDetails?.dataphone}</p>
             </div>
 
             <div>
               <h3 className="text-[#6E6E6E]">Data Bundle</h3>
-              <p>{dataDetails?.datadata}</p>
+              <p className='font-semibold'>{dataDetails?.datadata}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Amount</h3>
-              <p>{dataDetails?.dataamount}</p>
+              <p className='font-semibold'>{formatCurrency(dataDetails?.dataamount)}</p>
             </div>
 
             <div className="my-5 flex flex-wrap w-full items-center justify-center gap-8">

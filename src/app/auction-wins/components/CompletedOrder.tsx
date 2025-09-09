@@ -96,6 +96,7 @@ import { useAuthStore } from "@/store/store";
 import * as yup from "yup";
 import { FaStar } from "react-icons/fa";
 import { useMutateData } from "@/hooks/useMutateNewData";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type Product = {
   name: string;
@@ -442,7 +443,7 @@ const submitFormdelete = async (data: any, event: any) => {
           ))}
         </td>
         <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
-          ₦ {val.total_price}
+          {formatCurrency(val.total_price)}
         </td>
         <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
           {new Date(val.order_date).toLocaleString()}

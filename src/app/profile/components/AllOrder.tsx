@@ -22,6 +22,7 @@ import { FaStar } from "react-icons/fa";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import { RiH1 } from "react-icons/ri";
 import Cookies from "js-cookie";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type Product = {
   name: string;
@@ -326,7 +327,7 @@ export const AllOrder = ({ transac }: transacProps) => {
             ))}
           </td>
           <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
-            ₦ {val.total_price}
+            {formatCurrency(val.total_price)}
           </td>
           <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
             {new Date(val.order_date).toLocaleString()}

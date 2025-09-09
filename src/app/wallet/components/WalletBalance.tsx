@@ -383,6 +383,9 @@ export const WalletBalance = () => {
     staleTime: 0,
   });
 
+
+  // console.log(userInfo?.data, 'userInfo');
+
   useEffect(() => {
     if (tkn_) {
       setIsTokenReady(true);

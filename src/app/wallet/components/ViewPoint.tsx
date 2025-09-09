@@ -50,14 +50,22 @@ export const ReferralPointsModal = ({ isOpen, setIsOpen, referralData }: any) =>
               </tr>
             </thead>
             <tbody className='mt-8' >
-              {pointinfo?.data?.data?.map((referral: any, index: number) => (
-                <tr key={index}>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
-                  <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.date_created}</td>
+              {Array.isArray(pointinfo?.data?.data) && pointinfo.data.data.length > 0 ? (
+                pointinfo.data.data.map((referral: any, index: number) => (
+                  <tr key={index}>
+                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
+                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
+                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
+                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.date_created}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="p-6 text-center text-[#A09F9F] font-Poppins text-sm">
+                    No referral points data available.
+                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

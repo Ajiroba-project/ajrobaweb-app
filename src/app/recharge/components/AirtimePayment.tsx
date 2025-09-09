@@ -16,6 +16,7 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 import { useGetDatanew } from '@/hooks/useGetData'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 export const AirtimePayment = () => {
 
@@ -401,7 +402,7 @@ export const AirtimePayment = () => {
         <div className='flex items-center justify-center '>
           <Formtitle
             title='Payment'
-            subtitle='you can make your payment with any of the payment options below '
+            subtitle='You can make your payment with any of the payment options below '
           />
         </div>
 
@@ -411,15 +412,15 @@ export const AirtimePayment = () => {
           <form className='flex w-full flex-col items-start justify-start gap-4 py-10 '>
             <div>
               <h3 className='text-[#6E6E6E]'>Network Provider</h3>
-              <p>{AirtimeDetails?.network}</p>
+              <p className='font-semibold'>{AirtimeDetails?.network}</p>
             </div>
             <div>
               <h3 className='text-[#6E6E6E]'>Phone Number</h3>
-              <p>{AirtimeDetails?.phone}</p>
+              <p className='font-semibold'>{AirtimeDetails?.phone}</p>
             </div>
             <div>
               <h3 className='text-[#6E6E6E]'>Amount</h3>
-              <p>{AirtimeDetails?.amount}</p>
+              <p className='font-semibold'>{formatCurrency(AirtimeDetails?.amount)}</p>
             </div>
             {/*  <div>
             <h3 className='text-[#6E6E6E]'>Tranction ID</h3>
