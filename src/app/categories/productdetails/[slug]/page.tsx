@@ -531,8 +531,6 @@ const Page = ({ params }: any) => {
 
   // console.log(productdata, 'datatatat')
 
-
-
   return (
     <main>
       <Header />

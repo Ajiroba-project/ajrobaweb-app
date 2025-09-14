@@ -43,58 +43,44 @@ export const RelatedProducts = ({ cardInfo }: cardDetails) => {
     return (
         <>
             <div
-                className={`${poppins.className} my-4 grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 mb-8 mt-4`}
+                className={`${poppins.className} my-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8 mt-4`}
             >
                 {paginatedCardInfo?.map((value, index) => (
-                    <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className=' w-full rounded bg-[#F6F6F6] shadow-md' key={index}>
-                        <div className='py-2'>
-                            <div className='flex items-center justify-center'>
-                                {/*   <Image src={value.image} alt='product' className='w-fit' /> */}
-                                <Image
-                                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
-                                    alt="product"
-                                    className=""
-                                    width={100}
-                                    height={100}
-                                    objectFit="cover"
-                                />
-                            </div>
+                    <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='w-full rounded-lg bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden' key={index}>
+                        <div className='py-4 h-48 flex items-center justify-center bg-gray-50'>
+                            <Image
+                                src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
+                                alt="product"
+                                className="object-contain max-h-full max-w-full"
+                                width={100}
+                                height={100}
+                            />
                         </div>
-                        <hr />
-                        <div className='py-3 shadow-inner'>
-                            <div className='flex flex-col gap-2 px-2'>
-                                <div className='flex  w-full items-center justify-between gap-3 capitalize'>
-                                    {/* product name */}
-                                    <div className=' text-sm font-semibold'>
-                                        <p className='text-pretty'>{value.name}</p>
+                        <div className='p-4'>
+                            <div className='flex flex-col gap-3'>
+                                <div className='flex w-full items-start justify-between gap-3'>
+                                    <div className='flex-1 min-w-0'>
+                                        <p className='text-sm font-semibold text-gray-900 truncate'>{value.name}</p>
                                     </div>
                                 </div>
-                                <div className='flex justify-between'>
-                                    {/* price */}
-                                    <div className='justify-start'>
-                                        <p className='w-max font-semibold'>
+                                <div className='flex justify-between items-center'>
+                                    <div className='flex flex-col'>
+                                        <p className='text-lg font-bold text-gray-900'>
                                             ₦&nbsp;{value.discount}
-                                            <span className='font-semibold '></span>
+                                        </p>
+                                        <p className='text-sm text-gray-500 line-through'>
+                                            ₦&nbsp;{value.price}
                                         </p>
                                     </div>
-
-                                    {/* stars */}
-                                    <p className='flex justify-end text-left'>
-                                        {Array.from({ length: value?.product_reviews?.average_ratings }, (_, index) => (
-                                            <span key={index}>
-                                                <FaStar className="text-[#F25E26]" />
-                                            </span>
+                                    <div className='flex'>
+                                        {Array.from({ length: value?.product_reviews?.average_ratings || 0 }, (_, index) => (
+                                            <FaStar key={index} className="text-[#F25E26] text-xs" />
                                         ))}
-                                    </p>
+                                    </div>
                                 </div>
-                                <p className='text-sm text-gray-500 line-through'>
-                                    ₦&nbsp;{value.price}
-                                </p>
                             </div>
                         </div>
-
                     </div>
-
                 ))}
 
 

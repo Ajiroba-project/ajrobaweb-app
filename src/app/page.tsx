@@ -27,6 +27,7 @@ import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
 import { AuctionComp } from "./component/AuctionComp";
 import Loading from "./component/Loading";
+import { LoadingSpinner } from "./component/LoadingSkeleton";
 
 type AuctionData = {
   id: string;
@@ -103,6 +104,10 @@ const Page = () => {
       true,
     );
 
+  // Calculate page counts after data is available
+  const auctionTotalPages = auctionInfo?.data ? Math.ceil(auctionInfo.data.length / cardsPerPage) : 0;
+  const categoriesTotalPages = categoriesInfo?.data ? Math.ceil(categoriesInfo.data.length / cardsPerPage) : 0;
+
   useEffect(() => {
     if (headerNav !== 'Home') {
       setHeaderNav('Home');
@@ -169,22 +174,30 @@ const Page = () => {
                 
                 {/* Pagination - Hidden on Mobile if Space Issue */}
                 <div className="flex items-center justify-center sm:justify-end">
-                  <CircularPagination
-                    pageCount={totalPages}
-                    onPageChange={({ selected }) => handleAuctionChange(selected)}
-                    className="flex items-center scale-75 sm:scale-100"
-                  />
+                  {auctionLoading ? (
+                    <div className="flex items-center justify-center gap-2 px-4 py-2">
+                      <LoadingSpinner size="sm" />
+                      <span className="text-sm text-gray-500 font-Poppins">Loading...</span>
+                    </div>
+                  ) : (
+                    <CircularPagination
+                      pageCount={auctionTotalPages}
+                      currentPage={auctionCurrentPage}
+                      onPageChange={({ selected }) => handleAuctionChange(selected)}
+                      className="flex items-center scale-75 sm:scale-100"
+                    />
+                  )}
                 </div>
               </div>
 
               {/* Auction Content */}
               <div className="w-full">
-                {loadingdata && <Loading />}
                 <AuctionComp
                   cardInfo={filteredAuctionData}
                   currentPage={0}
                   cardsNum={0}
                   onLoadingChange={onAuctionLoadingChange}
+                  isLoading={auctionLoading}
                 />
               </div>
             </div>
@@ -221,11 +234,19 @@ const Page = () => {
                 </div>
                 
                 <div className="flex items-center justify-center sm:justify-end">
-                  <CircularPagination
-                    pageCount={totalPages}
-                    onPageChange={({ selected }) => handleAuctionChange(selected)}
-                    className="flex items-center scale-75 sm:scale-100"
-                  />
+                  {categoriesLoading ? (
+                    <div className="flex items-center justify-center gap-2 px-4 py-2">
+                      <LoadingSpinner size="sm" />
+                      <span className="text-sm text-gray-500 font-Poppins">Loading...</span>
+                    </div>
+                  ) : (
+                    <CircularPagination
+                      pageCount={categoriesTotalPages}
+                      currentPage={categoryCurrentPage}
+                      onPageChange={({ selected }) => handlePageChange(selected)}
+                      className="flex items-center scale-75 sm:scale-100"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -233,7 +254,7 @@ const Page = () => {
               <div className="w-full">
                 <div className="flex flex-col items-center gap-6">
                   <div className="w-full">
-                    <CatFeatCard cardInfo={filteredCatData} />
+                    <CatFeatCard cardInfo={filteredCatData} isLoading={categoriesLoading} />
                   </div>
                   
                   <div className="flex justify-center pt-4">
@@ -259,7 +280,7 @@ const Page = () => {
               
               <div className="flex flex-col items-center gap-6">
                 <div className="w-full">
-                  <ProductCardMain cardInfo={featuredproductInfo?.data} />
+                  <ProductCardMain cardInfo={featuredproductInfo?.data} isLoading={featuredproducLoading} />
                 </div>
                 
                 <div className="flex justify-center pt-2">
@@ -288,7 +309,7 @@ const Page = () => {
               
               <div className="flex flex-col items-center gap-6">
                 <div className="w-full">
-                  <ProductCardMain cardInfo={topdeals?.data} />
+                  <ProductCardMain cardInfo={topdeals?.data} isLoading={topdealsLoading} />
                 </div>
                 
                 <div className="flex justify-center pt-2">
@@ -324,7 +345,7 @@ const Page = () => {
               
               <div className="flex flex-col items-center gap-6">
                 <div className="w-full">
-                  <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} />
+                  <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} isLoading={topweakLoading} />
                 </div>
                 
                 <div className="flex justify-center pt-2">

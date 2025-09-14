@@ -246,14 +246,14 @@ export default function RaffleTicket({
                                     <div 
                                         className="absolute bg-black" 
                                         style={{
-                                            left: '4rem',
-                                            right: '-0.5rem',
-                                            bottom: '0.1rem',
-                                            height: '0.375rem',
+                                            left: '6rem',
+                                            right: '-1rem',
+                                            bottom: '-1rem',
+                                            height: '0.175rem',
                                             transform: 'skewY(-8deg)',
                                             transformOrigin: 'left bottom',
                                             zIndex: 0,
-                                            minWidth: '200px'
+                                            minWidth: '100px'
                                         }}
                                     ></div>
                                 </div>
@@ -300,12 +300,12 @@ export default function RaffleTicket({
                                     style={{
                                         left: '2rem',
                                         right: '-1rem',
-                                        bottom: '0.1rem',
-                                        height: '0.25rem',
+                                        bottom: '-.5rem',
+                                        height: '0.15rem',
                                         transform: 'skewY(-8deg)',
                                         transformOrigin: 'left bottom',
                                         zIndex: 0,
-                                        minWidth: '100px'
+                                        minWidth: '50px'
                                     }}
                                 ></div>
                             </div>

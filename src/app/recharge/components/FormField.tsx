@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { FaRegEye } from 'react-icons/fa6'
 import { FiUpload } from 'react-icons/fi'
@@ -301,6 +301,187 @@ export const MutipleUpload = ({
         {errors?.[name]?.message}
       </div>
     </div>
+  )
+}
+
+// Currency formatting utility
+const formatCurrencyInput = (value: string): string => {
+  // Remove all non-numeric characters except decimal point
+  const numericValue = value.replace(/[^0-9.]/g, '');
+  
+  // Handle empty or invalid input
+  if (!numericValue || numericValue === '.') return '';
+  
+  // Parse the number
+  const number = parseFloat(numericValue);
+  
+  // Handle invalid numbers
+  if (isNaN(number)) return '';
+  
+  // Format with Nigerian Naira symbol and commas
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(number);
+};
+
+// Extract numeric value from formatted currency string
+const extractNumericValue = (formattedValue: string): string => {
+  return formattedValue.replace(/[^0-9.]/g, '');
+};
+
+export const CurrencyInputField = ({
+  label,
+  placeholder,
+  name,
+  register,
+  errors,
+  classname,
+  value,
+  isdisabled,
+  maxLength,
+  onKeyDown,
+  onInput,
+  onPaste
+}: inputProps) => {
+  const [displayValue, setDisplayValue] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
+
+  // Get the register function
+  const { onChange, onBlur, ref } = register(name, { 
+    required: true,
+    setValueAs: (value: string) => extractNumericValue(value)
+  })
+
+  // Handle input change with real-time formatting
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const numericValue = extractNumericValue(inputValue)
+    
+    // Update the display value with formatting
+    const formattedValue = formatCurrencyInput(numericValue)
+    setDisplayValue(formattedValue)
+    
+    // Create a new event with the numeric value for the form
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: numericValue
+      }
+    }
+    
+    // Call the register's onChange with the numeric value
+    onChange(syntheticEvent)
+    
+    // Call the original onInput if provided
+    if (onInput) {
+      onInput(e)
+    }
+  }
+
+  // Handle focus - show raw value for easier editing
+  const handleFocus = () => {
+    setIsFocused(true)
+    const numericValue = extractNumericValue(displayValue)
+    setDisplayValue(numericValue)
+  }
+
+  // Handle blur - format the value
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false)
+    const numericValue = extractNumericValue(displayValue)
+    const formattedValue = formatCurrencyInput(numericValue)
+    setDisplayValue(formattedValue)
+    
+    // Call the register's onBlur
+    onBlur(e)
+  }
+
+  // Handle key down events
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow: backspace, delete, tab, escape, enter, decimal point
+    if ([8, 9, 27, 13, 46, 110, 190].indexOf(e.keyCode) !== -1 ||
+        // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        (e.keyCode === 65 && e.ctrlKey === true) ||
+        (e.keyCode === 67 && e.ctrlKey === true) ||
+        (e.keyCode === 86 && e.ctrlKey === true) ||
+        (e.keyCode === 88 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right, down, up
+        (e.keyCode >= 35 && e.keyCode <= 40)) {
+      return
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      e.preventDefault()
+    }
+    
+    if (onKeyDown) {
+      onKeyDown(e)
+    }
+  }
+
+  // Handle paste events
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const pastedData = e.clipboardData.getData('text')
+    const numericValue = extractNumericValue(pastedData)
+    const formattedValue = formatCurrencyInput(numericValue)
+    setDisplayValue(formattedValue)
+    
+    // Create a synthetic event for the form
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: numericValue
+      }
+    }
+    
+    // Call the register's onChange with the numeric value
+    onChange(syntheticEvent)
+    
+    if (onPaste) {
+      onPaste(e)
+    }
+  }
+
+  // Initialize display value when component mounts or value prop changes
+  useEffect(() => {
+    if (value && typeof value === 'string') {
+      const numericValue = extractNumericValue(value)
+      const formattedValue = formatCurrencyInput(numericValue)
+      setDisplayValue(formattedValue)
+    }
+  }, [value])
+
+  return (
+    <>
+      <div className='relative flex flex-col'>
+        {label && <label className='py-2 text-sm'>{label}</label>}
+        <input
+          ref={ref}
+          name={name}
+          type="text"
+          placeholder={placeholder}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          value={displayValue}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          disabled={isdisabled}
+          maxLength={maxLength}
+        />
+
+        <div className='pt-1 text-xs text-rose-500'>
+          {errors?.[name]?.message}
+        </div>
+      </div>
+    </>
   )
 }
 

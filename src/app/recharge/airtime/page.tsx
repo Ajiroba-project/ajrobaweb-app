@@ -5,10 +5,9 @@ import { Fragment, Suspense, useEffect, useState } from "react";
 import {
   userNavStore,
   useAuthStore,
-  DataPurchase,
-  CablePurchase,
+
   AirtimePurchase,
-  ElectricityPurchase,
+
 } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { SideMenu } from "../components/SideMenu";

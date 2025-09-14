@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Airtimeschema, Cableschema, Electricitychema, Rechargeschema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
-import { InputField, SelectField } from "./FormField";
+import { InputField, SelectField, CurrencyInputField } from "./FormField";
 import { AirtimePurchase, ElectricityPurchase } from "@/store/store";
 import { Formtitle } from "./Formtitle";
 import { CustomModal, Modal } from "@/app/component/Modal";
@@ -23,6 +23,7 @@ import gloicon from "../../asset/gloicon.png";
 import { set } from "date-fns";
 import { Item } from "@radix-ui/react-select";
 import { fetchCableTVPackages } from "@/app/utils/fetchCableTVPackages";
+import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates';
 import { useDebounce } from "@/hooks/useDebounce";
 type DataProps = {
   decoder: string;
@@ -75,17 +76,7 @@ export const ElectricityDetails = () => {
     GLO: gloicon,
   };
 
-  const transformedData = bensdata?.data?.map(
-    (item: { biller: string; number: any }, index: number) => {
-      const billerUpper = item.biller.trim().toUpperCase();
-      return {
-        id: index + 1,
-        number: item.number,
-        type: billerUpper,
-        icon: iconMap[billerUpper] || null,
-      };
-    },
-  );
+  const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
   const {
     reset,
@@ -258,7 +249,7 @@ export const ElectricityDetails = () => {
 
 
           <div className="w-full max-w-[350px]">
-            <InputField
+            <CurrencyInputField
               name="elecamount"
               register={register}
               errors={errors}

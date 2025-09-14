@@ -20,6 +20,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
+import { CarouselSkeleton } from './LoadingSkeleton'
 
 export const CarouselSwiper = () => {
   return (
@@ -89,7 +90,11 @@ export const CarouselSwiper = () => {
   )
 }
 
-export const Carousel = () => {
+export const Carousel = ({ isLoading = false }: { isLoading?: boolean }) => {
+  if (isLoading) {
+    return <CarouselSkeleton />
+  }
+
   return (
     <div className='relative '>
       <CarouselSwiper />

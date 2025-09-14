@@ -1,9 +1,11 @@
 /* eslint-disable react/display-name */
 import Marquee from 'react-fast-marquee'
 import React, { memo } from 'react';
+import { MarqueeSkeleton } from './LoadingSkeleton';
 
 type Marqueeprop =  {
     info: string[]
+    isLoading?: boolean
 }
 
 // export const AuctionMarquee = ({info}:Marqueeprop)=>{
@@ -23,7 +25,11 @@ type Marqueeprop =  {
 // }
 
 
-export const AuctionMarquee = memo(({ info }:Marqueeprop) => {
+export const AuctionMarquee = memo(({ info, isLoading = false }:Marqueeprop) => {
+
+      if (isLoading) {
+    return <MarqueeSkeleton />
+  }
 
       if (!info) {
     return null;

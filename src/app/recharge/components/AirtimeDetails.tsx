@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { Airtimeschema } from './YupValidations'
 import { DefaultButton } from '../../component/Button'
-import { InputField, SelectField } from './FormField'
+import { InputField, SelectField, CurrencyInputField } from './FormField'
 import { AirtimePurchase } from '@/store/store'
 import { Formtitle } from './Formtitle'
 import { CustomModal, Modal } from '@/app/component/Modal'
@@ -21,6 +21,7 @@ import ninemobileicon from '../../asset/ninemobileicon.png'
 import gloicon from '../../asset/gloicon.png'
 import { set } from 'date-fns'
 import { Item } from '@radix-ui/react-select'
+import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates'
 
 
 type AirtimeProps = {
@@ -65,15 +66,7 @@ export const AirtimeDetails = () => {
     GLO: gloicon
   }
 
-  const transformedData = bensdata?.data?.map((item: { biller: string; number: any }, index: number) => {
-    const billerUpper = item.biller.trim().toUpperCase(); // Trim whitespace & ensure uppercase
-    return {
-      id: index + 1,
-      number: item.number,
-      type: billerUpper,
-      icon: iconMap[billerUpper] || null, // Default to null if not found
-    };
-  });
+  const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
 
 
@@ -147,13 +140,12 @@ export const AirtimeDetails = () => {
             type='text'
             placeholder='Phone Number'
           />
-          <InputField
+          <CurrencyInputField
             name='amount'
             register={register}
             errors={errors}
             type='text'
             placeholder='Amount'
-
           />
           <p onClick={() => setprintreceipt(!printreceipt)} className='text-end text-[#f25e26] underline cursor-pointer text-sm font-Poppins'>Beneficiaries</p>
 

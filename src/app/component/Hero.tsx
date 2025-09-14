@@ -6,11 +6,20 @@ import { marqueeInfo } from '../static-data'
 import { AuctionMarquee } from './Auction-Marquee'
 import { FiMenu } from 'react-icons/fi'
 import { IoClose } from 'react-icons/io5'
+import { useQueryData } from '@/hooks/useQueryData'
 
 type menuprops = boolean | null
 
 export const Hero = () => {
   const [active, setActive] = useState<menuprops>(false)
+  
+  // Add loading state for categories (used in SideMenu)
+  const { isLoading: categoriesLoading } = useQueryData(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories_and_subcategories/`, 
+    ["get categories_and_subcategories"], 
+    true
+  )
+
   return (
     <>
       <section className='flex flex-col mt-4 md:mt-0 2xl:mt-0 lg:mt-0 xl:mt-0   '>
@@ -47,14 +56,14 @@ export const Hero = () => {
             </div>
 
             <div className='col-span-3 lg:col-span-2  lg:mr-12'>
-              <Carousel />
+              <Carousel isLoading={false} />
             </div>
           </div>
         </div>
 
         <div className='my-4 bg-[#F25E26] p-4 text-white '>
           <div className=' p-2 px-5'>
-            <AuctionMarquee info={marqueeInfo} />
+            <AuctionMarquee info={marqueeInfo} isLoading={false} />
           </div>
         </div>
       </section>

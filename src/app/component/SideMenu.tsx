@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Poppins, Inter } from 'next/font/google'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useQueryData } from '@/hooks/useQueryData'
+import { SideMenuSkeleton, MobileSideMenuSkeleton } from './LoadingSkeleton'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -69,6 +70,10 @@ export const SideMenu = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  if (catnLoading) {
+    return <SideMenuSkeleton />
+  }
 
   return (
     <>
@@ -159,6 +164,10 @@ export const MobileSideMenu = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  if (catnLoading) {
+    return <MobileSideMenuSkeleton />
+  }
 
   return (
     <>

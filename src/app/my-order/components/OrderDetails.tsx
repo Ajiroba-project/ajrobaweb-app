@@ -19,7 +19,7 @@ export const OrderDetails = () => {
   const [pendingFilter, setPendingFilter] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isExporting, setIsExporting] = useState<boolean>(false);
-  const itemsPerPage = 2; // Number of items per page
+  const itemsPerPage = 15; // Number of items per page
 
   const { isLoggedIn, user, token } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,

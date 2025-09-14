@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { useRouter } from 'next/navigation'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
 
@@ -31,65 +32,45 @@ export const RelatedAuctionDetails = ({ cardInfo }) => {
     return (
         <>
             <div
-                className={`${poppins.className} my-8 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF]  `}
+                className={`${poppins.className} my-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8 mt-4 bg-[#FFFFFF]`}
             >
                 {paginatedCardInfo?.map((value, index) => (
-                    <div onClick={() => router.push(`/auction/productdetails/${value.id}`)} className='w-[25%] border border-white shadow-sm ' key={index}>
-                        {/*   {console.log(value, 'value')} */}
-                        <div className='py-2'>
-                            <div className='flex items-center justify-center'>
-                                <Image
-                                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
-                                    alt="product"
-                                    className=""
-                                    width={120}
-                                    height={300}
-                                    objectFit="cover"
-                                />
-                            </div>
+                    <div onClick={() => router.push(`/auction/productdetails/${value.id}`)} className='w-full cursor-pointer border border-gray-200 shadow-sm rounded-lg overflow-hidden hover:shadow-md transition-shadow' key={index}>
+                        <div className='py-4 h-48 flex items-center justify-center bg-gray-50'>
+                            <Image
+                                src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
+                                alt="product"
+                                className="object-contain max-h-full max-w-full"
+                                width={120}
+                                height={120}
+                            />
                         </div>
-                        {/* <hr /> */}
-                        <div className='py-3 mb-8 '>
-                            <div className='flex flex-col gap-2 px-2'>
-                                <div className='flex  w-full items-center justify-between gap-3 capitalize'>
-                                    <div className=' text-sm font-semibold'>
-                                        <p className=' font-Poppins text-[13px] font-bold'>{value.name}</p>
+                        <div className='p-4'>
+                            <div className='flex flex-col gap-3'>
+                                <div className='flex w-full items-start justify-between gap-3'>
+                                    <div className='flex-1 min-w-0'>
+                                        <p className='font-Poppins text-sm font-bold text-gray-900 truncate'>{value.name}</p>
                                     </div>
-
-                                    <div className='justify-start'>
-                                        <p className="text-sm" >Ticket Price:</p>
-                                        <p className=' font-Poppins text-[13px] font-semibold flex justify-end '>
-                                            ₦&nbsp;{value.ticket_price}
-                                            <span className='font-semibold '></span>
+                                    <div className='flex-shrink-0 text-right'>
+                                        <p className="text-xs text-gray-500">Ticket Price:</p>
+                                        <p className='font-Poppins text-sm font-semibold text-gray-900'>
+                                            {formatCurrency(value.ticket_price)}
                                         </p>
                                     </div>
                                 </div>
-                                <div className='flex justify-between'>
-
-                                    <p className='flex justify-end text-left'>
-                                        {Array.from({ length: value?.product_reviews?.average_ratings }, (_, index) => (
-                                            <span key={index}>
-                                                <FaStar className="text-[#F25E26]" />
-                                            </span>
+                                <div className='flex justify-between items-center'>
+                                    <div className='flex'>
+                                        {Array.from({ length: value?.product_reviews?.average_ratings || 0 }, (_, index) => (
+                                            <FaStar key={index} className="text-[#F25E26] text-xs" />
                                         ))}
-                                    </p>
-
-
-                                    <div className='justify-start'>
-                                        {/*  <p className='w-max text-[10px] font-normal font-Poppins  text-[#242423]'>
-                                           ({value?.product_reviews?.total_reviews})
-                                            <span className='font-semibold '></span>
-                                        </p> */}
                                     </div>
+                                    <p className='text-xs font-Poppins text-gray-600'>
+                                        w - {value?.weight || 'NA'}
+                                    </p>
                                 </div>
-                                <p className='text-[13px] font-Poppins  text-[#2A2A2A] '>
-                                    w - {value?.weight || 'NA'}
-                                </p>
                             </div>
                         </div>
-
                     </div>
-
                 ))}
 
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { Breadcrumb } from "@/app/component/Breadcrumb";
@@ -21,6 +21,7 @@ import { useSearchParams } from "next/navigation";
 import { useQueryData } from "@/hooks/useQueryData";
 import Loading from "@/app/component/Loading";
 import { userNavStore } from "@/store/store";
+import { GridSkeleton, SectionLoadingSkeleton } from "@/app/component/LoadingSkeleton";
 
 interface CardInfoItem {
   id: number;
@@ -137,6 +138,7 @@ const CategoryPage = () => {
     }
   }, [paths, path, headerNav, setHeaderNav]);
 
+  // Primary data fetching - only load what's needed
   const {
     data: filtercat,
     isLoading: filtercatLoading,
@@ -147,6 +149,7 @@ const CategoryPage = () => {
     !!cat_id,
   );
 
+  // Conditional data fetching - only when specific filters are applied
   const {
     data: filter_by_sub_cat,
     isLoading: filter_by_sub_cattLoading,
@@ -164,7 +167,7 @@ const CategoryPage = () => {
   } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_price_under/?category=${cat_id}&price_under=${Number(numericPriceQuery)}`,
     ["filter_by_price_under", cat_id, price_query],
-    true,
+    !!price_query && !!cat_id,
   );
 
   const {
@@ -174,7 +177,7 @@ const CategoryPage = () => {
   } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_from_price_above/?category=${cat_id}&filter_from_price_above=${Number(numericprice_greaterQuery)}`,
     ["filter_from_price_above", cat_id, price_greater],
-    true,
+    !!price_greater && !!cat_id,
   );
 
   const {
@@ -184,7 +187,7 @@ const CategoryPage = () => {
   } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_price_range/?category=${cat_id}&min_price=${Number(min)}&max_price=${Number(max)}`,
     ["filter_by_price_range", cat_id, min, max],
-    true,
+    !!(min || max) && !!cat_id,
   );
 
   const {
@@ -193,21 +196,23 @@ const CategoryPage = () => {
     isFetching: filter_by_ratingsfetching,
   } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_ratings/?category=${cat_id}&rating=${Number(rating)}`,
-    ["filter_by_price_range", cat_id, rating],
-    true,
+    ["filter_by_ratings", cat_id, rating],
+    !!rating && !!cat_id,
   );
 
+  // Featured and top deals - only load when specifically requested
   const { data: featuredproductInfo, isLoading: featuredproducLoading } =
     useQueryData<AuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/featured_products/`,
       ["get featureddetails"],
-      true,
+      !!feat_id,
     );
+  
   const { data: topdeals, isLoading: topdealsLoading } =
     useQueryData<AuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/top_deals_products/`,
       ["get topdeals"],
-      true,
+      !!top_id,
     );
 
   const {
@@ -217,7 +222,7 @@ const CategoryPage = () => {
   } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/filter_by_name/?category=${cat_id}&name=${searchval}`,
     ["filter_by_name", cat_id, searchval],
-    true,
+    !!searchval && !!cat_id,
   );
 
   const ProductsNew = useMemo(
@@ -241,297 +246,139 @@ const CategoryPage = () => {
     [filtercat, filter_by_sub_cat],
   );
 
-  const filteredProducts = useMemo(() => {
-    if (rating) {
-      return (
-        filter_by_ratings?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          id: product.id,
-          price: product.price,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-
-    if (feat_id) {
-      return (
-        featuredproductInfo?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          id: product.id,
-          price: product.price,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-    if (top_id) {
-      return (
-        topdeals?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          id: product.id,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-
-    if (sub) {
-      return (
-        filter_by_sub_cat?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          id: product.id,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-
-    if (searchval) {
-      return (
-        filter_by_name?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          id: product.id,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-
-    if (subid) {
-      return (
-        filter_by_sub_cat?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          id: product.id,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-    if (price_query) {
-      return (
-        filter_by_price_under?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          id: product.id,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-
-    if (min || max) {
-      return (
-        filter_by_price_range?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          id: product.id,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-
-    if (price_greater) {
-      return (
-        filter_from_price_above?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          id: product.id,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    }
-    if (cat_id) {
-      return (
-        filtercat?.data?.map((product) => ({
-          name: product.name,
-          image:
-            product.images && product.images.length > 0
-              ? product.images[0].image
-              : "", // Taking the first image as the main image
-          description: "",
-          price: product.price,
-          id: product.id,
-          previousPrice: product.discount,
-          rating: product.reviews,
-          time: "",
-          category: filtercat?.message,
-          subCategory: filter_by_sub_cat?.message,
-          tag: ["open"],
-        })) || []
-      );
-    } else {
-      return (
-        ProductsNew?.filter((product) => {
-          const lowerCaseParams = paths
-            .map((param) => param && param.toLowerCase())
-            .filter(Boolean);
-
-          const lowerCaseCategoryWords = product.category
-            .toLowerCase()
-            .split(" ");
-
-          const lowerCaseSubCategoryWords = product?.subCategory
-            ?.toLowerCase()
-            .split(" ");
-
-          return (
-            lowerCaseCategoryWords.some((word: string | null) =>
-              lowerCaseParams.includes(word),
-            ) ||
-            (lowerCaseSubCategoryWords &&
-              lowerCaseSubCategoryWords.some((word: string | null) =>
-                lowerCaseParams.includes(word),
-              ))
-          );
-        }) || []
-      );
-    }
+  // Determine which data source to use based on active filters
+  const activeDataSource = useMemo(() => {
+    if (rating) return filter_by_ratings;
+    if (feat_id) return featuredproductInfo;
+    if (top_id) return topdeals;
+    if (sub) return filter_by_sub_cat;
+    if (searchval) return filter_by_name;
+    if (subid) return filter_by_sub_cat;
+    if (price_query) return filter_by_price_under;
+    if (min || max) return filter_by_price_range;
+    if (price_greater) return filter_from_price_above;
+    if (cat_id) return filtercat;
+    return null;
   }, [
+    rating, filter_by_ratings,
+    feat_id, featuredproductInfo,
+    top_id, topdeals,
+    sub, filter_by_sub_cat,
+    searchval, filter_by_name,
     subid,
-    filter_by_sub_cat,
-    price_greater,
-    filter_from_price_above,
-    ProductsNew,
-    paths,
-    filter_by_name,
-    searchval,
-    filtercat,
-    cat_id,
-    filter_by_price_under,
-    sub,
-    price_query,
-    min,
-    max,
-    filter_by_price_range,
-    filter_by_ratings,
-    rating,
-    feat_id,
-    topdeals,
-    featuredproductInfo,
-    top_id,
+    price_query, filter_by_price_under,
+    min, max, filter_by_price_range,
+    price_greater, filter_from_price_above,
+    cat_id, filtercat
   ]);
+
+  // Optimized product transformation function
+  const transformProduct = useCallback((product: CardInfoItem) => ({
+    name: product.name,
+    image: product.images && product.images.length > 0 ? product.images[0].image : "",
+    description: "",
+    id: product.id,
+    price: product.price,
+    previousPrice: product.discount,
+    rating: product.reviews,
+    time: "",
+    category: filtercat?.message || "",
+    subCategory: filter_by_sub_cat?.message || "",
+    tag: ["open"],
+  }), [filtercat?.message, filter_by_sub_cat?.message]);
+
+  // Simplified filtered products logic
+  const filteredProducts = useMemo(() => {
+    if (!activeDataSource?.data) {
+      // Fallback to path-based filtering
+      return ProductsNew?.filter((product) => {
+        const lowerCaseParams = paths
+          .map((param) => param && param.toLowerCase())
+          .filter(Boolean);
+
+        const lowerCaseCategoryWords = product.category
+          .toLowerCase()
+          .split(" ");
+
+        const lowerCaseSubCategoryWords = product?.subCategory
+          ?.toLowerCase()
+          .split(" ");
+
+        return (
+          lowerCaseCategoryWords.some((word: string | null) =>
+            lowerCaseParams.includes(word),
+          ) ||
+          (lowerCaseSubCategoryWords &&
+            lowerCaseSubCategoryWords.some((word: string | null) =>
+              lowerCaseParams.includes(word),
+            ))
+        );
+      }) || [];
+    }
+
+    return activeDataSource.data.map(transformProduct);
+  }, [activeDataSource, ProductsNew, paths, transformProduct]);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [cat_id, subid, price_query, price_greater, min, max, rating, feat_id, top_id, searchval]);
 
   useEffect(() => {
     setIsOpen(true);
   }, []);
 
+  // Optimized loading state - only show loading for active queries
+  const isLoading = useMemo(() => {
+    if (cat_id && isFetching) return true;
+    if (subid && filter_by_sub_catfetching) return true;
+    if (price_query && filter_by_price_underfetching) return true;
+    if (price_greater && filter_from_price_abovefetching) return true;
+    if ((min || max) && filter_by_price_rangefetching) return true;
+    if (rating && filter_by_ratingsfetching) return true;
+    if (feat_id && featuredproducLoading) return true;
+    if (top_id && topdealsLoading) return true;
+    if (searchval && filter_by_namefetching) return true;
+    return false;
+  }, [
+    cat_id, isFetching,
+    subid, filter_by_sub_catfetching,
+    price_query, filter_by_price_underfetching,
+    price_greater, filter_from_price_abovefetching,
+    min, max, filter_by_price_rangefetching,
+    rating, filter_by_ratingsfetching,
+    feat_id, featuredproducLoading,
+    top_id, topdealsLoading,
+    searchval, filter_by_namefetching
+  ]);
 
-  const isLoading = (
-    isFetching ||
-    filter_by_sub_catfetching ||
-    filter_by_namefetching ||
-    filter_by_price_rangefetching ||
-    filter_by_ratingsfetching ||
-    filter_by_price_underfetching ||
-    filter_from_price_abovefetching
-  );
+  // Error state handling
+  const hasError = useMemo(() => {
+    // Add error checking logic here if your useQueryData hook returns error states
+    return false;
+  }, []);
 
 
 
 
-//   {(isFetching ||
-//     filter_by_sub_catfetching ||
-//     filter_by_namefetching ||
-//     filter_by_price_rangefetching ||
-//     filter_by_ratingsfetching ||
-//     filter_by_price_underfetching ||
-//     filter_from_price_abovefetching) ? (
-//     <Loading />
-// ) : filteredProducts.length > 0 ? (
-//     <ProductCategoryCard cardInfo={filteredProducts} />
-// ) : (
-//     <div className="text-center flex h-full items-center justify-center">
-//       No data available
-//     </div>
-// )}
+  // Performance optimization: Debounce search queries
+  const [debouncedSearchVal, setDebouncedSearchVal] = useState(searchval);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchVal(searchval);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchval]);
 
 
 
@@ -555,12 +402,76 @@ const CategoryPage = () => {
 
         <div className="w-9/12 h-full lg:pr-8 2xl:pr-8 pr-0 xl:pr-8 md:pr-0">
           {isLoading ? (
-            <Loading />
-          ) : filteredProducts.length > 0 ? (
-            <ProductCategoryCard cardInfo={filteredProducts} />
+            <SectionLoadingSkeleton 
+              title="Loading Products..." 
+              count={12}
+            />
+          ) : hasError ? (
+            <div className="text-center flex h-full items-center justify-center flex-col space-y-4">
+              <div className="text-red-500 text-xl">⚠️</div>
+              <h3 className="text-lg font-semibold text-gray-900">Something went wrong</h3>
+              <p className="text-gray-600">Unable to load products. Please try again.</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="px-4 py-2 bg-[#F25E26] text-white rounded-lg hover:bg-orange-600 transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          ) : paginatedProducts.length > 0 ? (
+            <div>
+              <ProductCategoryCard cardInfo={paginatedProducts} />
+              
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center mt-8 space-x-2">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 transition-colors"
+                  >
+                    Previous
+                  </button>
+                  
+                  <div className="flex space-x-1">
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      const pageNum = i + 1;
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={`px-3 py-2 rounded-lg transition-colors ${
+                            currentPage === pageNum
+                              ? 'bg-[#F25E26] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+              
+              {/* Results count */}
+              <div className="text-center mt-4 text-sm text-gray-600">
+                Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
+              </div>
+            </div>
           ) : (
-            <div className="text-center flex h-full items-center justify-center">
-              No data available
+            <div className="text-center flex h-full items-center justify-center flex-col space-y-4">
+              <div className="text-gray-400 text-6xl">🔍</div>
+              <h3 className="text-lg font-semibold text-gray-900">No products found</h3>
+              <p className="text-gray-600">Try adjusting your filters or search terms</p>
             </div>
           )}
         </div>
@@ -584,13 +495,7 @@ const CategoryPage = () => {
           )}
         </div>
 
-     {/*    <div className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8" style={{
-          height: '80vh',
-          overflow: 'scroll',
-        }} > */}
-        <div
-  className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8  overflow-scroll"
->
+        <div className="2xl:hidden xl:hidden md:hidden lg:hidden bg-[#F6F6F6] shadow h-full px-8 overflow-scroll">
           <SearchFilter />
         </div>
 

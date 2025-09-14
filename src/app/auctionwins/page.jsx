@@ -45,30 +45,82 @@ const WrappedPage = () => {
     try {
       const node = contentRef.current;
 
-      // Ensure images inside node are loaded
-      const images = node.querySelectorAll('img');
+      // Create a temporary container with fixed positioning
+      const tempContainer = document.createElement('div');
+      tempContainer.style.position = 'fixed';
+      tempContainer.style.top = '-9999px';
+      tempContainer.style.left = '0';
+      tempContainer.style.width = node.offsetWidth + 'px';
+      tempContainer.style.backgroundColor = '#ffffff';
+      tempContainer.style.fontFamily = window.getComputedStyle(node).fontFamily;
+      
+      // Clone the content
+      const clonedContent = node.cloneNode(true);
+      
+      // Fix all skewed lines in the cloned content
+      const skewedElements = clonedContent.querySelectorAll('[style*="skewY"]');
+      skewedElements.forEach(element => {
+        const currentStyle = element.getAttribute('style');
+        
+        // Extract positioning values
+        const leftMatch = currentStyle.match(/left:\s*([^;]+)/);
+        const bottomMatch = currentStyle.match(/bottom:\s*([^;]+)/);
+        const heightMatch = currentStyle.match(/height:\s*([^;]+)/);
+        
+        // Convert rem to px for positioning
+        let leftValue = leftMatch ? leftMatch[1].trim() : '0';
+        if (leftValue.includes('rem')) {
+          leftValue = (parseFloat(leftValue) * 16) + 'px'; // 1rem = 16px
+        }
+        
+        let bottomValue = bottomMatch ? bottomMatch[1].trim() : '0';
+        let heightValue = heightMatch ? heightMatch[1].trim() : '3px';
+        
+        // Create replacement element with CSS borders for skew effect
+        const replacement = document.createElement('div');
+        replacement.style.position = 'absolute';
+        replacement.style.left = leftValue;
+        replacement.style.bottom = bottomValue;
+        replacement.style.width = '0';
+        replacement.style.height = '0';
+        replacement.style.borderLeft = '100px solid transparent';
+        replacement.style.borderBottom = heightValue + ' solid #000000';
+        replacement.style.zIndex = '0';
+        
+        // Replace the problematic element
+        element.parentNode.replaceChild(replacement, element);
+      });
+      
+      tempContainer.appendChild(clonedContent);
+      document.body.appendChild(tempContainer);
+
+      // Wait for fonts and images to load
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Ensure all images are loaded
+      const images = tempContainer.querySelectorAll('img');
       await Promise.all(Array.from(images).map((img) => {
-        if (img.complete) return Promise.resolve();
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
         return new Promise((resolve) => {
           img.onload = resolve;
           img.onerror = resolve;
-          setTimeout(resolve, 3000);
+          setTimeout(resolve, 2000);
         });
       }));
 
-      // Use the node's actual on-screen size, do not mutate styles
-      const rect = node.getBoundingClientRect();
-
-      const canvas = await html2canvas(node, {
+      const canvas = await html2canvas(tempContainer, {
         scale: 2,
         useCORS: true,
+        allowTaint: true,
         logging: false,
         backgroundColor: '#ffffff',
-        windowWidth: Math.ceil(rect.width),
-        windowHeight: Math.ceil(rect.height),
-        scrollX: 0,
-        scrollY: -window.scrollY,
+        width: tempContainer.offsetWidth,
+        height: tempContainer.offsetHeight,
+        foreignObjectRendering: false,
       });
+
+      // Clean up temp container
+      document.body.removeChild(tempContainer);
 
       const imgData = canvas.toDataURL('image/png', 1.0);
       const pdf = new jsPDF({
@@ -93,6 +145,7 @@ const WrappedPage = () => {
       pdf.save(`auction-win-${filteredItems[0]?.ticket_number}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
     }
   };
 

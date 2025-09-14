@@ -5,16 +5,49 @@ import { Formtitle } from './Formtitle'
 import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
 import { FaToggleOn, FaToggleOff } from 'react-icons/fa'
+import { FaCheck } from 'react-icons/fa'
 import Cookies from 'js-cookie'
+import { useSaveBeneficiary } from '@/hooks/useSaveBeneficiary'
+import { CablePurchase } from '@/store/store'
 
+interface CableReceiptProps {
+  beneficiaryData?: {
+    number: string
+    biller: string
+    type: 'airtime' | 'data' | 'electricity' | 'cable'
+  }
+}
 
-export const CableReceipt = () => {
+export const CableReceipt = ({ beneficiaryData }: CableReceiptProps) => {
   const router = useRouter()
-  const [toggle, setToggle] = useState(false)
+  const { saveBeneficiary, isLoading, isSaved, error, isBeneficiarySaved } = useSaveBeneficiary()
+  
+  // Get data from store
+  const cableDetails = CablePurchase((state) => state.CableDetails)
+  
+  // Construct beneficiary data from store if not provided as prop
+  const beneficiaryDataFromStore = beneficiaryData || {
+    number: cableDetails.iucnumber,
+    biller: cableDetails.decoder,
+    type: 'cable' as const
+  }
+
+  // Check if this specific beneficiary is already saved
+  const isThisBeneficiarySaved = isBeneficiarySaved(beneficiaryDataFromStore)
 
   const usertoken = Cookies.get('atd')
-
   const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
+
+  const handleSaveBeneficiary = async () => {
+    // console.log(beneficiaryDataFromStore, 'bbb')
+
+    if (!beneficiaryDataFromStore.number || !beneficiaryDataFromStore.biller) {
+      console.error('No beneficiary data available')
+      return
+    }
+
+    await saveBeneficiary(beneficiaryDataFromStore)
+  }
   return (
     <section className='p-5 '>
       <div className='my-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
@@ -35,15 +68,27 @@ export const CableReceipt = () => {
           />
         </div>
       </div>
-      <div
-        className='flex items-center justify-center gap-2'
-        onClick={() => setToggle(!toggle)}
-      >
-        <p>Save as beneficiary</p>
-        {toggle ? (
-          <FaToggleOn className='text-[#F25E26] cursor-pointer text-3xl' />
-        ) : (
-          <FaToggleOff className='cursor-pointer text-3xl text-gray-300' />
+      <div className='flex flex-col items-center justify-center gap-2'>
+        <div className='flex items-center justify-center gap-2'>
+          <p className='text-gray-700'>
+            {isThisBeneficiarySaved ? 'Saved as beneficiary' : 'Save as beneficiary'}
+          </p>
+          {isThisBeneficiarySaved ? (
+            <FaCheck 
+              className='text-green-600 text-2xl cursor-pointer hover:text-green-700' 
+              onClick={handleSaveBeneficiary}
+            />
+          ) : isLoading ? (
+            <div className='w-6 h-6 border-2 border-[#F25E26] border-t-transparent rounded-full animate-spin'></div>
+          ) : (
+            <FaToggleOff 
+              className='text-3xl text-gray-300 cursor-pointer hover:text-gray-400' 
+              onClick={handleSaveBeneficiary}
+            />
+          )}
+        </div>
+        {error && (
+          <p className='text-red-500 text-sm text-center'>{error}</p>
         )}
       </div>
     </section>
