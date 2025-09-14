@@ -245,7 +245,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                                         <PhoneCall size={12} className="text-black" />
                                         <span className="text-black underline underline-offset-2">Customer careline</span>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">07038808512</div>
+                                    <div className="text-[#2A2A2A] font-semibold">07038809512</div>
                                 </div>
 
                                 {/* Email */}
@@ -391,7 +391,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                                         <PhoneCall size={12} className="text-black" />
                                         <span className="text-black underline underline-offset-2">Customer careline</span>
                                     </div>
-                                    <div className="text-[#2A2A2A] font-semibold">07038808512</div>
+                                    <div className="text-[#2A2A2A] font-semibold">07038809512</div>
                                 </div>
 
                                 {/* Email */}
