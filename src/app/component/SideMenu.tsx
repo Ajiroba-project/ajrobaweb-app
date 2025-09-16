@@ -77,7 +77,7 @@ export const SideMenu = () => {
 
   return (
     <>
-      <section className='pl-[4rem]' ref={menuRef}>
+      <section className='pl-[4rem] h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100' ref={menuRef}>
         <ul className='relative py-6'>
           {catInfo?.data?.map((val, index) => (
             <Fragment key={index}>
@@ -171,7 +171,7 @@ export const MobileSideMenu = () => {
 
   return (
     <>
-      <section className='bg-[#F6F6F6] p-6' ref={menuRef}>
+      <section className='bg-[#F6F6F6] p-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200' ref={menuRef}>
         <ul className='relative '>
           {catInfo?.data?.map((val, index) => (
             <Fragment key={index}>

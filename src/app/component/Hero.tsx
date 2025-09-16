@@ -24,7 +24,7 @@ export const Hero = () => {
     <>
       <section className='flex flex-col mt-4 md:mt-0 2xl:mt-0 lg:mt-0 xl:mt-0   '>
         <div className=''>
-          <div className='flex flex-col md:grid-cols-3 lg:grid lg:grid-cols-3'>
+          <div className='flex flex-col md:grid-cols-3 lg:grid lg:grid-cols-3 lg:items-stretch'>
             <div className='flex flex-col items-center bg-[#F6F6F6] lg:hidden '>
               <div style={{
                 zIndex: 21
@@ -51,11 +51,11 @@ export const Hero = () => {
               </div>
             </div>
 
-            <div className='hidden bg-[#F6F6F6] lg:block '>
+            <div className='hidden bg-[#F6F6F6] lg:block lg:h-[500px]'>
               <SideMenu />
             </div>
 
-            <div className='col-span-3 lg:col-span-2  lg:mr-12'>
+            <div className='col-span-3 lg:col-span-2 lg:mr-12 lg:h-[500px]'>
               <Carousel isLoading={false} />
             </div>
           </div>
