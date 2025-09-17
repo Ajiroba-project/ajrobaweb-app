@@ -16,10 +16,16 @@ import AuthMiddleware from '@/hooks/useAuthCart'
 import { useAuthStore } from '@/store/store';
 import  Loading  from "../component/Loading";
 
+// Small loading spinner component for individual operations
+const SmallSpinner = () => (
+  <div className="inline-block w-4 h-4 border-2 border-gray-300 border-t-[#E36414] rounded-full animate-spin"></div>
+);
+
 const Page = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [operationLoading, setOperationLoading] = useState<{ [key: number]: boolean }>({});
 
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
 
@@ -94,10 +100,9 @@ const Page = () => {
 
   // Function to handle quantity increase
   const handleIncrement = async (id: number, quantity: number) => {
-    // const sessionKey = Cookies.get("session_key");
-
+    setOperationLoading(prev => ({ ...prev, [id]: true }));
+    
     let sessionKey = Cookies.get("session_key");
-
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
     };
@@ -105,6 +110,7 @@ const Page = () => {
     if (tkn_) {
       headers["Authorization"] = `token ${tkn_}`;
     }
+
     try {
       const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/increase_item_quantity/", {
         cart_item_id: id,
@@ -114,23 +120,17 @@ const Page = () => {
         headers: headers,
       });
 
-      const successMessage = response.data?.message || "Item quantity increased successfully!";
-      toast.success(`${successMessage}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        onClose: () => router.push('/cart')
-      })
-      fetchCartItems(); // Refresh cart items after updating
-      triggerCartRefresh(); // Trigger header cart refresh
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-      toast.error(`${errorMessage}`, {
+      // Update local state immediately for better UX
+      setCartItemsn(prevItems => 
+        prevItems.map(item => 
+          item.id === id 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+
+      const successMessage = response.data?.message || "Quantity increased successfully!";
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -139,17 +139,40 @@ const Page = () => {
         draggable: true,
         progress: undefined,
         theme: 'light'
-      })
-      setError("Error increasing quantity");
+      });
+
+      triggerCartRefresh(); // Trigger header cart refresh
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      });
+    } finally {
+      setOperationLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
   // Function to handle quantity decrease
   const handleDecrement = async (id: number, quantity: number) => {
-    // const sessionKey = Cookies.get("session_key");
+    if (quantity <= 1) {
+      toast.warning("Quantity cannot be less than 1. Use delete to remove item.", {
+        position: 'top-right',
+        autoClose: 3000,
+        theme: 'light'
+      });
+      return;
+    }
 
+    setOperationLoading(prev => ({ ...prev, [id]: true }));
+    
     let sessionKey = Cookies.get("session_key");
-
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
     };
@@ -157,6 +180,7 @@ const Page = () => {
     if (tkn_) {
       headers["Authorization"] = `token ${tkn_}`;
     }
+
     try {
       const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/decrease_item_quantity/", {
         cart_item_id: id,
@@ -166,23 +190,17 @@ const Page = () => {
         headers: headers,
       });
 
-      const successMessage = response.data?.message || "Item quantity increased successfully!";
-      toast.success(`${successMessage}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        onClose: () => router.push('/cart')
-      })
-      fetchCartItems(); // Refresh cart items after updating
-      triggerCartRefresh(); // Trigger header cart refresh
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-      toast.error(`${errorMessage}`, {
+      // Update local state immediately for better UX
+      setCartItemsn(prevItems => 
+        prevItems.map(item => 
+          item.id === id 
+            ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+            : item
+        )
+      );
+
+      const successMessage = response.data?.message || "Quantity decreased successfully!";
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -191,15 +209,35 @@ const Page = () => {
         draggable: true,
         progress: undefined,
         theme: 'light'
-      })
-      setError("Error increasing quantity");
+      });
+
+      triggerCartRefresh(); // Trigger header cart refresh
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Error decreasing item quantity.";
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      });
+    } finally {
+      setOperationLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
   // Function to delete a cart item
   const handleDelete = async (id: number, quantity: number) => {
-    let sessionKey = Cookies.get("session_key");
+    // Show confirmation dialog
+    const confirmed = window.confirm("Are you sure you want to remove this item from your cart?");
+    if (!confirmed) return;
 
+    setOperationLoading(prev => ({ ...prev, [id]: true }));
+    
+    let sessionKey = Cookies.get("session_key");
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
     };
@@ -208,20 +246,21 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-
     try {
       const response = await axios.delete("https://staging.ajiroba.ng/v1/commerce/remove_from_cart/", {
         data: {
           cart_item_id: id,
-          session_key: sessionKey || null,  // Ensure the session_key is not empty
+          session_key: sessionKey || null,
           quantity: quantity
         },
         headers: headers,
       });
 
+      // Update local state immediately for better UX
+      setCartItemsn(prevItems => prevItems.filter(item => item.id !== id));
 
       const successMessage = response.data?.message || "Item removed successfully!";
-      toast.success(`${successMessage}`, {
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -229,16 +268,13 @@ const Page = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light',
-        onClose: () => router.push('/cart'),
+        theme: 'light'
       });
 
-      fetchCartItems(); // Refresh cart items after updating
       triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
-
       const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
-      toast.error(`${errorMessage}`, {
+      toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -246,10 +282,10 @@ const Page = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light',
+        theme: 'light'
       });
-
-      setError("Error removing item");
+    } finally {
+      setOperationLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
@@ -287,9 +323,6 @@ const Page = () => {
 
 
                 {
-
-
-
                   loading ? (
                     <p>Loading cart items...</p>
                   ) : error ? (
@@ -313,21 +346,31 @@ const Page = () => {
                             <div className="flex items-center mt-2">
                               <button
                                 onClick={() => handleDecrement(item.id, item.quantity)}
-                                className="px-2  bg-white text-[#111111] rounded border border-[#DEDEDE]"
+                                disabled={operationLoading[item.id] || item.quantity <= 1}
+                                className={`px-2 bg-white text-[#111111] rounded border border-[#DEDEDE] ${
+                                  operationLoading[item.id] || item.quantity <= 1 
+                                    ? 'opacity-50 cursor-not-allowed' 
+                                    : 'hover:bg-gray-50'
+                                }`}
                               >
-                                -
+                                {operationLoading[item.id] ? <SmallSpinner /> : '-'}
                               </button>
                               <input
                                 type="text"
                                 value={item.quantity}
                                 readOnly
-                                className="w-12 text-center  border-gray-300"
+                                className="w-12 text-center border-gray-300"
                               />
                               <button
                                 onClick={() => handleIncrement(item.id, item.quantity)}
-                                className="px-2  bg-[#E36414] text-white rounded border-[#E36414]"
+                                disabled={operationLoading[item.id]}
+                                className={`px-2 bg-[#E36414] text-white rounded border-[#E36414] ${
+                                  operationLoading[item.id] 
+                                    ? 'opacity-50 cursor-not-allowed' 
+                                    : 'hover:bg-[#d55a12]'
+                                }`}
                               >
-                                +
+                                {operationLoading[item.id] ? <SmallSpinner /> : '+'}
                               </button>
                             </div>
                           </div>
@@ -350,11 +393,17 @@ const Page = () => {
                             </h1>
 
                             <div
-                              className="flex items-center gap-2 mt-8 cursor-pointer"
-                              onClick={() => handleDelete(item.id, item.quantity)}
+                              className={`flex items-center gap-2 mt-8 ${
+                                operationLoading[item.id] 
+                                  ? 'cursor-not-allowed opacity-50' 
+                                  : 'cursor-pointer hover:opacity-80'
+                              }`}
+                              onClick={() => !operationLoading[item.id] && handleDelete(item.id, item.quantity)}
                             >
                               <RiDeleteBin6Line color="#E84526" />
-                              <h1 className="text-[#E84526]">Delete</h1>
+                              <h1 className="text-[#E84526]">
+                                {operationLoading[item.id] ? 'Removing...' : 'Delete'}
+                              </h1>
                             </div>
                           </div>
                         </div>
