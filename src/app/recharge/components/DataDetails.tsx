@@ -89,15 +89,15 @@ export const DataDetails = () => {
 
   const discourl = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/electric_discos/`;
 
-  const { data: discosdata, isLoading: discosLoading } = useGetDatanew(
-    discourl,
-    "get_electric_discos",
-    userToken || " ",
-  );
+  // const { data: discosdata, isLoading: discosLoading } = useGetDatanew(
+  //   discourl,
+  //   "get_electric_discos",
+  //   userToken || " ",
+  // );
 
 
 
-  const providersList = discosdata?.data?.map((provider: { name: any; }) => provider.name);
+  // const providersList = discosdata?.data?.map((provider: { name: any; }) => provider.name);
 
 
 
@@ -106,11 +106,11 @@ export const DataDetails = () => {
 
 
 
-  const { data: data_plansdata, isLoading: data_plansLoading } = useGetDatanew(
-    discourl,
-    "get_data_plans",
-    userToken || " ",
-  );
+  // const { data: data_plansdata, isLoading: data_plansLoading } = useGetDatanew(
+  //   discourl,
+  //   "get_data_plans",
+  //   userToken || " ",
+  // );
 
 
 
@@ -123,6 +123,16 @@ export const DataDetails = () => {
   // console.log(dataPlansData, 'dataPlansData')
 
   const dataPlan = dataPlansData?.data?.map((plan: { plan: string; code: number }) => `${plan.plan} -₦${plan.code}`) || [];
+
+  const extractAmountFromPlan = (planText: string): string | null => {
+    if (!planText) return null;
+    const match = planText.match(/₦\s*([\d,]+)/);
+    if (!match) return null;
+    return match[1].replace(/,/g, "");
+  };
+
+
+  // console.log(dataPlan, 'datatta')
 
 
   // console.log(dataPlan, 'dataPlannew')
@@ -176,10 +186,19 @@ export const DataDetails = () => {
             <SelectField
               name="datadata"
               register={register}
-              errors="errors"
+              errors={errors}
               options={dataPlan}
               label="Data Bundle"
               showlabel={false}
+              value={watch("datadata")}
+              onChange={(e) => {
+                const selected = e.target.value;
+                setValue("datadata", selected);
+                const amt = extractAmountFromPlan(selected);
+                if (amt) {
+                  setValue("dataamount", amt, { shouldValidate: true, shouldDirty: true });
+                }
+              }}
               className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
             />
           </div>
@@ -206,6 +225,7 @@ export const DataDetails = () => {
               errors={errors}
               type="text"
               placeholder="Amount"
+              value={watch("dataamount")}
             />
 
           </div>

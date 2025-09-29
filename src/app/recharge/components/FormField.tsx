@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { FaRegEye } from 'react-icons/fa6'
 import { FiUpload } from 'react-icons/fi'
+import './style.css'
 
 type inputProps = {
   name: string
@@ -208,32 +210,83 @@ export const SelectField = ({
   multiple,
   style,
   className,
-  value, // Accept value prop
-  onChange, // Accept onChange handler
+  isdisabled,
+  value,
+  onChange,
 }: selectProps & { style?: React.CSSProperties; value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) => {
+  // For multiple selection, keep native select to avoid behavior changes
+  if (multiple) {
+    return (
+      <div className='relative flex flex-col'>
+        {showlabel && <label className='py-2 text-sm'>{label} </label>}
+        <select
+          {...register(name, { required: true })}
+          name={name}
+          multiple
+          disabled={isdisabled}
+          style={style}
+          value={value}
+          onChange={onChange}
+          className={
+            className
+              ? className
+              : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`
+          }
+        >
+          <option value='' className='text-wdc-textbody'>
+            {label ? ` ${label}` : ''}
+          </option>
+          {options?.map((val: string, key: number) => (
+            <option key={key} className='text-wdc-textbody' value={val}>
+              {val}
+            </option>
+          ))}
+        </select>
+        <div className='pt-1 text-xs text-rose-500'>{errors?.[name]?.message}</div>
+      </div>
+    )
+  }
+
+  // Controlled value to sync with RHF and external value
+  const [selectedValue, setSelectedValue] = useState<string>(value ?? '')
+  useEffect(() => {
+    if (typeof value === 'string') setSelectedValue(value)
+  }, [value])
+
+  const reg = register(name, { required: true })
+
+  const handleValueChange = (val: string) => {
+    setSelectedValue(val)
+    // Update RHF hidden input
+    if (typeof reg.onChange === 'function') {
+      reg.onChange({ target: { value: val, name } } as any)
+    }
+    // Support existing onChange signature from native select
+    if (onChange) {
+      onChange({ target: { value: val, name } } as any)
+    }
+  }
+
   return (
     <div className='relative flex flex-col'>
       {showlabel && <label className='py-2 text-sm'>{label} </label>}
-      <select style={style}
-        {...register(name, { required: true })}
-        name={name}
-        value={value} // Bind value prop
-        onChange={onChange} // Bind onChange prop
-        className={
-          className
-            ? className
-            : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`
-        }
-      >
-        <option value='' className='text-wdc-textbody'>
-          {label ? ` ${label}` : ''}
-        </option>
-        {options?.map((val: string, key: number) => (
-          <option key={key} className='text-wdc-textbody' value={val}>
-            {val}
-          </option>
-        ))}
-      </select>
+
+      {/* Hidden input preserves RHF registration */}
+      <input type='hidden' name={name} value={selectedValue} ref={reg.ref} />
+
+      <Select value={selectedValue} onValueChange={handleValueChange} disabled={isdisabled}>
+        <SelectTrigger className={`${className ? className : 'xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'} selector`} style={style}>
+          <SelectValue placeholder={label ? ` ${label}` : ''} />
+        </SelectTrigger>
+        <SelectContent className='' style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
+          {options?.map((val: string, key: number) => (
+            <SelectItem key={key} value={val} className='text-[#2A2A2A] data-[highlighted]:bg-[#FCDFD4]  data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>
+              {val}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
       <div className='pt-1 text-xs text-rose-500'>{errors?.[name]?.message}</div>
     </div>
   )

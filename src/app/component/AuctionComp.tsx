@@ -184,6 +184,8 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
   const [makepayment, setmakepayment] = useState(false);
   const [successbid, setSuccessbid] = useState(false);
 
+  // console.log(ticketData,)
+
   const tkn_: string = Cookies.get("token") as string;
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
@@ -1056,7 +1058,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={formatCurrency(ticketData?.data?.ticket_amount)}
+                      value={formatCurrency(ticketData?.data?.total_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}

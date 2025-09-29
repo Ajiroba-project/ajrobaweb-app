@@ -1,0 +1,78 @@
+/* .selector {
+    overflow: hidden;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  .selector option {
+    padding: 8px 12px;
+    background-color: white !important;
+    color: #374151 !important;
+    border: none;
+  }
+  
+  .selector option:hover {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+  }
+  
+  .selector option:checked {
+    background-color: #f78120 !important;
+    color: white !important;
+  }
+  
+  .selector option:focus {
+    background-color: #e5e7eb !important;
+    color: #111827 !important;
+  }
+  
+
+  .selector option:active {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+  }
+  
+  .selector option:selected {
+    background-color: #f78120 !important;
+    color: white !important;
+  }
+
+
+
+
+  select > option{
+   background-color: #ffffff !important;
+   background: #ffffff !important;
+   color: #f78120 !important;
+  }
+
+  select > option:hover{
+    background-color: #ffffff !important;
+    color: #f78120 !important;
+    background: #ffffff !important;
+  }
+
+*/
+
+/* Remove browser autofill/focus light blue background (WebKit) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+select:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important; /* keep white background */
+  -webkit-text-fill-color: #111111 !important; /* keep dark text */
+  caret-color: #111111;
+  transition: background-color 9999s ease-out, color 9999s ease-out;
+}
+
+/* Remove system light-blue focus tint while preserving your focus ring */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(247, 129, 32, 0.2) !important; /* subtle orange glow */
+  border-color: #f78120 !important;
+  background-color: #ffffff;
+}

@@ -34,6 +34,16 @@ export const PhotoUpload = () => {
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop: (acceptedFiles) => {
       acceptedFiles.forEach((file) => {
+        // Additional validation to reject SVG and GIF files
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        const fileExtension = file.name.toLowerCase().split('.').pop();
+        const isAllowedExtension = ['jpg', 'jpeg', 'png'].includes(fileExtension || '');
+        
+        if (!allowedTypes.includes(file.type) || !isAllowedExtension) {
+          alert(`File ${file.name} is not supported. Only PNG, JPG, and JPEG files are allowed.`);
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
           setFiles([
@@ -51,7 +61,7 @@ export const PhotoUpload = () => {
     noClick: true,
     noKeyboard: true,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.svg']
+      'image/*': ['.jpeg', '.jpg', '.png']
     },
     maxSize: 1 * 1024 * 1024, // 1MB limit
     minSize: 1024, // 1KB minimum
@@ -141,7 +151,7 @@ export const PhotoUpload = () => {
           <p>
             <span className="brand1">Click to upload</span> or drag and drop
           </p>
-          <p className="text-sm text-gray-300">SVG, PNG, JPG, GIF (max 1MB, min 1KB)</p>
+          <p className="text-sm text-gray-300">PNG, JPG, JPEG (max 1MB, min 1KB)</p>
         </div>
         <div className="my-4 flex w-full items-center justify-center gap-3">
           <hr className="w-full" />
@@ -151,11 +161,16 @@ export const PhotoUpload = () => {
 
         {files.length > 0 && (
           <div className="mt-4 text-center">
-            {files.map((val) => (
-              <div key={val.name}>
-                {val.name} ({val.size} bytes)
-              </div>
-            ))}
+            <div className="mb-4">
+              <img 
+                src={files[0].base64} 
+                alt="Preview" 
+                className="mx-auto max-h-48 max-w-48 rounded-lg object-cover"
+              />
+            </div>
+            <div className="text-sm text-gray-400">
+              {files[0].name} ({(files[0].size / 1024).toFixed(1)} KB)
+            </div>
           </div>
         )}
 

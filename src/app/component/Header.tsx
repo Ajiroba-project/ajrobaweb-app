@@ -788,9 +788,15 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             {/* Social Icons - Hidden on mobile, shown on larger screens */}
             <div className='hidden md:flex gap-1 lg:gap-2 xl:gap-3 flex-shrink-0'>
               {socialIcon.map((val, index) => (
-                <div key={index} className='w-3 lg:w-4 flex-shrink-0'>
-                  <Image src={val.icon} alt={'socials'} className='w-full h-auto' />
-                </div>
+                <a 
+                  key={index} 
+                  href={val.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className='w-3 lg:w-4 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity'
+                >
+                  <Image src={val.icon} alt={val.name} className='w-full h-auto' />
+                </a>
               ))}
             </div>
           </div>

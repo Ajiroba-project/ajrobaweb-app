@@ -18,6 +18,7 @@ import airtelicon from '../../asset/airtelicon.png'
 import { StaticImageData } from 'next/image'
 import mtnicon from '../../asset/mtnicon.svg'
 import ninemobileicon from '../../asset/ninemobileicon.png'
+import './style.css'
 import gloicon from '../../asset/gloicon.png'
 import { set } from 'date-fns'
 import { Item } from '@radix-ui/react-select'
@@ -129,7 +130,7 @@ export const AirtimeDetails = () => {
             showlabel={false}
             value={watch("network")} // Ensure value updates
             onChange={(e) => setValue("network", e.target.value)} // Update manually
-            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F] selector"
           />
 
 
