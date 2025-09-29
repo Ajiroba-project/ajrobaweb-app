@@ -169,7 +169,8 @@ export const OrderDetails = () => {
             disabled={isExporting}
           />
           <span className='text-xs text-gray-500 font-Poppins'>
-            Exports current view ({(() => {
+            Export current view 
+            {/* ({(() => {
               if (pipeline === orderSwitch[0]) {
                 return orderinfo?.data?.data?.data?.all_orders?.length || 0;
               } else if (pipeline === orderSwitch[1]) {
@@ -177,7 +178,7 @@ export const OrderDetails = () => {
               } else {
                 return orderinfo?.data?.data?.data?.pending_order?.length || 0;
               }
-            })()} {pipeline} transactions)
+            })()} {pipeline} transactions) */}
           </span>
         </div>
       </div>

@@ -86,23 +86,12 @@ export const CustomModal =({children, isOpen}:CustomModal)=>{
 
 return (
   <>
-   {/*  {isOpen && (
-      <section className='fixed left-0 top-0 z-50 flex overflow-x-scroll overflow-y-scroll w-screen items-center justify-center bg-black bg-opacity-50 p-4'>
-        <div style={{
-          height: '100vh',
-          overflow: 'scroll'
-        }} className='  flex h-auto  flex-col  gap-6 rounded-md bg-white p-6 '>
-          {children}
-        </div>
-      </section>
-    )} */}
     {isOpen && (
-  <section style={{
-          height: '100vh',
-          overflow: 'scroll'
-        }}  className='fixed left-0 top-0 z-50 flex overflow-x-scroll overflow-y-scroll w-screen items-center justify-center bg-black bg-opacity-50 p-4'>
-    <div className='flex h-auto flex-col gap-6 rounded-md bg-white p-6 max-h-[100vh] overflow-y-auto'>
-      {children}
+  <section className='fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50 p-4 sm:p-6'>
+    <div className='w-full max-w-[720px] rounded-2xl bg-white shadow-xl overflow-hidden'>
+      <div className='max-h-[85vh] overflow-y-auto p-6'>
+        {children}
+      </div>
     </div>
   </section>
 )}

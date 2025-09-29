@@ -43,6 +43,12 @@ const normalizeBillerName = (biller: string): string => {
     'GLO': 'GLO',
     '9MOBILE': '9MOBILE',
     'NINEMOBILE': '9MOBILE',
+    'GOTV': 'GOTV',
+    'DSTV': 'DSTV',
+    'SHOWMAX': 'SHOWMAX',
+    'STARTIME': 'STARTIME',
+    'CONSAT TV': 'CONSAT TV',
+  
   };
   
   return billerMap[trimmed] || trimmed;
@@ -71,6 +77,8 @@ export const removeDuplicateBeneficiaries = (
       uniqueData.push(item);
     }
   });
+
+
 
   // Transform the unique data
   return uniqueData.map((item: BeneficiaryItem, index: number) => {

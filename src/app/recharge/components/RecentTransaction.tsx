@@ -6,6 +6,31 @@ import Loading from "@/app/component/Loading";
 import { useRouter } from 'next/navigation'
 import { formatCurrency } from "@/utils/formatCurrency";
 import { MdSearch } from "react-icons/md";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from 'next/image';
+
+import airtelicon from "../../asset/airtelicon.png";
+import mtnicon from "../../asset/mtnicon.svg";
+import ninemobileicon from "../../asset/ninemobileicon.png";
+import gloicon from "../../asset/gloicon.png";
+import dstvicon from '../../asset/dstvicon.jpeg'
+import gotvicon from '../../asset/gotvicon.jpeg'
+import startimesicon from '../../asset/startimesicon.jpeg'
+import consattvicon from '../../asset/consattvicon.png'
+import showmaxicon from '../../asset/showmaxicon.png'
+import ibedcicon from '../../asset/ibedcicon.png'
+import ikejaicon from '../../asset/ikejaicon.png'
+import beninicon from '../../asset/beninicon.png'
+import enuguicon from '../../asset/enuguicon.jpeg'
+import ekedcicon from '../../asset/ekedcicon.jpeg'
+import kadunaicon from '../../asset/kadunaicon.jpeg'
+import kanoicon from '../../asset/kedcoicon.png'
+import aedcicon from '../../asset/aedc.png'
+import jedicon from '../../asset/jedicon.jpeg'
+import phedcicon from '../../asset/phedicon.jpeg'
+
+
+import Brand from "../../asset/logo.svg";
 
 
 export const RecentTransaction = () => {
@@ -37,6 +62,43 @@ export const RecentTransaction = () => {
   const [viewAll, setViewAll] = useState(false);
   const [sortBy, setSortBy] = useState("Date");
   const [searchQuery, setSearchQuery] = useState("");
+
+
+  // const iconMap =  {
+  //   MTN: mtnicon,
+  //   AIRTEL: airtelicon,
+  //   Smile: airtelicon,
+  //   Virgin: airtelicon,
+  //   Etisalat: airtelicon,
+  //   ninemobile: ninemobileicon,
+  //   GLO: gloicon,
+  // };
+
+  const getIconForTransaction = (description: string, type: string) => {
+    const desc = (description || '').toLowerCase();
+    if (type === 'airtime' || type === 'data') {
+      if (desc.includes('mtn')) return mtnicon;
+      if (desc.includes('airtel')) return airtelicon;
+      if (desc.includes('glo')) return gloicon;
+      if (desc.includes('showmax')) return showmaxicon;
+      if (desc.includes('startimes')) return startimesicon;
+      if (desc.includes('gotv')) return gotvicon;
+      if (desc.includes('consattv') || desc.includes('consat')) return consattvicon;
+      if (desc.includes('dstv')) return dstvicon;
+      if (desc.includes('ibedc')) return ibedcicon;
+      if (desc.includes('ikeja')) return ikejaicon;
+      if (desc.includes('benin')) return beninicon;
+      if (desc.includes('enugu')) return enuguicon;
+      if (desc.includes('ekedc')) return ekedcicon;
+      if (desc.includes('kaduna')) return kadunaicon;
+       if (desc.includes('kano')) return kanoicon;
+      if (desc.includes('aedc')) return aedcicon;
+      if (desc.includes('jed')) return jedicon;
+      if (desc.includes('phedc')) return phedcicon;
+      if (desc.includes('9mobile') || desc.includes('9 mobile') || desc.includes('etisalat') || desc.includes('ninemobile')) return ninemobileicon;
+    }
+    return Brand;
+  };
 
   // ✅ Update state when data is received
   useEffect(() => {
@@ -106,20 +168,17 @@ export const RecentTransaction = () => {
             <div className="flex items-center gap-2 ">
               <span>Sort by:</span>
               <div style={{ zIndex: 10, position: "relative" }}>
-                
-
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded px-3 py-2"
-                >
-                  <option value="Date">Date</option>
-                  <option value="Time">Time</option>
-                  <option value="Brand">Brand</option>
-                  <option value="Amount">Amount</option>
-                </select>
-
-
+                <Select value={sortBy} onValueChange={(val) => setSortBy(val)}>
+                  <SelectTrigger className="h-10 w-[160px] rounded border px-3 selector">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
+                    <SelectItem value="Date" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Date</SelectItem>
+                    <SelectItem value="Time" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Time</SelectItem>
+                    <SelectItem value="Brand" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Brand</SelectItem>
+                    <SelectItem value="Amount" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Amount</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -171,6 +230,8 @@ export const RecentTransaction = () => {
                   }
 
                   const url = `/recharge/${transactionType}/receipt?ref=${val.reference}`;
+                  const icon = getIconForTransaction(val?.description, transactionType);
+                  const iconAlt = transactionType || 'transaction';
 
                   return (
                     <Fragment key={index}>
@@ -179,7 +240,17 @@ export const RecentTransaction = () => {
                         className="mr-4 flex cursor-pointer items-center justify-between rounded bg-[#FCDFD480] p-4 hover:shadow-md"
                       >
                         <div className="flex">
-                          <div>{/* logo */}</div>
+                          <div>
+
+                          <Image
+                            src={icon}
+                            alt={iconAlt}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10 rounded-full mr-4"
+                          />
+
+                          </div>
                           <div className="flex flex-col">
                             <p className="font-semibold">{val?.description}</p>
                             <p>{val.date_created
@@ -202,7 +273,9 @@ export const RecentTransaction = () => {
                     </Fragment>
                   );
                 })
-              )}
+              )
+              
+              }
             </div>
           )}
         </div>

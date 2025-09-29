@@ -1,15 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useMutateData } from "@/hooks/useMutateData";
+import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Airtimeschema, Cableschema, Electricitychema, Rechargeschema } from "./YupValidations";
+import { Electricitychema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
 import { InputField, SelectField, CurrencyInputField } from "./FormField";
 import { AirtimePurchase, ElectricityPurchase } from "@/store/store";
 import { Formtitle } from "./Formtitle";
 import { CustomModal, Modal } from "@/app/component/Modal";
-import { Header } from "../airtime/receipt/component/Header";
 import Image from "next/image";
 import Brand from "../../asset/ajirobalogo.png";
 import { useRouter } from "next/navigation";
@@ -20,9 +18,17 @@ import { StaticImageData } from "next/image";
 import mtnicon from "../../asset/mtnicon.svg";
 import ninemobileicon from "../../asset/ninemobileicon.png";
 import gloicon from "../../asset/gloicon.png";
-import { set } from "date-fns";
-import { Item } from "@radix-ui/react-select";
-import { fetchCableTVPackages } from "@/app/utils/fetchCableTVPackages";
+import ibedcicon from '../../asset/ibedcicon.png'
+import ikejaicon from '../../asset/ikejaicon.png'
+import beninicon from '../../asset/beninicon.png'
+import enuguicon from '../../asset/enuguicon.jpeg'
+import ekedcicon from '../../asset/ekedcicon.jpeg'
+import kadunaicon from '../../asset/kadunaicon.jpeg'
+import kanoicon from '../../asset/kedcoicon.png'
+import aedcicon from '../../asset/aedc.png'
+import jedicon from '../../asset/jedicon.jpeg'
+import phedcicon from '../../asset/phedicon.jpeg'
+
 import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates';
 import { useDebounce } from "@/hooks/useDebounce";
 type DataProps = {
@@ -74,6 +80,16 @@ export const ElectricityDetails = () => {
     Etisalat: airtelicon,
     ninemobile: ninemobileicon,
     GLO: gloicon,
+    IBEDC: ibedcicon,
+    IKEJA: ikejaicon,
+    BENIN: beninicon,
+    ENUGU: enuguicon,
+    EKEDC: ekedcicon,
+    KADUNA: kadunaicon,
+    KANO: kanoicon,
+    AEDC: aedcicon,
+    JED: jedicon,
+    PHEDC: phedcicon,
   };
 
   const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
@@ -135,7 +151,7 @@ export const ElectricityDetails = () => {
         `${subScriptionType.subScriptionType} -₦${subScriptionType.amount}`,
     ) || [];
 
-  const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV"];
+  const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV", "IBEDC", "IKEDC", "BENIN", "ENUGU", "EKEDC", "KADUNA", "KANO", "AEDC", "JED", "PHEDC"];
 
 
   // Debounce the customerId to delay API call

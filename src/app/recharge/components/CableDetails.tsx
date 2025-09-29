@@ -20,6 +20,12 @@ import { StaticImageData } from "next/image";
 import mtnicon from "../../asset/mtnicon.svg";
 import ninemobileicon from "../../asset/ninemobileicon.png";
 import gloicon from "../../asset/gloicon.png";
+import gotvicon from '../../asset/gotvicon.jpeg'
+import dstvicon from '../../asset/dstvicon.jpeg'
+import showmaxicon from '../../asset/showmaxicon.png'
+import startimesicon from '../../asset/startimesicon.jpeg'
+import consattvicon from '../../asset/consattvicon.png'
+
 import { set } from "date-fns";
 import { Item } from "@radix-ui/react-select";
 import { fetchCableTVPackages } from "@/app/utils/fetchCableTVPackages";
@@ -70,6 +76,11 @@ export const CableDetails = () => {
     Etisalat: airtelicon,
     ninemobile: ninemobileicon,
     GLO: gloicon,
+    GOTV: gotvicon,
+    DSTV: dstvicon,
+    SHOWMAX: showmaxicon,
+    STARTIME: startimesicon,
+    "CONSAT TV": consattvicon,
   };
 
   const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);

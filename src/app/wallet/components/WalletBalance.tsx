@@ -10,7 +10,7 @@ import { ChangePin } from "./ChangePin";
 import { CreatePin } from "./CreatePin";
 import { useAuthStore, userProfile } from "@/store/store";
 import success from "../../asset/verify.svg";
-import { useGetDatanew } from "@/hooks/useGetData";
+import { useGetDatanew, useGetPointData } from "@/hooks/useGetData";
 import Loading from "@/app/component/Loading";
 import { ReferralPointsModal } from "./ViewPoint";
 import { toast } from "react-toastify";
@@ -336,7 +336,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
 export const WalletBalance = () => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
-  const [showPin, setShowPin] = useState<boolean>(false);
+  // const [showPin, setShowPin] = useState<boolean>(false);
   const [createPin, setCreatePin] = useState<boolean>(false);
   const [printreceipt, setprintreceipt] = useState<boolean>(false);
   const [viewPoint, setViewPoint] = useState<boolean>(false);
@@ -384,7 +384,11 @@ export const WalletBalance = () => {
   });
 
 
-  // console.log(userInfo?.data, 'userInfo');
+  //  console.log(userInfo?.data, 'userInfo');
+
+  // Call points hook before any early returns to keep hook order stable
+  const userToken = Cookies.get('token') as string;
+  const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
 
   useEffect(() => {
     if (tkn_) {
@@ -406,12 +410,29 @@ export const WalletBalance = () => {
     return <Loading />;
   }
 
-  const sampleReferralData = [
-    { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
-    { name: "Rachel Jade", points: 50, date: "12 Feb, 2024" },
-    { name: "Malik Berry", points: 50, date: "12 Feb, 2024" },
-    { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
-  ];
+
+
+
+  // console.log(pointinfo?.data?.data, 'pointinfo');
+
+
+  const sampleReferralData = pointinfo?.data?.data.map((item: any) => ({
+    name: item.description,
+    points: item.point,
+    date: item.date_created,
+  }));
+
+
+  // console.log(sampleReferralData, 'sampleReferralData');
+
+
+
+  // const sampleReferralData = [
+  //   { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
+  //   { name: "Rachel Jade", points: 50, date: "12 Feb, 2024" },
+  //   { name: "Malik Berry", points: 50, date: "12 Feb, 2024" },
+  //   { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
+  // ];
 
   return (
     <div className="flex flex-col px-2">
@@ -532,6 +553,8 @@ export const WalletBalance = () => {
       {printreceipt && (
         <PrintReceipt receipt={receipt} setreceipt={setprintreceipt} />
       )}
+
+
       {viewPoint && (
         <ReferralPointsModal
           isOpen={viewPoint}

@@ -779,7 +779,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       <section className='relative w-full'>
         {/* Top Bar - Responsive */}
         <div className='bg-[#2A2A2A] p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
-          <div className='flex items-center justify-between gap-1 sm:gap-2 md:gap-3 px-1 sm:px-2 md:px-4 lg:px-7 max-w-full'>
+          <div className='container flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
             {/* Marquee - Takes available space */}
             <div className='flex-1 min-w-0 overflow-hidden'>
               <AuctionMarquee info={marqueeInfo} />
@@ -810,7 +810,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           )}
 
           <div className='relative z-50'>
-            <div className='flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 px-2 sm:px-4 lg:px-7 max-w-full overflow-visible'>
+            <div className='container flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 overflow-visible'>
               
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>

@@ -4,8 +4,7 @@ import Image from 'next/image'
 import { Formtitle } from './Formtitle'
 import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
-import { FaToggleOn, FaToggleOff } from 'react-icons/fa'
-import { FaCheck } from 'react-icons/fa'
+ 
 import Cookies from 'js-cookie'
 import { useSaveBeneficiary } from '@/hooks/useSaveBeneficiary'
 import { CablePurchase } from '@/store/store'
@@ -20,7 +19,7 @@ interface CableReceiptProps {
 
 export const CableReceipt = ({ beneficiaryData }: CableReceiptProps) => {
   const router = useRouter()
-  const { saveBeneficiary, isLoading, isSaved, error, isBeneficiarySaved } = useSaveBeneficiary()
+  const { saveBeneficiary, removeBeneficiary, isLoading, isSaved, error, isBeneficiarySaved } = useSaveBeneficiary()
   
   // Get data from store
   const cableDetails = CablePurchase((state) => state.CableDetails)
@@ -38,15 +37,15 @@ export const CableReceipt = ({ beneficiaryData }: CableReceiptProps) => {
   const usertoken = Cookies.get('atd')
   const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
 
-  const handleSaveBeneficiary = async () => {
-    // console.log(beneficiaryDataFromStore, 'bbb')
-
+  const handleToggleBeneficiary = async () => {
     if (!beneficiaryDataFromStore.number || !beneficiaryDataFromStore.biller) {
-      console.error('No beneficiary data available')
       return
     }
-
-    await saveBeneficiary(beneficiaryDataFromStore)
+    if (isThisBeneficiarySaved) {
+      await removeBeneficiary(beneficiaryDataFromStore)
+    } else {
+      await saveBeneficiary(beneficiaryDataFromStore)
+    }
   }
   return (
     <section className='p-5 '>
@@ -60,7 +59,7 @@ export const CableReceipt = ({ beneficiaryData }: CableReceiptProps) => {
             subtitle={`you have successfully made a payment`}
           />
           <DefaultButton
-            text='View Reciept'
+            text='View Receipt'
             type='button'
             className=' my-5 w-full rounded-lg bg-[#FCDFD4] py-2 hover:bg-[#F25E26] hover:text-white'
             handleClick={() => router.push(`/recharge/cable/receipt?ref=${parsedUserToken?.data?.reference}`)}
@@ -69,23 +68,21 @@ export const CableReceipt = ({ beneficiaryData }: CableReceiptProps) => {
         </div>
       </div>
       <div className='flex flex-col items-center justify-center gap-2'>
-        <div className='flex items-center justify-center gap-2'>
-          <p className='text-gray-700'>
+        <div className='flex items-center justify-center gap-3'>
+          <p className='text-[#F25E26]'>
             {isThisBeneficiarySaved ? 'Saved as beneficiary' : 'Save as beneficiary'}
           </p>
-          {isThisBeneficiarySaved ? (
-            <FaCheck 
-              className='text-green-600 text-2xl cursor-pointer hover:text-green-700' 
-              onClick={handleSaveBeneficiary}
+          <button
+            aria-pressed={isThisBeneficiarySaved}
+            onClick={handleToggleBeneficiary}
+            disabled={isLoading}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full border transition-colors duration-200 ${isThisBeneficiarySaved ? 'bg-[#F25E26] border-[#F25E26]' : 'bg-white border-[#E5E5E5]'}`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200 ${isThisBeneficiarySaved ? 'translate-x-5' : 'translate-x-0.5'}`}
             />
-          ) : isLoading ? (
-            <div className='w-6 h-6 border-2 border-[#F25E26] border-t-transparent rounded-full animate-spin'></div>
-          ) : (
-            <FaToggleOff 
-              className='text-3xl text-gray-300 cursor-pointer hover:text-gray-400' 
-              onClick={handleSaveBeneficiary}
-            />
-          )}
+          </button>
+          {isLoading && <div className='w-4 h-4 border-2 border-[#F25E26] border-t-transparent rounded-full animate-spin' />}
         </div>
         {error && (
           <p className='text-red-500 text-sm text-center'>{error}</p>

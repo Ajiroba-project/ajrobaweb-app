@@ -113,6 +113,57 @@ export const useSaveBeneficiary = () => {
     }
   }
 
+  const removeBeneficiary = async (params: SaveBeneficiaryParams): Promise<boolean> => {
+    const beneficiaryKey = `${params.number}-${params.biller}-${params.type}`
+
+    if (!globalSaveStatus.savedBeneficiaries.has(beneficiaryKey)) {
+      return true
+    }
+
+    globalSaveStatus.isLoading = true
+    globalSaveStatus.error = null
+    notifyListeners()
+
+    try {
+      const token = Cookies.get('token')
+      if (!token) {
+        globalSaveStatus.error = 'Authentication token not found'
+        globalSaveStatus.isLoading = false
+        notifyListeners()
+        return false
+      }
+
+      const response = await fetch('/api/remove_beneficiary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+        body: JSON.stringify(params)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        globalSaveStatus.error = data.message || 'Failed to remove beneficiary'
+        globalSaveStatus.isLoading = false
+        notifyListeners()
+        return false
+      }
+
+      globalSaveStatus.savedBeneficiaries.delete(beneficiaryKey)
+      globalSaveStatus.isSaved = false
+      globalSaveStatus.isLoading = false
+      notifyListeners()
+      return true
+    } catch (err) {
+      globalSaveStatus.error = 'Network error occurred'
+      globalSaveStatus.isLoading = false
+      notifyListeners()
+      return false
+    }
+  }
+
   const reset = () => {
     globalSaveStatus.isSaved = false
     globalSaveStatus.error = null
@@ -127,6 +178,7 @@ export const useSaveBeneficiary = () => {
 
   return {
     saveBeneficiary,
+    removeBeneficiary,
     isLoading,
     isSaved,
     error,

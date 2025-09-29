@@ -63,9 +63,11 @@ export const AirtimeDetails = () => {
     Smile: airtelicon,
     Virgin: airtelicon,
     Etisalat: airtelicon,
-    ninemobile: ninemobileicon,
+    "9MOBILE": ninemobileicon,
     GLO: gloicon
-  }
+  };
+
+  // console.log(bensdata?.data, 'bensdata?.data');
 
   const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
@@ -162,46 +164,37 @@ export const AirtimeDetails = () => {
 
           <CustomModal isOpen={printreceipt}>
 
-            <section className='container flex flex-col '>
-              <div className='flex justify-between items-center'>
+            <section className='flex flex-col'>
+              <div className='flex items-center justify-between'>
                 <Image src={Brand} alt='brand-logo' />
-                <h2 className=' font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize'>{'Beneficiaries'}</h2>
+                <h2 className='font-Poppins text-[#2A2A2A] font-medium text-base md:text-xl leading-none'>Beneficiaries</h2>
               </div>
-              <p className="brand1 py-4 cursor-pointer font-Poppins text-sm underline" onClick={() => setprintreceipt(false)}>Back</p>
+              <button className='text-left text-[#E84526] underline mt-3 font-Poppins text-sm' onClick={() => setprintreceipt(false)}>Back</button>
             </section>
 
 
 
-
-            <div className="p-6 bg-gray-100 min-h-screen">
-              <div className="space-y-4">
+            <div className="pt-2">
+              <div className="space-y-5">
 
                 {transformedData?.map((item: TransformedDataItem) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                    className="flex items-center justify-between rounded-xl bg-[#F8F8F8] px-6 py-5 border border-[#F0F0F0]"
                   >
-                    {/* Icon and details */}
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-4">
                       {item.icon && (
-                        <Image src={item.icon} alt={item.type} width={40} className="w-10 h-10 rounded-full mr-4" height={40} />
+                        <Image src={item.icon} alt={item.type} width={44} height={44} className="w-11 h-11 rounded-full" />
                       )}
-
-                      {/*  <Image
-                src={item.icon as string}
-                alt={item.type}
-                className="w-10 h-10 rounded-full mr-4"
-                width={40}
-                height={40}
-              /> */}
-                      <div>
-                        <p className="text-gray-900 font-semibold">{item.number}</p>
-                        <p className="text-gray-500 text-sm">{item.type}</p>
+                      <div className="leading-tight">
+                        <p className="text-[15px] md:text-base text-[#2A2A2A] font-medium tracking-[0.2px]">{item.number}</p>
+                        <p className="text-xs text-[#8C8C8C] mt-1">{item.type}</p>
                       </div>
                     </div>
-
-                    {/* Action button */}
-                    <button onClick={() => handleUseClick(item.number, item.type)} className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]">
+                    <button
+                      onClick={() => handleUseClick(item.number, item.type)}
+                      className="px-5 py-2 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] text-sm font-medium hover:opacity-90"
+                    >
                       Use
                     </button>
                   </div>
