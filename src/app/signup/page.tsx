@@ -8,7 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 // import Input from "../component/Input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -18,7 +18,7 @@ import { Input } from "@nextui-org/react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 
 import { state_and_LGA } from "../../app/static-data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ModalProfile, ModalTerms } from "../profile/components/ModalProfile";
 import { IoIosClose } from "react-icons/io";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
@@ -39,6 +39,7 @@ function Page() {
     agree_terms?: boolean;
   };
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const schema = yup.object().shape({
     first_name: yup
@@ -186,6 +187,16 @@ function Page() {
   };
 
   const [showPassword, setShowPassword] = useState(false);
+
+  // Get referral code from URL parameters
+  const referralCodeFromUrl = searchParams.get('ref');
+
+  // Set referral code from URL when component mounts
+  useEffect(() => {
+    if (referralCodeFromUrl) {
+      setValue('referral', referralCodeFromUrl);
+    }
+  }, [referralCodeFromUrl, setValue]);
 
   return (
     <>
@@ -344,6 +355,11 @@ function Page() {
               <div className="flex flex-col">
                 <label className="text-sm" htmlFor="referral">
                   Referal code (Optional)
+                  {referralCodeFromUrl && (
+                    <span className="text-green-600 text-xs ml-2">
+                      ✓ Pre-filled from referral link
+                    </span>
+                  )}
                 </label>
                 <Controller
                   name="referral"

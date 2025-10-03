@@ -2462,10 +2462,10 @@ const Page = ({ params }: any) => {
             </div>
             <div className="flex flex-col justify-center items-center">
               <h1 className="text-center font-bold text-lg">
-                Successfully
+              Successful
               </h1>
               <p className="text-center font-normal text-sm">
-                You have entered into raffle draw for this product. Good mmmm
+                You have entered into raffle draw for this product. Good
                 luck
               </p>
             </div>

@@ -12,7 +12,7 @@ import Cookies from 'js-cookie'
 
 export const OrderDetails = () => {
   const orderSwitch = ['all', 'Completed', 'Pending'];
-  const tableHeader = ['orderID', 'product details', 'amount', 'date', 'status', ' '];
+  const tableHeader = ['orderID', 'product details', 'amount', 'date', 'status', 'actions'];
   const [pipeline, setPipeline] = useState<string>('all');
   const [completedFilter, setCompletedFilter] = useState<any[]>([]);
   const [allordeerFilter, setAllorderFilter] = useState<any[]>([]);
@@ -30,7 +30,7 @@ export const OrderDetails = () => {
   // const userToken = token;
   const userToken = Cookies.get('token') as string;
 
-  const tkn_: string = Cookies.get('token') as string;
+  
 
   const { data: orderinfo, isLoading: ordersLoading, error: ordererror } = useGetOrderData('/api/getallorders', "get_order_details", userToken);
 
@@ -186,13 +186,21 @@ export const OrderDetails = () => {
 
       <div className='relative mt-6 w-full overflow-x-auto'>
         <div className='mb-6 min-w-[720px] rounded-xl bg-white shadow-[0_12px_30px_rgba(16,24,40,0.08)] ring-1 ring-gray-100 overflow-hidden'>
-        <table className='w-full table-auto'>
+        <table className='w-full table-fixed'>
+          <colgroup>
+            <col className='w-[12%]' />
+            <col className='w-[38%]' />
+            <col className='w-[15%]' />
+            <col className='w-[15%]' />
+            <col className='w-[12%]' />
+            <col className='w-[8%]' />
+          </colgroup>
           <thead className='table-header-group rounded-t-xl bg-[#F0F2F5]'>
             <tr className='tracking-wide'>
               {tableHeader.map((val, index) => (
                 <th
                   key={index}
-                  className='mb-2 w-max p-6 text-left text-[12px] text-[#344054] font-Poppins font-medium capitalize tracking-wide'
+                  className='py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium capitalize tracking-wide'
                   scope='col'
                 >
                   {val}

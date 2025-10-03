@@ -205,6 +205,7 @@ function Page() {
       setAuthCookie(data?.data?.token, 0)
       Cookies.set("token", data?.data?.token, { expires: 1 });
       setUser(data?.data)
+      Cookies.set("user", JSON.stringify(data?.data), { expires: 1 });
       
       // Save email if remember me is checked, using the last submitted value
       if (rememberMe && lastEmailOrPhone.current) {

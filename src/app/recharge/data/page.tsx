@@ -77,7 +77,7 @@ const DataStepper = DataPurchase((state) => state.DataStepper);
   const Step = ({ props }: any) => {
     return (
 
-             <div className="  flex  2xl:flex-col xl:flex-col md:flex-col lg:flex-col flex-col py-4 mt-14 gap-4 2xl:w-3/12 xl:w-3/12 md:w-auto lg:w-3/12 w-auto   ">
+             <div className="flex 2xl:flex-col xl:flex-col md:flex-row lg:flex-col flex-row py-4 mt-14 gap-4 2xl:w-3/12 xl:w-3/12 md:w-full lg:w-3/12 w-full">
         {stepperList.map((val, index) => (
           <div
             key={index}
@@ -96,11 +96,11 @@ const DataStepper = DataPurchase((state) => state.DataStepper);
   const DataContentNew = () => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <section className="flex flex-col gap-4 2xl:flex-col  md:flex-col lg:flex-row  ">
+        <section className="flex flex-col gap-4 2xl:flex-row xl:flex-row md:flex-col lg:flex-row">
 
             <Step props={DataStepper} />
 
-          <div className="w-full">
+          <div className="w-full 2xl:flex-1 xl:flex-1 lg:flex-1">
               {DataStepper === 0 ? (
                 <DataDetails />
               ) : DataStepper === 1 ? (

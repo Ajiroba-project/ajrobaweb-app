@@ -376,12 +376,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
   );
 
   return (
-    <section
-      className="bg-[#F6F6F6] py-12 w-9/12"
-      style={{
-        margin: "0 auto",
-      }}
-    >
+    <section className="bg-[#F6F6F6] py-12 w-full">
       <p
         className="brand1 cursor-pointer flex items-start px-8"
         onClick={() => setElectricityStepper(0)}

@@ -237,6 +237,27 @@ const Page = ({ params }: any) => {
   };
 
 
+  function maskPhone(phone: string) {
+    if (!phone) return "N/A";
+  
+    // Keep only digits
+    const digits = phone.replace(/\D/g, '');
+    const len = digits.length;
+  
+    if (len <= 4) {
+      // Too short to mask meaningfully
+      return digits;
+    }
+  
+    const first = digits.slice(0, Math.floor(len / 3));
+    const middle = '*'.repeat(Math.floor(len / 3));
+    const last = digits.slice(-Math.ceil(len / 3));
+  
+    return first + middle + last;
+  }
+  
+
+
 
   const renderRows = () => {
     if (!showWinners) {
@@ -295,11 +316,13 @@ const Page = ({ params }: any) => {
                         {/* Counter animation */}
                       </p>
                     </td>
-                    <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-                      <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-                        {showWinners ? val?.phone_number || "N/A" : "*********"}
-                      </p>
-                    </td>
+                      <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                        <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
+                          {showWinners 
+                            ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
+                            : "*********"}
+                        </p>
+                      </td>
                   </tr>
                 ))}
               </tbody>
@@ -387,9 +410,22 @@ const Page = ({ params }: any) => {
                     </td>
                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-                        {val.phone_number
-                          ? val.phone_number.replace(/^(\d{3})\d{3}(\d{4})$/, '$1***$2')
-                          : ''}
+
+                        {/* {
+                          console.log(val.phone_number.replace(/\D/g, '')   // remove non-digits
+                          .replace(/^(\d{3})(\d{3})(\d{4})$/, '$1***$2'), 'vppppvv99999')
+                        } */}
+                      
+                      {/* {
+                      val?.phone_number
+                        ? val.phone_number.replace(/^(\d{4})\d{3}(\d{4})$/, '$1***$2')
+                        : "N/A"
+                      } */}
+
+{
+  val?.phone_number ? maskPhone(val.phone_number) : "N/A"
+}
+
                       </p>
                     </td>
                   </tr>
@@ -452,14 +488,19 @@ const Page = ({ params }: any) => {
             >
               Back
             </p>
-            <div className="mb-3 text-center">
+            <div className="mb-3 text-center p-4">
               <HeadingText title="Raffle Draw Winners" />
             </div>
           </div>
         </div>
 
-        <div className="w-4/12 mx-auto flex justify-start">
-          <p className="mt-4 text-gray-600">{`Total Winners: ${displayedData?.length}`}</p>
+        <div className="w-4/12 mx-auto flex justify-start items-center gap-2 mt-4">
+          <div className="border border-orange-300 px-4 py-2 rounded">
+            <p className="text-black font-bold text-center">Total Winners</p>
+          </div>
+          <div className="border border-orange-300 px-4 py-2 rounded">
+            <p className="text-black font-bold text-center">{displayedData?.length}</p>
+          </div>
         </div>
 
         {loadingdata ? (

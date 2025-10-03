@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateNewData";
-import { useGetOrderWinsData, useGetBanksData } from "@/hooks/useGetData";
+import { useGetOrderWinsData, useGetBanksData, useGetDatanew } from "@/hooks/useGetData";
 import Cookies from "js-cookie";
 import { CustomModal } from "@/app/component/Modal";
 import maskgroup from "@/app/asset/image/Maskgroup.svg";
@@ -24,6 +24,7 @@ import bikecode from '@/app/asset/image/bikecode.svg'
 import DropDownAuctionWin from "./DropDownAuctionWin";
 import WinningAdviceModal from "./WinningAdviceModal";
 import { formatCurrency } from "@/utils/formatCurrency";
+import deliveryicon from '@/app/asset/deliveryicon.svg';
 
 type AuctionProps = {
     product: any[];
@@ -101,6 +102,16 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     const [isValidatingAccount, setIsValidatingAccount] = useState(false);
     const [isProcessingCashout, setIsProcessingCashout] = useState(false);
     const [storedVoucherData, setStoredVoucherData] = useState<Record<string, any>>({});
+    const [isDeliveryNoticeModalOpen, setIsDeliveryNoticeModalOpen] = useState(false);
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const [isChangeAddressModalOpen, setIsChangeAddressModalOpen] = useState(false);
+    const [newAddress, setNewAddress] = useState("");
+    const [newCity, setNewCity] = useState("");
+    const [newState, setNewState] = useState("");
+    const [newLandmark, setNewLandmark] = useState("");
+    const [isDeliverySuccessModalOpen, setIsDeliverySuccessModalOpen] = useState(false);
+    const [deliverySuccessData, setDeliverySuccessData] = useState<any>(null);
+    const [isProcessingDelivery, setIsProcessingDelivery] = useState(false);
 
     const router = useRouter();
 
@@ -168,6 +179,10 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     }));
 
     const userToken = (Cookies.get("token") as string) || "";
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+
+    const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken || " ");
 
     /*  const userToken = token; */
 
@@ -542,6 +557,45 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         }
     };
 
+    const handleDeliveryRedemption = async () => {
+        if (!selectedTransaction?.id || !selectedTransaction?.auction?.[0]?.auction_id) {
+            toast.error("Missing required transaction data");
+            return;
+        }
+
+        setIsProcessingDelivery(true);
+        try {
+            const response = await fetch("/api/redeem-by-delivery", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `token ${userToken}`,
+                },
+                body: JSON.stringify({
+                    ticket_id: selectedTransaction.id,
+                    auction_id: selectedTransaction.auction[0].auction_id,
+                    redemption_mode: "by_delivery",
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.status === "success") {
+                setDeliverySuccessData(data.data);
+                setIsAddressModalOpen(false);
+                setIsDeliverySuccessModalOpen(true);
+                // Refresh the auction data in the background
+                window.location.reload();
+            } else {
+                toast.error(data.message || "Failed to process delivery redemption");
+            }
+        } catch (error) {
+            toast.error("Error processing delivery redemption");
+        } finally {
+            setIsProcessingDelivery(false);
+        }
+    };
+
     return (
         <div>
             <div className="">
@@ -797,6 +851,9 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     } else if (selectedRedemption === "transfer") {
                                         setIsWinningAdviseModalOpen(false);
                                         setIsBankTransferModalOpen(true);
+                                    } else if (selectedRedemption === "delivery") {
+                                        setIsWinningAdviseModalOpen(false);
+                                        setIsDeliveryNoticeModalOpen(true);
                                     } else {
                                         // Handle other redemption methods
                                         setIsWinningAdviseModalOpen(false);
@@ -1067,6 +1124,285 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     />
                                 )}
                             </div>
+                        </div>
+                    </div>
+                </ModalProfile>
+            )}
+
+            {isDeliveryNoticeModalOpen && (
+                <ModalProfile
+                    icon={""}
+                    isOpen={isDeliveryNoticeModalOpen}
+                    onClose={() => setIsDeliveryNoticeModalOpen(false)}
+                    title=""
+                    handleEvent={() => setIsDeliveryNoticeModalOpen(false)}
+                >
+                    <div className="flex flex-col p-6">
+                        <div className="text-center mb-6">
+                            <div className="flex items-center justify-center mb-4">
+                                <h2 className="text-2xl font-bold text-gray-900 mr-3">Delivery Notice</h2>
+                                <div className="flex items-center">
+                                    <Image
+                                        src={deliveryicon}
+                                        alt="Delivery Icon"
+                                        width={32}
+                                        height={32}
+                                        className="mr-2"
+                                    />
+                                    <Image
+                                        src={deliveryicon}
+                                        alt="Location Pin"
+                                        width={24}
+                                        height={24}
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="text-left space-y-3">
+                                <div className="flex items-start">
+                                    <span className="text-red-600 mr-2">•</span>
+                                    <p className="text-gray-700">
+                                        Delivery within Lagos may take <strong>3 business days</strong>
+                                    </p>
+                                </div>
+                                <div className="flex items-start">
+                                    <span className="text-red-600 mr-2">•</span>
+                                    <p className="text-gray-700">
+                                        Delivery outside lagos may take <strong>5 business days</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between gap-4 mt-6">
+                            <DefaultButton
+                                text="Back"
+                                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                                type="button"
+                                handleClick={() => {
+                                    setIsDeliveryNoticeModalOpen(false);
+                                    setIsWinningAdviseModalOpen(true);
+                                }}
+                            />
+                            <DefaultButton
+                                text="Proceed"
+                                className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                                type="button"
+                                handleClick={() => {
+                                    // Handle proceed action for delivery
+                                    setIsDeliveryNoticeModalOpen(false);
+                                    setIsAddressModalOpen(true);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </ModalProfile>
+            )}
+
+            {isAddressModalOpen && (
+                <ModalProfile
+                    icon={""}
+                    isOpen={isAddressModalOpen}
+                    onClose={() => setIsAddressModalOpen(false)}
+                    title="Address"
+                    handleEvent={() => setIsAddressModalOpen(false)}
+                >
+                    <div className="flex flex-col p-6">
+                        <div className="mb-6">
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex-1">
+                                    <p className="text-lg font-semibold text-gray-900 mb-2">
+                                        {userInfo?.data?.first_name} {userInfo?.data?.last_name}
+                                    </p>
+                                    <p className="text-gray-700 mb-1">{userInfo?.data?.address}</p>
+                                    <p className="text-gray-700">{userInfo?.data?.phone}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="text-[#F25E26] text-sm font-medium hover:underline ml-4"
+                                    onClick={() => {
+                                        setIsAddressModalOpen(false);
+                                        setIsChangeAddressModalOpen(true);
+                                    }}
+                                >
+                                    Change
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between gap-4">
+                            <DefaultButton
+                                text={isProcessingDelivery ? "Processing..." : "Proceed"}
+                                className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                                type="button"
+                                handleClick={handleDeliveryRedemption}
+                                disabled={isProcessingDelivery}
+                            />
+                            <DefaultButton
+                                text="Back"
+                                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                                type="button"
+                                handleClick={() => {
+                                    setIsAddressModalOpen(false);
+                                    setIsDeliveryNoticeModalOpen(true);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </ModalProfile>
+            )}
+
+            {isChangeAddressModalOpen && (
+                <ModalProfile
+                    icon={""}
+                    isOpen={isChangeAddressModalOpen}
+                    onClose={() => setIsChangeAddressModalOpen(false)}
+                    title="Change Address"
+                    handleEvent={() => setIsChangeAddressModalOpen(false)}
+                >
+                    <div className="flex flex-col p-6">
+                        <p className="text-gray-600 mb-6 text-center">Please Enter Your Preferred Address</p>
+                        
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                                <input
+                                    type="text"
+                                    value={newAddress}
+                                    onChange={(e) => setNewAddress(e.target.value)}
+                                    placeholder="Enter your new Address here"
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-[#F25E26]"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                <input
+                                    type="text"
+                                    value={newCity}
+                                    onChange={(e) => setNewCity(e.target.value)}
+                                    placeholder="Enter your city name"
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-[#F25E26]"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                                <input
+                                    type="text"
+                                    value={newState}
+                                    onChange={(e) => setNewState(e.target.value)}
+                                    placeholder="Enter your state of residency"
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-[#F25E26]"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Landmark</label>
+                                <input
+                                    type="text"
+                                    value={newLandmark}
+                                    onChange={(e) => setNewLandmark(e.target.value)}
+                                    placeholder="Enter your a popular location around you"
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-[#F25E26]"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between gap-4 mt-6">
+                            <DefaultButton
+                                text="Back"
+                                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                                type="button"
+                                handleClick={() => {
+                                    setIsChangeAddressModalOpen(false);
+                                    setIsAddressModalOpen(true);
+                                }}
+                            />
+                            <DefaultButton
+                                text="Change"
+                                className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
+                                type="button"
+                                handleClick={() => {
+                                    if (!newAddress || !newCity || !newState) {
+                                        toast.error("Please fill in all required fields");
+                                        return;
+                                    }
+                                    // Handle address change - you can implement API call here
+                                    toast.success("Address updated successfully");
+                                    setIsChangeAddressModalOpen(false);
+                                    setIsAddressModalOpen(true);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </ModalProfile>
+            )}
+
+            {isDeliverySuccessModalOpen && deliverySuccessData && (
+                <ModalProfile
+                    icon={""}
+                    isOpen={isDeliverySuccessModalOpen}
+                    onClose={() => setIsDeliverySuccessModalOpen(false)}
+                    title=""
+                    handleEvent={() => setIsDeliverySuccessModalOpen(false)}
+                >
+                    <div className="flex flex-col items-center p-8 relative">
+                        {/* Close Icon */}
+                        <button
+                            onClick={() => setIsDeliverySuccessModalOpen(false)}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+
+                        <div className="mb-6">
+                            <div className="flex items-center justify-center mb-4">
+                                <Image
+                                    src={deliveryicon}
+                                    alt="Delivery Icon"
+                                    width={48}
+                                    height={48}
+                                    className="mr-2"
+                                />
+                                <Image
+                                    src={deliveryicon}
+                                    alt="Location Pin"
+                                    width={32}
+                                    height={32}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="text-center space-y-4 mb-6">
+                            <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 bg-blue-50">
+                                <p className="text-lg font-bold text-gray-900">
+                                    Order Code: {deliverySuccessData.auction_number}
+                                </p>
+                            </div>
+                            <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 bg-blue-50">
+                                <p className="text-xl font-bold text-gray-900">
+                                    Congratulations. Your Order is on its way
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="text-center text-sm text-gray-600">
+                            <p>Ticket Number: {deliverySuccessData.ticket_number}</p>
+                            <p>Redemption Date: {new Date(deliverySuccessData.redemption_date).toLocaleDateString()}</p>
                         </div>
                     </div>
                 </ModalProfile>
