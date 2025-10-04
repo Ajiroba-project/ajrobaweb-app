@@ -102,7 +102,7 @@ const useCartItems = () => {
     } finally {
       setLoading(false);
     }
-  }, [router, triggerCartRefresh]);
+  }, [router]);
 
   useEffect(() => {
     fetchCartItems();

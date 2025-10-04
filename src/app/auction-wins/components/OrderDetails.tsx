@@ -46,7 +46,7 @@ export const OrderDetails = () => {
     setCompletedFilter(completedOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[1])));
     setPendingFilter(pendingOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[2])));
   }
-}, [orderinfo]); // Add only necessary dependencies
+}, [orderinfo, orderSwitch]); // Add orderSwitch to dependencies
 
 
   const handlePageChange = (selectedItem: { selected: number }) => {

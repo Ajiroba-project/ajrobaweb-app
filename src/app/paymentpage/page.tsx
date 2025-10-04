@@ -1487,7 +1487,7 @@
 
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { SetStateAction, useEffect, useMemo, useState, useRef } from "react";
+import { SetStateAction, useEffect, useMemo, useState, useRef, useCallback } from "react";
 
 import { Header } from "../component/Header";
 import { Title } from "../component/Title";
@@ -1544,7 +1544,7 @@ const Page = () => {
     triggerCartRefresh: state.triggerCartRefresh,
   }));
 
-  const fetchCartItems = async () => {
+  const fetchCartItems = useCallback(async () => {
     const tkn_: string = Cookies.get("token") as string;
 
     if (!tkn_) {
@@ -1608,11 +1608,11 @@ const Page = () => {
 
       })
       .finally(() => setLoading(false));
-  };
+  }, [router]);
 
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, [fetchCartItems]);
 
   const handlePaymentSelection = (method: SetStateAction<string>) => {
     setPaymentMethod(method);
