@@ -18,12 +18,12 @@ import { Input } from "@nextui-org/react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 
 import { state_and_LGA } from "../../app/static-data";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { ModalProfile, ModalTerms } from "../profile/components/ModalProfile";
 import { IoIosClose } from "react-icons/io";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
-function Page() {
+const WrappedPage = () => {
   type dataProps = {
     first_name: string;
     last_name: string;
@@ -720,4 +720,10 @@ function Page() {
   );
 }
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WrappedPage />
+    </Suspense>
+  );
+}
