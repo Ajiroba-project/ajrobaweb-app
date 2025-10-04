@@ -586,17 +586,19 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       
       const transformedNotifications = notificationsData.data.map((notification: any, index: number) => ({
         ...notification,
-        id: index + 1, // Generate an ID since the real API doesn't provide one
-        read: false, // Default to unread since the real API doesn't track read status
+        id: notification.id || index + 1, // Use actual ID from API or fallback to index
+        read: notification.read || false, // Use actual read status from API or default to false
         type: 'notification', // Default type
         url: '/profile' // Default URL for navigation
       }));
       
      
       
+      // Count only unread notifications
+      const unreadCount = transformedNotifications.filter(n => !n.read).length;
+      
       // Check for new notifications
-      const newCount = transformedNotifications.length;
-      if (previousNotificationCount > 0 && newCount > previousNotificationCount) {
+      if (previousNotificationCount > 0 && unreadCount > previousNotificationCount) {
         setHasNewNotifications(true);
 
         
@@ -607,8 +609,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       }
       
       setNotifications(transformedNotifications);
-      setNotificationCount(newCount);
-      setPreviousNotificationCount(newCount);
+      setNotificationCount(unreadCount);
+      setPreviousNotificationCount(unreadCount);
       setNotificationError(null);
     } else if (notificationsData?.status === 'success' && (!notificationsData.data || notificationsData.data.length === 0)) {
       // Successful response but no notifications
@@ -696,7 +698,20 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   }, [cartRefreshTrigger, fetchCartItems]);
 
   // Handle notification accordion toggle
-  const toggleNotification = (index: number) => {
+  const toggleNotification = async (index: number) => {
+    const notification = notifications[index];
+    
+    // If expanding the notification and it's not read, mark it as read
+    if (!expandedNotifications.includes(index) && notification && !notification.read) {
+      // Mark as read locally first for immediate UI feedback
+      markAsRead(notification.id);
+      
+      // Call API to mark as read on backend
+      if (notification.id && typeof notification.id === 'string') {
+        await markNotificationAsRead(notification.id);
+      }
+    }
+    
     setExpandedNotifications(prev => 
       prev.includes(index) 
         ? prev.filter(i => i !== index)
@@ -735,9 +750,48 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Mark single notification as read
-  const markAsRead = (id: number) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-    setNotificationCount(prev => Math.max(0, prev - 1));
+  const markAsRead = (id: string | number) => {
+    setNotifications(prev => {
+      const updated = prev.map(n => {
+        if (n.id === id && !n.read) {
+          return { ...n, read: true };
+        }
+        return n;
+      });
+      
+      // Only decrease count if we actually marked a notification as read
+      const wasUnread = prev.find(n => n.id === id && !n.read);
+      if (wasUnread) {
+        setNotificationCount(prevCount => Math.max(0, prevCount - 1));
+      }
+      
+      return updated;
+    });
+  };
+
+  // Mark notification as read via API
+  const markNotificationAsRead = async (notificationId: string) => {
+    try {
+      const token = Cookies.get("token") as string;
+      if (!token) return;
+
+      const response = await fetch(`/api/read_notification/${notificationId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // console.log('Notification marked as read:', data);
+      } else {
+        console.error('Failed to mark notification as read');
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   };
 
   // Clear all notifications
@@ -748,8 +802,15 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Handle notification click
-  const handleNotificationClick = (notification: any) => {
+  const handleNotificationClick = async (notification: any) => {
+    // Mark as read locally first for immediate UI feedback
     markAsRead(notification.id);
+    
+    // Call API to mark as read on backend
+    if (notification.id && typeof notification.id === 'string') {
+      await markNotificationAsRead(notification.id);
+    }
+    
     if (notification.url) {
       router.push(notification.url);
       closeNotificationModal();
