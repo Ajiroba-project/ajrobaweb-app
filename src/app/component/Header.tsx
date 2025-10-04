@@ -837,7 +837,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   return (
     <>
-      <section className='relative w-full'>
+      <section className='relative w-full '>
         {/* Top Bar - Responsive */}
         <div className='bg-[#2A2A2A] p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
           <div className='container flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
@@ -863,15 +863,29 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           </div>
         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
         {/* Main Header - Responsive */}
-        <div className='relative bg-white shadow-md overflow-visible'>
+        <div className='relative bg-white shadow-md overflow-visible '>
           {/* Mobile Menu Overlay */}
           {isOpen && !showDesktopNav && (
             <div className='fixed inset-0 bg-black bg-opacity-50 z-40' onClick={hamburgerfunc} />
           )}
 
           <div className='relative z-50'>
-            <div className='container flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 overflow-visible'>
+            {/* <div className='container flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 overflow-visible'> */}
+            <div className='flex w-full py-2 px-12 sm:px-6 md:px-8 lg:px-12   overflow-visible'>
+            {/* px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 */}
               
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>
@@ -1139,6 +1153,27 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           )}
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {/* Notification Modal - Full Page Overlay */}
         {showNotificationModal && (
