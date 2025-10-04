@@ -203,7 +203,7 @@ export const AirtimeDetails = () => {
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="text-center">
                       <p className="text-[#8C8C8C] text-lg font-medium mb-2">No Beneficiaries Available</p>
-                      <p className="text-[#8C8C8C] text-sm">You haven't saved any beneficiaries yet.</p>
+                      <p className="text-[#8C8C8C] text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
                     </div>
                   </div>
                 )}

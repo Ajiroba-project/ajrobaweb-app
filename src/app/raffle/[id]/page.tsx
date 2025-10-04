@@ -128,6 +128,23 @@ const Page = ({ params }: any) => {
     }
   }, [userToken, product_id, router]);
 
+  // Start countdown timer
+  const startCountdown = useCallback(() => {
+    let count = 5;
+    setCountdownValue(count);
+    
+    const timer = setInterval(() => {
+      count--;
+      setCountdownValue(count);
+      
+      if (count <= 0) {
+        clearInterval(timer);
+        // Navigate to winners page
+        router.push(`/raffle/${product_id}/winners`);
+      }
+    }, 1000);
+  }, [product_id, router]);
+
   // Check if raffle is about to start (within 5 seconds)
   const checkRaffleAboutToStart = useCallback(() => {
     if (!productdatanew?.start_date || !productdatanew?.start_time) return;
@@ -141,7 +158,7 @@ const Page = ({ params }: any) => {
       setShowCountdown(true);
       startCountdown();
     }
-  }, [productdatanew]);
+  }, [productdatanew, startCountdown]);
 
   // Check if enforced time has passed
   const checkEnforcedTime = useCallback(() => {
@@ -261,22 +278,6 @@ const Page = ({ params }: any) => {
   };
 
 
-  // Start countdown timer
-  const startCountdown = () => {
-    let count = 5;
-    setCountdownValue(count);
-    
-    const timer = setInterval(() => {
-      count--;
-      setCountdownValue(count);
-      
-      if (count <= 0) {
-        clearInterval(timer);
-        // Navigate to winners page
-        router.push(`/raffle/${product_id}/winners`);
-      }
-    }, 1000);
-  };
 
   const handleVideoControl = () => {
     if (iframeRef.current) {

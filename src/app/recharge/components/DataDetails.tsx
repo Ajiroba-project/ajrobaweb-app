@@ -303,7 +303,7 @@ export const DataDetails = () => {
                   <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg">
                     <div className="text-center">
                       <p className="text-gray-500 text-lg font-medium mb-2">No Beneficiaries Available</p>
-                      <p className="text-gray-400 text-sm">You haven't saved any beneficiaries yet.</p>
+                      <p className="text-gray-400 text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
                     </div>
                   </div>
                 )}

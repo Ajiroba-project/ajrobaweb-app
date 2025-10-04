@@ -187,27 +187,6 @@ const Page = () => {
     setConfirmOrder(true);
   }, []);
 
-  const handleOrderbutton = useCallback(() => {
-    const pin = Cookies.get("nvd");
-    if (!pin) {
-      toast.error("Please enter your wallet pin first.");
-      return;
-    }
-
-    const payload = {
-      wallet_pin: pin,
-      shipping_address: cartItems?.["Delivery Details"],
-      shipping_method: "standard",
-      payment_method: "Wallet",
-    };
-
-    mutate({
-      url: "/api/orderpayment",
-      payload: { payload: payload, token: tkn_ },
-      token: tkn_,
-    });
-  }, [cartItems, tkn_]);
-
   // Form handling
   const schema = yup.object().shape({
     password: yup
@@ -330,6 +309,27 @@ const Page = () => {
       token: tkn_,
     });
   }, [mutate, tkn_]);
+
+  const handleOrderbutton = useCallback(() => {
+    const pin = Cookies.get("nvd");
+    if (!pin) {
+      toast.error("Please enter your wallet pin first.");
+      return;
+    }
+
+    const payload = {
+      wallet_pin: pin,
+      shipping_address: cartItems?.["Delivery Details"],
+      shipping_method: "standard",
+      payment_method: "Wallet",
+    };
+
+    mutate({
+      url: "/api/orderpayment",
+      payload: { payload: payload, token: tkn_ },
+      token: tkn_,
+    });
+  }, [cartItems, tkn_, mutate]);
 
   // Modal handlers
   const showModal = useCallback(() => setIsModalOpen(true), []);
