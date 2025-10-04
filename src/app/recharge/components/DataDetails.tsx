@@ -50,7 +50,7 @@ export const DataDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Data`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=data`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -265,39 +265,48 @@ export const DataDetails = () => {
 
             <div className="p-6 bg-gray-100 min-h-screen">
               <div className="space-y-4">
-                {transformedData?.map((item: TransformedDataItem) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    {/* Icon and details */}
-                    <div className="flex items-center">
-                      {item.icon && (
-                        <Image
-                          src={item.icon}
-                          alt={item.type}
-                          width={40}
-                          className="w-10 h-10 rounded-full mr-4"
-                          height={40}
-                        />
-                      )}
-
-                      <div>
-                        <p className="text-gray-900 font-semibold">
-                          {item.number}
-                        </p>
-                        <p className="text-gray-500 text-sm">{item.type}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleUseClick(item.number, item.type)}
-                      className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                {transformedData && transformedData.length > 0 ? (
+                  transformedData.map((item: TransformedDataItem) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     >
-                      Use
-                    </button>
+                      {/* Icon and details */}
+                      <div className="flex items-center">
+                        {item.icon && (
+                          <Image
+                            src={item.icon}
+                            alt={item.type}
+                            width={40}
+                            className="w-10 h-10 rounded-full mr-4"
+                            height={40}
+                          />
+                        )}
+
+                        <div>
+                          <p className="text-gray-900 font-semibold">
+                            {item.number}
+                          </p>
+                          <p className="text-gray-500 text-sm">{item.type}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleUseClick(item.number, item.type)}
+                        className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                      >
+                        Use
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg">
+                    <div className="text-center">
+                      <p className="text-gray-500 text-lg font-medium mb-2">No Beneficiaries Available</p>
+                      <p className="text-gray-400 text-sm">You haven't saved any beneficiaries yet.</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </CustomModal>

@@ -29,6 +29,7 @@ export const PhotoUpload = () => {
   const [files, setFiles] = useState<FileProps[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -55,6 +56,7 @@ export const PhotoUpload = () => {
     setProfile(false);
     setFiles([]);
     setUploadSuccess(false);
+    setError('');
   };
 
 
@@ -68,6 +70,7 @@ export const PhotoUpload = () => {
 
     const base64Image = files[0].base64;
     setUploading(true);
+    setError('');
 
     try {
       const response = await fetch('https://staging.ajiroba.ng/v1/user/change_profile_image/', {
@@ -90,10 +93,15 @@ export const PhotoUpload = () => {
         // console.log('Image uploaded successfully');
         setProfileurl(responseData?.profile_image_url)
       } else {
-        console.error('Failed to upload image');
+        // console.log(response, 'response');
+        const errorData = await response.json().catch(() => ({}));
+        // console.log(errorData, 'errorData');
+        setError(errorData.message || response.statusText ||  'Failed to upload image. Please try again.');
+        // console.error('Failed to upload image');
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      setError('Network error. Please check your connection and try again.');
+      // console.error('Error uploading image:', error);
     } finally {
       setUploading(false);
       setFiles([]);
@@ -134,6 +142,12 @@ export const PhotoUpload = () => {
           <button onClick={files.length === 0 ? open : uploadImage} disabled={uploading} type="button" className="rounded-md bg-[#f25e26] px-8 py-4 text-white">
             {files.length === 0 ? "Browse files" : "Upload"}
           </button>
+          
+          {error && (
+            <div className="mt-2 text-center">
+              <p className="text-red-500 text-sm">{error}</p>
+            </div>
+          )}
         </div>
       </label>
 

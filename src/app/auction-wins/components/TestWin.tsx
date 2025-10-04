@@ -58,20 +58,27 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                 logging: false,
             });
 
-            // Create PDF with both pages
+            // Create PDF with A4 format
             const pdf = new jsPDF({
                 orientation: 'portrait',
-                unit: 'px',
-                format: [canvas1.width, canvas1.height * 2] // Double height to accommodate both pages
+                unit: 'mm',
+                format: 'a4'
             });
+
+            // Calculate dimensions to fit the content
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 297; // A4 height in mm
+            const imgHeight1 = (canvas1.height * imgWidth) / canvas1.width;
+            const imgHeight2 = (canvas2.height * imgWidth) / canvas2.width;
 
             // Add first page
             const imgData1 = canvas1.toDataURL('image/png');
-            pdf.addImage(imgData1, 'PNG', 0, 0, canvas1.width, canvas1.height);
+            pdf.addImage(imgData1, 'PNG', 0, 0, imgWidth, imgHeight1);
 
             // Add second page
+            pdf.addPage();
             const imgData2 = canvas2.toDataURL('image/png');
-            pdf.addImage(imgData2, 'PNG', 0, canvas1.height, canvas2.width, canvas2.height);
+            pdf.addImage(imgData2, 'PNG', 0, 0, imgWidth, imgHeight2);
 
             // Save the PDF
             pdf.save('winning-advice.pdf');

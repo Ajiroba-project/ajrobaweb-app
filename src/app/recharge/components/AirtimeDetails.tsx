@@ -46,7 +46,7 @@ export const AirtimeDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Airtime`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=airtime`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -176,29 +176,37 @@ export const AirtimeDetails = () => {
 
             <div className="pt-2">
               <div className="space-y-5">
-
-                {transformedData?.map((item: TransformedDataItem) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between rounded-xl bg-[#F8F8F8] px-6 py-5 border border-[#F0F0F0]"
-                  >
-                    <div className="flex items-center gap-4">
-                      {item.icon && (
-                        <Image src={item.icon} alt={item.type} width={44} height={44} className="w-11 h-11 rounded-full" />
-                      )}
-                      <div className="leading-tight">
-                        <p className="text-[15px] md:text-base text-[#2A2A2A] font-medium tracking-[0.2px]">{item.number}</p>
-                        <p className="text-xs text-[#8C8C8C] mt-1">{item.type}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleUseClick(item.number, item.type)}
-                      className="px-5 py-2 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] text-sm font-medium hover:opacity-90"
+                {transformedData && transformedData.length > 0 ? (
+                  transformedData.map((item: TransformedDataItem) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between rounded-xl bg-[#F8F8F8] px-6 py-5 border border-[#F0F0F0]"
                     >
-                      Use
-                    </button>
+                      <div className="flex items-center gap-4">
+                        {item.icon && (
+                          <Image src={item.icon} alt={item.type} width={44} height={44} className="w-11 h-11 rounded-full" />
+                        )}
+                        <div className="leading-tight">
+                          <p className="text-[15px] md:text-base text-[#2A2A2A] font-medium tracking-[0.2px]">{item.number}</p>
+                          <p className="text-xs text-[#8C8C8C] mt-1">{item.type}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleUseClick(item.number, item.type)}
+                        className="px-5 py-2 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] text-sm font-medium hover:opacity-90"
+                      >
+                        Use
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="text-center">
+                      <p className="text-[#8C8C8C] text-lg font-medium mb-2">No Beneficiaries Available</p>
+                      <p className="text-[#8C8C8C] text-sm">You haven't saved any beneficiaries yet.</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 

@@ -57,7 +57,7 @@ const WrappedPage = () => {
       // Clone the content
       const clonedContent = node.cloneNode(true);
       
-      // Fix all skewed lines in the cloned content
+      // Fix skewed elements for PDF generation
       const skewedElements = clonedContent.querySelectorAll('[style*="skewY"]');
       skewedElements.forEach(element => {
         const currentStyle = element.getAttribute('style');
@@ -65,27 +65,39 @@ const WrappedPage = () => {
         // Extract positioning values
         const leftMatch = currentStyle.match(/left:\s*([^;]+)/);
         const bottomMatch = currentStyle.match(/bottom:\s*([^;]+)/);
+        const widthMatch = currentStyle.match(/width:\s*([^;]+)/);
         const heightMatch = currentStyle.match(/height:\s*([^;]+)/);
         
-        // Convert rem to px for positioning
         let leftValue = leftMatch ? leftMatch[1].trim() : '0';
-        if (leftValue.includes('rem')) {
-          leftValue = (parseFloat(leftValue) * 16) + 'px'; // 1rem = 16px
-        }
-        
         let bottomValue = bottomMatch ? bottomMatch[1].trim() : '0';
+        let widthValue = widthMatch ? widthMatch[1].trim() : '200px';
         let heightValue = heightMatch ? heightMatch[1].trim() : '3px';
         
-        // Create replacement element with CSS borders for skew effect
+        // Adjust positioning for PDF to compensate for transform issues
+        let adjustedBottomValue = bottomValue;
+        if (bottomValue.includes('px')) {
+          const pxValue = parseFloat(bottomValue);
+          // Different adjustments based on original position
+          if (pxValue === -16) {
+            adjustedBottomValue = (pxValue + -40) + 'px'; // -16 - 12 = -28px
+          } else if (pxValue === -8) {
+            adjustedBottomValue = (pxValue + -24) + 'px'; // -8 - 4 = -12px
+          } else {
+            adjustedBottomValue = (pxValue + -32) + 'px'; // Default adjustment
+          }
+        }
+        
+        // Create replacement element with adjusted positioning
         const replacement = document.createElement('div');
         replacement.style.position = 'absolute';
         replacement.style.left = leftValue;
-        replacement.style.bottom = bottomValue;
-        replacement.style.width = '0';
-        replacement.style.height = '0';
-        replacement.style.borderLeft = '100px solid transparent';
-        replacement.style.borderBottom = heightValue + ' solid #000000';
+        replacement.style.bottom = adjustedBottomValue;
+        replacement.style.width = widthValue;
+        replacement.style.height = heightValue;
+        replacement.style.backgroundColor = '#000000';
         replacement.style.zIndex = '0';
+        replacement.style.transform = 'skewY(-8deg)';
+        replacement.style.transformOrigin = 'left bottom';
         
         // Replace the problematic element
         element.parentNode.replaceChild(replacement, element);
@@ -214,22 +226,15 @@ const WrappedPage = () => {
               <p className="text-[#E84526] text-base">Back</p>
             </div>
           </div>
-
-          <section
-            style={{
-              margin: "0 auto",
-              width: "80%",
-            }}
-          >
-            {/*  <Title title="Purchase Order Details" /> */}
-            <div className="container py-4 mb-8">
-              <p className="text-center  2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px]  font-Poppins text-sm text-[#504D4D] font-extrabold">{'Purchase Order Details'}</p>
-            </div>
-          </section>
         </div>
       </section>
 
       <main className="container bg-white py-8" ref={contentRef}>
+        <div className="container">
+          <div className="py-4 mb-8">
+            <p className="text-center  2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px]  font-Poppins text-sm text-[#504D4D] font-extrabold">{'Purchase Order Details'}</p>
+          </div>
+        </div>
         <div className="container">
           <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0">
             <div className="flex items-center gap-4">
@@ -257,21 +262,7 @@ const WrappedPage = () => {
               </div>
             </div>
 
-            {/*   <div className="flex items-center gap-2 border border-[#F25E26] p-2 hover:bg-[#F25E26] hover:text-white cursor-pointer  texthover  ">
-              <div className="hover:bg-[#F25E26] hover:text-white">
-
-                <MdOutlineFileDownload className="text-[#F25E26] texthover" size={12} />
-
-              </div>
-              <div>
-                <p
-                  className="font-Poppins text-sm  font-medium cursor-pointer hover:bg-[#F25E26] hover:text-white"
-                  onClick={handleDownload}
-                >
-                  Download
-                </p>
-              </div>
-            </div> */}
+           
 
             <div className="group flex items-center gap-2 border border-[#F25E26] p-2 hover:bg-[#F25E26] hover:text-white cursor-pointer">
               <div>
@@ -300,18 +291,7 @@ const WrappedPage = () => {
               </div>
             </div>
 
-            {/* <div className="flex items-center gap-2 flex-wrap">
-              <div>
-                <p className="font-Poppins text-sm text-[#6E6E6E] font-medium">
-                  Ticket Number:
-                </p>
-              </div>
-              <div>
-                <p className="font-Inter text-base text-[#111111] font-bold">
-                  {filteredItems[0]?.ticket_number}
-                </p>
-              </div>
-            </div> */}
+          
           </div>
         </div>
 

@@ -244,16 +244,16 @@ export default function RaffleTicket({
                                 <div className="relative inline-block mt-1">
                                     <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white relative z-10 tracking-tighter">Ticket</h1>
                                     <div 
-                                        className="absolute bg-black" 
+                                        className="absolute" 
                                         style={{
-                                            left: '6rem',
-                                            right: '-1rem',
-                                            bottom: '-1rem',
-                                            height: '0.175rem',
-                                            transform: 'skewY(-8deg)',
-                                            transformOrigin: 'left bottom',
+                                            left: '96px',
+                                            bottom: '-16px',
                                             zIndex: 0,
-                                            minWidth: '100px'
+                                            width: '180px',
+                                            height: '3px',
+                                            backgroundColor: '#000000',
+                                            transform: 'skewY(-8deg)',
+                                            transformOrigin: 'left bottom'
                                         }}
                                     ></div>
                                 </div>
@@ -296,16 +296,16 @@ export default function RaffleTicket({
                             <div className="relative inline-block mt-1">
                                 <h1 className="text-3xl md:text-4xl font-bold text-white relative z-10 tracking-tighter">Ticket</h1>
                                 <div 
-                                    className="absolute bg-black" 
+                                    className="absolute" 
                                     style={{
-                                        left: '2rem',
-                                        right: '-1rem',
-                                        bottom: '-.5rem',
-                                        height: '0.15rem',
-                                        transform: 'skewY(-8deg)',
-                                        transformOrigin: 'left bottom',
+                                        left: '32px',
+                                        bottom: '-8px',
                                         zIndex: 0,
-                                        minWidth: '50px'
+                                        width: '100px',
+                                        height: '2px',
+                                        backgroundColor: '#000000',
+                                        transform: 'skewY(-8deg)',
+                                        transformOrigin: 'left bottom'
                                     }}
                                 ></div>
                             </div>

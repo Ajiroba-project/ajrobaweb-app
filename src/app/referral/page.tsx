@@ -109,7 +109,7 @@ const ReferralPage = () => {
 
                 {/* Refer Input */}
                 <section className="flex flex-col items-center gap-4 mt-8 mb-8">
-                    <div className="w-full max-w-2xl flex flex-col md:flex-row gap-2">
+                    {/* <div className="w-full max-w-2xl flex flex-col md:flex-row gap-2">
                         <input
                             type="text"
                             value={friendInput}
@@ -123,8 +123,8 @@ const ReferralPage = () => {
                         >
                             Refer A Friend
                         </button>
-                    </div>
-                    <div className="my-2 text-gray-500 font-semibold">OR</div>
+                    </div> 
+                    <div className="my-2 text-gray-500 font-semibold">OR</div> */}
                     {/* Referral Link */}
                     <div className="w-full max-w-2xl flex gap-2 items-center flex-wrap">
                         <div className="flex items-center bg-gray-100 border border-gray-300 rounded-md flex-1 px-4 py-3">
