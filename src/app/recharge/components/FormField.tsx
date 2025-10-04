@@ -214,6 +214,12 @@ export const SelectField = ({
   value,
   onChange,
 }: selectProps & { style?: React.CSSProperties; value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) => {
+  // Controlled value to sync with RHF and external value
+  const [selectedValue, setSelectedValue] = useState<string>(value ?? '')
+  useEffect(() => {
+    if (typeof value === 'string') setSelectedValue(value)
+  }, [value])
+
   // For multiple selection, keep native select to avoid behavior changes
   if (multiple) {
     return (
@@ -246,12 +252,6 @@ export const SelectField = ({
       </div>
     )
   }
-
-  // Controlled value to sync with RHF and external value
-  const [selectedValue, setSelectedValue] = useState<string>(value ?? '')
-  useEffect(() => {
-    if (typeof value === 'string') setSelectedValue(value)
-  }, [value])
 
   const reg = register(name, { required: true })
 

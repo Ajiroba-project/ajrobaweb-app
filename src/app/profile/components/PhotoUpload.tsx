@@ -4,6 +4,7 @@ import { CustomModal } from '@/app/component/Modal';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { IoClose } from 'react-icons/io5';
 import { useDropzone } from 'react-dropzone';
+import Image from 'next/image';
 // import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
 
@@ -162,9 +163,11 @@ export const PhotoUpload = () => {
         {files.length > 0 && (
           <div className="mt-4 text-center">
             <div className="mb-4">
-              <img 
+              <Image 
                 src={files[0].base64} 
                 alt="Preview" 
+                width={192}
+                height={192}
                 className="mx-auto max-h-48 max-w-48 rounded-lg object-cover"
               />
             </div>

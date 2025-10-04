@@ -128,6 +128,41 @@ const Page = ({ params }: any) => {
     }
   }, [userToken, product_id, router]);
 
+  // Check if raffle is about to start (within 5 seconds)
+  const checkRaffleAboutToStart = useCallback(() => {
+    if (!productdatanew?.start_date || !productdatanew?.start_time) return;
+
+    const now = new Date();
+    const startDate = new Date(productdatanew.start_date + " " + productdatanew.start_time);
+    const timeUntilStart = startDate.getTime() - now.getTime();
+    
+    // If raffle starts in 5 seconds or less, show countdown
+    if (timeUntilStart <= 5000 && timeUntilStart > 0) {
+      setShowCountdown(true);
+      startCountdown();
+    }
+  }, [productdatanew]);
+
+  // Check if enforced time has passed
+  const checkEnforcedTime = useCallback(() => {
+    if (enforceTime === 0 || raffleStartTime === 0) return;
+    
+    const now = Date.now();
+    const timeSinceRaffleStarted = now - raffleStartTime;
+    const remaining = Math.max(0, enforceTime - timeSinceRaffleStarted);
+    setRemainingEnforceTime(remaining);
+    
+    // Check if we're in the enforced period
+    if (timeSinceRaffleStarted >= 0 && timeSinceRaffleStarted < enforceTime) {
+      // We're in the enforced period, show countdown
+      // console.log('In enforced period, remaining time:', remaining);
+    } else if (timeSinceRaffleStarted >= enforceTime) {
+      // Enforced time has passed, redirect to winners page
+    /*   console.log('Redirecting due to enforced time completion'); */
+      router.push(`/raffle/${product_id}/winners`);
+    }
+  }, [enforceTime, raffleStartTime, product_id, router]);
+
   useEffect(() => {
    /*  console.log('Page loaded, fetching raffle data'); */
     
@@ -153,7 +188,7 @@ const Page = ({ params }: any) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [productdatanew]);
+  }, [productdatanew, checkRaffleAboutToStart]);
 
   // Check enforced time every second
   useEffect(() => {
@@ -173,7 +208,7 @@ const Page = ({ params }: any) => {
  /*      console.log('Clearing enforced time interval'); */
       clearInterval(interval);
     };
-  }, [enforceTime, raffleStartTime]);
+  }, [enforceTime, raffleStartTime, checkEnforcedTime]);
 
 
 
@@ -225,49 +260,6 @@ const Page = ({ params }: any) => {
     }
   };
 
-  // Check if raffle is about to start (within 5 seconds)
-  const checkRaffleAboutToStart = () => {
-    if (!productdatanew?.start_date || !productdatanew?.start_time) return;
-
-    const now = new Date();
-    const startDate = new Date(productdatanew.start_date + " " + productdatanew.start_time);
-    const timeUntilStart = startDate.getTime() - now.getTime();
-    
-    // If raffle starts in 5 seconds or less, show countdown
-    if (timeUntilStart <= 5000 && timeUntilStart > 0) {
-      setShowCountdown(true);
-      startCountdown();
-    }
-  };
-
-  // Check if enforced time has passed
-  const checkEnforcedTime = () => {
-    if (enforceTime === 0 || raffleStartTime === 0) return;
-    
-    const now = Date.now();
-    const timeSinceRaffleStarted = now - raffleStartTime;
-    const remaining = Math.max(0, enforceTime - timeSinceRaffleStarted);
-    setRemainingEnforceTime(remaining);
-    
-    // Check if we're in the enforced period
-    if (timeSinceRaffleStarted >= 0 && timeSinceRaffleStarted < enforceTime) {
-      // We're in the enforced period, show countdown
-      // console.log('In enforced period, remaining time:', remaining);
-    } else if (timeSinceRaffleStarted >= enforceTime) {
-      // Enforced time has passed, redirect to winners page
-    /*   console.log('Redirecting due to enforced time completion'); */
-      router.push(`/raffle/${product_id}/winners`);
-    }
-    
-    // console.log('Enforced time check:', {
-    //   enforceTime,
-    //   raffleStartTime: new Date(raffleStartTime).toLocaleString(),
-    //   now: new Date(now).toLocaleString(),
-    //   timeSinceRaffleStarted,
-    //   remaining,
-    //   shouldRedirect: timeSinceRaffleStarted >= enforceTime
-    // });
-  };
 
   // Start countdown timer
   const startCountdown = () => {
