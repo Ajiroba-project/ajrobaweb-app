@@ -120,7 +120,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         setPaymentUrl(payment_url);
         setShowModalUp(true);
 
-        toast.success(`Payment initiated successfully`, {
+        toast.success(`Payment initiated, Kindly proceed to complete payment`, {
           closeButton: false,
         });
       } else {

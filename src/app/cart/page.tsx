@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import AuthMiddleware from '@/hooks/useAuthCart'
 import { useAuthStore } from '@/store/store';
 import  Loading  from "../component/Loading";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 // Small loading spinner component for individual operations
 const SmallSpinner = () => (
@@ -385,11 +386,11 @@ const Page = () => {
 
                           <div>
                             <h1 className="text-[#111111] font-Poppins text-xl mt-2 font-semibold">
-                              N{" "}
-                              {calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString()}
+                              {" "}
+                              {formatCurrency(calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString())}
                             </h1>
                             <h1 className="text-[#111111] text-lg mt-2 line-through">
-                              N {item?.product?.price?.toLocaleString()}
+                              {formatCurrency(item?.product?.price)}
                             </h1>
 
                             <div

@@ -12,7 +12,7 @@ import Cookies from 'js-cookie'
 
 export const OrderDetails = () => {
   const orderSwitch = useMemo(() => ['all', 'Completed', 'Pending'], []);
-  const tableHeader = ['orderID', 'product details', 'amount', 'date', 'status', 'actions'];
+  const tableHeader = ['orderID', 'product details', 'amount', 'date', 'delivery status', 'actions'];
   const [pipeline, setPipeline] = useState<string>('all');
   const [completedFilter, setCompletedFilter] = useState<any[]>([]);
   const [allordeerFilter, setAllorderFilter] = useState<any[]>([]);
