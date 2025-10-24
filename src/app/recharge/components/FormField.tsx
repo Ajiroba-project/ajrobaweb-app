@@ -279,7 +279,7 @@ export const SelectField = ({
           <SelectValue placeholder={label ? ` ${label}` : ''} />
         </SelectTrigger>
         <SelectContent className='' style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
-          {options?.filter(val => val && val.trim() !== '').map((val: string, key: number) => (
+          {options?.filter((val: any) => val && val.trim() !== '').map((val: any, key: number) => (
             <SelectItem key={key} value={val} className='text-[#2A2A2A] data-[highlighted]:bg-[#FCDFD4]  data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>
               {val}
             </SelectItem>
