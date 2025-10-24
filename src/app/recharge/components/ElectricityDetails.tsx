@@ -149,7 +149,7 @@ export const ElectricityDetails = () => {
     dataPlansData?.data?.data?.map(
       (subScriptionType: { subScriptionType: string; amount: number }) =>
         `${subScriptionType.subScriptionType} -₦${subScriptionType.amount}`,
-    ).filter(plan => plan && plan.trim() !== '') || [];
+    ).filter((plan: string) => plan && plan.trim() !== '') || [];
 
   const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV", "IBEDC", "IKEDC", "BENIN", "ENUGU", "EKEDC", "KADUNA", "KANO", "AEDC", "JED", "PHEDC"];
 
