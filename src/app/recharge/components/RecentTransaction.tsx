@@ -144,32 +144,32 @@ export const RecentTransaction = () => {
   };
 
   return (
-    <section className="my-10 rounded bg-[#F6F6F6] p-7">
+    <section className="my-10 rounded bg-[#F6F6F6] p-4 sm:p-7">
       {viewAll && (
         <div className="mb-3">
           <button onClick={() => setViewAll(false)} className="text-[#F25E26]">Back</button>
         </div>
       )}
-      <div className="rounded border-2 border-[#f25e26] p-4">
+      <div className="rounded border-2 border-[#f25e26] p-3 sm:p-4 overflow-hidden">
         {viewAll ? (
-          <div className="flex justify-between items-center ">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative">
+              <div className="relative w-full sm:w-auto">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-[200px] sm:w-[260px] rounded-md border border-gray-300 pl-3 pr-9 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-transparent"
+                  className="w-full sm:w-[260px] rounded-md border border-gray-300 pl-3 pr-9 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F25E26] focus:border-transparent"
                 />
                 <MdSearch className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
             </div>
-            <div className="flex items-center gap-2 ">
-              <span>Sort by:</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm sm:text-base">Sort by:</span>
               <div style={{ zIndex: 10, position: "relative" }}>
                 <Select value={sortBy} onValueChange={(val) => setSortBy(val)}>
-                  <SelectTrigger className="h-10 w-[160px] rounded border px-3 selector">
+                  <SelectTrigger className="h-9 sm:h-10 w-[140px] sm:w-[160px] rounded border px-3 selector">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
@@ -183,8 +183,8 @@ export const RecentTransaction = () => {
             </div>
           </div>
         ) : (
-          <div className="flex justify-between">
-            <h3 className="text-xl font-semibold"> Recent Transactions</h3>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-lg sm:text-xl font-semibold"> Recent Transactions</h3>
             <p
               className={`text-[#F25E26] cursor-pointer ${allTransaction?.length === recenttransdata?.results?.data?.length
                 ? "pointer-events-none opacity-50 hidden"
@@ -192,7 +192,7 @@ export const RecentTransaction = () => {
                 }`}
               onClick={() => setViewAll(true)}
             >
-              View all
+              <span className="text-sm sm:text-base">View all</span>
             </p>
           </div>
         )}
@@ -205,7 +205,7 @@ export const RecentTransaction = () => {
               <Loading /> 
             </div>
           ) : (
-            <div className="my-4 flex flex-col gap-4">
+            <div className="my-4 flex flex-col gap-3 sm:gap-4">
               {allTransaction.length === 0 ? (
                 <p className="text-gray-500 text-center">No transactions available.</p>
               ) : (
@@ -237,23 +237,23 @@ export const RecentTransaction = () => {
                     <Fragment key={index}>
                       <div
                         onClick={() => router.push(url)}
-                        className="mr-4 flex cursor-pointer items-center justify-between rounded bg-[#FCDFD480] p-4 hover:shadow-md"
+                        className="mr-0 sm:mr-4 flex flex-col sm:flex-row cursor-pointer items-start sm:items-center justify-between rounded bg-[#FCDFD480] p-3 sm:p-4 hover:shadow-md gap-2 sm:gap-0"
                       >
-                        <div className="flex">
-                          <div>
+                        <div className="flex w-full sm:w-auto">
+                          <div className="shrink-0">
 
                           <Image
                             src={icon}
                             alt={iconAlt}
-                            width={40}
-                            height={40}
-                            className="w-10 h-10 rounded-full mr-4"
+                            width={36}
+                            height={36}
+                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full mr-3 sm:mr-4"
                           />
 
                           </div>
-                          <div className="flex flex-col">
-                            <p className="font-semibold">{val?.description}</p>
-                            <p>{val.date_created
+                          <div className="flex flex-col min-w-0">
+                            <p className="font-semibold text-sm sm:text-base break-words whitespace-normal sm:whitespace-nowrap sm:truncate">{val?.description}</p>
+                            <p className="text-xs sm:text-base text-[#4B5563]">{val.date_created
                               ? new Date(val.date_created).toLocaleString("en-US", {
                                 year: "numeric",
                                 month: "long",
@@ -266,8 +266,13 @@ export const RecentTransaction = () => {
                               : "NA"}</p>
                           </div>
                         </div>
-                        <div>
+                        <div className="hidden sm:block ml-0 sm:ml-6 text-right shrink-0">
                           <p className="text-xl font-semibold">{formatCurrency(val?.amount)}</p>
+                        </div>
+
+                        {/* Mobile amount block below content for clean layout */}
+                        <div className="sm:hidden w-full border-t border-[#F4C3AD] pt-2 mt-1">
+                          <p className="text-base font-semibold">{formatCurrency(val?.amount)}</p>
                         </div>
                       </div>
                     </Fragment>

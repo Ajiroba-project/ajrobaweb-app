@@ -180,6 +180,36 @@ img {
   /* Ensures no white background */
 }
 
+/* Performance: avoid rendering offscreen sections until scrolled into view */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 600px; /* reserve vertical space to prevent CLS */
+}
+
+/* Prevent iOS Safari zoom on input focus by ensuring 16px min font-size */
+input,
+textarea,
+select,
+button {
+  font-size: 16px !important;
+}
+
+/* Fine tune for common input types explicitly */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+  font-size: 16px !important;
+}
+
 .custom-calendar {
   background: #d3d3d3 !important;
   /* light gray */

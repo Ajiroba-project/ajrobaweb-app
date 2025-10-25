@@ -171,26 +171,26 @@ export const MobileSideMenu = () => {
 
   return (
     <>
-      <section className='bg-[#F6F6F6] p-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200' ref={menuRef}>
+      <section className='bg-[#F6F6F6] p-4 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200' ref={menuRef}>
         <ul className='relative '>
           {catInfo?.data?.map((val, index) => (
             <Fragment key={index}>
               <div className='relative bg-[#F6F6F6] p-2'>
                 <li
-                  className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 2 hover:text-[#F25E26] `}
+                  className={`${poppins.className} ${active === index ? '' : ''}  flex  cursor-pointer items-center gap-1.5 hover:text-[#F25E26] text-sm`}
                   onClick={() => {
                     setActive(active === index ? null : index)
                   }}
                 >
                   <span className='flex items-center gap-2 '>
-                    <p onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)} className={``}>{val.category}</p>
+                    <p onClick={() => router.push(`/categories/${val.category}?cat_id=${val.id}`)} className={`capitalize`}>{val.category}</p>
                     {active === index ? <IoIosArrowUp /> : <IoIosArrowDown />}
                   </span>
                 </li>
 
                  {active === index && (
                 <div
-                  className={`${inter.className} z-20 bg-white ${ 'left-[10rem] -mt-[30px] w-48 rounded-md'} absolute rounded text-sm shadow-md transition delay-300 duration-300 ease-in-out`}
+                  className={`${inter.className} z-20 bg-white mt-2 rounded-md text-sm shadow-md transition delay-150 duration-200 ease-in-out`}
                 >
                   {val.subcategories?.map(subcategory => (
                     <div
@@ -200,7 +200,7 @@ export const MobileSideMenu = () => {
 
                     >
                        <p
-                        className={` ${ 'w-max p-2 text-sm font-Inter font-normal'}`}
+                        className={`w-full p-2 text-sm font-Inter font-normal`}
                       >
                         {subcategory.subcategory}
                       </p>

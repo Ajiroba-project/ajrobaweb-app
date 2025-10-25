@@ -144,6 +144,8 @@ const AuctionPage = () => {
       <header className='fixed z-50 w-full'>
         <Header />
       </header>
+  	  {/* Spacer to offset fixed header height on small/medium screens */}
+  	  <div className='h-24 md:h-28 lg:h-32'></div>
       <AuctionBanner text='Auction Deals' banner={auctionImg} />
       <main className='container my-4'>
         <section className='my-5 flex flex-col items-center justify-between gap-5 lg:flex-row'>

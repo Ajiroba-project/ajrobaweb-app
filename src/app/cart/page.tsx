@@ -332,12 +332,12 @@ const Page = () => {
                     paginatedCartInfo?.map((item) => (
                       <div
                         key={item.id}
-                        className="border rounded border-[#D2D2D2] px-4 py-2 my-4"
+                        className="border rounded border-[#D2D2D2] px-3 py-3 sm:px-4 sm:py-2 my-4"
                       >
-                        <div className="flex justify-between flex-wrap 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col gap-4">
-                          <div>
+                        <div className="grid grid-cols-[64px_1fr] sm:flex sm:flex-row justify-between gap-3 sm:gap-6 overflow-hidden">
+                          <div className="col-span-1">
                             <Image
-                              className="w-100 h-100 object-cover"
+                              className="w-16 h-16 sm:w-[100px] sm:h-[100px] object-cover rounded"
                               src={`https://staging.ajiroba.ng/media/${item?.product?.images[0]?.image}`}
                               alt="Product Thumbnail"
                               height={100}
@@ -360,7 +360,7 @@ const Page = () => {
                                 type="text"
                                 value={item.quantity}
                                 readOnly
-                                className="w-12 text-center border-gray-300"
+                                className="w-10 sm:w-12 text-center border-gray-300"
                               />
                               <button
                                 onClick={() => handleIncrement(item.id, item.quantity)}
@@ -376,17 +376,17 @@ const Page = () => {
                             </div>
                           </div>
 
-                          <div className="flex justify-center items-center flex-col 2xl:w-3/12 xl:w-3/12 lg:w-3/12 md:w-3/12 w-auto">
-                            <p className="text-[#111111]  font-Poppins font-medium text-base mt-4">
+                          <div className="flex justify-start items-start flex-col sm:w-5/12 w-full pr-1">
+                            <p className="text-[#111111] font-Poppins font-medium text-sm sm:text-base mt-0 sm:mt-4 leading-5 sm:leading-6">
                               {item?.product?.name}
                             </p>
 
-                            <h1 className="text-[#b4a3a3] text-sm  mt-4">Food Stuff . In Stock</h1>
+                            <h1 className="text-[#6B7280] text-xs sm:text-sm mt-1 sm:mt-2">Food Stuff • In stock</h1>
                           </div>
 
-                          <div>
+                          {/* Desktop price + delete */}
+                          <div className="hidden sm:block text-right min-w-[180px] md:min-w-[220px]">
                             <h1 className="text-[#111111] font-Poppins text-xl mt-2 font-semibold">
-                              {" "}
                               {formatCurrency(calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString())}
                             </h1>
                             <h1 className="text-[#111111] text-lg mt-2 line-through">
@@ -394,7 +394,7 @@ const Page = () => {
                             </h1>
 
                             <div
-                              className={`flex items-center gap-2 mt-8 ${
+                              className={`flex items-center justify-end gap-2 mt-6 ${
                                 operationLoading[item.id] 
                                   ? 'cursor-not-allowed opacity-50' 
                                   : 'cursor-pointer hover:opacity-80'
@@ -406,6 +406,29 @@ const Page = () => {
                                 {operationLoading[item.id] ? 'Removing...' : 'Delete'}
                               </h1>
                             </div>
+                          </div>
+                        
+                          {/* Mobile price + delete */}
+                          <div className="sm:hidden w-full border-t border-[#E5E7EB] pt-3 mt-2 flex items-center justify-between">
+                            <div>
+                              <h1 className="text-[#111111] font-Poppins text-base font-semibold">
+                                {formatCurrency(calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString())}
+                              </h1>
+                              <h1 className="text-[#111111] text-sm line-through">
+                                {formatCurrency(item?.product?.price)}
+                              </h1>
+                            </div>
+                            <button
+                              className={`flex items-center gap-2 ${
+                                operationLoading[item.id] 
+                                  ? 'cursor-not-allowed opacity-50' 
+                                  : 'cursor-pointer hover:opacity-80'
+                              }`}
+                              onClick={() => !operationLoading[item.id] && handleDelete(item.id, item.quantity)}
+                            >
+                              <RiDeleteBin6Line color="#E84526" />
+                              <span className="text-[#E84526] text-sm">{operationLoading[item.id] ? 'Removing...' : 'Delete'}</span>
+                            </button>
                           </div>
                         </div>
                       </div>

@@ -42,49 +42,49 @@ export const CarouselSwiper = () => {
         prevEl: '.swiper-button-prev',
         disabledClass: 'swiper-button-disabled'
       }}
-      className="h-[500px]"
+      className="h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]"
     >
       <SwiperSlide>
         {/* Mobile: default size */}
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={auction_one} alt="carousel" />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
+          <Image src={auction_one} alt="carousel" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
         </div>
         {/* Desktop: fill container */}
         <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={auction_one} alt="carousel" fill style={{ objectFit: 'cover' }} />
+          <Image src={auction_one} alt="carousel" fill priority sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
         </div>
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={buyticket} alt="carousel" />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
+          <Image src={buyticket} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
         </div>
         <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={buyticket} alt="carousel" fill style={{ objectFit: 'cover' }} />
+          <Image src={buyticket} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={auction_and_win} alt="carousel" />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
+          <Image src={auction_and_win} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
         </div>
         <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={auction_and_win} alt="carousel" fill style={{ objectFit: 'cover' }} />
+          <Image src={auction_and_win} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={rafledraw} alt="carousel" />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
+          <Image src={rafledraw} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
         </div>
         <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={rafledraw} alt="carousel" fill style={{ objectFit: 'cover' }} />
+          <Image src={rafledraw} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={recharge_and_win} alt="carousel" />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
+          <Image src={recharge_and_win} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
         </div>
         <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={recharge_and_win} alt="carousel" fill style={{ objectFit: 'cover' }} />
+          <Image src={recharge_and_win} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
         </div>
       </SwiperSlide>
     </Swiper>
@@ -97,7 +97,7 @@ export const Carousel = ({ isLoading = false }: { isLoading?: boolean }) => {
   }
 
   return (
-    <div className='relative h-[500px]'>
+    <div className='relative h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]'>
       <CarouselSwiper />
       <div className='swiper-button-next  !w-[35px]  rounded-full bg-[#fcdfd4] !p-[10px] !text-[15px] !h-auto !text-[#f25e26] after:!text-[15px]'></div>
       <div className='swiper-button-prev  !w-[35px]  rounded-full border-2 border-white bg-transparent !p-[10px] !text-[15px] !text-white after:!text-[15px] !h-auto'></div>

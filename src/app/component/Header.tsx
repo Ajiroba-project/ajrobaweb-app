@@ -884,7 +884,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
           <div className='relative z-50'>
             {/* <div className='container flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 overflow-visible'> */}
-            <div className='flex w-full py-2 px-12 sm:px-6 md:px-8 lg:px-12   overflow-visible'>
+            <div className='container xl:max-w-none flex w-full py-2 px-4 sm:px-6 md:px-8 lg:px-12   overflow-visible'>
             {/* px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 */}
               
               {/* Left Section - Logo */}
@@ -984,7 +984,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
                 {/* Mobile Search Button - Show when desktop nav is hidden */}
                 <button 
-                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2 hover:bg-gray-100 rounded-full transition-colors duration-200`}
+                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200`}
                   onClick={() => setShowMobileSearch(!showMobileSearch)}
                 >
                   <CiSearch className='text-xl text-[#A09F9F]' />
@@ -992,7 +992,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
                 {/* Notifications */}
                 <button 
-                  className='relative p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                  className='relative p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200'
                   onClick={() => isLoggedIn && setShowNotificationModal(true)}
                   title="Notifications"
                   aria-label={`Notifications (${notificationCount} unread)`}
@@ -1016,7 +1016,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
                 {/* Cart */}
                 <button 
-                  className='relative p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                  className='relative p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200'
                   onClick={() => router.push('/cart')}
                 >
                   <IoCartOutline className='text-xl text-[#A09F9F] hover:text-[#F25E26] transition-colors duration-200' />
@@ -1029,7 +1029,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
                 {/* Mobile Menu Toggle - Show when desktop nav is hidden */}
                 <button 
-                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2 hover:bg-gray-100 rounded-full transition-colors duration-200`}
+                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200`}
                   onClick={hamburgerfunc}
                 >
                   {isOpen ? (
@@ -1044,7 +1044,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
           {/* Mobile Navigation Menu */}
           <div
-            className={`fixed top-0 right-0 h-full w-72 sm:w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+            className={`fixed top-0 right-0 h-full w-80 sm:w-96 max-w-[92vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
               !showDesktopNav ? 'block' : 'hidden'
             } ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -1136,15 +1136,15 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
           {/* Mobile Search Overlay */}
           {showMobileSearch && !showDesktopNav && (
-            <div className='absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40'>
-              <div className='p-3 sm:p-4'>
+            <div className='absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40 rounded-b-lg'>
+              <div className='p-3 sm:p-4 mx-auto max-w-[1200px]'>
                 <div className='flex items-center gap-2 sm:gap-3'>
                   <div className='flex-1 min-w-0'>
                     <Search isMobile={true} onClose={() => setShowMobileSearch(false)} />
                   </div>
                   <button 
                     onClick={() => setShowMobileSearch(false)}
-                    className='p-2 text-gray-500 hover:text-gray-700 flex-shrink-0'
+                    className='p-2.5 h-10 w-10 flex items-center justify-center text-gray-500 hover:text-gray-700 flex-shrink-0 rounded-full hover:bg-gray-100'
                   >
                     <IoClose className='text-xl' />
                   </button>

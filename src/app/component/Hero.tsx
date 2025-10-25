@@ -28,9 +28,9 @@ export const Hero = () => {
             <div className='flex flex-col items-center bg-[#F6F6F6] lg:hidden '>
               <div style={{
                 zIndex: 21
-              }} className='container relative py-4'>
+              }} className='w-full relative py-3 px-4'>
                 <div
-                  className='z-40 flex items-center gap-4'
+                  className='z-40 flex items-center gap-3'
                   onClick={() => {
                     setActive(!active ? !active : null)
                   }}
@@ -40,11 +40,11 @@ export const Hero = () => {
                   ) : (
                     <FiMenu className='w-2xl cursor-pointer' />
                   )}
-                  <p className='cursor-pointer '> Categories </p>
+                  <p className='cursor-pointer text-sm font-medium'>Categories</p>
                 </div>
 
                 {active && (
-                  <div className='top-2.8 absolute left-0 h-full w-full'>
+                  <div className='absolute left-0 right-0 mt-2 rounded-md shadow-lg border border-gray-200 bg-white z-50'>
                      <MobileSideMenu />
                   </div>
                 )}

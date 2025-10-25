@@ -6,15 +6,12 @@ import { SubHeading } from "./component/SubHeading";
 import {
   AuctionCard,
   CategoryFeatureCard,
-  CatFeatCard,
   ProductCard,
-  ProductCardMain,
   TopDealsCard,
   TopWeakCard,
 } from "./component/Card";
 import { HIW } from "./component/How-it-works";
-import { Banner } from "./component/Banner";
-import { Community } from "./component/Community";
+import dynamic from "next/dynamic";
 import { Products, categories } from "./static-data";
 import { Header } from "./component/Header";
 import { Footer } from "./component/Footer";
@@ -25,9 +22,36 @@ import { CircularPagination } from "./component/Pagination";
 import { useRouter } from "next/navigation";
 import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
-import { AuctionComp } from "./component/AuctionComp";
 import Loading from "./component/Loading";
 import { LoadingSpinner } from "./component/LoadingSkeleton";
+
+// Lazy-loaded components to improve mobile performance and Lighthouse scores
+const Banner = dynamic(() => import("./component/Banner").then(m => m.Banner), {
+  ssr: false,
+  loading: () => <div className="w-full h-24 sm:h-28 md:h-32 bg-[#F6F6F6]" />,
+});
+
+const Community = dynamic(() => import("./component/Community").then(m => m.Community), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-40 sm:h-56 md:h-64 bg-[#F6F6F6]" />
+  ),
+});
+
+const ProductCardMain = dynamic(
+  () => import("./component/Card").then(m => m.ProductCardMain),
+  { loading: () => <div className="w-full h-44 bg-gray-50" /> }
+);
+
+const CatFeatCard = dynamic(
+  () => import("./component/Card").then(m => m.CatFeatCard),
+  { loading: () => <div className="w-full h-40 bg-gray-50" /> }
+);
+
+const AuctionComp = dynamic(
+  () => import("./component/AuctionComp").then(m => m.AuctionComp),
+  { loading: () => <div className="w-full h-48 bg-gray-50" /> }
+);
 
 type AuctionData = {
   id: string;
@@ -153,7 +177,7 @@ const Page = () => {
         </header>
 
         {/* Main Content - Responsive Padding */}
-        <main className="w-full overflow-x-hidden pt-[13vh] md:pt-[16vh] lg:pt-[20vh]">
+        <main className="w-full overflow-x-hidden pt-20 sm:pt-24 md:pt-28">
           
           {/* Hero Section - Full Width */}
           <section className="w-full">
@@ -163,7 +187,7 @@ const Page = () => {
           </section>
 
           {/* Auction Sales Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               {/* Header with Pagination - Mobile Stack */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
@@ -204,7 +228,7 @@ const Page = () => {
           </section>
 
           {/* How It Works Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="How it works" />
@@ -224,7 +248,7 @@ const Page = () => {
           </section>
 
           {/* Categories Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               {/* Header with Pagination - Mobile Stack */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
@@ -271,7 +295,7 @@ const Page = () => {
           </section>
 
           {/* Featured Products Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Featured" />
@@ -329,14 +353,14 @@ const Page = () => {
           </section>
 
           {/* Community Section - Full Width Background */}
-          <section className="w-full bg-[#F6F6F6] py-8 md:py-12 lg:py-16">
+          <section className="w-full bg-[#F6F6F6] py-8 md:py-12 lg:py-16 content-visibility-auto">
             <div className="w-full">
               <Community />
             </div>
           </section>
 
           {/* Top Week Products Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Top Product" />
@@ -365,7 +389,7 @@ const Page = () => {
           </section>
 
           {/* Banner Section - Full Width */}
-          <section className="w-full">
+          <section className="w-full content-visibility-auto">
             <Banner />
           </section>
         </main>
