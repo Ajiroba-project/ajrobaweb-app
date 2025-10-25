@@ -46,6 +46,9 @@ const WrappedPage = () => {
     userToken || " ",
   );
 
+
+  // console.log(transdata, 'transdata')
+
   if (transLoading) {
     return <div className="text-center">Loading...</div>;
   }

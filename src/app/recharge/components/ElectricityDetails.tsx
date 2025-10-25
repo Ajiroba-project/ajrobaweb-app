@@ -117,7 +117,9 @@ export const ElectricityDetails = () => {
   );
 
 
-  const providersList = discosdata?.data?.map((provider: { id: any; }) => provider.id) || [];
+  // console.log(discosdata?.data, 'discosdata')
+
+  const providersList = discosdata?.data?.map((provider: { id: any; name: any }) => provider.name) || [];
 
   // console.log(providersList, "providersList")
 
@@ -271,6 +273,7 @@ export const ElectricityDetails = () => {
               errors={errors}
               type="text"
               placeholder="Amount"
+              // isdisabled
             />
 
           </div>

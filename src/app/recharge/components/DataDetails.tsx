@@ -226,6 +226,7 @@ export const DataDetails = () => {
               type="text"
               placeholder="Amount"
               value={watch("dataamount")}
+              isdisabled
             />
 
           </div>

@@ -15,6 +15,8 @@ import { FaX } from 'react-icons/fa6'
 import Cookies from 'js-cookie'
 import { generateReferralLink } from '@/utils/getBaseUrl'
 import { ReferralPointsModal } from '../wallet/components/ViewPoint'
+import { useGetDatanew, useGetPointData } from '@/hooks/useGetData'
+import PointsHistoryModal from '../wallet/components/PointsHistoryModal'
 
 const ReferralPage = () => {
     const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
@@ -31,7 +33,22 @@ const ReferralPage = () => {
 
     const userData = JSON.parse(cookieUser || '{}')
 
-    // console.log(userData?.data, 'userData')
+
+
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+  
+    const tkn_: string = Cookies.get('token') as string;
+  
+    const {
+      data: userInfo,
+      isLoading: userLoading,
+      refetch,
+    } = useGetDatanew(url, "get_user_details", tkn_, {
+      cacheTime: 0,
+      staleTime: 0,
+    });
+
 
     const { userNavMenu, sidebar, toggleSidebar } = userNavStore(state => ({
         userNavMenu: state.userNav,
@@ -44,6 +61,9 @@ const ReferralPage = () => {
     const [referralLink, setReferralLink] = useState('')
     const [copied, setCopied] = useState(false)
     const [viewReferralActivities, setViewReferralActivities] = useState(false)
+
+    const [pointsUserId, setPointsUserId] = useState<string | undefined>(undefined);
+    const [isPointsModalOpen, setIsPointsModalOpen] = useState<boolean>(false);
 
     // Social share icons (using react-icons)
     const socialIcons = [
@@ -81,6 +101,7 @@ const ReferralPage = () => {
 
     const handleViewReferralActivities = () => {
         setViewReferralActivities(true)
+        
     }
 
     if (isLoading) {
@@ -165,7 +186,8 @@ const ReferralPage = () => {
                         ))}
                     </div>
                     <button 
-                        onClick={handleViewReferralActivities}
+                        // onClick={handleViewReferralActivities}
+                        onClick={() => { setPointsUserId(userInfo?.data?.id || ""); setIsPointsModalOpen(true); }}
                         className="bg-[#FCDFD4]  text-[#131313] text-sm px-8 py-3 rounded-md font-semibold hover:bg-orange-200 transition shadow-md w-full max-w-xs mt-2"
                     >
                         View Referral Activities
@@ -176,13 +198,21 @@ const ReferralPage = () => {
             <Footer />
 
             {/* Referral Activities Modal */}
-            {viewReferralActivities && (
+            {/* {isPointsModalOpen && (
+               
                 <ReferralPointsModal
-                    isOpen={viewReferralActivities}
-                    setIsOpen={setViewReferralActivities}
-                    referralData={userData?.data}
-                />
-            )}
+                isOpen={isPointsModalOpen}
+                setIsOpen={setIsPointsModalOpen}
+                referralData={sampleReferralData}
+              />
+            )} */}
+
+
+<PointsHistoryModal
+        isOpen={isPointsModalOpen}
+        onClose={() => setIsPointsModalOpen(false)}
+        userId={pointsUserId}
+      />
         </Fragment>
     )
 }
