@@ -141,11 +141,11 @@ export default function PointsHistoryModal({ isOpen, onClose, userId }: Props) {
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent className="z-[2000]" style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
-              <SelectItem value="yesterday">Yesterday</SelectItem>
-              <SelectItem value="last_week">Last Week</SelectItem>
-              <SelectItem value="last_month">Last Month</SelectItem>
-              <SelectItem value="last_year">Last Year</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
+              <SelectItem value="yesterday" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Yesterday</SelectItem>
+              <SelectItem value="last_week" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Last Week</SelectItem>
+              <SelectItem value="last_month" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Last Month</SelectItem>
+              <SelectItem value="last_year" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Last Year</SelectItem>
+              <SelectItem value="custom" className='data-[highlighted]:bg-[#FCDFD4] data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>Custom</SelectItem>
             </SelectContent>
           </Select>
           {sortBy === 'custom' && (

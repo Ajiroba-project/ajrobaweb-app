@@ -401,8 +401,8 @@ export const WalletBalance = () => {
     //  console.log(userInfo?.data, 'userInfo');
 
   // Call points hook before any early returns to keep hook order stable
-  const userToken = Cookies.get('token') as string;
-  const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
+  // const userToken = Cookies.get('token') as string;
+  // const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
 
   useEffect(() => {
     if (tkn_) {
@@ -430,11 +430,11 @@ export const WalletBalance = () => {
   // console.log(pointinfo?.data?.data, 'pointinfo');
 
 
-  const sampleReferralData = pointinfo?.data?.data.map((item: any) => ({
-    name: item.description,
-    points: item.point,
-    date: item.date_created,
-  }));
+  // const sampleReferralData = pointinfo?.data?.data.map((item: any) => ({
+  //   name: item.description,
+  //   points: item.point,
+  //   date: item.date_created,
+  // }));
 
 
   // console.log(sampleReferralData, 'sampleReferralData');
@@ -570,13 +570,13 @@ export const WalletBalance = () => {
       )}
 
 
-      {viewPoint && (
+      {/* {viewPoint && (
         <ReferralPointsModal
           isOpen={viewPoint}
           setIsOpen={setViewPoint}
           referralData={sampleReferralData}
         />
-      )}
+      )} */}
 
 
 

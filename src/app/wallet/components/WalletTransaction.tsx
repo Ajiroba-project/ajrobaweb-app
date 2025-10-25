@@ -181,17 +181,17 @@ export const WalletTransaction = () => {
               {/* Left: Icon and Description */}
               <div className="flex items-center gap-3 w-full sm:w-1/2">
                 <div className={`flex items-center justify-center rounded-full p-2
-                  ${val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet"
+                  ${val.description === "Fund Wallet"
                     ? 'bg-emerald-200'
                     : 'bg-amber-200'}`}>
-                  {val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet" ? (
+                  {val.description === "Fund Wallet" ? (
                     <GoArrowDownLeft className="text-lg font-semibold text-green-700" />
                   ) : (
                     <GoArrowUpRight className="text-lg font-semibold text-amber-700" />
                   )}
                 </div>
                 <div className="flex flex-col justify-center">
-                  <p className="truncate text-sm font-medium text-[#101928]">{val.description}</p>
+                  <p className="text-sm font-medium text-[#101928] ">{val.description}</p>
                   <p className="text-xs text-[#111111]">{val.channel}</p>
                 </div>
               </div>
