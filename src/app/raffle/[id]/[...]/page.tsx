@@ -259,215 +259,464 @@ const Page = ({ params }: any) => {
 
 
 
-  const renderRows = () => {
-    if (!showWinners) {
-      return (
-        <>
-          {
+//   const renderRows = () => {
+//     if (!showWinners) {
+//       return (
+//         <>
+//           {
 
 
-            <table className="w-full border-separate border-spacing-y-4">
-              <thead className="bg-white text-[#F25E26]">
-                <tr className="tracking-wide">
-                  {thead.map((header) => (
-                    <th
-                      className={`${header === "S/N"
-                        ? "rounded-bl-3xl"
-                        : header === "Ticket Price"
-                          ? "rounded-br-3xl"
-                          : header === `Phone Number`
-                            ? "rounded-br-3xl  text-left"
-                            : "text-center"
-                        } p-3 text-2xl font-semibold capitalize lg:w-max`}
-                      key={header}
-                    >
-                      {header === "Ticket Number" ? (
-                        <div className="flex flex-col items-center">
-                           <span className="text-2xl text-[#F25E26] font-normal">(Winner)</span>
-                          <span>{header} </span>
+//             <table className="w-full border-separate border-spacing-y-4">
+//               <thead className="bg-white text-[#F25E26]">
+//                 <tr className="tracking-wide">
+//                   {thead.map((header) => (
+//                     <th
+//                       className={`${header === "S/N"
+//                         ? "rounded-bl-3xl"
+//                         : header === "Ticket Price"
+//                           ? "rounded-br-3xl"
+//                           : header === `Phone Number`
+//                             ? "rounded-br-3xl  text-left"
+//                             : "text-center"
+//                         } p-3 text-2xl font-semibold capitalize lg:w-max`}
+//                       key={header}
+//                     >
+//                       {header === "Ticket Number" ? (
+//                         <div className="flex flex-col items-center">
+//                            <span className="text-2xl text-[#F25E26] font-normal">(Winner)</span>
+//                           <span>{header} </span>
                          
-                        </div>
-                      ) : (
-                        header
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems?.map((val: any, index: number) => (
-                  <tr className="text-white h-1" key={index}>
-                    <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-                      <p className="text-lg font-semibold">
-                        {indexOfFirstItem + index + 1}
-                      </p>
-                    </td>
+//                         </div>
+//                       ) : (
+//                         header
+//                       )}
+//                     </th>
+//                   ))}
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {currentItems?.map((val: any, index: number) => (
+//                   <tr className="text-white h-1" key={index}>
+//                     <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
+//                       <p className="text-lg font-semibold">
+//                         {indexOfFirstItem + index + 1}
+//                       </p>
+//                     </td>
 
-                    <td className=" text-center h-[16px]">
-                      <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-                        {val?.product || "Loading..."}
-                      </p>
-                    </td>
-                    {/*    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
-                      <p className="p-rd  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black"></p>
-                    </td> */}
-                    <td className="pl-6 p-0 h-[16px] w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold">
-                      <p className="p-rd mx-2 flex w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2 text-center text-lg tracking-[0.5em] text-black">
-                        {/* Counter animation */}
-                      </p>
-                    </td>
-                      <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-                        <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-                          {showWinners 
-                            ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
-                            : "*********"}
-                        </p>
-                      </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          }
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#F25E26] hover:bg-[#EA7000]"
-                } text-white`}
-            >
-              Previous
-            </button>
+//                     <td className=" text-center h-[16px]">
+//                       <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
+//                         {val?.product || "Loading..."}
+//                       </p>
+//                     </td>
+                  
+//                     <td className="pl-6 p-0 h-[16px] w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold">
+//                       <p className="p-rd mx-2 flex w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2 text-center text-lg tracking-[0.5em] text-black">
+//                         {/* Counter animation */}
+//                       </p>
+//                     </td>
+//                       <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+//                         <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
+//                           {showWinners 
+//                             ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
+//                             : "*********"}
+//                         </p>
+//                       </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           }
+//           <div className="flex justify-center mt-4">
+//             <button
+//               onClick={handlePrevPage}
+//               disabled={currentPage === 1}
+//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
+//                 ? "bg-gray-400 cursor-not-allowed"
+//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
+//                 } text-white`}
+//             >
+//               Previous
+//             </button>
 
-            <span className="mx-4 text-lg text-white">
-              Page {currentPage} of {totalPages}
-            </span>
+//             <span className="mx-4 text-lg text-white">
+//               Page {currentPage} of {totalPages}
+//             </span>
 
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#F25E26] hover:bg-[#EA7000]"
-                } text-white`}
-            >
-              Next
-            </button>
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <>
-          {
-            <table className="w-full border-separate border-spacing-y-4">
-              <thead className="bg-white text-[#F25E26]">
-                <tr className="tracking-wide">
-                  {thead.map((header) => (
-                    <th
-                      className={`${header === "S/N"
-                        ? "rounded-bl-3xl"
-                        : header === "Ticket Price"
-                          ? "rounded-br-3xl"
-                          : header === `Phone Number`
-                            ? "rounded-br-3xl  text-left"
-                            : "text-center"
-                        } p-3 text-2xl font-semibold capitalize lg:w-max`}
-                      key={header}
-                    >
-                     {header === "Ticket Number" ? (
-                        <div className="flex flex-col items-center">
-                           <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
-                          <span>{header} </span>
+//             <button
+//               onClick={handleNextPage}
+//               disabled={currentPage === totalPages}
+//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
+//                 ? "bg-gray-400 cursor-not-allowed"
+//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
+//                 } text-white`}
+//             >
+//               Next
+//             </button>
+//           </div>
+//         </>
+//       );
+//     } else {
+//       return (
+//         <>
+//           {
+//             <table className="w-full border-separate border-spacing-y-4">
+//               <thead className="bg-white text-[#F25E26]">
+//                 <tr className="tracking-wide">
+//                   {thead.map((header) => (
+//                     <th
+//                       className={`${header === "S/N"
+//                         ? "rounded-bl-3xl"
+//                         : header === "Ticket Price"
+//                           ? "rounded-br-3xl"
+//                           : header === `Phone Number`
+//                             ? "rounded-br-3xl  text-left"
+//                             : "text-center"
+//                         } p-3 text-2xl font-semibold capitalize lg:w-max`}
+//                       key={header}
+//                     >
+//                      {header === "Ticket Number" ? (
+//                         <div className="flex flex-col items-center">
+//                            <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
+//                           <span>{header} </span>
                          
-                        </div>
-                      ) : (
-                        header
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems?.map((val: any, index: number) => (
-                  <tr className="text-white h-1" key={index}>
-                    <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-                      <p className="text-lg font-semibold">
-                        {indexOfFirstItem + index + 1}
-                      </p>
-                    </td>
+//                         </div>
+//                       ) : (
+//                         header
+//                       )}
+//                     </th>
+//                   ))}
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {currentItems?.map((val: any, index: number) => (
+//                   <tr className="text-white h-1" key={index}>
+//                     <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
+//                       <p className="text-lg font-semibold">
+//                         {indexOfFirstItem + index + 1}
+//                       </p>
+//                     </td>
 
-                    <td className=" text-center h-[16px]">
-                      <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-                        {val.product}
-                      </p>
-                    </td>
-                    <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
-                      <p className="  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
-                        {val.ticket_number}
-                      </p>
-                    </td>
-                    <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-                      <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
+//                     <td className=" text-center h-[16px]">
+//                       <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
+//                         {val.product}
+//                       </p>
+//                     </td>
+//                     <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
+//                       <p className="  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
+//                         {val.ticket_number}
+//                       </p>
+//                     </td>
+//                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+//                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
 
-                        {/* {
-                          console.log(val.phone_number.replace(/\D/g, '')   // remove non-digits
-                          .replace(/^(\d{3})(\d{3})(\d{4})$/, '$1***$2'), 'vppppvv99999')
-                        } */}
-                      
-                      {/* {
-                      val?.phone_number
-                        ? val.phone_number.replace(/^(\d{4})\d{3}(\d{4})$/, '$1***$2')
-                        : "N/A"
-                      } */}
+                     
 
-{
-  val?.phone_number ? maskPhone(val.phone_number) : "N/A"
-}
+// {
+//   val?.phone_number ? maskPhone(val.phone_number) : "N/A"
+// }
 
-                      </p>
-                    </td>
-                  </tr>
+//                       </p>
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           }
+
+//           <div className="flex justify-center mt-4">
+//             <button
+//               onClick={handlePrevPage}
+//               disabled={currentPage === 1}
+//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
+//                 ? "bg-gray-400 cursor-not-allowed"
+//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
+//                 } text-white`}
+//             >
+//               Previous
+//             </button>
+
+//             <span className="mx-4 text-lg text-white">
+//               Page {currentPage} of {totalPages}
+//             </span>
+
+//             <button
+//               onClick={handleNextPage}
+//               disabled={currentPage === totalPages}
+//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
+//                 ? "bg-gray-400 cursor-not-allowed"
+//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
+//                 } text-white`}
+//             >
+//               Next
+//             </button>
+//           </div>
+//         </>
+//       );
+//     }
+//   };
+
+
+const renderRows = () => {
+  if (!showWinners) {
+    return (
+      <>
+        {/* Desktop/Tablet View */}
+        <div className="hidden md:block">
+          <table className="w-full border-separate border-spacing-y-4">
+            <thead className="bg-white text-[#F25E26]">
+              <tr className="tracking-wide">
+                {thead.map((header) => (
+                  <th
+                    className={`${header === "S/N"
+                      ? "rounded-bl-3xl"
+                      : header === "Ticket Price"
+                        ? "rounded-br-3xl"
+                        : header === `Phone Number`
+                          ? "rounded-br-3xl text-left"
+                          : "text-center"
+                      } p-3 text-xl lg:text-2xl font-semibold capitalize`}
+                    key={header}
+                  >
+                    {header === "Ticket Number" ? (
+                      <div className="flex flex-col items-center">
+                        <span className="text-xl lg:text-2xl text-[#F25E26] font-normal">(Winner)</span>
+                        <span>{header}</span>
+                      </div>
+                    ) : (
+                      header
+                    )}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          }
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems?.map((val: any, index: number) => (
+                <tr className="text-white h-1" key={index}>
+                  <td className="rounded-tl-[30px] rounded-br-[20px] relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000] text-white font-bold">
+                    <p className="text-lg font-semibold">
+                      {indexOfFirstItem + index + 1}
+                    </p>
+                  </td>
+                  <td className="text-center h-[16px]">
+                    <p className="custom-shape pt-3 pb-8 mx-2 lg:mx-4 w-[180px] lg:w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000] text-lg lg:text-xl font-semibold">
+                      {val?.product || "Loading..."}
+                    </p>
+                  </td>
+                  <td className="pl-4 lg:pl-6 p-0 h-[16px] w-[200px] lg:w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold">
+                    <p className="p-rd mx-2 flex w-[150px] lg:w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2 text-center text-base lg:text-lg tracking-[0.5em] text-black">
+                      {/* Counter animation */}
+                    </p>
+                  </td>
+                  <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                    <p className="cursor-pointer px-2 py-1 text-base lg:text-lg font-semibold tracking-wider">
+                      {showWinners 
+                        ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
+                        : "*********"}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#F25E26] hover:bg-[#EA7000]"
-                } text-white`}
-            >
-              Previous
-            </button>
+        {/* Mobile View */}
+        <div className="block md:hidden space-y-4">
+          {currentItems?.map((val: any, index: number) => (
+            <div key={index} className="bg-gradient-to-r from-[#E84526] to-[#EA7000] rounded-2xl p-4 text-white">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-tl-2xl rounded-br-xl bg-gradient-to-b from-[#E84526] to-[#EA7000] w-12 h-12 flex items-center justify-center font-bold text-lg border-2 border-white">
+                    {indexOfFirstItem + index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-white/80 mb-1">Product</p>
+                    <p className="text-base font-semibold">{val?.product || "Loading..."}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mt-3">
+                <div className="bg-white/10 rounded-lg p-3">
+                  <p className="text-xs text-white/80 mb-1">Ticket Number (Winner)</p>
+                  <div className="bg-gray-200 rounded-lg px-3 py-2 text-center">
+                    <p className="text-black text-sm tracking-[0.3em] font-semibold">
+                      {/* Counter animation */}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="bg-white/10 rounded-lg p-3">
+                  <p className="text-xs text-white/80 mb-1">Phone Number</p>
+                  <p className="text-base font-semibold tracking-wider">
+                    {showWinners 
+                      ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
+                      : "*********"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-            <span className="mx-4 text-lg text-white">
-              Page {currentPage} of {totalPages}
-            </span>
+        <div className="flex flex-col sm:flex-row justify-center items-center mt-6 gap-3">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className={`w-full sm:w-auto px-6 py-2 rounded-lg ${currentPage === 1
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white font-semibold transition-colors`}
+          >
+            Previous
+          </button>
 
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#F25E26] hover:bg-[#EA7000]"
-                } text-white`}
-            >
-              Next
-            </button>
-          </div>
-        </>
-      );
-    }
-  };
+          <span className="text-base sm:text-lg text-white font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
 
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`w-full sm:w-auto px-6 py-2 rounded-lg ${currentPage === totalPages
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white font-semibold transition-colors`}
+          >
+            Next
+          </button>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {/* Desktop/Tablet View */}
+        <div className="hidden md:block">
+          <table className="w-full border-separate border-spacing-y-4">
+            <thead className="bg-white text-[#F25E26]">
+              <tr className="tracking-wide">
+                {thead.map((header) => (
+                  <th
+                    className={`${header === "S/N"
+                      ? "rounded-bl-3xl"
+                      : header === "Ticket Price"
+                        ? "rounded-br-3xl"
+                        : header === `Phone Number`
+                          ? "rounded-br-3xl text-left"
+                          : "text-center"
+                      } p-3 text-xl lg:text-2xl font-semibold capitalize`}
+                    key={header}
+                  >
+                    {header === "Ticket Number" ? (
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
+                        <span>{header}</span>
+                      </div>
+                    ) : (
+                      header
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems?.map((val: any, index: number) => (
+                <tr className="text-white h-1" key={index}>
+                  <td className="rounded-tl-[30px] rounded-br-[20px] relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000] text-white font-bold">
+                    <p className="text-lg font-semibold">
+                      {indexOfFirstItem + index + 1}
+                    </p>
+                  </td>
+                  <td className="text-center h-[16px]">
+                    <p className="custom-shape pt-3 pb-8 mx-2 lg:mx-4 w-[180px] lg:w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000] text-lg lg:text-xl font-semibold">
+                      {val.product}
+                    </p>
+                  </td>
+                  <td className="pl-4 lg:pl-6 p-0 h-[16px] w-[200px] lg:w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold">
+                    <p className="mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2 text-center text-base lg:text-lg tracking-[0.5em] text-black">
+                      {val.ticket_number}
+                    </p>
+                  </td>
+                  <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                    <p className="cursor-pointer px-2 py-1 text-base lg:text-lg font-semibold tracking-wider">
+                      {val?.phone_number ? maskPhone(val.phone_number) : "N/A"}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
+        {/* Mobile View */}
+        <div className="block md:hidden space-y-4">
+          {currentItems?.map((val: any, index: number) => (
+            <div key={index} className="bg-gradient-to-r from-[#E84526] to-[#EA7000] rounded-2xl p-4 text-white">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-tl-2xl rounded-br-xl bg-gradient-to-b from-[#E84526] to-[#EA7000] w-12 h-12 flex items-center justify-center font-bold text-lg border-2 border-white">
+                    {indexOfFirstItem + index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-white/80 mb-1">Product</p>
+                    <p className="text-base font-semibold">{val.product}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 mt-3">
+                <div className="bg-white/10 rounded-lg p-3">
+                  <p className="text-xs text-white/80 mb-1">Ticket Number (Winner)</p>
+                  <div className="bg-gray-200 rounded-lg px-3 py-2 text-center">
+                    <p className="text-black text-sm tracking-[0.3em] font-semibold">
+                      {val.ticket_number}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="bg-white/10 rounded-lg p-3">
+                  <p className="text-xs text-white/80 mb-1">Phone Number</p>
+                  <p className="text-base font-semibold tracking-wider">
+                    {val?.phone_number ? maskPhone(val.phone_number) : "N/A"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
+        <div className="flex flex-col sm:flex-row justify-center items-center mt-6 gap-3">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className={`w-full sm:w-auto px-6 py-2 rounded-lg ${currentPage === 1
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white font-semibold transition-colors`}
+          >
+            Previous
+          </button>
+
+          <span className="text-base sm:text-lg text-white font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`w-full sm:w-auto px-6 py-2 rounded-lg ${currentPage === totalPages
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#F25E26] hover:bg-[#EA7000]"
+              } text-white font-semibold transition-colors`}
+          >
+            Next
+          </button>
+        </div>
+      </>
+    );
+  }
+};
 
 
   if (ticketError) {
