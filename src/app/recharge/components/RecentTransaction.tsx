@@ -76,28 +76,35 @@ export const RecentTransaction = () => {
 
   const getIconForTransaction = (description: string, type: string) => {
     const desc = (description || '').toLowerCase();
-    if (type === 'airtime' || type === 'data') {
-      if (desc.includes('mtn')) return mtnicon;
-      if (desc.includes('airtel')) return airtelicon;
-      if (desc.includes('glo')) return gloicon;
-      if (desc.includes('showmax')) return showmaxicon;
-      if (desc.includes('startimes')) return startimesicon;
-      if (desc.includes('gotv')) return gotvicon;
-      if (desc.includes('consattv') || desc.includes('consat')) return consattvicon;
-      if (desc.includes('dstv')) return dstvicon;
-      if (desc.includes('ibedc')) return ibedcicon;
-      if (desc.includes('ikeja')) return ikejaicon;
-      if (desc.includes('benin')) return beninicon;
-      if (desc.includes('enugu')) return enuguicon;
-      if (desc.includes('ekedc')) return ekedcicon;
-      if (desc.includes('kaduna')) return kadunaicon;
-       if (desc.includes('kano')) return kanoicon;
-      if (desc.includes('aedc')) return aedcicon;
-      if (desc.includes('jed')) return jedicon;
-      if (desc.includes('phedc')) return phedcicon;
-      if (desc.includes('9mobile') || desc.includes('9 mobile') || desc.includes('etisalat') || desc.includes('ninemobile')) return ninemobileicon;
-    }
-    return Brand;
+    if (!desc) return Brand;
+
+    const keywordIconMap: { keywords: string[]; icon: any }[] = [
+      { keywords: ['mtn'], icon: mtnicon },
+      { keywords: ['airtel'], icon: airtelicon },
+      { keywords: ['glo'], icon: gloicon },
+      { keywords: ['showmax'], icon: showmaxicon },
+      { keywords: ['startimes', 'star times', 'startime'], icon: startimesicon },
+      { keywords: ['gotv'], icon: gotvicon },
+      { keywords: ['consattv', 'consat'], icon: consattvicon },
+      { keywords: ['dstv'], icon: dstvicon },
+      { keywords: ['ibedc'], icon: ibedcicon },
+      { keywords: ['ikeja'], icon: ikejaicon },
+      { keywords: ['benin'], icon: beninicon },
+      { keywords: ['enugu'], icon: enuguicon },
+      { keywords: ['ekedc'], icon: ekedcicon },
+      { keywords: ['kaduna'], icon: kadunaicon },
+      { keywords: ['kano'], icon: kanoicon },
+      { keywords: ['aedc'], icon: aedcicon },
+      { keywords: ['jed'], icon: jedicon },
+      { keywords: ['phedc'], icon: phedcicon },
+      { keywords: ['9mobile', '9 mobile', 'etisalat', 'ninemobile'], icon: ninemobileicon },
+    ];
+
+    const match = keywordIconMap.find(({ keywords }) =>
+      keywords.some((k) => desc.includes(k))
+    );
+
+    return match ? match.icon : Brand;
   };
 
   // ✅ Update state when data is received

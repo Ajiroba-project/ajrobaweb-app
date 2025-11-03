@@ -17,6 +17,13 @@ type Props = {
   userId?: string;
 };
 
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default function PointsHistoryModal({ isOpen, onClose, userId }: Props) {
   const [sortBy, setSortBy] = useState<string>("");
   const [customStart, setCustomStart] = useState<string>("");
@@ -56,10 +63,19 @@ export default function PointsHistoryModal({ isOpen, onClose, userId }: Props) {
 
     const controller = new AbortController();
     const q = new URLSearchParams();
-    if (debouncedSortBy) q.append("filter", debouncedSortBy);
+    if (debouncedSortBy) {
+      const filterValue = debouncedSortBy === "yesterday" ? "custom" : debouncedSortBy;
+      q.append("filter", filterValue);
+    }
     if (debouncedSortBy === "custom") {
       q.append("start_date", debouncedCustomStart);
       q.append("end_date", debouncedCustomEnd);
+    } else if (debouncedSortBy === "yesterday") {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const formatted = formatDate(yesterday);
+      q.append("start_date", formatted);
+      q.append("end_date", formatted);
     }
     if (userId) q.append("user_id", userId);
     if (page) q.append("page", String(page));

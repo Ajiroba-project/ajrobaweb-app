@@ -379,7 +379,9 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
   };
 
   const userAddressTokens = normalizeTokens(userInfo?.data?.address);
-  const searchTokens = normalizeTokens(searchQuery);
+
+  // console.log(userAddressTokens, "userAddressTokens")
+
 
   // Score merchants by how closely their stores match the user's address
   const scoreMerchant = (merchant: any): number => {
@@ -443,7 +445,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
           console.log(data.data, "data.data")  */
 
 
-          toast.warning(responseData.message);
+          toast.success(responseData.message);
 
     /*     const temporaryData = {
           "status": "success",

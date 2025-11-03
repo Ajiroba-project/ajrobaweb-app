@@ -52,7 +52,7 @@ const router = useRouter();
         <div className='flex justify-center lg:justify-start'>
           <p className='font-semibold font-Poppins'>
             {' '}
-            Welcome let&apos;s get you{' '}
+            Welcome, let&apos;s get you{' '}
             <span className='text-[#E84526]'>connected</span> today.
           </p>
         </div>

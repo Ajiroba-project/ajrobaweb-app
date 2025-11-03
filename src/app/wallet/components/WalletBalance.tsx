@@ -487,9 +487,9 @@ export const WalletBalance = () => {
 
       <div className="flex justify-between py-4">
         <div className="flex flex-col">
-          <p className="text-sm capitalize leading-snug">ajiroba point</p>
+          <p className="text-sm capitalize leading-snug">ajiroba points</p>
           <p className="text-sm font-semibold slashed-zero">
-            {userInfo?.data?.my_wallet[0]?.point}
+            {(userInfo?.data?.my_wallet[0]?.point || 0).toLocaleString()}
           </p>
         </div>
         <p

@@ -249,11 +249,29 @@ const Page = ({ params }: any) => {
       return digits;
     }
   
-    const first = digits.slice(0, Math.floor(len / 3));
-    const middle = '*'.repeat(Math.floor(len / 3));
-    const last = digits.slice(-Math.ceil(len / 3));
-  
-    return first + middle + last;
+    const first = digits.slice(0, Math.min(5, len));
+    const afterFirst = digits.slice(first.length);
+
+    if (!afterFirst.length) {
+      return first;
+    }
+
+    const maskedLength = Math.min(3, afterFirst.length);
+    const masked = '*'.repeat(maskedLength);
+    const remaining = afterFirst.slice(maskedLength);
+
+    if (!remaining.length) {
+      return first + masked;
+    }
+
+    if (remaining.length <= 3) {
+      return first + masked + remaining;
+    }
+
+    const middle = remaining.slice(0, remaining.length - 3);
+    const last = remaining.slice(-3);
+
+    return first + masked + middle + last;
   }
   
 
