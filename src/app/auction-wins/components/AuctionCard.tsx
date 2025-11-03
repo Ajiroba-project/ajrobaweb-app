@@ -52,6 +52,7 @@ type Order = {
   }[];
   ticket_number?: string;
   ticket_price?: string;
+  product_no?: string;
   start_date?: string;
   start_time?: string;
   estimated_value?: string;
@@ -969,6 +970,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
             date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }),
             productId: `${selectedTransaction?.auction?.[0]?.auction_id}`,
             /*  productCode: `${selectedTransaction?.auction?.[0]?.product_code}`, */
+            product_no: selectedTransaction?.product_no || "",
             name: `${userInfo?.data?.first_name} ${userInfo?.data?.last_name}`,
             prize: selectedTransaction?.auction?.[0]?.name || "Prize",
             drawDate: selectedTransaction?.start_date || "",

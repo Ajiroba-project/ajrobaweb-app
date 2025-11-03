@@ -31,6 +31,7 @@ type Order = {
   total_price: string;
   order_date: string;
   delivery_status: string;
+  product_no?: string;
   id?: string;
   auction?: {
     auction_id: string;
@@ -204,7 +205,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
 
     if (option === "Download winning Advice") {
-      /*   console.log(transaction, "transaction") */
+        //  console.log(transaction, "transaction") 
       setSelectedTransaction(transaction);
       setIsWinningAdvice(true);
     }
@@ -1037,6 +1038,9 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       )}
 
 
+    {/* {  console.log(selectedTransaction?.auction, "selectedTransaction?.auction?.[0]?.auction_id")} */}
+
+
 
       {isWinningAdvice && selectedTransaction && (
         <TestWin
@@ -1046,6 +1050,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
             date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }),
             productId: `${selectedTransaction?.auction?.[0]?.auction_id}`,
             /*  productCode: `${selectedTransaction?.auction?.[0]?.product_code}`, */
+            product_no: selectedTransaction?.product_no || "",
             name: `${userInfo?.data?.first_name} ${userInfo?.data?.last_name}`,
             prize: selectedTransaction?.auction?.[0]?.name || "Prize",
             drawDate: selectedTransaction?.start_date || "",
