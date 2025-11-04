@@ -1342,7 +1342,7 @@ const Page = ({ params }: any) => {
                     <p className="text-[#111111] text-base mt-4 ">Product ID</p>
 
                     <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
-                      {`${productdatanew?.data?.id}` || "NA"}
+                      {`${productdatanew?.data?.product_no}` || "NA"}
                     </h1>
 
 
@@ -2568,13 +2568,17 @@ const Page = ({ params }: any) => {
                     </div>
                   </div>
 
+                  {/* {
+                    console.log(ticketData?.data, 'ticketData?.data?.ticket_quantity')
+                  } */}
+
                   {/* Amount */}
                   <div className="flex flex-col items-center">
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
                    
-                      value={formatCurrency(ticketData?.data?.ticket_amount)}
+                      value={formatCurrency(ticketData?.data?.total_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}
