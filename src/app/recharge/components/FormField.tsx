@@ -220,6 +220,29 @@ export const SelectField = ({
     if (typeof value === 'string') setSelectedValue(value)
   }, [value])
 
+  const normalizedOptions: { value: string; label: string }[] = Array.isArray(options)
+    ? options.reduce((acc: { value: string; label: string }[], option: any) => {
+        if (!option) return acc
+        if (typeof option === 'string') {
+          const trimmed = option.trim()
+          if (!trimmed) return acc
+          acc.push({ value: trimmed, label: trimmed })
+          return acc
+        }
+
+        const rawValue = option.value ?? option.id ?? option.name ?? ''
+        const rawLabel = option.label ?? option.name ?? option.value ?? ''
+
+        if (rawValue === null || rawValue === undefined || rawValue === '') return acc
+        const valueString = String(rawValue)
+        const labelString = String(rawLabel || rawValue)
+
+        if (!valueString.trim()) return acc
+        acc.push({ value: valueString, label: labelString })
+        return acc
+      }, [])
+    : []
+
   // For multiple selection, keep native select to avoid behavior changes
   if (multiple) {
     return (
@@ -242,9 +265,9 @@ export const SelectField = ({
           <option value='' className='text-wdc-textbody'>
             {label ? ` ${label}` : ''}
           </option>
-          {options?.map((val: string, key: number) => (
-            <option key={key} className='text-wdc-textbody' value={val}>
-              {val}
+          {normalizedOptions.map(({ value, label }, key: number) => (
+            <option key={key} className='text-wdc-textbody' value={value}>
+              {label}
             </option>
           ))}
         </select>
@@ -279,9 +302,9 @@ export const SelectField = ({
           <SelectValue placeholder={label ? ` ${label}` : ''} />
         </SelectTrigger>
         <SelectContent className='' style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
-          {options?.filter((val: any) => val && val.trim() !== '').map((val: any, key: number) => (
-            <SelectItem key={key} value={val} className='text-[#2A2A2A] data-[highlighted]:bg-[#FCDFD4]  data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>
-              {val}
+          {normalizedOptions.map(({ value, label }) => (
+            <SelectItem key={value} value={value} className='text-[#2A2A2A] data-[highlighted]:bg-[#FCDFD4]  data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>
+              {label}
             </SelectItem>
           ))}
         </SelectContent>

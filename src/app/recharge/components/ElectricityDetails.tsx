@@ -117,24 +117,38 @@ export const ElectricityDetails = () => {
   );
 
 
-  // console.log(discosdata?.data, 'discosdata')
 
-  const providersList = discosdata?.data?.map((provider: { id: any; name: any }) => provider.name) || [];
+
+ const providersList = Array.isArray(discosdata?.data)
+    ? discosdata?.data?.map((provider: { id: any; name: any; code?: any; identifier?: any; slug?: any }) => ({
+        value: String(provider?.id ?? ''),
+        label: provider?.name ?? '',
+        meta: provider
+      }))
+        .filter(provider => provider.value && provider.label)
+    : [];
 
   // console.log(providersList, "providersList")
 
   const customerId = watch("iucnumber");
-  const selectedNetwork = watch("decoder");
+ const selectedNetwork = watch("decoder");
 
-  const extractedContent = selectedNetwork?.match(/\((.*?)\)/)?.[1] || '';
+ const selectedProvider = providersList.find(provider => provider.value === selectedNetwork);
+
+ const discoQueryValue = selectedProvider?.meta?.code
+    || selectedProvider?.meta?.identifier
+    || selectedProvider?.meta?.slug
+    || selectedProvider?.label
+    || selectedProvider?.value
+    || '';
 
   // console.log(extractedContent, 'extractedContent');
 
 
   // console.log(selectedNetwork, 'selectedNetwork')
 
-  const dataplanurl = selectedNetwork
-    ? `/api/fetchcable?disco=${selectedNetwork}`
+ const dataplanurl = discoQueryValue
+    ? `/api/fetchcable?disco=${discoQueryValue}`
     : "";
 
   const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(
@@ -160,9 +174,9 @@ export const ElectricityDetails = () => {
   const debouncedCustomerId = useDebounce(customerId, 1000); // 800ms delay
 
 
-  const customerdetailsurl =
-    debouncedCustomerId && selectedNetwork
-      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${extractedContent}`
+ const customerdetailsurl =
+    debouncedCustomerId && discoQueryValue
+      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${discoQueryValue}`
       : "";
 
   // Call API only when the user stops typing (debounced value changes)
@@ -178,19 +192,24 @@ export const ElectricityDetails = () => {
 
 
   const sumbitForm = (data: DataProps) => {
-    // console.log("data=>", data);
+    //  console.log("data=>", data);
     //  console.log(errors, 'eeeee')
-    setElectricityDetails(data)
-    setElectricityStepper(1)
-    // console.log(customerdetailsData, "customerdetailsData");
-    setElectricityCustomerDetails(customerdetailsData?.data?.data);
+     setElectricityDetails(data)
+     setElectricityStepper(1)
+    // // console.log(customerdetailsData, "customerdetailsData");
+     setElectricityCustomerDetails(customerdetailsData?.data?.data);
   };
 
   const router = useRouter();
 
-  const handleUseClick = (number: string, type: string) => {
+ const handleUseClick = (number: string, type: string) => {
     setValue("iucnumber", number);
-    setValue("decoder", type);
+    const matchingProvider = providersList.find(provider => provider.label?.toLowerCase() === type?.toLowerCase());
+    if (matchingProvider) {
+      setValue("decoder", matchingProvider.value);
+    } else {
+      setValue("decoder", type);
+    }
     setprintreceipt(false);
   };
 
@@ -206,6 +225,10 @@ export const ElectricityDetails = () => {
           className="flex flex-col gap-3"
           onSubmit={handleSubmit(sumbitForm)}
         >
+
+          {/* {
+            console.log(providersList, 'providersList')
+          } */}
 
 
           <div className="w-full max-w-[350px]">
