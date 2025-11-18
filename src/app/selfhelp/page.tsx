@@ -105,7 +105,7 @@ const SelfHelpOption = ({ text, onClick }: {
               Back
             </p>
             <div className="text-center">
-              <HeadingText title="Live Chat" />
+              <HeadingText title="Self Help" />
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@ const SelfHelpOption = ({ text, onClick }: {
             We &apos; re Here to Help:
           </h1>
           <h2 className="text-base font-semibold font-Poppins text-[#E84526] mb-4">
-            Ajiroba Technologies Live Chat
+            Ajiroba Technologies Self Help
           </h2>
           <p className="text-[#353131] text-sm font-Poppins mb-6 leading-relaxed">
             For immediate assistance, click the &apos;Chat Now&apos; button below to connect
@@ -141,12 +141,12 @@ const SelfHelpOption = ({ text, onClick }: {
 
           {/* Buttons */}
           <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-             <button onClick={() => router.push('/mainlivechat')}
+             {/* <button onClick={() => router.push('/mainlivechat')}
             className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
           >
-            Chat Now
-          </button>
-                     <button onClick={() => router.back()}
+            Self Help
+          </button> */}
+           <button onClick={() => router.back()}
             className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:[#FCDFD4] text-[#2A2A2A]  font-semibold rounded"
           >
             Go Back

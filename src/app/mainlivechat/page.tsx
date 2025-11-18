@@ -308,110 +308,110 @@ const LiveChatPage = () => {
 
 
 
-  // Manual retry function
-  const retryChatData = () => {
-    setError(null);
-    setRetryCount(0);
-    hasInitialized.current = false; // Reset initialization flag
-    ChatData();
-  };
+  // // Manual retry function
+  // const retryChatData = () => {
+  //   setError(null);
+  //   setRetryCount(0);
+  //   hasInitialized.current = false; // Reset initialization flag
+  //   ChatData();
+  // };
 
-  useEffect(() => {
-    if (userToken && !hasInitialized.current) {
-      hasInitialized.current = true;
-      ChatData();
-    }
-  }, [userToken]);
+  // useEffect(() => {
+  //   if (userToken && !hasInitialized.current) {
+  //     hasInitialized.current = true;
+  //     ChatData();
+  //   }
+  // }, [userToken]);
 
-  // Cleanup effect to clear any pending timeouts
-  useEffect(() => {
-    return () => {
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
-      }
-    };
-  }, []);
+  // // Cleanup effect to clear any pending timeouts
+  // useEffect(() => {
+  //   return () => {
+  //     if (refreshTimeoutRef.current) {
+  //       clearTimeout(refreshTimeoutRef.current);
+  //     }
+  //   };
+  // }, []);
 
 
 
-  const EndChat = async () => {
-    if (isEndingChat) return; // Prevent multiple calls
+  // const EndChat = async () => {
+  //   if (isEndingChat) return; // Prevent multiple calls
     
-    // Clear any pending refresh timeout to prevent API calls after chat ends
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-      refreshTimeoutRef.current = null;
-    }
+  //   // Clear any pending refresh timeout to prevent API calls after chat ends
+  //   if (refreshTimeoutRef.current) {
+  //     clearTimeout(refreshTimeoutRef.current);
+  //     refreshTimeoutRef.current = null;
+  //   }
     
-    setIsEndingChat(true);
-    setError(null);
+  //   setIsEndingChat(true);
+  //   setError(null);
     
-    try {
-      const headers = {
-        Authorization: `token ${userToken}`,
-      };
+  //   try {
+  //     const headers = {
+  //       Authorization: `token ${userToken}`,
+  //     };
 
-      const response = await axios.put(
-        "https://staging.ajiroba.ng/v1/admin/end_chat/",
-        {},
-        { headers }
-      );
+  //     const response = await axios.put(
+  //       "https://staging.ajiroba.ng/v1/admin/end_chat/",
+  //       {},
+  //       { headers }
+  //     );
 
-      if (response.data.status === "success") {
-        // Clear any pending refresh timeout since chat is ending
-        if (refreshTimeoutRef.current) {
-          clearTimeout(refreshTimeoutRef.current);
-          refreshTimeoutRef.current = null;
-        }
+  //     if (response.data.status === "success") {
+  //       // Clear any pending refresh timeout since chat is ending
+  //       if (refreshTimeoutRef.current) {
+  //         clearTimeout(refreshTimeoutRef.current);
+  //         refreshTimeoutRef.current = null;
+  //       }
         
-        // Don't reset isEndingChat on success - keep it true to prevent further API calls
-        toast.success(`${response.data.message || "Chat ended successfully"}`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          onClose: () => router.push("/chatended"),
-        });
-      } else {
-        const errorMessage = response.data.message || "Failed to end chat";
-        setError(errorMessage);
-        setIsEndingChat(false); // Only reset on error
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    } catch (error) {
-      const errorMessage = error instanceof AxiosError 
-        ? error.response?.data?.detail || error.response?.data?.message || "Network error occurred"
-        : "An unexpected error occurred";
+  //       // Don't reset isEndingChat on success - keep it true to prevent further API calls
+  //       toast.success(`${response.data.message || "Chat ended successfully"}`, {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "light",
+  //         onClose: () => router.push("/chatended"),
+  //       });
+  //     } else {
+  //       const errorMessage = response.data.message || "Failed to end chat";
+  //       setError(errorMessage);
+  //       setIsEndingChat(false); // Only reset on error
+  //       toast.error(errorMessage, {
+  //         position: "top-right",
+  //         autoClose: 4000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "light",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     const errorMessage = error instanceof AxiosError 
+  //       ? error.response?.data?.detail || error.response?.data?.message || "Network error occurred"
+  //       : "An unexpected error occurred";
       
-      setError(errorMessage);
-      setIsEndingChat(false); // Only reset on error
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+  //     setError(errorMessage);
+  //     setIsEndingChat(false); // Only reset on error
+  //     toast.error(errorMessage, {
+  //       position: "top-right",
+  //       autoClose: 4000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
       
-      console.error("Error ending chat:", error);
-    }
-  };
+  //     console.error("Error ending chat:", error);
+  //   }
+  // };
 
 
 
@@ -433,7 +433,7 @@ const LiveChatPage = () => {
               Back
             </p>
             <div className="text-center">
-              <HeadingText title="Live Chat" />
+              <HeadingText title="Self Help" />
             </div>
           </div>
         </div>
@@ -448,12 +448,12 @@ const LiveChatPage = () => {
           className=" flex justify-center items-center bg-gray-50 "
         >
           <div className="bg-white  gap-12 flex flex-col md:flex-row  p-8 w-full ">
-            <div className="md:w-1/2 mt-24 w-full mb-6 md:mb-0 text-center md:text-left">
+            <div className="md:w-1/2 mt-16 w-full mb-6 md:mb-0 mx-auto flex flex-col items-center text-center">
               <h1 className="text-3xl md:text-4xl font-Poppins font-semibold mb-3 text-[#111111]">
                 We &apos; re Here to Help:
               </h1>
               <h2 className="text-base font-semibold font-Poppins text-[#E84526] mb-4">
-                Ajiroba Technologies Live Chat
+                Ajiroba Technologies Self Help
               </h2>
               <p className="text-[#353131] text-sm font-Poppins mb-6 leading-relaxed">
                 For immediate assistance, click the &apos;Chat Now&apos; button
@@ -462,7 +462,7 @@ const LiveChatPage = () => {
                 here to help with any questions or issues you may have.
               </p>
 
-              <div className="flex justify-center md:justify-start flex-wrap space-x-4">
+              <div className="flex justify-center flex-wrap gap-4 w-full">
                 <button
                   onClick={() => {
                     router.push('/livechat');
@@ -481,7 +481,7 @@ const LiveChatPage = () => {
                 </button>
               </div>
 
-              <div className="flex justify-center md:justify-start space-x-4 mt-6">
+              <div className="flex justify-center gap-4 mt-6">
                 <a href="#" aria-label="WhatsApp">
                   <FaWhatsapp color="#60d669" className="h-8 w-8" />
                 </a>
@@ -502,7 +502,7 @@ const LiveChatPage = () => {
             </div>
 
 
-            <div className="md:w-1/2 w-full flex justify-center" style={{
+            {/* <div className="md:w-1/2 w-full flex justify-center" style={{
               height: ' min-content',
               overflow: 'scroll',
               overflowY: 'scroll',
@@ -551,7 +551,7 @@ const LiveChatPage = () => {
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {/* Loading state */}
+                        
                         {isInitialLoad && isLoading && (
                           <div className="flex justify-center items-center py-8">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E84526]"></div>
@@ -559,7 +559,7 @@ const LiveChatPage = () => {
                           </div>
                         )}
 
-                        {/* Error state */}
+                        
                         {error && !isLoading && (
                           <div className="flex flex-col items-center justify-center py-8 px-4">
                             <div className="text-red-500 text-center mb-4">
@@ -568,23 +568,18 @@ const LiveChatPage = () => {
                               </svg>
                               <p className="text-sm font-medium">{error}</p>
                             </div>
-                            {/* <button
-                              onClick={retryChatData}
-                              className="px-4 py-2 bg-[#E84526] text-white rounded-lg hover:bg-[#F25E26] transition-colors text-sm"
-                            >
-                              Try Again
-                            </button> */}
+                            
                           </div>
                         )}
 
-                        {/* Messages */}
+                   
                         {!error && !isInitialLoad && messages.length === 0 && !isLoading && (
                           <div className="flex justify-center items-center py-8">
                             <p className="text-gray-500 text-sm">No messages yet. Start the conversation!</p>
                           </div>
                         )}
 
-                        {/* Subtle refresh indicator */}
+                      
                         {isRefreshing && (
                           <div className="flex justify-center items-center py-2">
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#E84526]"></div>
@@ -650,7 +645,7 @@ const LiveChatPage = () => {
                                   : "text-gray-500 hover:text-gray-700"
                               }`}
                               onClick={() => !error && setShowEmojiPicker(!showEmojiPicker)}
-                              // disabled={!!error}
+                      
                             >
                               <Image 
                                 src={emojiicon} 
@@ -679,7 +674,7 @@ const LiveChatPage = () => {
                                 className="hidden"
                                 {...register("image")}
                                 onChange={handlePhotoUpload}
-                                // disabled={!!error}
+                            
                               />
                             </label>
 
@@ -687,7 +682,7 @@ const LiveChatPage = () => {
                               type="text"
                               placeholder={error ? "Send a message" : "Send a message"}
                               {...register("text")}
-                              // disabled={!!error}
+                    
                               className={`flex-1 mx-3 px-4 py-2 border rounded-full text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-500 ${
                                 error 
                                   ? "bg-gray-100 text-gray-500 cursor-pointer" 
@@ -702,7 +697,7 @@ const LiveChatPage = () => {
                                   : "hover:bg-orange-600"
                               }`}
                               type="submit"
-                              // disabled={isSendingMessage || !!error}
+                     
                             >
                               {isSendingMessage ? (
                                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
@@ -729,7 +724,7 @@ const LiveChatPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
 
 

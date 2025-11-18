@@ -27,6 +27,7 @@ import TestWin from "./TestWin";
 import DropDownAuctionClosed from "./DropDownAuctionClosed";
 import { formatCurrency } from "@/utils/formatCurrency";
 import deliveryicon from '@/app/asset/deliveryicon.svg';
+import { formatDate } from "date-fns";
 
 type AuctionProps = {
   product: any[];
@@ -207,15 +208,20 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
       // resolver: yupResolver(/* your delete form schema */),
     });
   
-    const { isLoggedIn, user, token } = useAuthStore((state) => ({
+    const { isLoggedIn, token } = useAuthStore((state) => ({
       isLoggedIn: state.isLoggedIn,
-      user: state.user,
       token: state.token,
     }));
   
-    const userToken = (Cookies.get("token") as string) || "";
+    const cookieToken = Cookies.get("token");
+    const userToken = (token ?? cookieToken) ?? "";
+    const isAuthenticated = Boolean(userToken) && Boolean(isLoggedIn);
   
-    /*  const userToken = token; */
+    useEffect(() => {
+      if (!isAuthenticated) {
+        router.replace("/signin");
+      }
+    }, [isAuthenticated, router]);
   
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
   
@@ -369,10 +375,6 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
       Setreviewerrordelete("");
     };
   
-    const userToken_ = Cookies.get("token") as string;
-  
-    const tkn_: string = Cookies.get("token") as string;
-  
     const {
       data: auctioninfo,
       isLoading: auctionLoading,
@@ -380,14 +382,36 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
     } = useGetOrderWinsData(
       "/api/auctionwins",
       "get_auctionwins_details",
-      userToken_,
+      userToken,
     );
   
-    const openProducts = auctioninfo?.data?.data?.closed.map(
-      (item: { id: any }) => {
-        return { ...item, tag: ["closed", 'redeem items', 'winning advise'] }; // Add tag as an array with "open" for consistency
-      },
-    );
+    const openProducts = Array.isArray(auctioninfo?.data?.data?.closed)
+      ? Array.from(
+        auctioninfo.data.data.closed.reduce((map: Map<string, any>, item: any) => {
+          const auctionName = item?.auction?.[0]?.name ?? item?.id;
+          const key = typeof auctionName === "string" ? auctionName : String(auctionName);
+
+          if (!map.has(key)) {
+            map.set(key, { ...item, tag: ["closed", "redeem items", "winning advise"] });
+          }
+
+          return map;
+        }, new Map<string, any>()).values(),
+      )
+      : [];
+
+    // const openProducts = Array.isArray(auctioninfo?.data?.data?.closed) ? Array.from(
+    //   auctioninfo?.data?.data?.closed
+    //     .reduce((map: Map<any, any>, item: { id: any }) => {
+    //       if (!map.has(item.id)) {
+    //         map.set(item.id, { ...item, tag: ["closed", 'redeem items', 'winning advise'] });
+    //       }
+    //       return map;
+    //     }, new Map())
+    //     .values()
+    // ) : [] as any[];
+
+    // console.log(openProducts, 'openProducts')
   
   
   
@@ -399,6 +423,9 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
   
     // Slice data based on the current page
     const currentData = openProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+
+
   
     // Handle page navigation
     const handlePageChange = (page: number) => {
@@ -646,6 +673,21 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
       }
     };
   
+    if (!isAuthenticated) {
+      return null;
+    }
+    // const formatTime = (time: string) => {
+    //   const [hours, minutes] = time.split(':').map(Number);
+    //   const period = hours >= 12 ? 'PM' : 'AM';
+    //   const hours12 = hours % 12 || 12;
+    //   return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+    // };
+
+    // const formatDate = (date: string, time: string) => {
+    //   return formatDate(date, time);
+    // };
+    
+  
     return (
       <div>
         <div className="">
@@ -659,12 +701,15 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
                 <div
                   key={index}
                   className="relative my-2 flex gap-4 border p-3 flex-wrap"
+                  onClick={() =>
+                    router.push(`/raffle/${val?.auction[0]?.auction_id}/winners`)
+                  }
                 >
   
   
                   <div onClick={() =>
                     router.push(`/raffle/${val?.auction[0]?.auction_id}/winners`)
-                  } className="relative  flex gap-4 border p-3 flex-wrap h-[120px] cursor-pointer"> {/* Container height control */}
+                  } className="relative  flex gap-4 border p-3 flex-wrap  cursor-pointer"> {/* Container height control */}
                     <Image
                       src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
                       alt={val?.auction[0]?.name}
@@ -678,12 +723,19 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
   
                   <div className="flex flex-col gap-3 capitalize">
                     <p className=" font-semibold">{val?.auction[0]?.name}</p>
-                    <p>Ticket Number: {val?.ticket_number} </p>
+                    {/* <p>Ticket Number: {val?.ticket_number} </p> */}
   
   
                     <p>Ticket Price: { formatCurrency(val?.ticket_price) }</p>
+
+                    {/* {console.log(val, 'draw_date')} */}
+
+                     <p> Start Date: { (val?.start_date) }</p>
+                    <p> Start Time: { (val?.start_time) }</p>
+                    <p> Date Created: { formatDate(val?.date_created, 'dd MMMM, yyyy') }</p>
                     
-                    <div className="mt-5 flex gap-3 flex-wrap">
+                    
+                    {/* <div className="mt-5 flex gap-3 flex-wrap">
   
   
   
@@ -726,16 +778,9 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
                           </p>
                         ))}
   
-                    </div>
+                    </div> */}
                   </div>
-                  {/* <span className="absolute right-3 top-2 rounded-md border p-2 cursor-pointer">
-                    <DropDownAuctionClosed
-                      onOptionClick={(option) => handleOptionClick(option, val)}
-                      transaction={val}
-                    />
-  
-                   
-                  </span> */}
+                 
                 </div>
               ))
             )}
@@ -889,7 +934,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
           </ModalProfile>
         )}
   
-        {isMerchantsModalOpen && (
+        {/* {isMerchantsModalOpen && (
           <ModalProfile
             icon={""}
             isOpen={isMerchantsModalOpen}
@@ -956,31 +1001,30 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
             </div>
           </ModalProfile>
         )}
+   */}
   
   
-  
-        {isWinningAdvice && selectedTransaction && (
+        {/* {isWinningAdvice && selectedTransaction && (
           <TestWin
             isOpen={isWinningAdvice}
             onClose={() => setIsWinningAdvice(false)}
             adviceData={{
               date: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }),
               productId: `${selectedTransaction?.auction?.[0]?.auction_id}`,
-              /*  productCode: `${selectedTransaction?.auction?.[0]?.product_code}`, */
+             
               name: `${userInfo?.data?.first_name} ${userInfo?.data?.last_name}`,
               prize: selectedTransaction?.auction?.[0]?.name || "Prize",
               drawDate: selectedTransaction?.start_date || "",
               raffleDrawTime: selectedTransaction?.start_time || "",
               estimated_value: selectedTransaction?.cost_price || "N/A",
   
-              /*   drawDate: new Date(selectedTransaction?.auction?.[0]?.draw_date || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), */
               ticketNumber: selectedTransaction?.ticket_number || "",
             }}
           />
-        )}
+        )} */}
   
   
-        {isVoucherModalOpen && voucherData && (
+        {/* {isVoucherModalOpen && voucherData && (
           <ModalProfile
             icon={""}
             isOpen={isVoucherModalOpen}
@@ -992,9 +1036,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-bold text-gray-800">Gift Voucher</h3>
-                  {/*   {
-                    console.log(voucherData, "voucherData")
-                  } */}
+                
                   <p className="text-gray-600">Order #{voucherData?.orderNumber}</p>
                   <p className="text-sm text-gray-500">Reference: {voucherData?.reference}</p>
                   <p className="text-sm text-gray-500">Status: {voucherData?.status}</p>
@@ -1037,7 +1079,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
                     className="rounded-md bg-[#F25E26] p-2 px-4 text-white"
                     type="button"
                     handleClick={() => {
-                      // Create a PDF or image of the voucher
+               
                       const voucherContent = document.createElement('div');
                       voucherContent.style.position = 'absolute';
                       voucherContent.style.left = '-9999px';
@@ -1088,7 +1130,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
                         </div>
                       `;
   
-                      // Use html2canvas to create an image
+            
                       import('html2canvas').then(({ default: html2canvas }) => {
                         html2canvas(voucherContent, {
                           backgroundColor: '#ffffff',
@@ -1115,9 +1157,9 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
               </div>
             </div>
           </ModalProfile>
-        )}
+        )} */}
   
-        {isBankTransferModalOpen && (
+        {/* {isBankTransferModalOpen && (
           <ModalProfile
             icon={""}
             isOpen={isBankTransferModalOpen}
@@ -1199,9 +1241,9 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
               </div>
             </div>
           </ModalProfile>
-        )}
+        )} */}
   
-        {isDeliveryNoticeModalOpen && (
+        {/* {isDeliveryNoticeModalOpen && (
           <ModalProfile
             icon={""}
             isOpen={isDeliveryNoticeModalOpen}
@@ -1420,7 +1462,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
             handleEvent={() => setIsDeliverySuccessModalOpen(false)}
           >
             <div className="flex flex-col items-center p-8 relative">
-              {/* Close Icon */}
+          
               <button
                 onClick={() => setIsDeliverySuccessModalOpen(false)}
                 className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -1478,7 +1520,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
               </div>
             </div>
           </ModalProfile>
-        )}
+        )} */}
       </div>
     );
   };

@@ -87,7 +87,7 @@ export const CustomModal =({children, isOpen}:CustomModal)=>{
 return (
   <>
     {isOpen && (
-  <section className='fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50 p-4 sm:p-6'>
+  <section className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6'>
     <div className='w-full max-w-[720px] rounded-2xl bg-white shadow-xl overflow-hidden'>
       <div className='max-h-[85vh] overflow-y-auto p-6'>
         {children}

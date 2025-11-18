@@ -437,9 +437,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
   }, [isMerchantsModalOpen, userToken]);
 
   // Filter merchants based on search query
-  const filteredMerchants = merchants.filter((merchant: any) =>
+  const filteredMerchants = merchants.filter((merchant: { name: string }) =>
     merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
 
   const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string) => {
 
@@ -456,6 +458,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
           auction_id: auctionId,
           productCode: productCode,
           ticket_id: ticketNumber,
+          merchant_name: merchantName || '',
         }),
       });
 
@@ -464,36 +467,36 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         /*   console.log(data.data.data, "data.data.data")
           console.log(data.data, "data.data") */
 
-        const temporaryData = {
-          "status": "success",
-          "message": "Voucher processed successfully",
-          "data": {
-            "data": {
-              "orderNumber": "223787",
-              "reference": "0a8703fd25_Gbolahan_143246.00_voucher",
-              "status": "COMPLETED",
-              "vouchers": [
-                {
-                  "value": 7000.0,
-                  "expiryDate": "2026-05-13T08:36:01.3848235Z",
-                  "pin": "1234",
-                  "code": "791976848284",
-                  "serial": "3080560697"
-                }
-              ]
-            },
-            "statusCode": "00",
-            "message": "Successful"
-          }
-        }
+        // const temporaryData = {
+        //   "status": "success",
+        //   "message": "Voucher processed successfully",
+        //   "data": {
+        //     "data": {
+        //       "orderNumber": "223787",
+        //       "reference": "0a8703fd25_Gbolahan_143246.00_voucher",
+        //       "status": "COMPLETED",
+        //       "vouchers": [
+        //         {
+        //           "value": 7000.0,
+        //           "expiryDate": "2026-05-13T08:36:01.3848235Z",
+        //           "pin": "1234",
+        //           "code": "791976848284",
+        //           "serial": "3080560697"
+        //         }
+        //       ]
+        //     },
+        //     "statusCode": "00",
+        //     "message": "Successful"
+        //   }
+        // }
 
 
-        localStorage.setItem("voucherData", JSON.stringify(temporaryData.data.data));
-        setVoucherData(temporaryData.data.data);
+        // localStorage.setItem("voucherData", JSON.stringify(temporaryData.data.data));
+        // setVoucherData(temporaryData.data.data);
         setIsMerchantsModalOpen(false);
-        setIsVoucherModalOpen(true);
+        // setIsVoucherModalOpen(true);
 
-        /*     window.location.reload(); */
+            window.location.reload();
       } else {
         toast.error(responseData.message || "Failed to process gift card");
       }

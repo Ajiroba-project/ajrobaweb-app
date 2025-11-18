@@ -4,16 +4,57 @@ interface RequestPayload {
     url: string;
     payload: any;
     otp?: any;
-    token?: any
+    token?: string;
 }
 
 const postData = async (request: RequestPayload): Promise<any> => {
+    const isFormData =
+        typeof FormData !== "undefined" && request.payload instanceof FormData;
+
+    const headers: HeadersInit = {};
+
+    if (!isFormData) {
+        headers["Content-Type"] = "application/json";
+    }
+
+    if (request.token) {
+        headers["Authorization"] = `Token ${request.token}`;
+    }
+
     const response = await fetch(request.url, {
         method: "POST",
-        body: JSON.stringify(request.payload)
+        headers,
+        body: isFormData ? request.payload : JSON.stringify(request.payload),
     });
-    return await response.json();
-}
+
+    let data: any = null;
+
+    try {
+        data = await response.json();
+    } catch (error) {
+        // In case the response is empty or not JSON, keep data as null.
+    }
+
+    if (!response.ok) {
+        const errorMessage =
+            data?.message ||
+            data?.detail ||
+            data?.data?.detail ||
+            data?.data?.message ||
+            "Unable to complete request. Please try again.";
+
+        const errorObject = new Error(errorMessage);
+        (errorObject as any).status = response.status;
+        (errorObject as any).data = data;
+
+        throw errorObject;
+    }
+
+    return {
+        ...data,
+        status: data?.status ?? response.status,
+    };
+};
 
 type SuccessCallback = (data: any) => void;
 type ErrorCallback = (error: any) => void;

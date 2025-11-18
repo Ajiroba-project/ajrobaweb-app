@@ -1353,7 +1353,7 @@ const Page = () => {
                 </div>
               </div>
 
-              <div className="flex mt-4 gap-4">
+              {/* <div className="flex mt-4 gap-4">
                 <div>
                   <IoLocationOutline color="#F25E26" size={24} />
                 </div>
@@ -1362,10 +1362,10 @@ const Page = () => {
                   <p className="text-[#2A2A2A]">
                     32, Ajiroba street,Arepo,lagos
                   </p>
-                </div>
-              </div>
+                </div> 
+              </div> */}
 
-              <div className="flex mt-4 gap-4">
+              {/* <div className="flex mt-4 gap-4">
                 <div>
                   <IoLocationOutline color="#F25E26" size={24} />
                 </div>
@@ -1373,7 +1373,7 @@ const Page = () => {
                 <div>
                   <p className="text-[#2A2A2A]">45, jasper james, lekki</p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex gap-4 justify-center mt-4">
                 <div>

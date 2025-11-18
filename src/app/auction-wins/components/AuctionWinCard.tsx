@@ -419,6 +419,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     return nameMatch || storesMatch;
   });
 
+  const merchantName = filteredMerchants[0]?.name || '';
+
   const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string) => {
 
 
@@ -433,6 +435,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
         body: JSON.stringify({
           auction_id: auctionId,
           productCode: productCode,
+          merchant_name: merchantName || '',
           ticket_id: ticketNumber,
         }),
       });
@@ -477,7 +480,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
         setIsMerchantsModalOpen(false);
   /*       setIsVoucherModalOpen(true); */
 
-        /*     window.location.reload(); */
+             window.location.reload(); 
       } else {
       /*   console.log(responseData, "responseData")
         console.log(responseData.message, "responseData.message") */
