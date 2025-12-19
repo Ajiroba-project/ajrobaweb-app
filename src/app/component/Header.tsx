@@ -1015,7 +1015,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                 </button>
 
                 {/* Cart */}
-                <button 
+                {/* <button 
                   className='relative p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200'
                   onClick={() => router.push('/cart')}
                 >
@@ -1025,7 +1025,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       {cartCount > 99 ? '99+' : cartCount}
                     </span>
                   )}
-                </button>
+                </button> */}
 
                 {/* Mobile Menu Toggle - Show when desktop nav is hidden */}
                 <button 

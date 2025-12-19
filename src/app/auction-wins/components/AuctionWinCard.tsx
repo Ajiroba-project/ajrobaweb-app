@@ -441,53 +441,23 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       });
 
       const responseData = await response.json();
-      /* console.log(responseData, 'rrrrrrr') */
+
 
 
       if (responseData.status === "success") {
-   /*         console.log(data.data.data, "data.data.data")
-          console.log(data.data, "data.data")  */
-
 
           toast.success(responseData.message);
 
-    /*     const temporaryData = {
-          "status": "success",
-          "message": "Voucher processed successfully",
-          "data": {
-            "data": {
-              "orderNumber": "223787",
-              "reference": "0a8703fd25_Gbolahan_143246.00_voucher",
-              "status": "COMPLETED",
-              "vouchers": [
-                {
-                  "value": 7000.0,
-                  "expiryDate": "2026-05-13T08:36:01.3848235Z",
-                  "pin": "1234",
-                  "code": "791976848284",
-                  "serial": "3080560697"
-                }
-              ]
-            },
-            "statusCode": "00",
-            "message": "Successful"
-          }
-        } */
 
-
-       /*  localStorage.setItem("voucherData", JSON.stringify(temporaryData.data.data));
-        setVoucherData(temporaryData.data.data); */
         setIsMerchantsModalOpen(false);
-  /*       setIsVoucherModalOpen(true); */
 
              window.location.reload(); 
       } else {
-      /*   console.log(responseData, "responseData")
-        console.log(responseData.message, "responseData.message") */
+     
         toast.error(responseData?.data?.message || responseData?.message || "Failed to process gift card");
       }
     } catch (error) {
-    /*   console.log(error, "error") */
+
       toast.error("Error processing gift card");
     } finally {
       setIsProcessingGiftCard(false);

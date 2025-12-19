@@ -1,10 +1,14 @@
- import { Hero } from "../component/Hero";
- import { Heading } from "../component/Heading"
- import { SubHeading } from "../component/SubHeading"
- import { AuctionCard } from "../component/Card"
- import { HIW } from "../component/How-it-works"
- import { Products } from "../static-data"
- import { Suspense } from 'react'
+import Image from 'next/image'
+import { Suspense } from 'react'
+
+import { Hero } from "../component/Hero"
+import { Heading } from "../component/Heading"
+import { SubHeading } from "../component/SubHeading"
+import { AuctionCard } from "../component/Card"
+import { HIW } from "../component/How-it-works"
+import { Products } from "../static-data"
+import exploreBg from "../asset/expoloresectionbg.png"
+import brandWhite from "../asset/logoWhite.svg"
 
 function Page() {
   return (
@@ -23,12 +27,16 @@ function Page() {
           <div>
             <SubHeading title="Today" />
           </div>
+
           <div>
-            <Heading title="Auction Sales" />
+            <Heading title="Raffle Draw Sales" />
           </div>
+
           <div>
             <AuctionCard cardInfo={Products} />
           </div>
+
+      
         </section>
 
         {/*  How it works  */}
