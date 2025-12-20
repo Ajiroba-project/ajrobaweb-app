@@ -27,6 +27,7 @@ import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
 import Loading from "./component/Loading";
 import { LoadingSpinner } from "./component/LoadingSkeleton";
+import { TopAuctionBid } from "./component/TopAuctionBid";
 
 // Lazy-loaded components to improve mobile performance and Lighthouse scores
 const Banner = dynamic(() => import("./component/Banner").then(m => m.Banner), {
@@ -85,9 +86,11 @@ interface AuctionResponse {
 const Page = () => {
   const [categoryCurrentPage, setCategoryCurrentPage] = useState<number>(0);
   const [auctionCurrentPage, setAuctionCurrentPage] = useState<number>(0);
+  const [topAuctionCurrentPage, setTopAuctionCurrentPage] = useState<number>(0);
   const [cardsPerPage] = useState<number>(4);
   const [filteredCatData, setFilteredCatData] = useState<any>([]);
   const [filteredAuctionData, setFilteredAuctionData] = useState<any>([]);
+  const [TopAuctionData, setTopAuctionData] = useState<any>([]);
   const [loadingdata, setLoadingData] = useState<boolean>(false);
 
   const totalPages = Math.ceil(Products.length / cardsPerPage);
@@ -105,6 +108,16 @@ const Page = () => {
       ["get auctiondetails"],
       true,
     );
+
+  const { data: topAuctionInfo, isLoading: topAuctionLoading } =
+    useQueryData<AuctionResponse>(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auction/raffle_draws/`,
+      ["get topauctiondetails"],
+      true,
+    );
+
+  console.log(topAuctionInfo, 'topAuctionInfooooo');
+
   const { data: categoriesInfo, isLoading: categoriesLoading } =
     useQueryData<AuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/categories/`,
@@ -157,6 +170,15 @@ const Page = () => {
       );
       setFilteredAuctionData(filteredAuction);
     }
+    if (topAuctionInfo?.data) {
+
+      // console.log(topAuctionInfo.data, 'topAuctionInfo');
+      const filteredTopAuction = topAuctionInfo.data.slice(
+        topAuctionCurrentPage * cardsPerPage,
+        (topAuctionCurrentPage + 1) * cardsPerPage,
+      );
+      setTopAuctionData(filteredTopAuction);
+    }
   }, [auctionInfo, auctionCurrentPage, cardsPerPage]);
 
   const handlePageChange = (pageNumber: number) => {
@@ -165,6 +187,10 @@ const Page = () => {
 
   const handleAuctionChange = (pageNumber: number) => {
     setAuctionCurrentPage(pageNumber);
+  };
+
+  const handleTopAuctionChange = (pageNumber: number) => {
+    setTopAuctionCurrentPage(pageNumber);
   };
 
   const onAuctionLoadingChange = useCallback((loading: any) => {
@@ -293,9 +319,9 @@ const Page = () => {
      
 
           {/* Categories Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
+          {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
-              {/* Header with Pagination - Mobile Stack */}
+        
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div className="flex flex-col gap-2">
                   <SubHeading title="Categories" />
@@ -319,7 +345,7 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Categories Content */}
+
               <div className="w-full">
                 <div className="flex flex-col items-center gap-6">
                   <div className="w-full">
@@ -337,10 +363,10 @@ const Page = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
           {/* Featured Products Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
+          {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Featured" />
@@ -366,10 +392,55 @@ const Page = () => {
                 </div>
               </div>
             </div>
+          </section> */}
+
+
+
+
+<section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
+            <div className="max-w-7xl mx-auto">
+              {/* Header with Pagination - Mobile Stack */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+                <div className="flex flex-col gap-2">
+                  <SubHeading title="Today" />
+                  <Heading title="Bid from Top Deals Collection" />
+                </div>
+                
+                {/* Pagination - Hidden on Mobile if Space Issue */}
+                <div className="flex items-center justify-center sm:justify-end">
+                  {auctionLoading ? (
+                    <div className="flex items-center justify-center gap-2 px-4 py-2">
+                      <LoadingSpinner size="sm" />
+                      <span className="text-sm text-gray-500 font-Poppins">Loading...</span>
+                    </div>
+                  ) : (
+                    <CircularPagination
+                      pageCount={auctionTotalPages}
+                      currentPage={auctionCurrentPage}
+                      onPageChange={({ selected }) => handleAuctionChange(selected)}
+                      className="flex items-center scale-75 sm:scale-100"
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Auction Content */}
+              <div className="w-full">
+                <TopAuctionBid
+                  cardInfo={TopAuctionData}
+                  currentPage={0}
+                  cardsNum={0}
+                  onLoadingChange={onAuctionLoadingChange}
+                  isLoading={auctionLoading}
+                />
+              </div>
+            </div>
           </section>
 
+
+
           {/* Top Deals Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
+          {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Deals" />
@@ -395,7 +466,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
           {/* Community Section - Full Width Background */}
           <section className="w-full bg-[#F6F6F6] py-8 md:py-12 lg:py-16 content-visibility-auto">
@@ -405,7 +476,7 @@ const Page = () => {
           </section>
 
           {/* Top Week Products Section - Responsive Container */}
-          <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
+          {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Top Product" />
@@ -431,7 +502,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
           {/* Banner Section - Full Width */}
           <section className="w-full content-visibility-auto">

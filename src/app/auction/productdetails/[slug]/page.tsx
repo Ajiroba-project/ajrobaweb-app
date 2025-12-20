@@ -1348,13 +1348,13 @@ const Page = ({ params }: any) => {
 
                     <div className="flex flex-wrap flex-row justify-between">
                       <div>
-                        <p className="text-[#111111] text-base mt-4 ">Auction Date</p>
+                        <p className="text-[#111111] text-base mt-4 ">Raffle Date</p>
                         <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
                           {productdatanew?.data?.start_date || "NA"}
                         </h1>
                       </div>
                       <div>
-                        <p className="text-[#111111] text-base mt-4 ">Auction Time</p>
+                        <p className="text-[#111111] text-base mt-4 ">Raffle Time</p>
                         <h1 className="text-[#111111] font-Poppins text-base mt-2 font-bold">
                           {productdatanew?.data?.start_time || "NA"}
                         </h1>

@@ -864,14 +864,13 @@ const WrappedPage = () => {
                 <div>
                   <div>
                     <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Auction Winning
+                      Raffle Draw Winning
                     </h1>
                   </div>
 
                   <div>
                     <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                      There is no guarantee that you win the item you bid for as the auction
-                      process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
+                    There is no guarantee that you win the item you bid for as the raffle draw process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
                     </p>
                   </div>
                 </div>

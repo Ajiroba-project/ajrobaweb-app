@@ -16,6 +16,7 @@ import { Button, Box } from '@mui/material'
 import Loading from '../component/Loading'
 import { parse } from 'date-fns'
 import { PickersLayout, PickersLayoutProps } from '@mui/x-date-pickers/PickersLayout'
+import { Title } from '../component/Title'
 
 // Add this helper function to get auction dates from the data
 const extractAuctionDates = (data: any[]) => {
@@ -144,8 +145,19 @@ const AuctionPage = () => {
       <header className='fixed z-50 w-full'>
         <Header />
       </header>
+
+     
+
+
   	  {/* Spacer to offset fixed header height on small/medium screens */}
   	  <div className='h-24 md:h-28 lg:h-32'></div>
+
+
+
+      <div className="container py-4 mb-8">
+          <p className="text-center  2xl:text-[20px] lg:text-[20px] md:text-[20px] xl:text-[20px]  font-Poppins text-sm text-[#504D4D] font-extrabold">{'Raffle Draw Products'}</p>
+        </div>
+
       <AuctionBanner text='Auction Deals' banner={auctionImg} />
       <main className='container my-4'>
         <section className='my-5 flex flex-col items-center justify-between gap-5 lg:flex-row'>
@@ -156,7 +168,7 @@ const AuctionPage = () => {
           {/* Date Input */}
           
           <div>
-            <span className=' font-Poppins py-8 mb-4'>Auction Calendar</span>
+            <span className=' font-Poppins py-8 mb-4'>Raffle Calendar</span>
             {isAuctionActive ? (
               <div className='mt-2'>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
