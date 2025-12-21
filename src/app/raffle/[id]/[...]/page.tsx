@@ -204,7 +204,7 @@ const Page = ({ params }: any) => {
   const thead = ["S/N", "Product", `Ticket Number`, "Phone Number"];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Set the number of items per page
+  const itemsPerPage = 15; // Set the number of items per page
 
   // Determine which dataset to show: all tickets while rolling, only winners after
   const displayedData = useMemo(() => {

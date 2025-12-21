@@ -67,6 +67,7 @@ type AuctionData = {
 };
 
 interface CardInfoItem {
+  raffle_top_deals?: any[];
   id?: number;
   title?: string;
   description?: string;
@@ -81,6 +82,13 @@ interface CardInfoItem {
 
 interface AuctionResponse {
   data: CardInfoItem[];
+}
+
+interface TopAuctionResponse {
+  data: {
+    raffle_top_deals: CardInfoItem[];
+    raffle_deals: CardInfoItem[];
+  };
 }
 
 const Page = () => {
@@ -110,13 +118,13 @@ const Page = () => {
     );
 
   const { data: topAuctionInfo, isLoading: topAuctionLoading } =
-    useQueryData<AuctionResponse>(
+    useQueryData<TopAuctionResponse>(
       `${process.env.NEXT_PUBLIC_BASE_URL}/auction/raffle_draws/`,
       ["get topauctiondetails"],
       true,
     );
 
-  console.log(topAuctionInfo, 'topAuctionInfooooo');
+  // console.log(topAuctionInfo, 'topAuctionInfooooo');
 
   const { data: categoriesInfo, isLoading: categoriesLoading } =
     useQueryData<AuctionResponse>(
@@ -145,8 +153,8 @@ const Page = () => {
     );
 
   // Calculate page counts after data is available
-  const auctionTotalPages = auctionInfo?.data ? Math.ceil(auctionInfo.data.length / cardsPerPage) : 0;
-  const categoriesTotalPages = categoriesInfo?.data ? Math.ceil(categoriesInfo.data.length / cardsPerPage) : 0;
+  const auctionTotalPages = topAuctionInfo?.data?.raffle_deals ? Math.ceil(topAuctionInfo?.data?.raffle_deals?.length / cardsPerPage) : 0;
+  // const categoriesTotalPages = categoriesInfo?.data ? Math.ceil(categoriesInfo.data.length / cardsPerPage) : 0;
 
   useEffect(() => {
     if (headerNav !== 'Home') {
@@ -163,23 +171,24 @@ const Page = () => {
   }, [categoriesInfo, categoryCurrentPage, cardsPerPage, headerNav, setHeaderNav]);
 
   useEffect(() => {
-    if (auctionInfo?.data) {
-      const filteredAuction = auctionInfo.data.slice(
+    if (topAuctionInfo?.data?.raffle_deals) {
+      const filteredAuction = topAuctionInfo.data.raffle_deals.slice(
         auctionCurrentPage * cardsPerPage,
         (auctionCurrentPage + 1) * cardsPerPage,
       );
       setFilteredAuctionData(filteredAuction);
     }
-    if (topAuctionInfo?.data) {
 
-      // console.log(topAuctionInfo.data, 'topAuctionInfo');
-      const filteredTopAuction = topAuctionInfo.data.slice(
+    if (topAuctionInfo?.data?.raffle_top_deals) {
+      const filteredTopAuction = topAuctionInfo.data.raffle_top_deals.slice(
         topAuctionCurrentPage * cardsPerPage,
         (topAuctionCurrentPage + 1) * cardsPerPage,
       );
       setTopAuctionData(filteredTopAuction);
+    } else {
+      setTopAuctionData([]);
     }
-  }, [auctionInfo, auctionCurrentPage, cardsPerPage]);
+  }, [auctionInfo, topAuctionInfo, auctionCurrentPage, topAuctionCurrentPage, cardsPerPage]);
 
   const handlePageChange = (pageNumber: number) => {
     setCategoryCurrentPage(pageNumber);
@@ -248,7 +257,7 @@ const Page = () => {
                 
                 {/* Pagination - Hidden on Mobile if Space Issue */}
                 <div className="flex items-center justify-center sm:justify-end">
-                  {auctionLoading ? (
+                  {auctionLoading || topAuctionLoading ? (
                     <div className="flex items-center justify-center gap-2 px-4 py-2">
                       <LoadingSpinner size="sm" />
                       <span className="text-sm text-gray-500 font-Poppins">Loading...</span>
@@ -271,7 +280,7 @@ const Page = () => {
                   currentPage={0}
                   cardsNum={0}
                   onLoadingChange={onAuctionLoadingChange}
-                  isLoading={auctionLoading}
+                  isLoading={ topAuctionLoading}
                 />
               </div>
             </div>
@@ -431,9 +440,24 @@ const Page = () => {
                   currentPage={0}
                   cardsNum={0}
                   onLoadingChange={onAuctionLoadingChange}
-                  isLoading={auctionLoading}
+                  isLoading={ topAuctionLoading}
                 />
               </div>
+
+
+              <div className="flex justify-center pt-2">
+                  <DefaultButton
+                    text="View all Raffle Draw Deals"
+                    type="button"
+                    disabled={ topAuctionLoading}
+                    handleClick={() =>
+                      router.push(
+                        `/auction`,
+                      )
+                    }
+                    className="font-Poppins font-normal text-sm px-4 py-2 rounded-lg bg-[#FCDFD4] transition-all duration-300 hover:bg-[#F25E26] hover:text-white hover:shadow-lg transform hover:scale-105"
+                  />
+                </div>
             </div>
           </section>
 

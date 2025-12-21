@@ -8,6 +8,9 @@ export async function POST(request: Request) {
         /*  console.log(token, "token") */
 
 
+        // console.log(body, "body")
+
+
         if (!token) {
             return NextResponse.json(
                 { status: "failed", message: "No token provided" },
@@ -34,6 +37,7 @@ export async function POST(request: Request) {
                     auction_id: body.auction_id,
                     productCode: body.productCode,
                     ticket_id: body.ticket_id,
+                    merchant_name: body.merchant_name,
                 }),
             }
         );

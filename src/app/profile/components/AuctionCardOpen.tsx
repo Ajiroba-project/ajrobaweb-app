@@ -387,6 +387,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     const filteredMerchants = merchants.filter((merchant: any) =>
         merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
 
     const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string) => {
         setIsProcessingGiftCard(true);
@@ -401,6 +402,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                     auction_id: auctionId,
                     productCode: productCode,
                     ticket_id: ticketNumber,
+                    merchant_name: merchantName || '',
                 }),
             });
 
