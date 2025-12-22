@@ -1,11 +1,11 @@
 'use client'
 import Image from 'next/image'
 import carousel from '../asset/image/carousel.png'
-import buyticket from '../asset/image/buy_ticket.svg'
-import auction_one from '../asset/image/auction_one.svg'
-import auction_and_win from '../asset/image/enter_and_win.png'
-import rafledraw from '../asset/image/raffle_draw.svg'
-import recharge_and_win from '../asset/image/recharge_and_win.svg'
+import buyticket from '../asset/image/buy_ticket.png'
+import auction_one from '../asset/image/auction_one.png'
+import auction_and_win from '../asset/image/enter_and_win_main_demo.webp'
+import rafledraw from '../asset/image/raffle_draw.png'
+import recharge_and_win from '../asset/image/recharge_and_win.png'
 import {
   Navigation,
   Pagination,
@@ -23,6 +23,10 @@ import 'swiper/css/effect-fade'
 import { CarouselSkeleton } from './LoadingSkeleton'
 
 export const CarouselSwiper = () => {
+
+  const slideHeights =
+  "relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]";
+  
   return (
     <Swiper
       // install Swiper modules
