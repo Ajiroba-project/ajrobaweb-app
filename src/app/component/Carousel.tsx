@@ -1,11 +1,11 @@
 'use client'
 import Image from 'next/image'
-import carousel from '../asset/image/carousel.png'
-import buyticket from '../asset/image/buy_ticket.png'
-import auction_one from '../asset/image/auction_one.png'
+// import carousel from '../asset/image/carousel.png'
+import buyticket from '../asset/image/buy_ticket.webp'
+import auction_one from '../asset/image/auction_one.webp'
 import auction_and_win from '../asset/image/enter_and_win_main_demo.webp'
-import rafledraw from '../asset/image/raffle_draw.png'
-import recharge_and_win from '../asset/image/recharge_and_win.png'
+import rafledraw from '../asset/image/raffle_draw.webp'
+import recharge_and_win from '../asset/image/recharge_and_win.webp'
 import {
   Navigation,
   Pagination,
