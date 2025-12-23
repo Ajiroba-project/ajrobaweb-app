@@ -24,8 +24,8 @@ import { CarouselSkeleton } from './LoadingSkeleton'
 
 export const CarouselSwiper = () => {
 
-  const slideHeights =
-  "relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]";
+  // Responsive sizes for better performance
+  const imageSizes = "(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
   
   return (
     <Swiper
@@ -49,46 +49,72 @@ export const CarouselSwiper = () => {
       className="h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]"
     >
       <SwiperSlide>
-        {/* Mobile: default size */}
-        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
-          <Image src={auction_one} alt="carousel" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
-        </div>
-        {/* Desktop: fill container */}
-        <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={auction_one} alt="carousel" fill priority sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]">
+          <Image 
+            src={auction_one} 
+            alt="Auction carousel" 
+            fill 
+            priority
+            quality={85}
+            sizes={imageSizes}
+            className="object-cover"
+          />
         </div>
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
-          <Image src={buyticket} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={buyticket} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
-          <Image src={auction_and_win} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={auction_and_win} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]">
+          <Image 
+            src={buyticket} 
+            alt="Buy ticket carousel" 
+            fill 
+            priority
+            quality={85}
+            sizes={imageSizes}
+            className="object-cover"
+          />
         </div>
       </SwiperSlide>
+      
       <SwiperSlide>
-        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
-          <Image src={rafledraw} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
-        </div>
-        <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={rafledraw} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]">
+          <Image 
+            src={auction_and_win} 
+            alt="Enter and win carousel" 
+            fill 
+            priority
+            quality={85}
+            sizes={imageSizes}
+            className="object-cover"
+          />
         </div>
       </SwiperSlide>
+      
       <SwiperSlide>
-        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] block lg:hidden">
-          <Image src={recharge_and_win} alt="carousel" fill sizes="100vw" style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]">
+          <Image 
+            src={rafledraw} 
+            alt="Raffle draw carousel" 
+            fill 
+            priority
+            quality={85}
+            sizes={imageSizes}
+            className="object-cover"
+          />
         </div>
-        <div className="relative w-full h-[500px] hidden lg:block">
-          <Image src={recharge_and_win} alt="carousel" fill sizes="(min-width: 1024px) 100vw, 100vw" style={{ objectFit: 'cover' }} />
+      </SwiperSlide>
+      
+      <SwiperSlide>
+        <div className="relative w-full h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]">
+          <Image 
+            src={recharge_and_win} 
+            alt="Recharge and win carousel" 
+            fill 
+            priority
+            quality={85}
+            sizes={imageSizes}
+            className="object-cover"
+          />
         </div>
       </SwiperSlide>
     </Swiper>

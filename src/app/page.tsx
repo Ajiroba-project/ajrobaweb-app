@@ -4,13 +4,13 @@ import { DefaultButton } from "./component/Button";
 import { Hero } from "./component/Hero";
 import { Heading } from "./component/Heading";
 import { SubHeading } from "./component/SubHeading";
-import {
-  AuctionCard,
-  CategoryFeatureCard,
-  ProductCard,
-  TopDealsCard,
-  TopWeakCard,
-} from "./component/Card";
+// import {
+//   AuctionCard,
+//   CategoryFeatureCard,
+//   ProductCard,
+//   TopDealsCard,
+//   TopWeakCard,
+// } from "./component/Card";
 import { HIW } from "./component/How-it-works";
 import dynamic from "next/dynamic";
 import { Products, categories } from "./static-data";
@@ -25,7 +25,7 @@ import { CircularPagination } from "./component/Pagination";
 import { useRouter } from "next/navigation";
 import { useAuthStore, userNavStore } from "@/store/store";
 import { useQueryData } from "@/hooks/useQueryData";
-import Loading from "./component/Loading";
+// import Loading from "./component/Loading";
 import { LoadingSpinner } from "./component/LoadingSkeleton";
 import { TopAuctionBid } from "./component/TopAuctionBid";
 
@@ -273,7 +273,6 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Auction Content */}
               <div className="w-full">
                 <AuctionComp
                   cardInfo={filteredAuctionData}
