@@ -316,7 +316,7 @@ const Page = () => {
                   Every raffle draw is guaranteed a winner. Your chance of winning increases by buying multiple tickets.
                 </p>
                 <div className="mt-8 flex justify-center md:justify-end">
-                  <button className="inline-flex items-center justify-center rounded-lg bg-[#121212] px-12 py-3 text-sm font-medium transition-all duration-200 hover:-translate-y-1 hover:bg-[#F25E26] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+                  <button onClick={() => router.push('/auction')} className="inline-flex items-center justify-center rounded-lg bg-[#121212] px-12 py-3 text-sm font-medium transition-all duration-200 hover:-translate-y-1 hover:bg-[#F25E26] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
                     Explore
                   </button>
                 </div>
