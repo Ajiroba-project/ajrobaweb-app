@@ -161,7 +161,7 @@ export const ChangePin = ({ changePin, setChangePin }: any) => {
       new_pin: data?.newpass
     }
 
-    console.log(payload, 'payload')
+    // console.log(payload, 'payload')
 
     mutate({
       url: "/api/changewalletpin",

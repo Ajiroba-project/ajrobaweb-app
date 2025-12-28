@@ -389,9 +389,9 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
+    // const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
 
-    const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string) => {
+    const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string, merchantName: string) => {
         setIsProcessingGiftCard(true);
         try {
             const response = await fetch("/api/suregifts/process_giftcard", {
@@ -860,7 +860,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                                 if (selectedTransaction?.id) {
                                                     const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
                                                     if (auctionId && typeof auctionId === 'string') {
-                                                        handleProcessGiftCard(auctionId, merchant.code, selectedTransaction?.id || "");
+                                                        handleProcessGiftCard(auctionId, merchant.code, selectedTransaction?.id || "", merchant.name || "");
                                                     } else {
                                                         toast.error("Invalid auction ID");
                                                     }

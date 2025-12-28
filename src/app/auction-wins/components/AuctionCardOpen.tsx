@@ -45,6 +45,9 @@ type Order = {
         auction_id: string;
     }[];
     ticket_number?: string;
+    redeem_by_delivery?: boolean;
+    redeem_by_voucher?: boolean;
+    redeem_by_cash?: boolean;
 };
 
 type ButtonProps = {
@@ -93,6 +96,9 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     const [voucherData, setVoucherData] = useState<any>(null);
     const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
     const [isProcessingGiftCard, setIsProcessingGiftCard] = useState(false);
+    const [isGiftCardSuccessModalOpen, setIsGiftCardSuccessModalOpen] = useState(false);
+    const [giftCardSuccessMessage, setGiftCardSuccessMessage] = useState("");
+    const [giftCardResponseStatus, setGiftCardResponseStatus] = useState<"success" | "error">("success");
     const [isBankTransferModalOpen, setIsBankTransferModalOpen] = useState(false);
     const [banks, setBanks] = useState<Bank[]>([]);
     const [selectedBank, setSelectedBank] = useState("");
@@ -395,17 +401,24 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
             }
         };
 
-        fetchMerchants();
-    }, [isMerchantsModalOpen, userToken]);
+    fetchMerchants();
+  }, [isMerchantsModalOpen, userToken]);
 
-    // Filter merchants based on search query
+  // Reset selected redemption when modal opens
+  useEffect(() => {
+    if (isWinningAdviseModalOpen) {
+      setSelectedRedemption("");
+    }
+  }, [isWinningAdviseModalOpen]);
+
+  // Filter merchants based on search query
     const filteredMerchants = merchants.filter((merchant: any) =>
         merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
+    // const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
 
-    const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string) => {
+    const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string, merchantName: string) => {
         setIsProcessingGiftCard(true);
         try {
             const response = await fetch("/api/suregifts/process_giftcard", {
@@ -424,45 +437,27 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
 
             const responseData = await response.json();
             if (responseData.status === "success") {
-                const temporaryData = {
-                    "status": "success",
-                    "message": "Voucher processed successfully",
-                    "data": {
-                        "data": {
-                            "orderNumber": "223787",
-                            "reference": "0a8703fd25_Gbolahan_143246.00_voucher",
-                            "status": "COMPLETED",
-                            "vouchers": [
-                                {
-                                    "value": 7000.0,
-                                    "expiryDate": "2026-05-13T08:36:01.3848235Z",
-                                    "pin": "1234",
-                                    "code": "791976848284",
-                                    "serial": "3080560697"
-                                }
-                            ]
-                        },
-                        "statusCode": "00",
-                        "message": "Successful"
-                    }
-                };
-
-                // Store the voucher data with the transaction ID as key
-                if (selectedTransaction?.id) {
-                    const transactionId = selectedTransaction.id.toString();
-                    setStoredVoucherData((prev: Record<string, any>) => ({
-                        ...prev,
-                        [transactionId]: temporaryData.data.data
-                    }));
-                }
-
-                setVoucherData(temporaryData.data.data);
+                // Store the success message and show modal
+                setGiftCardSuccessMessage(responseData.message || "Gift card processed successfully!");
+                setGiftCardResponseStatus("success");
                 setIsMerchantsModalOpen(false);
-                setIsVoucherModalOpen(true);
+                setIsGiftCardSuccessModalOpen(true);
             } else {
-                toast.error(responseData.message || "Failed to process gift card");
+                // Show error in modal instead of just toast
+                const errorMessage = responseData?.data?.message || responseData?.message || "Failed to process gift card";
+                setGiftCardSuccessMessage(errorMessage);
+                setGiftCardResponseStatus("error");
+                setIsMerchantsModalOpen(false);
+                setIsGiftCardSuccessModalOpen(true);
+                // Also show toast for error
+                toast.error(errorMessage);
             }
         } catch (error) {
+            // Show error in modal
+            setGiftCardSuccessMessage("An error occurred while processing your gift card. Please try again.");
+            setGiftCardResponseStatus("error");
+            setIsMerchantsModalOpen(false);
+            setIsGiftCardSuccessModalOpen(true);
             toast.error("Error processing gift card");
         } finally {
             setIsProcessingGiftCard(false);
@@ -617,7 +612,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
 
                                 <div onClick={() =>
                                     router.push(`/auction/productdetails/${val?.auction[0]?.auction_id}`)
-                                } className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
+                                } className="relative  flex gap-4 border p-3 flex-wrap "> {/* Container height control */}
                                     <Image
                                         src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
                                         alt={val?.auction[0]?.name}
@@ -785,51 +780,65 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                     handleEvent={() => setIsWinningAdviseModalOpen(false)}
                 >
                     <div className="flex flex-col p-4">
-                        <div className="space-y-4">
-                            <div className="flex items-center space-x-3">
-                                <input
-                                    type="radio"
-                                    id="delivery"
-                                    name="redemption"
-                                    value="delivery"
-                                    checked={selectedRedemption === "delivery"}
-                                    onChange={(e) => setSelectedRedemption(e.target.value)}
-                                    className="h-4 w-4 text-[#F25E26] accent-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
-                                />
-                                <label htmlFor="delivery" className="text-gray-700">
-                                    By Delivery
-                                </label>
-                            </div>
+                        <div className="space-y-4 min-h-[120px]">
+                            {selectedTransaction?.redeem_by_delivery && (
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="radio"
+                                        id="delivery"
+                                        name="redemption"
+                                        value="delivery"
+                                        checked={selectedRedemption === "delivery"}
+                                        onChange={(e) => setSelectedRedemption(e.target.value)}
+                                        className="h-4 w-4 text-[#F25E26] accent-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                                    />
+                                    <label htmlFor="delivery" className="text-gray-700">
+                                        By Delivery
+                                    </label>
+                                </div>
+                            )}
 
-                            <div className="flex items-center space-x-3">
-                                <input
-                                    type="radio"
-                                    id="voucher"
-                                    name="redemption"
-                                    value="voucher"
-                                    checked={selectedRedemption === "voucher"}
-                                    onChange={(e) => setSelectedRedemption(e.target.value)}
-                                    className="h-4 w-4 accent-[#F25E26] text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
-                                />
-                                <label htmlFor="voucher" className="text-gray-700">
-                                    Gift Voucher
-                                </label>
-                            </div>
+                            {selectedTransaction?.redeem_by_voucher && (
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="radio"
+                                        id="voucher"
+                                        name="redemption"
+                                        value="voucher"
+                                        checked={selectedRedemption === "voucher"}
+                                        onChange={(e) => setSelectedRedemption(e.target.value)}
+                                        className="h-4 w-4 accent-[#F25E26] text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                                    />
+                                    <label htmlFor="voucher" className="text-gray-700">
+                                        Gift Voucher
+                                    </label>
+                                </div>
+                            )}
 
-                            <div className="flex items-center space-x-3">
-                                <input
-                                    type="radio"
-                                    id="transfer"
-                                    name="redemption"
-                                    value="transfer"
-                                    checked={selectedRedemption === "transfer"}
-                                    onChange={(e) => setSelectedRedemption(e.target.value)}
-                                    className="h-4 w-4 accent-[#F25E26] text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
-                                />
-                                <label htmlFor="transfer" className="text-gray-700">
-                                    Cash Transfer
-                                </label>
-                            </div>
+                            {selectedTransaction?.redeem_by_cash && (
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="radio"
+                                        id="transfer"
+                                        name="redemption"
+                                        value="transfer"
+                                        checked={selectedRedemption === "transfer"}
+                                        onChange={(e) => setSelectedRedemption(e.target.value)}
+                                        className="h-4 w-4 accent-[#F25E26] text-[#F25E26] border-gray-300 focus:ring-[#F25E26]"
+                                    />
+                                    <label htmlFor="transfer" className="text-gray-700">
+                                        Cash Transfer
+                                    </label>
+                                </div>
+                            )}
+
+                            {!selectedTransaction?.redeem_by_delivery && 
+                             !selectedTransaction?.redeem_by_voucher && 
+                             !selectedTransaction?.redeem_by_cash && (
+                                <div className="text-center py-4 text-gray-500">
+                                    No redemption methods available for this transaction.
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-8 flex justify-between">
@@ -919,7 +928,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                                 if (selectedTransaction?.id) {
                                                     const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
                                                     if (auctionId && typeof auctionId === 'string') {
-                                                        handleProcessGiftCard(auctionId, merchant.code, selectedTransaction?.id || "");
+                                                        handleProcessGiftCard(auctionId, merchant.code, selectedTransaction?.id || "", merchant.name || "");
                                                     } else {
                                                         toast.error("Invalid auction ID");
                                                     }
@@ -1406,6 +1415,101 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                         <div className="text-center text-sm text-gray-600">
                             <p>Ticket Number: {deliverySuccessData.ticket_number}</p>
                             <p>Redemption Date: {new Date(deliverySuccessData.redemption_date).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                </ModalProfile>
+            )}
+
+            {isGiftCardSuccessModalOpen && (
+                <ModalProfile
+                    icon={""}
+                    isOpen={isGiftCardSuccessModalOpen}
+                    onClose={() => {
+                        setIsGiftCardSuccessModalOpen(false);
+                        if (giftCardResponseStatus === "success") {
+                            window.location.reload();
+                        }
+                    }}
+                    title={giftCardResponseStatus === "success" ? "Gift Card Processing" : "Processing Error"}
+                    handleEvent={() => {
+                        setIsGiftCardSuccessModalOpen(false);
+                        if (giftCardResponseStatus === "success") {
+                            window.location.reload();
+                        }
+                    }}
+                >
+                    <div className="flex flex-col items-center p-8">
+                        <div className="mb-6">
+                            <div className="flex items-center justify-center mb-4">
+                                {giftCardResponseStatus === "success" ? (
+                                    <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                                        <svg
+                                            className="w-10 h-10 text-green-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M5 13l4 4L19 7"
+                                            />
+                                        </svg>
+                                    </div>
+                                ) : (
+                                    <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                                        <svg
+                                            className="w-10 h-10 text-red-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M6 18L18 6M6 6l12 12"
+                                            />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="text-center space-y-4 mb-6">
+                            <h3 className="text-xl font-bold text-gray-900">
+                                {giftCardResponseStatus === "success" ? "Processing Complete" : "Processing Failed"}
+                            </h3>
+                            <div className={`rounded-lg p-4 border ${
+                                giftCardResponseStatus === "success" 
+                                    ? "bg-green-50 border-green-200" 
+                                    : "bg-red-50 border-red-200"
+                            }`}>
+                                <p className={`text-base leading-relaxed ${
+                                    giftCardResponseStatus === "success" 
+                                        ? "text-gray-700" 
+                                        : "text-red-700"
+                                }`}>
+                                    {giftCardSuccessMessage}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="w-full">
+                            <DefaultButton
+                                text={giftCardResponseStatus === "success" ? "Proceed" : "Close"}
+                                className="rounded-md bg-[#F25E26] p-3 px-6 text-white w-full hover:bg-[#EA7000] transition-colors"
+                                type="button"
+                                handleClick={() => {
+                                    setIsGiftCardSuccessModalOpen(false);
+                                    if (giftCardResponseStatus === "success") {
+                                        window.location.reload();
+                                    }
+                                }}
+                            />
                         </div>
                     </div>
                 </ModalProfile>

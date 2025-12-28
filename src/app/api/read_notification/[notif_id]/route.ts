@@ -33,7 +33,10 @@ export async function PUT(
 
     const data = await response.json();
 
+    console.log(data, "data")
+
     if (!response.ok) {
+      // console.log(data, "data")
       return NextResponse.json(
         { 
           status: 'failed', 
@@ -46,7 +49,8 @@ export async function PUT(
     return NextResponse.json(data, { status: 200 });
 
   } catch (error) {
-    console.error('Read notification error:', error);
+
+    // console.error('Read notification error:', error);
     return NextResponse.json(
       { 
         status: 'failed', 

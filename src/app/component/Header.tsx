@@ -260,6 +260,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [previousNotificationCount, setPreviousNotificationCount] = useState(0);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
+  const [loadingNotifications, setLoadingNotifications] = useState<Record<string, boolean>>({});
+  const [notificationMessages, setNotificationMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
   const [windowWidth, setWindowWidth] = useState(0);
   const [showDesktopNav, setShowDesktopNav] = useState(false);
   const [navigationWidth, setNavigationWidth] = useState(0);
@@ -698,31 +700,83 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   }, [cartRefreshTrigger, fetchCartItems]);
 
   // Handle notification accordion toggle
+  // The API determines read/unread status automatically
+  // When expanding a notification, if it's unread, call API to mark as read
+  // If API returns success, notification will be marked as read
+  // If API returns error, notification stays unread
+  // Notifications will be updated automatically via background polling
   const toggleNotification = async (index: number) => {
     const notification = notifications[index];
+    const notificationId = notification?.id?.toString();
     
-    // If expanding the notification and it's not read, mark it as read
-    if (!expandedNotifications.includes(index) && notification && !notification.read) {
-      // Mark as read locally first for immediate UI feedback
-      markAsRead(notification.id);
-      
-      // Call API to mark as read on backend
-      if (notification.id && typeof notification.id === 'string') {
-        await markNotificationAsRead(notification.id);
-      }
-    }
-    
+    // Expand/collapse the notification immediately for better UX
     setExpandedNotifications(prev => 
       prev.includes(index) 
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
+    
+    // If expanding the notification and it's not read, mark it as read via API
+    if (!expandedNotifications.includes(index) && notification && !notification.read && notificationId) {
+      // Set loading state
+      setLoadingNotifications(prev => ({ ...prev, [notificationId]: true }));
+      // Clear any previous messages
+      setNotificationMessages(prev => {
+        const updated = { ...prev };
+        delete updated[notificationId];
+        return updated;
+      });
+      
+      // Call API to mark as read on backend
+      const result = await markNotificationAsRead(notificationId);
+      
+      // Clear loading state
+      setLoadingNotifications(prev => {
+        const updated = { ...prev };
+        delete updated[notificationId];
+        return updated;
+      });
+      
+      // Show success or error message
+      if (result.success) {
+        setNotificationMessages(prev => ({
+          ...prev,
+          [notificationId]: { type: 'success', message: result.message || 'Marked as read' }
+        }));
+        
+        // Clear success message after 2 seconds
+        setTimeout(() => {
+          setNotificationMessages(prev => {
+            const updated = { ...prev };
+            delete updated[notificationId];
+            return updated;
+          });
+        }, 2000);
+      } else {
+        setNotificationMessages(prev => ({
+          ...prev,
+          [notificationId]: { type: 'error', message: result.message || 'Failed to mark as read' }
+        }));
+        
+        // Clear error message after 3 seconds
+        setTimeout(() => {
+          setNotificationMessages(prev => {
+            const updated = { ...prev };
+            delete updated[notificationId];
+            return updated;
+          });
+        }, 3000);
+      }
+    }
   };
 
   // Handle notification modal close
   const closeNotificationModal = () => {
     setShowNotificationModal(false);
     setExpandedNotifications([]);
+    // Clear loading states and messages when modal closes
+    setLoadingNotifications({});
+    setNotificationMessages({});
   };
 
   // Handle keyboard navigation
@@ -770,10 +824,13 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Mark notification as read via API
-  const markNotificationAsRead = async (notificationId: string) => {
+  // The API determines read/unread status - if success, notification is marked as read
+  // If error/failed, notification stays unread
+  // Notifications are automatically updated in the background via polling
+  const markNotificationAsRead = async (notificationId: string): Promise<{ success: boolean; message?: string }> => {
     try {
       const token = Cookies.get("token") as string;
-      if (!token) return;
+      if (!token) return { success: false, message: 'No authentication token' };
 
       const response = await fetch(`/api/read_notification/${notificationId}`, {
         method: 'PUT',
@@ -785,12 +842,22 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
       if (response.ok) {
         const data = await response.json();
-        // console.log('Notification marked as read:', data);
+        // If API returns success, notification is marked as read on backend
+        // Refetch notifications to get updated read/unread status from backend
+        if (data.status === 'success') {
+          refetchNotifications();
+          return { success: true, message: 'Notification marked as read' };
+        } else {
+          return { success: false, message: data.message || 'Failed to mark notification as read' };
+        }
       } else {
-        console.error('Failed to mark notification as read');
+        const errorData = await response.json().catch(() => ({}));
+        // If API returns error, notification stays unread
+        return { success: false, message: errorData.message || 'Failed to mark notification as read' };
       }
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      // On error, notification stays unread
+      return { success: false, message: 'An error occurred. Please try again.' };
     }
   };
 
@@ -802,11 +869,13 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Handle notification click
+  // The API determines read/unread status automatically
+  // No manual read/unread handling needed - backend controls the state
   const handleNotificationClick = async (notification: any) => {
-    // Mark as read locally first for immediate UI feedback
-    markAsRead(notification.id);
-    
     // Call API to mark as read on backend
+    // If API returns success, notification will be marked as read
+    // If API returns error, notification stays unread
+    // Notifications will be updated automatically via background polling
     if (notification.id && typeof notification.id === 'string') {
       await markNotificationAsRead(notification.id);
     }
@@ -1275,6 +1344,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                         <button
                           onClick={() => toggleNotification(index)}
                           className='w-full p-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 rounded-t-lg'
+                          disabled={loadingNotifications[notification.id?.toString() || '']}
                         >
                           <div className='flex-1'>
                             <h4 className={`font-Poppins text-base ${
@@ -1296,17 +1366,40 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                            {/*  {!notification.read && (
                               <div className='w-2 h-2 bg-[#F25E26] rounded-full'></div>
                             )} */}
-                            <IoIosArrowDown 
-                              className={`text-lg text-[#A09F9F] transition-transform duration-200 ${
-                                expandedNotifications.includes(index) ? 'rotate-180' : ''
-                              }`} 
-                            />
+                            {loadingNotifications[notification.id?.toString() || ''] ? (
+                              <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-[#F25E26]'></div>
+                            ) : (
+                              <IoIosArrowDown 
+                                className={`text-lg text-[#A09F9F] transition-transform duration-200 ${
+                                  expandedNotifications.includes(index) ? 'rotate-180' : ''
+                                }`} 
+                              />
+                            )}
                           </div>
                         </button>
 
                         {/* Notification Content (Accordion) */}
                         {expandedNotifications.includes(index) && (
                           <div className='px-4 pb-4 border-t border-gray-100'>
+                            {/* Loading indicator */}
+                            {loadingNotifications[notification.id?.toString() || ''] && (
+                              <div className='flex items-center gap-2 mt-3 mb-2'>
+                                <div className='animate-spin rounded-full h-3 w-3 border-b-2 border-[#F25E26]'></div>
+                                <p className='text-xs text-gray-500 font-Poppins'>Marking as read...</p>
+                              </div>
+                            )}
+                            
+                            {/* Success/Error message */}
+                            {notificationMessages[notification.id?.toString() || ''] && !loadingNotifications[notification.id?.toString() || ''] && (
+                              <div className={`mt-3 mb-2 px-3 py-2 rounded-md text-xs font-Poppins ${
+                                notificationMessages[notification.id?.toString() || '']?.type === 'success'
+                                  ? 'bg-green-50 text-green-700 border border-green-200'
+                                  : 'bg-red-50 text-red-700 border border-red-200'
+                              }`}>
+                                {notificationMessages[notification.id?.toString() || '']?.message}
+                              </div>
+                            )}
+                            
                             <p className='text-sm text-[#504D4D] font-Poppins leading-relaxed mt-3'>
                               {notification.message}
                             </p>
