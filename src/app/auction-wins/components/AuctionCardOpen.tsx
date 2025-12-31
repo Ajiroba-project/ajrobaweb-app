@@ -469,7 +469,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         isLoading: isBanksLoading,
         error: banksError,
     } = useGetBanksData(
-        "https://staging.ajiroba.ng/v1/pay/nomba/banks/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/banks/`,
         "get_banks",
         userToken
     );
@@ -490,7 +490,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
 
         setIsValidatingAccount(true);
         try {
-            const response = await fetch("https://staging.ajiroba.ng/v1/pay/nomba/bank_account_details/", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/bank_account_details/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -523,7 +523,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
 
         setIsProcessingCashout(true);
         try {
-            const response = await fetch("https://staging.ajiroba.ng/v1/pay/nomba/cashout/", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/cashout/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -614,7 +614,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     router.push(`/auction/productdetails/${val?.auction[0]?.auction_id}`)
                                 } className="relative  flex gap-4 border p-3 flex-wrap "> {/* Container height control */}
                                     <Image
-                                        src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
+                                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                                         alt={val?.auction[0]?.name}
                                         layout="fixed"
                                         width={100}

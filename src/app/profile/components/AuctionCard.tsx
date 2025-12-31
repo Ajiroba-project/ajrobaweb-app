@@ -618,7 +618,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
 
                 <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]"> {/* Container height control */}
                   <Image
-                    src={`https://staging.ajiroba.ng${val?.auction[0]?.images[0]}`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
                     layout="fixed"
                     width={100}

@@ -81,7 +81,7 @@ const useCartItems = () => {
 
     try {
       const response = await axios.get(
-        `https://staging.ajiroba.ng/v1/commerce/checkout/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/checkout/`,
         { headers }
       );
 

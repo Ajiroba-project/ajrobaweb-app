@@ -118,7 +118,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       const payload = { amount: Number(amount) };
 
       const response = await axios.post(
-        "https://staging.ajiroba.ng/v1/pay/fund_wallet/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/fund_wallet/`,
         payload,
         {
           headers: {
@@ -156,7 +156,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     try {
       const tkn_: string = Cookies.get("token") as string;
       const response = await axios.get(
-        `https://staging.ajiroba.ng/v1/pay/verify_wallet_payment/${reference}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/verify_wallet_payment/${reference}/`,
         {
           headers: {
             Authorization: `token ${tkn_}`,

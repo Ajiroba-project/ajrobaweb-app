@@ -93,7 +93,7 @@ const LiveChatPage = () => {
       };
 
       const response = await axios.get(
-        "https://staging.ajiroba.ng/v1/admin/messages/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/admin/messages/`,
         { headers },
       );
 
@@ -296,7 +296,7 @@ const LiveChatPage = () => {
                                     /*   src={
                                         "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                                       } */
-                                    src={message?.image ? `https://staging.ajiroba.ng${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                                    src={message?.image ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
                                     }
                                     width={24}
                                     height={24}
@@ -312,7 +312,7 @@ const LiveChatPage = () => {
                                 <div className="mt-2 flex justify-end">
                                   <Image
                                     alt="Admin Avatar"
-                                    src={`https://staging.ajiroba.ng${message?.image}`}
+                                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${message?.image}`}
                                     width={24}
                                     height={24}
                                     className="w-24 h-24 object-cover rounded-md border"

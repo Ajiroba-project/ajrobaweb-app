@@ -73,7 +73,7 @@ export const PhotoUpload = () => {
     setError('');
 
     try {
-      const response = await fetch('https://staging.ajiroba.ng/v1/user/change_profile_image/', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/change_profile_image/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

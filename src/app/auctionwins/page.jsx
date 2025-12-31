@@ -308,7 +308,7 @@ const WrappedPage = () => {
                 <Image
                   width={100}
                   height={100}
-                  src={filteredItems[0]?.auction[0]?.images[0] ? `https://staging.ajiroba.ng${filteredItems[0]?.auction[0]?.images[0]}` : ''}
+                  src={filteredItems[0]?.auction[0]?.images[0] ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${filteredItems[0]?.auction[0]?.images[0]}` : ''}
                   alt="product_image"
                   className="object-contain w-full h-auto"
                 />

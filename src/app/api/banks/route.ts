@@ -12,7 +12,7 @@ export async function GET(request: Request) {
         }
 
         const response = await fetch(
-            "https://staging.ajiroba.ng/v1/pay/nomba/banks/",
+            `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/banks/`,
             {
                 headers: {
                     Authorization: `token ${token}`,

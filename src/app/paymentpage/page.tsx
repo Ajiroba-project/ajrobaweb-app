@@ -86,7 +86,7 @@ const Page = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://staging.ajiroba.ng/v1/commerce/checkout/`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/checkout/`,
       headers: headers,
     };
 
@@ -542,7 +542,7 @@ const Page = () => {
       };
 
       const response = await axios.post(
-   "https://staging.ajiroba.ng/v1/commerce/order/",
+   `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/order/`,
         payload,
         {
           headers: {
@@ -691,7 +691,7 @@ const Page = () => {
         };
   
         const response = await axios.post(
-          "https://staging.ajiroba.ng/v1/commerce/order/",
+          `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/order/`,
           payload,
           {
             headers: {
@@ -731,7 +731,7 @@ const Page = () => {
       try {
         const tkn_: string = Cookies.get("token") as string;
         const response = await axios.get(
-          `https://staging.ajiroba.ng/v1/commerce/verify_product_payment/${reference}/`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/verify_product_payment/${reference}/`,
           {
             headers: {
               Authorization: `token ${tkn_}`,

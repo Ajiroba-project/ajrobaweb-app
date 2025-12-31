@@ -30,7 +30,7 @@ export async function POST(request) {
       )
     }
 
-    const response = await fetch('https://staging.ajiroba.ng/v1/pay/save_beneficiary/', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/save_beneficiary/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

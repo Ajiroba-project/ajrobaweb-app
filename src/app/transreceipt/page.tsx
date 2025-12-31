@@ -35,7 +35,7 @@ const WrappedPage = () => {
       redirect: 'follow' as RequestRedirect,
     };
 
-    fetch(`https://staging.ajiroba.ng/v1/user/transaction_receipt/${order_id}/`, requestOptions)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user/transaction_receipt/${order_id}/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setProductInfo(result);

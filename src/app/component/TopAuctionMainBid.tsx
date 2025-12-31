@@ -858,7 +858,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
                     <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
                  
                       <Image
-                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${bidData?.images[0] || ''}`}
                         alt={bidData?.name || "Product Image"}
                         fill
                         className="object-cover rounded-md"

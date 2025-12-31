@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         }
 
         const response = await fetch(
-            "https://staging.ajiroba.ng/v1/pay/suregifts/process_giftcard/",
+            `${process.env.NEXT_PUBLIC_BASE_URL}/pay/suregifts/process_giftcard/`,
             {
                 method: "POST",
                 headers: {
@@ -44,11 +44,11 @@ export async function POST(request: Request) {
 
         const data = await response.json();
 
-        // console.log(data, "data")
+        // console.log(data, "data-----")
 
         if (!response.ok) {
             return NextResponse.json(
-                { status: "failed", message: data.message || "Failed to process gift card" },
+                { status: "failed", message:  data || data.message || "Failed to process gift card" },
                 { status: response.status }
             );
         }

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useState, useEffect, useMemo, SetStateAction, Key } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef, SetStateAction, Key } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Breadcrumb, ProductBreadcrumb } from "@/app/component/Breadcrumb";
 import { Header } from "@/app/component/Header";
@@ -212,14 +212,13 @@ const Page = ({ params }: any) => {
   //   };
 
 
-  const fetchWithAuth = async (url: string) => {
+  const fetchWithAuth = useCallback(async (url: string) => {
     setLoadingData(true); // Indicate loading start
 
-    /*  console.log(userToken, 'usertokennn') */
-
+    const token = Cookies.get("token") as string;
     const requestOptions: RequestInit = {
       method: "GET",
-      headers: userToken ? { Authorization: `token ${userToken}` } : undefined, // Conditionally add header
+      headers: token ? { Authorization: `token ${token}` } : undefined, // Conditionally add header
       redirect: "follow",
     };
 
@@ -240,24 +239,77 @@ const Page = ({ params }: any) => {
     } finally {
       setLoadingData(false); // Ensure loading is stopped
     }
-  };
+  }, []);
 
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const data = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`,
       );
       /*    console.log("Fetched data:", data); */
+      return data;
     } catch (error) {
       console.error("Failed to fetch data:", error);
+      return null;
     }
-  };
+  }, [product_id]);
 
+  // Initial data fetch
   useEffect(() => {
     fetchData();
     viewauctionrefetch();
-  }, [product_id]); // Refetch whenever product_id changes
+  }, [product_id, fetchData, viewauctionrefetch]); // Refetch whenever product_id changes
+
+  // Smart polling: Only poll when raffle hasn't started or ended
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isPollingActiveRef = useRef(false);
+
+  useEffect(() => {
+    const startsIn = productdatanew?.data?.starts_in;
+    const shouldPoll = 
+      productdatanew && 
+      startsIn !== "Raffle Started" && 
+      startsIn !== "Raffle Ended" &&
+      typeof startsIn === "string" &&
+      startsIn.includes("Left");
+
+    // Clear existing interval if any
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+
+    // Start polling if needed
+    if (shouldPoll && !isPollingActiveRef.current) {
+      isPollingActiveRef.current = true;
+      
+      // Poll every 30 seconds (adjust as needed)
+      pollingIntervalRef.current = setInterval(async () => {
+        const data = await fetchData();
+        // Stop polling if raffle has started or ended
+        if (data?.data?.starts_in === "Raffle Started" || data?.data?.starts_in === "Raffle Ended") {
+          isPollingActiveRef.current = false;
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+          }
+        }
+      }, 30000); // 30 seconds
+    } else if (!shouldPoll) {
+      // Stop polling if raffle has started or ended
+      isPollingActiveRef.current = false;
+    }
+
+    // Cleanup on unmount or when dependencies change
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+      isPollingActiveRef.current = false;
+    };
+  }, [productdatanew?.data?.starts_in, fetchData]);
 
   //   console.log(productdata, "productdata");
   /*   console.log(productdatanew, "productdatanew"); */
@@ -1003,7 +1055,7 @@ const Page = ({ params }: any) => {
                 <div key={key} className="flex gap-2">
                   <div className="">
                     <Image
-                      src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${item?.user?.profile_image}`}
                       height={40}
                       width={40}
                       alt="Profile Image"
@@ -1210,6 +1262,41 @@ const Page = ({ params }: any) => {
     }
   };
 
+  // Memoized Raffle Button Component - Prevents unnecessary re-renders and layout shifts
+  const raffleStartedButton = useMemo(() => {
+    const startsIn = productdatanew?.data?.starts_in;
+    const bidded = productdatanew?.data?.bidded;
+
+    if (startsIn === "Raffle Started") {
+      return (
+        <div className="flex justify-center items-center mt-4 min-h-[48px]">
+          <button
+            onClick={() => {
+              // Check if user has bid before allowing access to raffle
+              if (bidded === "false") {
+                toast.error("You need to bid first before you can watch the raffle! But, Unfortunately, The bidding start time has been reached, you can't enter the raffle again.", {
+                  position: "top-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+              } else {
+                router.push(`/raffle/${product_id}`);
+              }
+            }}
+            className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
+          >
+            Raffle Started, Watch Live Raffle
+          </button>
+        </div>
+      );
+    }
+    return null;
+  }, [productdatanew?.data?.starts_in, productdatanew?.data?.bidded, product_id, router]);
 
   return (
     <main>
@@ -1259,6 +1346,7 @@ const Page = ({ params }: any) => {
                 <div className=" flex gap-8 flex-col ">
                   {productdatanew?.data?.images?.map(
                     (image: any, index: number) => (
+                      // console.log(image, "image"),
                       <div 
                         key={index} 
                         className={`thumbnail-image 2xl:block lg:block md:block xl:block flex justify-center items-center cursor-pointer transition-all duration-200 ${
@@ -1270,7 +1358,7 @@ const Page = ({ params }: any) => {
                       >
                         <Image
                           className=" images-map w-32 h-32 object-cover rounded-lg"
-                          src={`https://staging.ajiroba.ng/media/${image.image}`}
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${image.image}`}
                           alt="Product Thumbnail"
                           width={100}
                           height={100}
@@ -1287,7 +1375,7 @@ const Page = ({ params }: any) => {
                   <div className="main-image ">
                     {productdatanew?.data?.images?.[selectedImageIndex] ? (
                       <Image
-                        src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[selectedImageIndex].image}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data.images[selectedImageIndex].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -1296,7 +1384,7 @@ const Page = ({ params }: any) => {
                       />
                     ) : productdatanew?.data?.images?.[0] ? (
                       <Image
-                        src={`https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data.images[0].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -1412,38 +1500,9 @@ const Page = ({ params }: any) => {
                         )}
                       </div>
                     )} */}
-                    {/*
-                    {
-                      console.log(productdatanew?.data, "productdatanew?.data?.starts_in")
-                    } */}
-                    {productdatanew?.data?.starts_in === "Raffle Started" ? (
-                      <div className="flex justify-center items-center mt-4">
-                        <button
-                          onClick={() => {
-                            // Check if user has bid before allowing access to raffle
-                            if (productdatanew?.data?.bidded === "false") {
-                              toast.error("You need to bid first before you can watch the raffle! But, Unfortunately, The bidding start time has been reached, you can't enter the raffle again.", {
-                                position: "top-center",
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: "light",
-                              });
-                            } else {
-                              router.push(`/raffle/${product_id}`);
-                            }
-                          }}
-                          className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all"
-                        >
-                          Raffle Started, Watch Live Raffle
-                        </button>
-                      </div>
-                    ) :
-
-
+                    {/* Memoized Raffle Button Component - Prevents unnecessary re-renders and layout shifts */}
+                    {raffleStartedButton}
+                    {productdatanew?.data?.starts_in !== "Raffle Started" && (
                       productdatanew?.data?.starts_in === "Raffle Ended" ? (
                         <div className="flex justify-center items-center mt-4">
                           <button
@@ -1522,7 +1581,8 @@ const Page = ({ params }: any) => {
                           )}
 
                         </div>
-                      )}
+                      )
+                    )}
                   </div>
                 </div>
               )}
@@ -1915,161 +1975,6 @@ const Page = ({ params }: any) => {
         handleCancel={handlecloseOrder}
       />
 
-
-
-    {/*   <ModalComponent
-        content={
-          <div className="flex flex-col  px-6 py-4">
-            <div className="self-start text-red-500 font-Poppins cursor-pointer mb-4">
-              Back
-            </div>
-
-            <div className="flex justify-between flex-wrap py-2">
-              <div>
-                <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-                  <span className="font-Poppins">{bidData?.category}</span>
-                  <span>|</span>
-                  <span className="font-Poppins font-medium">
-                    {bidData?.name}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <span className="font-Poppins font-medium">
-                  Raffle Draw
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col lg:flex-row justify-between items-start w-full gap-4">
-              <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-                <div className="relative w-48 h-60 bg-gray-200 rounded-md flex justify-center items-center">
-
-
-                  <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
-
-                  <div className="absolute inset-0 flex flex-col justify-center items-center text-white z-10">
-                    <div className="bg-orange-500 p-3 rounded-lg text-center">
-                      <span className="text-sm block">Raffle Ticket</span>
-                      <span className="text-sm font-bold">
-                        ₦ {ticketPrice}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full lg:w-1/2 flex flex-col space-y-4">
-                <div>
-                  <label className="font-Poppins text-gray-700">
-                    Product
-                  </label>
-                  <input
-                    type="text"
-                    value={bidData?.name}
-                    readOnly
-                    className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins"
-                  />
-                </div>
-
-                <div className="flex gap-8 flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                  <div className="flex flex-col items-center w-full sm:w-1/2">
-                    <label className="font-Poppins text-gray-700 mb-4">
-                      Ticket Price (₦)
-                    </label>
-                    <div className="flex items-center">
-                      <button
-                        className="px-2 py-1 bg-gray-200 rounded"
-                       
-                        disabled={ticketCount <= 1}
-                      >
-                        -
-                      </button>
-                      <span className="mx-4 font-bold text-sm">
-                        {" "}
-                        {ticketPrice}
-                      </span>
-                      <button
-                        className="px-2 py-1 bg-gray-200 rounded"
-       
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col items-center w-full sm:w-1/2">
-                    <label className="font-Poppins text-gray-700 mb-4">
-                      No of Ticket
-                    </label>
-                    <div className="flex items-center">
-                      <button
-                        className="px-2 py-1 bg-gray-200 rounded"
-                        onClick={handleDecrease}
-                        disabled={ticketCount <= 1}
-                      >
-                        -
-                      </button>
-                      <span className="mx-4 font-bold text-sm">
-                        {ticketCount}
-                      </span>
-                      <button
-                        className="px-2 py-1 bg-orange-500 text-white rounded"
-                        onClick={handleIncrease}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => {
-                      return (
-                        setbidopen(!bidopen), setViewTicket(!viewticket)
-                      );
-                    }}
-                    className="text-orange-500 font-Poppins text-xs mt-1"
-                  >
-                    View Ticket
-                  </button>
-                </div>
-
-                <div>
-                  <label className="font-Poppins text-gray-700">
-                    Amount (₦)
-                  </label>
-                  <input
-                    type="text"
-                    value={`₦ ${totalAmount.toLocaleString()}`}
-                    readOnly
-                    className="w-full border border-gray-300 p-2 rounded mt-1 font-Poppins  font-bold"
-                  />
-                </div>
-
-                <DefaultButton
-                  text="Proceed"
-                  type="submit"
-                  handleClick={() => {
-                    return (
-                      setmakepayment(!makepayment), setbidopen(!bidopen)
-                    );
-                  }}
-                  className="my-10 w-full bg-[#FCDFD4] p-3 rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
-        }
-        isModalOpen={bidopen}
-        showModal={() => setbidopen(!bidopen)}
-        handleOk={() => setbidopen(false)}
-        handleCancel={() => setbidopen(false)}
-      /> */}
-
-
 <ModalComponent
             content={
               <div className="flex flex-col  px-6 py-4">
@@ -2104,7 +2009,7 @@ const Page = ({ params }: any) => {
                     <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
                     
                       <Image
-                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${bidData?.images[0] || ''}`}
                         alt={bidData?.name || "Product Image"}
                         fill
                         className="object-cover rounded-md"

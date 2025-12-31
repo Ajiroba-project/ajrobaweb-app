@@ -35,7 +35,7 @@ export async function GET(request) {
             headers['Authorization'] = `token ${token.value}`;
         }
 
-        const base = process.env.NEXT_PUBLIC_BASE_URL || 'https://staging.ajiroba.ng/v1';
+        const base = process.env.NEXT_PUBLIC_BASE_URL || `${process.env.NEXT_PUBLIC_BASE_URL}/v1`;
         // const url = `${base}/admin/view_customer_points_history/${user_id}${query.toString() ? `?${query.toString()}` : ''}`;
         const url = `${base}/user/points_history/${query.toString() ? `?${query.toString()}` : ''}`;
 

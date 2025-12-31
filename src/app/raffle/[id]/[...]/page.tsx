@@ -142,7 +142,7 @@ const Page = ({ params }: any) => {
   const fetchData = async () => {
     try {
       const data = await fetchWithAuth(
-        `https://staging.ajiroba.ng/v1/auction/auction_tickets/?auction_id=${product_id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auction_tickets/?auction_id=${product_id}`,
       ).then((data) => {
         /*  setProductDataNew(data); */
         // console.log(data, "data");

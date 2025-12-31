@@ -186,7 +186,7 @@ const Page = ({ params }: any) => {
     const fetchData = async () => {
       try {
         const data = await fetchWithAuth(
-          `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`,
         );
       } catch (error) {
         console.error("Failed to fetch data:", error);

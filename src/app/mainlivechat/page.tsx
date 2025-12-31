@@ -158,7 +158,7 @@ const LiveChatPage = () => {
       };
 
       const response = await axios.get(
-        "https://staging.ajiroba.ng/v1/admin/messages/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/admin/messages/`,
         { headers },
       );
 
@@ -235,7 +235,7 @@ const LiveChatPage = () => {
       };
 
       const response = await axios.post(
-        "https://staging.ajiroba.ng/v1/admin/send_message/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/admin/send_message/`,
         payload,
         { headers },
       );
@@ -303,117 +303,6 @@ const LiveChatPage = () => {
       setIsSendingMessage(false);
     }
   };
-
-
-
-
-
-  // // Manual retry function
-  // const retryChatData = () => {
-  //   setError(null);
-  //   setRetryCount(0);
-  //   hasInitialized.current = false; // Reset initialization flag
-  //   ChatData();
-  // };
-
-  // useEffect(() => {
-  //   if (userToken && !hasInitialized.current) {
-  //     hasInitialized.current = true;
-  //     ChatData();
-  //   }
-  // }, [userToken]);
-
-  // // Cleanup effect to clear any pending timeouts
-  // useEffect(() => {
-  //   return () => {
-  //     if (refreshTimeoutRef.current) {
-  //       clearTimeout(refreshTimeoutRef.current);
-  //     }
-  //   };
-  // }, []);
-
-
-
-  // const EndChat = async () => {
-  //   if (isEndingChat) return; // Prevent multiple calls
-    
-  //   // Clear any pending refresh timeout to prevent API calls after chat ends
-  //   if (refreshTimeoutRef.current) {
-  //     clearTimeout(refreshTimeoutRef.current);
-  //     refreshTimeoutRef.current = null;
-  //   }
-    
-  //   setIsEndingChat(true);
-  //   setError(null);
-    
-  //   try {
-  //     const headers = {
-  //       Authorization: `token ${userToken}`,
-  //     };
-
-  //     const response = await axios.put(
-  //       "https://staging.ajiroba.ng/v1/admin/end_chat/",
-  //       {},
-  //       { headers }
-  //     );
-
-  //     if (response.data.status === "success") {
-  //       // Clear any pending refresh timeout since chat is ending
-  //       if (refreshTimeoutRef.current) {
-  //         clearTimeout(refreshTimeoutRef.current);
-  //         refreshTimeoutRef.current = null;
-  //       }
-        
-  //       // Don't reset isEndingChat on success - keep it true to prevent further API calls
-  //       toast.success(`${response.data.message || "Chat ended successfully"}`, {
-  //         position: "top-right",
-  //         autoClose: 2000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //         onClose: () => router.push("/chatended"),
-  //       });
-  //     } else {
-  //       const errorMessage = response.data.message || "Failed to end chat";
-  //       setError(errorMessage);
-  //       setIsEndingChat(false); // Only reset on error
-  //       toast.error(errorMessage, {
-  //         position: "top-right",
-  //         autoClose: 4000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     const errorMessage = error instanceof AxiosError 
-  //       ? error.response?.data?.detail || error.response?.data?.message || "Network error occurred"
-  //       : "An unexpected error occurred";
-      
-  //     setError(errorMessage);
-  //     setIsEndingChat(false); // Only reset on error
-  //     toast.error(errorMessage, {
-  //       position: "top-right",
-  //       autoClose: 4000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-      
-  //     console.error("Error ending chat:", error);
-  //   }
-  // };
-
-
 
   return (
     <Fragment>
@@ -520,7 +409,7 @@ const LiveChatPage = () => {
                           <div className="avatar">
                             <div className="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
                               <Image
-                                src={`https://staging.ajiroba.ng${userphoto}`}
+                                src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${userphoto}`}
                                 className=" rounded-lg mt-1"
                                 alt="Profile"
                                 width={40}
@@ -599,7 +488,7 @@ const LiveChatPage = () => {
                                     alt="Admin Avatar"
                                     src={
                                       message?.image
-                                        ? `https://staging.ajiroba.ng${message?.image}`
+                                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${message?.image}`
                                         : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                                     }
                                     width={24}

@@ -670,7 +670,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://staging.ajiroba.ng/v1/commerce/cart/?session_key=${sessionKey}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
       headers: headers,
     };
 
@@ -931,17 +931,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
         {/* Main Header - Responsive */}
@@ -1222,26 +1211,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           )}
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         {/* Notification Modal - Full Page Overlay */}

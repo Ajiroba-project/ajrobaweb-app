@@ -89,7 +89,7 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
     error,
     refetch
   } = useGetStatementData(
-    'https://staging.ajiroba.ng/v1/pay/statement_of_account/',
+    `${process.env.NEXT_PUBLIC_BASE_URL}/pay/statement_of_account/`,
     'statement',
     userToken || '',
     startDate,

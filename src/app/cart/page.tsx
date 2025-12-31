@@ -61,7 +61,7 @@ const Page = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://staging.ajiroba.ng/v1/commerce/cart/?session_key=${sessionKey}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
       headers: headers,
     };
 
@@ -113,7 +113,7 @@ const Page = () => {
     }
 
     try {
-      const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/increase_item_quantity/", {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/increase_item_quantity/`, {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
@@ -183,7 +183,7 @@ const Page = () => {
     }
 
     try {
-      const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/decrease_item_quantity/", {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/decrease_item_quantity/`, {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
@@ -248,7 +248,7 @@ const Page = () => {
     }
 
     try {
-      const response = await axios.delete("https://staging.ajiroba.ng/v1/commerce/remove_from_cart/", {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/remove_from_cart/`, {
         data: {
           cart_item_id: id,
           session_key: sessionKey || null,
