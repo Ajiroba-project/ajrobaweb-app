@@ -227,7 +227,7 @@ const Page = () => {
 
                {/* How It Works Section - Responsive Container */}
                <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="How it works" />
               </div>
@@ -247,7 +247,7 @@ const Page = () => {
 
           {/* Auction Sales Section - Responsive Container */}
           <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
               {/* Header with Pagination - Mobile Stack */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div className="flex flex-col gap-2">
@@ -286,39 +286,46 @@ const Page = () => {
           </section>
 
 
-          <section className="relative mt-20 min-h-[420px] overflow-hidden  sm:min-h-[480px] lg:min-h-[560px]">
-            <div className="absolute inset-0">
-              <Image
-                src={exploreBg}
-                alt="Explore Ajiroba background"
-                fill
-                className="object-cover object-center"
-                priority
-              />
-              <div className="absolute inset-0 bg-black/45" />
-            </div>
-
-            <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-10 px-6 py-12 text-white sm:px-10 sm:py-16 md:min-h-[480px] md:flex-row md:justify-end md:gap-12 lg:min-h-[560px] lg:px-16 lg:py-20">
-              <div className="hidden md:block md:flex-1" />
-
-              <div className="flex w-full max-w-xl flex-col items-center text-center md:max-w-lg md:items-end md:text-right">
+          <section className="relative mt-20 min-h-[420px] overflow-hidden sm:min-h-[480px] lg:min-h-[560px]">
+            <div className="max-w-[1440px] mx-auto relative min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]">
+              {/* Background Image Container */}
+              <div className="absolute inset-0 bg-[#FCE2D6]">
                 <Image
-                  src={brandWhite}
-                  alt="Ajiroba logo"
-                  className="h-12 w-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
+                  src={exploreBg}
+                  alt="Explore Ajiroba background"
+                  fill
+                  className="object-cover object-top"
                   priority
+                  sizes="(max-width: 1440px) 100vw, 1440px"
+                  quality={90}
                 />
-                <p className="mt-6 text-sm leading-relaxed text-[#F9F9F9] sm:text-base lg:text-lg">
-                  Ajiroba brings to you a world of affordability. You can get the best product at affordable prices,
-                  by simply bidding for a product to enter raffle draw.
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-[#F9F9F9] sm:text-base lg:text-lg">
-                  Every raffle draw is guaranteed a winner. Your chance of winning increases by buying multiple tickets.
-                </p>
-                <div className="mt-8 flex justify-center md:justify-end">
-                  <button onClick={() => router.push('/auction')} className="inline-flex items-center justify-center rounded-lg bg-[#121212] px-12 py-3 text-sm font-medium transition-all duration-200 hover:-translate-y-1 hover:bg-[#F25E26] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-                    Explore
-                  </button>
+                <div className="absolute inset-0 bg-black/45" />
+              </div>
+
+              {/* Content Container */}
+              <div className="relative flex min-h-[420px] flex-col items-center justify-center gap-10 px-6 py-12 text-white sm:px-10 sm:py-16 sm:min-h-[480px] sm:flex-row sm:justify-end sm:gap-12 lg:min-h-[560px] lg:px-16 lg:py-20">
+                <div className="hidden md:block md:flex-1" />
+
+                <div className="flex w-full max-w-xl flex-col items-center text-center md:max-w-lg md:items-end md:text-right">
+                  <Image
+                    src={brandWhite}
+                    alt="Ajiroba logo"
+                    className="h-12 w-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.28)]"
+                    priority
+                    quality={90}
+                  />
+                  <p className="mt-6 text-sm leading-relaxed text-[#F9F9F9] sm:text-base lg:text-lg">
+                    Ajiroba brings to you a world of affordability. You can get the best product at affordable prices,
+                    by simply bidding for a product to enter raffle draw.
+                  </p>
+                  <p className="mt-4 text-sm leading-relaxed text-[#F9F9F9] sm:text-base lg:text-lg">
+                    Every raffle draw is guaranteed a winner. Your chance of winning increases by buying multiple tickets.
+                  </p>
+                  <div className="mt-8 flex justify-center md:justify-end">
+                    <button onClick={() => router.push('/auction')} className="inline-flex items-center justify-center rounded-lg bg-[#121212] px-12 py-3 text-sm font-medium transition-all duration-200 hover:-translate-y-1 hover:bg-[#F25E26] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+                      Explore
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -328,7 +335,7 @@ const Page = () => {
 
           {/* Categories Section - Responsive Container */}
           {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
         
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div className="flex flex-col gap-2">
@@ -375,7 +382,7 @@ const Page = () => {
 
           {/* Featured Products Section - Responsive Container */}
           {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Featured" />
                 <Heading title="Featured Products" />
@@ -406,7 +413,7 @@ const Page = () => {
 
 
 <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
               {/* Header with Pagination - Mobile Stack */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div className="flex flex-col gap-2">
@@ -464,7 +471,7 @@ const Page = () => {
 
           {/* Top Deals Section - Responsive Container */}
           {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Deals" />
                 <Heading title="Shop from Top Deals Collection" />
@@ -500,7 +507,7 @@ const Page = () => {
 
           {/* Top Week Products Section - Responsive Container */}
           {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-[1440px] mx-auto">
               <div className="flex flex-col gap-4 mb-6">
                 <SubHeading title="Top Product" />
                 <Heading title="This Week Top Product" />

@@ -24,8 +24,8 @@ import { CarouselSkeleton } from './LoadingSkeleton'
 
 export const CarouselSwiper = () => {
 
-  // Responsive sizes for better performance
-  const imageSizes = "(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+  // Responsive sizes for better performance - optimized for 1440px desktop
+  const imageSizes = "(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, (max-width: 1440px) 1440px, 1440px"
   
   return (
     <Swiper
@@ -127,7 +127,7 @@ export const Carousel = ({ isLoading = false }: { isLoading?: boolean }) => {
   }
 
   return (
-    <div className='relative h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px]'>
+    <div className='relative h-[220px] sm:h-[280px] md:h-[360px] lg:h-[500px] max-w-[1440px] mx-auto'>
       <CarouselSwiper />
       <div className='swiper-button-next  !w-[35px]  rounded-full bg-[#fcdfd4] !p-[10px] !text-[15px] !h-auto !text-[#f25e26] after:!text-[15px]'></div>
       <div className='swiper-button-prev  !w-[35px]  rounded-full border-2 border-white bg-transparent !p-[10px] !text-[15px] !text-white after:!text-[15px] !h-auto'></div>

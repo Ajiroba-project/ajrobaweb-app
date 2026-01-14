@@ -18,6 +18,7 @@ import timelyIcon from '../asset/timelyicon.png'
 import affordabilityIcon from '../asset/affordabilityicon.png'
 import consistencyIcon from '../asset/consistencyicon.png'
 import credibilityIcon from '../asset/credibilityicon.png'
+import whyBg from '../asset/image/whybg.png'
 
 // type menuprops = boolean | null
 
@@ -34,7 +35,7 @@ export const Hero = () => {
   return (
     <>
       <section className='flex flex-col mt-4 md:mt-0'>
-        <div className='container mx-auto flex flex-col px-4 sm:px-6 md:px-8 lg:px-12'>
+        <div className='container mx-auto flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
           <div className='w-full lg:h-[500px]'>
             <Carousel isLoading={false} />
           </div>
@@ -62,14 +63,26 @@ export const Hero = () => {
         </div> */}
 
         <div className='my-4 bg-[#F25E26] p-4 text-white '>
-          <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12'>
+          <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
             <AuctionMarquee info={marqueeInfo} isLoading={false} />
           </div>
         </div>
       </section>
 
-      <section className='relative overflow-hidden bg-[#FCE2D6] pb-20 pt-16 sm:pt-20 lg:pt-24'>
-        <div className='container relative z-10 mx-auto grid grid-cols-1 gap-12 px-4 sm:px-6 md:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-20 lg:px-12'>
+      <section className='relative overflow-hidden  pb-20 pt-16 sm:pt-20 lg:pt-24'>
+        {/* Background Image */}
+        <div className='absolute inset-0 z-0'>
+          <Image
+            src={whyBg}
+            alt='Why Ajiroba background'
+            fill
+            className='object-cover object-center'
+            priority
+            quality={90}
+          />
+        </div>
+        
+        <div className='container relative z-10 mx-auto grid grid-cols-1 gap-12 px-4 sm:px-6 md:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-20 lg:px-12 max-w-[1440px]'>
           <div className='flex flex-col justify-center text-[#2A2A2A] max-w-2xl'>
             <h2 className='text-3xl sm:text-4xl lg:text-[44px] font-semibold text-[#F25E26] leading-tight'>
               Why Ajiroba?
@@ -86,40 +99,60 @@ export const Hero = () => {
           </div>
 
           <div className='flex items-center justify-center'>
-            <div className='relative flex w-full max-w-[760px] flex-col items-center gap-8 sm:flex-row sm:justify-center sm:gap-8 lg:gap-2'>
+            <div className='relative flex w-full max-w-[800px] xl:max-w-[900px] flex-col items-center gap-8 sm:flex-row sm:justify-center sm:gap-8 lg:gap-4 xl:gap-6'>
               <Image
                 src={phoneOne}
                 alt='About us screen'
-                className='w-[200px] sm:w-[190px] md:w-[210px] lg:w-[220px] drop-shadow-[0_20px_40px_rgba(0,0,0,0.18)]'
+                className='w-[200px] sm:w-[190px] md:w-[210px] lg:w-[240px] xl:w-[260px] drop-shadow-[0_20px_40px_rgba(0,0,0,0.18)]'
+                sizes='(max-width: 640px) 200px, (max-width: 768px) 190px, (max-width: 1024px) 210px, (max-width: 1280px) 240px, 260px'
                 priority
+                quality={90}
               />
               <Image
                 src={phoneTwo}
                 alt='Raffle draw procedure screen'
-                className='w-[180px] sm:w-[190px] md:w-[210px] lg:w-[220px] drop-shadow-[0_28px_55px_rgba(0,0,0,0.2)]'
+                className='w-[180px] sm:w-[190px] md:w-[210px] lg:w-[240px] xl:w-[260px] drop-shadow-[0_28px_55px_rgba(0,0,0,0.2)]'
+                sizes='(max-width: 640px) 180px, (max-width: 768px) 190px, (max-width: 1024px) 210px, (max-width: 1280px) 240px, 260px'
                 priority
+                quality={90}
               />
               <Image
                 src={phoneThree}
                 alt='How the raffle draw works screen'
-                className='w-[200px] sm:w-[190px] md:w-[210px] lg:w-[220px] drop-shadow-[0_20px_40px_rgba(0,0,0,0.18)]'
+                className='w-[200px] sm:w-[190px] md:w-[210px] lg:w-[240px] xl:w-[260px] drop-shadow-[0_20px_40px_rgba(0,0,0,0.18)]'
+                sizes='(max-width: 640px) 200px, (max-width: 768px) 190px, (max-width: 1024px) 210px, (max-width: 1280px) 240px, 260px'
                 priority
+                quality={90}
               />
             </div>
           </div>
         </div>
 
-        <div className='container relative z-20 mx-auto mt-12 px-4 sm:px-6 md:px-8 lg:px-12'>
+        <div className='container relative z-20 mx-auto mt-12 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
           <div className='flex flex-col justify-center sm:justify-end items-center sm:items-center gap-4 sm:flex-row sm:gap-6'>
             <p className='text-center text-sm font-medium text-[#4B4848] sm:text-base'>
               You can download our mobile app on:
             </p>
             <div className='flex items-center gap-3 sm:gap-4'>
               <a href='#' aria-label='Get it on Google Play' className='inline-flex'>
-                <Image src={googleStoreBadge} alt='Google Play Store' className='h-10 w-auto' priority />
+                <Image 
+                  src={googleStoreBadge} 
+                  alt='Google Play Store' 
+                  className='h-10 sm:h-12 xl:h-14 w-auto' 
+                  sizes='(max-width: 640px) 120px, (max-width: 1280px) 140px, 160px'
+                  priority 
+                  quality={90}
+                />
               </a>
               <a href='#' aria-label='Download on the App Store' className='inline-flex'>
-                <Image src={appleStoreBadge} alt='Apple App Store' className='h-10 w-auto' priority />
+                <Image 
+                  src={appleStoreBadge} 
+                  alt='Apple App Store' 
+                  className='h-10 sm:h-12 xl:h-14 w-auto' 
+                  sizes='(max-width: 640px) 120px, (max-width: 1280px) 140px, 160px'
+                  priority 
+                  quality={90}
+                />
               </a>
             </div>
           </div>
@@ -141,7 +174,7 @@ export const Hero = () => {
       </section>
 
       <section className='bg-white py-16 sm:py-20 lg:py-24'>
-        <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12'>
+        <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
           <div className='text-center'>
             <h2 className='text-2xl sm:text-3xl font-semibold text-[#F25E26]'>Our Key Attribute</h2>
             <p className='mt-2 text-sm sm:text-base text-[#4B4848]'>Our key attributes are:</p>
@@ -150,35 +183,70 @@ export const Hero = () => {
           <div className='mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5 lg:gap-12'>
             <div className='flex flex-col items-center text-center space-y-3 transition-transform duration-200 hover:scale-105'>
               <div className='flex h-20 w-20 items-center justify-center rounded-full bg-black transition-colors duration-200 hover:bg-[#F25E26]'>
-                <Image src={qualityIcon} alt='Quality icon' className='h-10 w-10' priority />
+                <Image 
+                  src={qualityIcon} 
+                  alt='Quality icon' 
+                  className='h-10 w-10' 
+                  sizes='80px'
+                  priority 
+                  quality={90}
+                />
               </div>
               <p className='text-sm font-medium text-[#2A2A2A] sm:text-base'>Quality</p>
             </div>
 
             <div className='flex flex-col items-center text-center space-y-3 transition-transform duration-200 hover:scale-105'>
               <div className='flex h-20 w-20 items-center justify-center rounded-full bg-black transition-colors duration-200 hover:bg-[#F25E26]'>
-                <Image src={timelyIcon} alt='Timely Delivery icon' className='h-10 w-10' priority />
+                <Image 
+                  src={timelyIcon} 
+                  alt='Timely Delivery icon' 
+                  className='h-10 w-10' 
+                  sizes='80px'
+                  priority 
+                  quality={90}
+                />
               </div>
               <p className='text-sm font-medium text-[#2A2A2A] sm:text-base'>Timely Delivery</p>
             </div>
 
             <div className='flex flex-col items-center text-center space-y-3 transition-transform duration-200 hover:scale-105'>
               <div className='flex h-20 w-20 items-center justify-center rounded-full bg-black transition-colors duration-200 hover:bg-[#F25E26]'>
-                <Image src={affordabilityIcon} alt='Affordability icon' className='h-10 w-10' priority />
+                <Image 
+                  src={affordabilityIcon} 
+                  alt='Affordability icon' 
+                  className='h-10 w-10' 
+                  sizes='80px'
+                  priority 
+                  quality={90}
+                />
               </div>
               <p className='text-sm font-medium text-[#2A2A2A] sm:text-base'>Affordability</p>
             </div>
 
             <div className='flex flex-col items-center text-center space-y-3 transition-transform duration-200 hover:scale-105'>
               <div className='flex h-20 w-20 items-center justify-center rounded-full bg-black transition-colors duration-200 hover:bg-[#F25E26]'>
-                <Image src={consistencyIcon} alt='Consistency icon' className='h-10 w-10' priority />
+                <Image 
+                  src={consistencyIcon} 
+                  alt='Consistency icon' 
+                  className='h-10 w-10' 
+                  sizes='80px'
+                  priority 
+                  quality={90}
+                />
               </div>
               <p className='text-sm font-medium text-[#2A2A2A] sm:text-base'>Consistency</p>
             </div>
 
             <div className='flex flex-col items-center text-center space-y-3 transition-transform duration-200 hover:scale-105 sm:col-span-2 sm:justify-self-center lg:col-span-1'>
               <div className='flex h-20 w-20 items-center justify-center rounded-full bg-black transition-colors duration-200 hover:bg-[#F25E26]'>
-                <Image src={credibilityIcon} alt='Credibility icon' className='h-10 w-10' priority />
+                <Image 
+                  src={credibilityIcon} 
+                  alt='Credibility icon' 
+                  className='h-10 w-10' 
+                  sizes='80px'
+                  priority 
+                  quality={90}
+                />
               </div>
               <p className='text-sm font-medium text-[#2A2A2A] sm:text-base'>Credibility</p>
             </div>
