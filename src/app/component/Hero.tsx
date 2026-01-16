@@ -11,8 +11,11 @@ import { AuctionMarquee } from './Auction-Marquee'
 import phoneOne from '../asset/whyusphoneone.png'
 import phoneTwo from '../asset/whyusphonetwo.png'
 import phoneThree from '../asset/whyusphonethree.png'
+import whyUsImage from '../asset/image/whyajirobaimg.png'
 import appleStoreBadge from '../asset/appleplayone.png'
 import googleStoreBadge from '../asset/googleplayicon.png'
+import appleplay from '../asset/image/appleplay.png'
+import googleplay from '../asset/image/googleplay.png'
 import qualityIcon from '../asset/qualityicon.png'
 import timelyIcon from '../asset/timelyicon.png'
 import affordabilityIcon from '../asset/affordabilityicon.png'
@@ -36,7 +39,7 @@ export const Hero = () => {
     <>
       <section className='flex flex-col mt-4 md:mt-0'>
         <div className='container mx-auto flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
-          <div className='w-full lg:h-[500px]'>
+          <div className='w-full lg:h-[620px]'>
             <Carousel isLoading={false} />
           </div>
         </div>
@@ -99,7 +102,7 @@ export const Hero = () => {
           </div>
 
           <div className='flex items-center justify-center'>
-            <div className='relative flex w-full max-w-[800px] xl:max-w-[900px] flex-col items-center gap-8 sm:flex-row sm:justify-center sm:gap-8 lg:gap-4 xl:gap-6'>
+            <div className='relative flex w-full max-w-[800px] xl:max-w-[900px] flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-4 lg:gap-2 xl:gap-2'>
               <Image
                 src={phoneOne}
                 alt='About us screen'
@@ -136,22 +139,28 @@ export const Hero = () => {
             <div className='flex items-center gap-3 sm:gap-4'>
               <a href='#' aria-label='Get it on Google Play' className='inline-flex'>
                 <Image 
-                  src={googleStoreBadge} 
+                  src={googleplay} 
                   alt='Google Play Store' 
-                  className='h-10 sm:h-12 xl:h-14 w-auto' 
-                  sizes='(max-width: 640px) 120px, (max-width: 1280px) 140px, 160px'
+                  width={162}
+                  height={48}
+                  className='h-10 w-auto sm:h-12 xl:h-14 object-contain' 
+                  sizes='(max-width: 640px) 135px, (max-width: 1280px) 162px, 189px'
                   priority 
-                  quality={90}
+                  quality={100}
+                  unoptimized={false}
                 />
               </a>
               <a href='#' aria-label='Download on the App Store' className='inline-flex'>
                 <Image 
-                  src={appleStoreBadge} 
+                  src={appleplay} 
                   alt='Apple App Store' 
-                  className='h-10 sm:h-12 xl:h-14 w-auto' 
-                  sizes='(max-width: 640px) 120px, (max-width: 1280px) 140px, 160px'
+                  width={162}
+                  height={48}
+                  className='h-10 w-auto sm:h-12 xl:h-14 object-contain' 
+                  sizes='(max-width: 640px) 135px, (max-width: 1280px) 162px, 189px'
                   priority 
-                  quality={90}
+                  quality={100}
+                  unoptimized={false}
                 />
               </a>
             </div>
