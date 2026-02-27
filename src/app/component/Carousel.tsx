@@ -133,7 +133,7 @@ export const Carousel = ({ isLoading = false }: { isLoading?: boolean }) => {
   }
 
   return (
-    <div className='relative h-[220px] sm:h-[280px] md:h-[360px] lg:h-[620px] w-full max-w-[1440px] mx-auto'>
+    <div className='relative h-[220px] sm:h-[280px] md:h-[360px] lg:h-[620px] w-full'>
       <CarouselSwiper />
       <div className='swiper-button-next  !w-[35px]  rounded-full bg-[#fcdfd4] !p-[10px] !text-[15px] !h-auto !text-[#f25e26] after:!text-[15px]'></div>
       <div className='swiper-button-prev  !w-[35px]  rounded-full border-2 border-white bg-transparent !p-[10px] !text-[15px] !text-white after:!text-[15px] !h-auto'></div>

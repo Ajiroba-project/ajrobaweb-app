@@ -38,7 +38,7 @@ export const Hero = () => {
   return (
     <>
       <section className='flex flex-col mt-4 md:mt-0'>
-        <div className='container mx-auto flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
+        <div className='container xl:max-w-none flex flex-col px-4 sm:px-6 md:px-8 lg:px-12'>
           <div className='w-full lg:h-[620px]'>
             <Carousel isLoading={false} />
           </div>

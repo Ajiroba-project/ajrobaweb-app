@@ -505,35 +505,7 @@ const Page = () => {
             </div>
           </section>
 
-          {/* Top Week Products Section - Responsive Container */}
-          {/* <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 content-visibility-auto">
-            <div className="max-w-[1440px] mx-auto">
-              <div className="flex flex-col gap-4 mb-6">
-                <SubHeading title="Top Product" />
-                <Heading title="This Week Top Product" />
-              </div>
-              
-              <div className="flex flex-col items-center gap-6">
-                <div className="w-full">
-                  <ProductCardMain cardInfo={topweak?.data?.slice(0, 8)} isLoading={topweakLoading} />
-                </div>
-                
-                <div className="flex justify-center pt-2">
-                  <DefaultButton
-                    text="View all Deals"
-                    type="button"
-                    handleClick={() =>
-                      router.push(
-                        `/categories/${"This Week Top Product"}?top_id=${topdeals?.data[0]?.id}`,
-                      )
-                    }
-                    className="font-Poppins font-normal text-sm px-4 py-2 rounded-lg bg-[#FCDFD4] transition-all duration-300 hover:bg-[#F25E26] hover:text-white hover:shadow-lg transform hover:scale-105"
-                  />
-                </div>
-              </div>
-            </div>
-          </section> */}
-
+        
           {/* Banner Section - Full Width */}
           <section className="w-full content-visibility-auto">
             <Banner />
