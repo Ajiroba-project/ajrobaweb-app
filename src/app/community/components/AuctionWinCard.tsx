@@ -152,7 +152,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     reset();
 
     if (data.status === 201 || data.status === 200 || data.status === 204) {
-      console.log(data, "data");
+   
       setSuccess(true);
       toast.success(`${data?.data?.message}`, {
         position: "top-right",

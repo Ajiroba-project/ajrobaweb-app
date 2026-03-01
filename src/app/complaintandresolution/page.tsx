@@ -34,9 +34,6 @@ const LiveChatPage = () => {
 
 
 const handleClick = (data: any) =>{
-console.log(data, 'data')
-
-
 
 
 if (data === 'tickets') {

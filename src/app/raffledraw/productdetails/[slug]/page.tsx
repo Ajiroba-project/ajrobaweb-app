@@ -1291,7 +1291,7 @@ const Page = ({ params }: any) => {
       <Header />
       <div className='content-container'>
         <ProductBreadcrumb
-          paths={['Auction', productdatanew?.data?.category_name, null]}
+          paths={['Raffle Draw', productdatanew?.data?.category_name, null]}
           text={undefined}
         />
       </div>

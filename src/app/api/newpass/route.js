@@ -10,8 +10,7 @@ export async function PUT(request) {
         };
 
         const otp = body.otp
-        /*   console.log(otp, 'otp')
-          console.log(payload, 'payload') */
+  
 
         const cacheBuster = `cache=${Date.now()}`;
 

@@ -11,7 +11,7 @@ export const fetchCableTVPackages = async (cableTvType, token) => {
 
         const data = await response.json();
 
-        console.log(data, 'data dataaa')
+     
 
         return data?.data || []; // Ensure only the data array is returned
     } catch (error) {

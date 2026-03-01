@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Poppins, Inter, Nunito_Sans } from 'next/font/google'
 import './globals.css'
 import RQProviders from '@/utils/provider'
@@ -35,6 +35,73 @@ const inter = Inter({
   style: ['normal', 'italic'],
 });
 
+// Ensures proper scaling and touch targets on phones and tablets
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#F25E26',
+};
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ajiroba.ng';
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Ajiroba – Your Foremost Consumer Raffle Platform',
+    template: '%s | Ajiroba',
+  },
+  description:
+    'Ajiroba is your foremost consumer raffle platform. Participate in raffles, auctions, recharge airtime and data, and win great prizes. Secure, transparent, and easy to use.',
+  keywords: [
+    'Ajiroba',
+    'raffle',
+    'raffle draw',
+    'consumer raffle',
+    'Nigeria raffle',
+    'auction',
+    'recharge',
+    'airtime',
+    'data',
+    'win prizes',
+  ],
+  authors: [{ name: 'Ajiroba', url: siteUrl }],
+  creator: 'Ajiroba Technologies Ltd',
+  publisher: 'Ajiroba Technologies Ltd',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_NG',
+    url: siteUrl,
+    siteName: 'Ajiroba',
+    title: 'Ajiroba – Your Foremost Consumer Raffle Platform',
+    description:
+      'Participate in raffles, auctions, recharge airtime and data, and win great prizes. Secure, transparent, and easy to use.',
+    images: [
+      {
+        url: '/ajirobalogo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ajiroba – Your Foremost Consumer Raffle Platform',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ajiroba – Your Foremost Consumer Raffle Platform',
+    description:
+      'Participate in raffles, auctions, recharge, and win great prizes. Secure and easy to use.',
+    images: ['/ajirobalogo.png'],
+  },
+  formatDetection: { telephone: true, email: true },
+  category: 'technology',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -48,9 +115,8 @@ export default function RootLayout({
           <Providers>
             {children}
             <GlobalLoadingOverlay />
-            {/* Tawk chat loads its own fixed-position widget; className on Script has no layout effect.
-                To align the widget with page content on wide screens, use the CSS in globals.css for #tawk-bubble-container. */}
-            <Script id="tawk-to">
+            {/* Tawk chat: load after page is idle so mobile and low-network users get faster first paint */}
+            <Script id="tawk-to" strategy="lazyOnload">
               {`
                 var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
                 (function(){

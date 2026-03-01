@@ -7,8 +7,6 @@ export async function POST(request) {
 
         const token_ = request.headers.get('authorization')?.replace('Token ', '');
 
-        console.log(token_, 'token_');
-
         /*     console.log(body, 'bodyyy');
             console.log(body.payload);
             console.log(body.tkn); */

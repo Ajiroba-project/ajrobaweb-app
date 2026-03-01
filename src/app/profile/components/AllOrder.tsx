@@ -286,8 +286,8 @@ export const AllOrder = ({ transac }: transacProps) => {
   const submitFormdelete = async (data: any, event: any) => {
     event.preventDefault();
 
-    console.log(errors);
-    console.log(data, "datata");
+
+
 
     //  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
 
