@@ -5,32 +5,55 @@ import { Footer } from '../component/Footer'
 import Image from 'next/image'
 import raffle_img from '../asset/image/raffle_img.svg'
 import { HeadingText } from '../component/Heading';
+import { useRouter } from 'next/navigation';
 
 const RafflePage = () => {
+
+  const router = useRouter();
   return (
     <>
       <header className="fixed z-50 w-full">
         <Header />
       </header>
 
-      <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh]">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-[1440px]">
-          <h1 className="text-center text-[28px] font-bold mb-16">Raffle Draw Procedure</h1>
+      <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh] content-container">
+        <div className=" mx-auto  max-w-[1440px]">
 
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-16 mb-20">
+
+        <div className=" bg-[#F6F6F6] py-4">
+          <div className="">
+            <p
+              onClick={() => router.back()}
+              className="text-[#F25E26] underline "
+              style={{
+                margin: "0 auto",
+                width: "90%",
+                maxWidth: "100%",
+              }}
+            >
+              Back
+            </p>
+            <div className="text-center">
+              <HeadingText title="Raffle Draw Procedure" />
+            </div>
+          </div>
+        </div>
+          {/* <h1 className="text-center text-[28px] font-bold mb-16">Raffle Draw Procedure</h1> */}
+
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-16 mb-20 content-container">
             <div className="max-w-[600px]">
               <div className="space-y-6">
                 <p className="text-[20px] leading-relaxed">
-                  At <span className="text-[#F25E26]">Ajiroba</span>, we believe in providing access to
+                  At <span className="text-[#F25E26] text-2xl font-bold">Ajiroba</span>, we believe in providing access to
                 </p>
                 <p className="text-[20px] leading-relaxed">
-                  <span className="text-[#F25E26]">basic daily</span> needs for everyone, regardless of their
+                  <span className="text-[#F25E26] text-2xl font-bold">basic daily</span> needs for everyone, regardless of their
                 </p>
                 <p className="text-[20px] leading-relaxed">
-                  <span className="text-[#F25E26]">financial position</span>, and by
+                  <span className="text-[#F25E26] text-2xl font-bold">financial position</span>, and by
                 </p>
                 <p className="text-[20px] leading-relaxed">
-                  extension we put smiles on the faces of our <span className="text-[#F25E26]">customers</span> who are our kings and queens
+                  extension we put smiles on the faces of our <span className="text-[#F25E26] text-2xl font-bold">customers</span> who are our kings and queens
                 </p>
               </div>
             </div>
@@ -45,12 +68,12 @@ const RafflePage = () => {
             </div>
           </div>
 
-          <div className="mt-20">
+          <div className="mt-20 content-container">
             <h2 className="text-[24px] font-semibold mb-12 text-center lg:text-left">
               How does the raffle draw work on our platform?
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
                 {
                   step: "1",
@@ -83,11 +106,26 @@ const RafflePage = () => {
                   description: "You Can Participate From Anywhere In The World. Your Location Is Not A Barrier With Ajiroba."
                 }
               ].map((item) => (
-                <div key={item.step} className="bg-[#F8F8F8] p-8 rounded-lg shadow-sm mb-12">
-                  <div className="text-[#F25E26] font-bold text-2xl mb-4">{item.step}</div>
-                  <h3 className="font-semibold text-xl mb-3">{item.title}</h3>
-
-                  <p className="text-[#666666] text-[16px] leading-relaxed">{item.description}</p>
+                <div
+                  key={item.step}
+                  className="bg-[#F8F8F8] p-8 rounded-lg shadow-sm"
+                >
+                  {/* Step number: top center of card, circle with orange fill and white number */}
+                  <div className="flex justify-center mb-4">
+                    <span
+                      className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EEDED8CC] text-2xl font-bold text-[#F25E26]"
+                      aria-hidden
+                    >
+                      {item.step}
+                    </span>
+                  </div>
+                 
+                  <div className="text-center">
+                    <h3 className="font-semibold text-xl mb-3">{item.title}</h3>
+                    <p className="text-[#666666] text-[16px] leading-relaxed font-Poppins">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -95,7 +133,9 @@ const RafflePage = () => {
         </div>
       </main>
 
-      <Footer />
+<div className='content-container'>
+  <Footer />
+</div>
     </>
   )
 }

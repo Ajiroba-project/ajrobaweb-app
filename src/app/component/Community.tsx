@@ -7,13 +7,13 @@ export const Community = () => {
 
   const router = useRouter();
   return (
-    <div className='flex justify-center lg:p-[4rem]'>
-      <div className='border-3 container mx-4 my-5 flex flex-col gap-6   py-[4rem] shadow-xl lg:w-2/3'>
+    <div className='content-container flex justify-center py-8 md:py-12 lg:py-16'>
+      <div className='border-3 flex w-full max-w-2xl flex-col gap-6 py-10 shadow-xl lg:py-16'>
         <h1 className='text-center text-2xl font-Poppins font-semibold text-[#2A2A2A] lg:leading-3'>
           Join Our Community
         </h1>
         <p className='text-center text-[#6E6E6E] text-sm font-Poppins font-normal'>
-          Become a part of a part of Ajiroba’s Community where we keep <br /> you up to
+          Become a part of Ajiroba’s Community where we keep <br /> you up to
           date on important topics and update about our <br />platform.
         </p>
         <div className='flex justify-center '>

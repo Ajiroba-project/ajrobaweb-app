@@ -39,7 +39,7 @@ const DropDownAuctionWin: React.FC<DropdownProps> = ({ onOptionClick, value, tra
 
     switch (option) {
       case 'Purchase order':
-     transaction?.id ?   router.push(`/auctionwins?orderId=${transaction?.id}`) : router.push(`/auctionwins?orderId=${transaction?.order_id}`);
+     transaction?.id ?   router.push(`/raffledrawwins?orderId=${transaction?.id}`) : router.push(`/raffledrawwins?orderId=${transaction?.order_id}`);
         break;
       case 'Transaction Receipt':
         router.push(`/transreceipt?transId=${transaction?.reference}`);

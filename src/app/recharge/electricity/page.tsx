@@ -122,15 +122,14 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
         <Header />
       </header>
 
-      <main className="relative flex pt-[20vh]">
+      <main className="relative flex pt-[20vh] content-container">
 
 
- <section
-      className={`${sidebar ? "absolute h-screen bg-[#F6F6F6]" : "absolute"} z-20 -mt-8  lg:relative`}
-
+      <section
+          className={`${sidebar ? 'absolute h-full bg-[#F6F6F6]' : 'absolute'} z-20 -mt-8  lg:relative`}
         >
           <div
-            className={`${sidebar ? "absolute  h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none" : "hidden h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none"} `}
+            className={`${sidebar ? 'absolute  h-full bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none' : 'shrink-0 self-stretch h-full bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none'} `}
           >
             <SideMenu />
           </div>
@@ -142,13 +141,15 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
           </div>
         </section>
 
-        <section className="container -mt-8 h-full">
+        <section className="container -mt-8 h-full content-container">
           {!isLoggedIn ? <Reroute /> : <DataContentNew />}
 
         </section>
       </main>
 
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   );
 };

@@ -78,7 +78,7 @@ export const Profile = () => {
 
   const menu = [
     { name: 'my profile', path: '/profile' },
-    { name: 'raffle draw wins', path: '/auction-wins' },
+    { name: 'raffle draw wins', path: '/raffledraw-wins' },
     // { name: 'my order', path: '/my-order' },
     { name: 'wallet', path: '/wallet' },
     { name: 'community', path: '/community' }
@@ -137,10 +137,10 @@ export const Profile = () => {
             <div className="relative justify-center flex items-center mt-2">
               <Image
                 src={userphoto || photo}
-                width={50}
-                height={50}
+                width={112}
+                height={112}
                 alt={'profile'}
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-28 h-28 rounded-full object-cover"
                 draggable={false}
               />
 

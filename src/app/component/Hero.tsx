@@ -37,23 +37,21 @@ export const Hero = () => {
 
   return (
     <>
-      <section className='flex flex-col mt-4 md:mt-0'>
-        <div className='container xl:max-w-none flex flex-col px-4 sm:px-6 md:px-8 lg:px-12'>
+      <section className='flex flex-col mt-4 md:mt-0 '>
+        <div className=' flex flex-col'>
           <div className='w-full lg:h-[620px]'>
             <Carousel isLoading={false} />
           </div>
         </div>
 
-       
-
         <div className='my-4 bg-[#F25E26] p-4 text-white '>
-          <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
+          <div className=''>
             <AuctionMarquee info={marqueeInfo} isLoading={false} />
           </div>
         </div>
       </section>
 
-      <section className='relative overflow-hidden  pb-20 pt-16 sm:pt-20 lg:pt-24'>
+      <section className='relative overflow-hidden  pb-20 pt-16 sm:pt-20 lg:pt-24 content-container'>
         {/* Background Image */}
         <div className='absolute inset-0 z-0'>
           <Image
@@ -66,7 +64,7 @@ export const Hero = () => {
           />
         </div>
 
-        <div className='container relative z-10 mx-auto grid grid-cols-1 gap-12 px-4 sm:px-6 md:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-20 lg:px-12 max-w-[1440px]'>
+        <div className='content-container relative z-10 grid grid-cols-1 gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-20'>
           <div className='flex flex-col justify-center text-[#2A2A2A] max-w-2xl'>
             <h2 className='text-3xl sm:text-4xl lg:text-[44px] font-semibold text-[#F25E26] leading-tight'>
               Why Ajiroba?
@@ -92,29 +90,11 @@ export const Hero = () => {
               priority
               quality={90}
             />
-            {/* <div className='relative flex w-full max-w-[800px] xl:max-w-[900px] flex-col items-center sm:flex-row sm:justify-center '>
             
-              <Image
-                src={phoneTwo}
-                alt='Raffle draw procedure screen'
-                className='w-[180px] sm:w-[190px] md:w-[210px] lg:w-[240px] xl:w-[260px] drop-shadow-[0_28px_55px_rgba(0,0,0,0.2)]'
-                sizes='(max-width: 640px) 180px, (max-width: 768px) 190px, (max-width: 1024px) 210px, (max-width: 1280px) 240px, 260px'
-                priority
-                quality={90}
-              />
-              <Image
-                src={phoneThree}
-                alt='How the raffle draw works screen'
-                className='w-[200px] sm:w-[190px] md:w-[210px] lg:w-[240px] xl:w-[260px] drop-shadow-[0_20px_40px_rgba(0,0,0,0.18)]'
-                sizes='(max-width: 640px) 200px, (max-width: 768px) 190px, (max-width: 1024px) 210px, (max-width: 1280px) 240px, 260px'
-                priority
-                quality={90}
-              />
-            </div> */}
           </div>
         </div>
 
-        <div className='container relative z-20 mx-auto mt-12 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
+        <div className='content-container relative z-20 mt-12'>
           <div className='flex flex-col justify-center sm:justify-end items-center sm:items-center gap-4 sm:flex-row sm:gap-6'>
             <p className='text-center text-sm font-medium text-[#4B4848] sm:text-base'>
               You can download our mobile app on:

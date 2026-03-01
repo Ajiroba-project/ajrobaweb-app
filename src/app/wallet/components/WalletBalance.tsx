@@ -398,7 +398,7 @@ export const WalletBalance = () => {
   });
 
 
-    //  console.log(userInfo?.data, 'userInfo');
+      // console.log(userInfo?.data, 'userInfo');
 
   // Call points hook before any early returns to keep hook order stable
   // const userToken = Cookies.get('token') as string;
@@ -489,7 +489,7 @@ export const WalletBalance = () => {
         <div className="flex flex-col">
           <p className="text-sm capitalize leading-snug">ajiroba points</p>
           <p className="text-sm font-semibold slashed-zero">
-            {(userInfo?.data?.my_wallet[0]?.point || 0).toLocaleString()}
+            {formatCurrency(userInfo?.data?.my_wallet[0]?.balance || 0)} ({(userInfo?.data?.my_wallet[0]?.point || 0)}) Point{userInfo?.data?.my_wallet[0]?.point > 1 ? 's' : ''}
           </p>
         </div>
         <p
@@ -501,7 +501,7 @@ export const WalletBalance = () => {
         </p>
       </div>
 
-      <div className="mt-10 flex w-full flex-col justify-between gap-4 md:flex-row lg:flex-row">
+      <div className="mt-10 flex w-full flex-col justify-between gap-2 md:flex-row lg:flex-row">
         <IconButton
           text="add money"
           type="button"

@@ -130,7 +130,7 @@ export async function GET(request) {
                                 id: auction.id,
                                 name: auction.name,
                                 type: 'auction',
-                                url: `/auction/productdetails/${auction.id}`,
+                                url: `/raffledraw/productdetails/${auction.id}`,
                                 description: `Auction - ${auction.ticket_price ? `₦${auction.ticket_price} per ticket` : 'Ticket price not available'}`,
                                 image: auction.images && auction.images.length > 0 ? auction.images[0].image : null,
                                 price: auction.ticket_price,

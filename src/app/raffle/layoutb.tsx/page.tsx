@@ -10,7 +10,7 @@
 
 // export const metadata: Metadata = {
 //   title: 'Ajiroba ',
-//   description: 'Your foremost consumer auction platform'
+//   description: 'Your foremost consumer raffle platform'
 // }
 
 // export default function RootLayout({

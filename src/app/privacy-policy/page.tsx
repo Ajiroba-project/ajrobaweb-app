@@ -237,7 +237,9 @@ const PrivacyPage = () => {
           </div>
         </section>
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

@@ -694,7 +694,9 @@ If the problem persists, clear your browser cache or try using a different brows
 
 
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

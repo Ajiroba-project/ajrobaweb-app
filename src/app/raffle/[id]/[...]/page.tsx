@@ -746,7 +746,7 @@ const renderRows = () => {
       <header className="fixed z-50 w-full">
         <Header />
       </header>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center content-container">
         <div className="w-full bg-[#F6F6F6] lg:pt-[23vh] md:pt-[20vh] pt-[20vh]">
           <div className="container flex flex-col">
             <p
@@ -783,7 +783,7 @@ const renderRows = () => {
 
             <div className="flex flex-col justify-center mb-8">
               <DefaultButton
-                handleClick={() => router.push("/auction")}
+                handleClick={() => router.push("/raffledraw")}
                 text="Back to Auction"
                 type="button"
                 className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
@@ -809,7 +809,10 @@ const renderRows = () => {
           </>
         )}
       </div>
-      <Footer />
+     
+       <div className='content-container'>
+        <Footer />
+       </div>
     </>
   );
 };

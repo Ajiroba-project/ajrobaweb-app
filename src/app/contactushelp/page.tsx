@@ -344,7 +344,9 @@ const SelfHelpOption = ({ text, onClick }: {
 
 
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

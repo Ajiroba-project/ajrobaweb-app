@@ -20,7 +20,7 @@ const LiveChatPage = () => {
   return (
     <Fragment>
       <Header />
-      <main className="">
+      <main className=" content-container">
         <div className=" bg-[#F6F6F6] py-4">
           <div className="">
             <p
@@ -115,7 +115,9 @@ const LiveChatPage = () => {
 
 
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

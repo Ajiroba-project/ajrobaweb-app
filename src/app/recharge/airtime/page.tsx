@@ -110,7 +110,7 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
       {/* Spacer to offset fixed header height on small/medium screens */}
       <div className="h-24 md:h-28 lg:h-32"></div>
 
-      <main className="container my-4">
+      <main className="container my-4 content-container">
         {/* Mobile menu trigger */}
         <div className="mb-4 lg:hidden">
           <button
@@ -126,8 +126,8 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
         {/* Responsive layout: sidebar on desktop, content on right */}
         <section className="flex flex-col lg:flex-row gap-6">
           {/* Desktop static sidebar */}
-          <aside className="hidden lg:block w-72 shrink-0">
-            <div className="bg-[#F6F6F6] p-6 shadow-none rounded-md">
+          <aside className="hidden lg:block w-72 shrink-0 self-stretch">
+            <div className="bg-[#F6F6F6] h-full p-6 shadow-none rounded-md">
               <SideMenu />
             </div>
           </aside>
@@ -149,7 +149,9 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
         </div>
       )}
 
-      <Footer />
+<div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   );
 };

@@ -37,7 +37,7 @@ export const headerMenu = [
   },
   {
     name: 'Raffle Draw',
-    path: '/auction'
+    path: '/raffledraw'
   },
 
   // {
@@ -450,12 +450,12 @@ export const quickLinks = [
     links: '/'
   },
   {
-    name: 'Auction Deals',
-    links: '/auction'
+    name: 'Raffle Draw Deals',
+    links: '/raffledraw'
   },
   {
-    name: 'Category',
-    links: '/categories'
+    name: 'Recharge',
+    links: '/recharge'
   },
   {
     name: 'Raffle Draw Process',

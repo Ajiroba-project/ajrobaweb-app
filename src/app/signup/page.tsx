@@ -273,7 +273,7 @@ const WrappedPage = () => {
 
   return (
     <>
-      <div className="px-4 py-8">
+      <div className="px-4 py-8 content-container">
         <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
           <Link href={"/"}>
             <Image src={Brand} alt="brand-logo" />

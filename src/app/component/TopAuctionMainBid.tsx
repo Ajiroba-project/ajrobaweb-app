@@ -755,7 +755,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
                     <div
                       className="flex justify-center items-center m-3 h-48"
                       onClick={() =>
-                        router.push(`/auction/productdetails/${value.id}`)
+                        router.push(`/raffledraw/productdetails/${value.id}`)
                       }
                     >
                       <div className="bg-transparent p-0 w-full h-full relative">
@@ -771,7 +771,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
 
                   <div className="flex-1 flex flex-col">
                     <div className="bg-[#F6F6F6] px-4 py-4 cursor-pointer flex-1"   onClick={() =>
-                        router.push(`/auction/productdetails/${value.id}`)
+                        router.push(`/raffledraw/productdetails/${value.id}`)
                       }>
                       <div className="flex justify-between items-center">
                         <div>
@@ -1312,7 +1312,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
       : (
         <div className="flex flex-col items-center justify-center py-20 text-gray-500">
           <Package className="w-12 h-12 text-gray-400 mx-auto" aria-hidden="true" />
-          <p className="mt-4 text-lg font-Poppins">No auctions available right now</p>
+          <p className="mt-4 text-lg font-Poppins">No raffle draw products available right now</p>
         </div>
       )
       

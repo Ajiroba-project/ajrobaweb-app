@@ -317,7 +317,7 @@ function Page() {
 
 
 
-      <div className="px-4">
+      <div className="px-4 content-container">
         <nav className="Brand-logo flex justify-center p-6 px-7 md:block lg:block lg:px-14 xl:block 2xl:block">
           <Link href={"/"}>
             <Image src={Brand} alt="brand-logo" />

@@ -17,15 +17,15 @@ export const Footer = () => {
   const date = new Date().getFullYear()
 
   return (
-    <footer className={`${lato.className} bg-[#111111]`}>
-      <section className='px-12 py-20 text-white '>
-        <div className='flex flex-col items-center gap-8 justify-between   lg:md:flex-row lg:items-start '>
+    <footer className={` ${lato.className} bg-[#111111]`}>
+      <section className='py-20 text-white '>
+        <div className='content-container flex flex-col items-center gap-8 justify-between lg:md:flex-row lg:items-start'>
           <div className='flex w-64 flex-col gap-4'>
             <Link href='/'>
               <Image src={Brand} alt='brand-logo' />
             </Link>
             <p className={`text-sm !italic text-[#F6F6F6]  ${poppins.className}`}>
-              ... Your foremost consumer auction platform
+              ... Your foremost consumer raffle platform
             </p>
             <div className='header-socials flex gap-3'>
               <Link href='https://www.facebook.com/share/1BvVA6ERkU/'>
@@ -100,9 +100,11 @@ export const Footer = () => {
 
       {/* copyright */}
       <section className='bg-[#F25E26] p-4 text-white'>
-        <p className='text-center'>
-          &copy; {date} AJIROBA Technologies. All right Reserved
-        </p>
+        <div className='content-container'>
+          <p className='text-center'>
+            &copy; {date} AJIROBA Technologies. All right Reserved
+          </p>
+        </div>
       </section>
     </footer>
   )

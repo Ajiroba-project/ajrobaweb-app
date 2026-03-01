@@ -81,7 +81,7 @@ export const Profile = () => {
 
   const menu = [
     { name: 'my profile', path: '/profile' },
-    { name: 'raffle draw wins', path: '/auction-wins' },
+    { name: 'raffle draw wins', path: '/raffledraw-wins' },
 // { name: 'my order', path: '/my-order' },    
     { name: 'wallet', path: '/wallet' },
     { name: 'community', path: '/community' }
@@ -107,7 +107,7 @@ export const Profile = () => {
 
       {/* Sidebar Navigation */}
       <section
-        className={`${
+        className={`content-container my-8  ${
           sideNav
             ? 'fixed left-0 top-0 h-full w-80 max-w-[85vw] flex-col bg-white px-4 pt-[4rem] z-50 transform translate-x-0'
             : 'fixed left-0 top-0 h-full w-80 max-w-[85vw] flex-col bg-white px-4 pt-[4rem] z-50 transform -translate-x-full'
@@ -178,7 +178,7 @@ export const Profile = () => {
 
       {/* Main Content Area */}
       <section className="span-2 flex w-full flex-col lg:items-center pt-16 lg:pt-0">
-        <div className="mt-5 flex lg:mx-12">
+        <div className="mt-12 flex ">
           <MainLayout />
         </div>
       </section>

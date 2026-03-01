@@ -50,8 +50,10 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -72,14 +74,28 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
     };
   }, [dropdownRef]);
 
-  // Debounced search function
-  const performSearch = async (query: string) => {
+  // Debounced search with timeout so spinner never hangs
+  const SEARCH_TIMEOUT_MS = 10000;
+
+  const performSearch = useCallback(async (query: string) => {
     if (!query || query.trim().length < 2) {
       setSearchResults([]);
+      setSearchError(null);
       return;
     }
 
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setIsSearching(true);
+    setSearchError(null);
+
+    const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+
     try {
       const token = Cookies.get("token") as string;
       const headers: { [key: string]: string } = {
@@ -93,33 +109,40 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
       const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&type=all`, {
         method: "GET",
         headers: headers,
+        signal: controller.signal,
       });
 
-      if (response.ok) {
-        const data: SearchResponse = await response.json();
-        setSearchResults(data.data.results);
-      } else {
-        setSearchResults([]);
+      const data = await response.json();
+      const results = data?.data?.results ?? [];
+      setSearchResults(Array.isArray(results) ? results : []);
+      if (!response.ok) {
+        setSearchError('Search is temporarily unavailable. Please try again.');
       }
-    } catch (error) {
-      console.error('Search error:', error);
+    } catch (error: unknown) {
+      if ((error as Error)?.name === 'AbortError') {
+        setSearchError('Search took too long. Please try again.');
+      } else {
+        setSearchError('Search is temporarily unavailable. Please try again.');
+      }
       setSearchResults([]);
+      console.error('Search error:', error);
     } finally {
+      clearTimeout(timeoutId);
+      abortControllerRef.current = null;
       setIsSearching(false);
     }
-  };
+  }, [isLoggedIn]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setSearchInput(input);
+    setSearchError(null);
     setIsDropdownOpen(true);
 
-    // Clear previous timeout
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Debounce search
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(input);
     }, 300);
@@ -137,7 +160,7 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
   };
 
   const handleResultClick = (result: SearchResult) => {
-    router.push(result.url);
+    // router.push(result.url);
     setIsDropdownOpen(false);
     onClose?.();
   };
@@ -228,13 +251,18 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
                 </div>
               )}
             </div>
-          ) : searchInput && searchInput.length >= 2 ? (
-            <div className={`p-4 text-sm text-gray-500 ${isMobile ? 'text-base' : ''}`}>
-              No results found for &quot;{searchInput}&quot;
+          ) : searchError ? (
+            <div className={`p-4 text-sm text-amber-700 bg-amber-50 ${isMobile ? 'text-base' : ''}`}>
+              {searchError}
+            </div>
+          ) : searchInput && searchInput.trim().length >= 2 ? (
+            <div className={`p-4 text-sm text-gray-600 ${isMobile ? 'text-base' : ''}`}>
+              <p className="font-medium text-[#2A2A2A]">No results found for &quot;{searchInput.trim()}&quot;</p>
+              <p className="mt-1 text-gray-500">Try different keywords or check your spelling.</p>
             </div>
           ) : (
             <div className={`p-4 text-sm text-gray-500 ${isMobile ? 'text-base' : ''}`}>
-              Start typing to search...
+              Type at least 2 characters to search...
             </div>
           )}
         </div>
@@ -906,10 +934,10 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   return (
     <>
-      <section className='relative w-full '>
+      <section className='relative w-full content-container  '>
         {/* Top Bar - Responsive */}
         <div className='bg-[#2A2A2A] p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
-          <div className='container flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
+          <div className=' flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
             {/* Marquee - Takes available space */}
             <div className='flex-1 min-w-0 overflow-hidden'>
               <AuctionMarquee info={marqueeInfo} />
@@ -941,9 +969,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           )}
 
           <div className='relative z-50'>
-            {/* <div className='container flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 overflow-visible'> */}
-            <div className='container xl:max-w-none flex w-full py-2 px-4 sm:px-6 md:px-8 lg:px-12   overflow-visible'>
-            {/* px-4 sm:px-6 md:px-8 lg:px-12 my-8 md:my-12 lg:my-16 */}
+            <div className=' flex w-full py-2 overflow-visible'>
               
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>

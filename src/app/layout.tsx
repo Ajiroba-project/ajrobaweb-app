@@ -43,11 +43,13 @@ export default function RootLayout({
   return (
     <html lang='en' className="light bg-white h-full">
       <RQProviders>
-        <body className={`${poppins.className} ${nunitoSans.className} ${inter.className} `} >
+        <body className={` ${poppins.className} ${nunitoSans.className} ${inter.className} `} >
           <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}
             <GlobalLoadingOverlay />
+            {/* Tawk chat loads its own fixed-position widget; className on Script has no layout effect.
+                To align the widget with page content on wide screens, use the CSS in globals.css for #tawk-bubble-container. */}
             <Script id="tawk-to">
               {`
                 var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();

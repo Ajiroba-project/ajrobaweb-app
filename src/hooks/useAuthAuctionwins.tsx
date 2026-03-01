@@ -17,7 +17,7 @@ const useAuthCommunity = (router: any) => {
             // If the token cookie or user data is not present, redirect to the sign-in page
             router.push('/signin');
         } else {
-            router.push('/auction-wins');
+            router.push('/raffledraw-wins');
         }
     }, [isLoggedIn, user, router]);
 

@@ -369,7 +369,9 @@ const LiveChatPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   );
 };

@@ -8,7 +8,7 @@ import { userNavStore, useAuthStore, AirtimePurchase } from '@/store/store'
 import { useRouter } from 'next/navigation'
 
 import { LuMenu } from 'react-icons/lu'
-import banner from '../asset/image/referral.svg'
+import banner from '../asset/image/referral.png'
 import TitleText from '../component/TitleText'
 import { FaLinkedinIn, FaPinterestP, FaEnvelope, FaWhatsapp, FaTwitter, FaFacebookF, FaLink, FaInstagram, FaTiktok } from 'react-icons/fa'
 import { FaX } from 'react-icons/fa6'
@@ -118,10 +118,18 @@ const ReferralPage = () => {
                 <Header />
             </section>
 
-            <main className='container mx-auto px-4'>
-                <section className='pt-[20vh]'>
+            <main className='container mx-auto '>
+
+              <div className='bg-[#F6F6F6]  pt-[20vh] content-container'>
+                <div className=''>
+                  <p onClick={() => router.back()} className='text-[#F25E26] underline '>Back</p>
+                  <TitleText text='Refer And Earn' />
+                </div>
+              </div>
+
+                {/* <section className='pt-[20vh]'>
                     <TitleText text='Refer And Earn' />
-                </section>
+                </section> */}
 
                 {/* Banner Card */}
                 <section className='py-8'>
@@ -195,7 +203,9 @@ const ReferralPage = () => {
                 </section>
             </main>
 
-            <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
 
             {/* Referral Activities Modal */}
             {/* {isPointsModalOpen && (

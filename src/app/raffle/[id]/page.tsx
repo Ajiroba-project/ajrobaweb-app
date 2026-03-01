@@ -387,7 +387,7 @@ const Page = ({ params }: any) => {
       <header className="fixed z-50 w-full">
         <Header />
       </header>
-      <div className="w-full bg-[#F6F6F6] pt-[20vh]">
+      <div className="w-full bg-[#F6F6F6] pt-[20vh] content-container">
         <div className="container flex flex-col">
           <p
             onClick={() => router.back()}
@@ -569,7 +569,10 @@ const Page = ({ params }: any) => {
         handleOk={() => setViewCountdown(false)}
         handleCancel={() => setViewCountdown(false)}
       />
-      <Footer />
+
+      <div className='content-container'>
+        <Footer />
+      </div>
     </section>
   );
 };
