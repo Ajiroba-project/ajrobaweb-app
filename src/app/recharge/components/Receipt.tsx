@@ -1,19 +1,55 @@
-import React, { useState } from 'react'
+import React from 'react'
 import verify from '../../asset/verify.svg'
 import Image from 'next/image'
 import { Formtitle } from './Formtitle'
 import { DefaultButton } from '../../component/Button'
 import { useRouter } from 'next/navigation'
-import { FaToggleOn, FaToggleOff } from 'react-icons/fa'
+ 
 import Cookies from 'js-cookie'
+import { useSaveBeneficiary } from '@/hooks/useSaveBeneficiary'
+import { AirtimePurchase } from '@/store/store'
 
-export const Receipt = () => {
+interface ReceiptProps {
+  beneficiaryData?: {
+    number: string
+    biller: string
+    type: 'airtime' | 'data' | 'electricity' | 'cable'
+  }
+}
+
+export const Receipt = ({ beneficiaryData }: ReceiptProps) => {
   const router = useRouter()
-  const [toggle, setToggle] = useState(false)
+  const { saveBeneficiary, removeBeneficiary, isLoading, isSaved, error, isBeneficiarySaved } = useSaveBeneficiary()
+  
+  // Get data from store
+  const airtimeDetails = AirtimePurchase((state) => state.AirtimeDetails)
+  
+  // Construct beneficiary data from store if not provided as prop
+  const beneficiaryDataFromStore = beneficiaryData || {
+    number: airtimeDetails.phone,
+    biller: airtimeDetails.network,
+    type: 'airtime' as const
+  }
+
+  // Check if this specific beneficiary is already saved
+  const isThisBeneficiarySaved = isBeneficiarySaved(beneficiaryDataFromStore)
 
   const usertoken = Cookies.get('atd')
-
   const parsedUserToken = usertoken ? JSON.parse(usertoken) : {};
+
+  // Debug isSaved state changes
+
+
+  const handleToggleBeneficiary = async () => {
+    if (!beneficiaryDataFromStore.number || !beneficiaryDataFromStore.biller) {
+      return
+    }
+    if (isThisBeneficiarySaved) {
+      await removeBeneficiary(beneficiaryDataFromStore)
+    } else {
+      await saveBeneficiary(beneficiaryDataFromStore)
+    }
+  }
 
   return (
     <section className='p-5 '>
@@ -27,23 +63,32 @@ export const Receipt = () => {
             subtitle={`You have successfully made a payment`}
           />
           <DefaultButton
-            text='View Reciept'
+            text='View Receipt'
             type='button'
             className=' my-5 w-full rounded-lg bg-[#FCDFD4] py-2 hover:bg-[#F25E26] hover:text-white'
             handleClick={() => router.push(`/recharge/airtime/receipt?ref=${parsedUserToken?.data?.reference}`)}
-
           />
         </div>
       </div>
-      <div
-        className='flex items-center justify-center gap-2'
-        onClick={() => setToggle(!toggle)}
-      >
-        <p>Save as beneficiary</p>
-        {toggle ? (
-          <FaToggleOn className='text-[#F25E26] cursor-pointer text-3xl' />
-        ) : (
-          <FaToggleOff className='cursor-pointer text-3xl text-gray-300' />
+      <div className='flex flex-col items-center justify-center gap-2'>
+        <div className='flex items-center justify-center gap-3'>
+          <p className='text-[#F25E26]'>
+            {isThisBeneficiarySaved ? 'Saved as beneficiary' : 'Save as beneficiary'}
+          </p>
+          <button
+            aria-pressed={isThisBeneficiarySaved}
+            onClick={handleToggleBeneficiary}
+            disabled={isLoading}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full border transition-colors duration-200 ${isThisBeneficiarySaved ? 'bg-[#F25E26] border-[#F25E26]' : 'bg-white border-[#E5E5E5]'}`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200 ${isThisBeneficiarySaved ? 'translate-x-5' : 'translate-x-0.5'}`}
+            />
+          </button>
+          {isLoading && <div className='w-4 h-4 border-2 border-[#F25E26] border-t-transparent rounded-full animate-spin' />}
+        </div>
+        {error && (
+          <p className='text-red-500 text-sm text-center'>{error}</p>
         )}
       </div>
     </section>

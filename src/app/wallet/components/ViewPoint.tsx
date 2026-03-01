@@ -40,34 +40,59 @@ export const ReferralPointsModal = ({ isOpen, setIsOpen, referralData }: any) =>
 
         {/* Table */}
         <div className="mt-6">
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-[#FCDFD4] text-left">
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">S/N</th>
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Name</th>
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Points</th>
-                <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Date</th>
-              </tr>
-            </thead>
-            <tbody className='mt-8' >
-              {Array.isArray(pointinfo?.data?.data) && pointinfo.data.data.length > 0 ? (
-                pointinfo.data.data.map((referral: any, index: number) => (
-                  <tr key={index}>
-                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
-                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
-                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
-                    <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.date_created}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="p-6 text-center text-[#A09F9F] font-Poppins text-sm">
-                    No referral points data available.
-                  </td>
+          {pointsLoading ? (
+            // Loading State
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
+              <p className="text-[#A09F9F] font-Poppins text-sm">Loading referral activities...</p>
+            </div>
+          ) : pointerror ? (
+            // Error State
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="text-red-500 text-4xl mb-4">⚠️</div>
+              <p className="text-red-500 font-Poppins text-sm text-center">
+                Failed to load referral activities. Please try again.
+              </p>
+            </div>
+          ) : (
+            // Data Table
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-[#FCDFD4] text-left">
+                  <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">S/N</th>
+                  <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Name</th>
+                  <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Points</th>
+                  <th className="p-3 border border-gray-300 text-sm text-[#121212] font-Poppins font-medium">Date</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className='mt-8' >
+                {Array.isArray(pointinfo?.data?.data) && pointinfo.data.data.length > 0 ? (
+                  pointinfo.data.data.map((referral: any, index: number) => (
+                    <tr key={index}>
+                      <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{index + 1}</td>
+                      <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.description}</td>
+                      <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">{referral.point}</td>
+                      <td className="p-3 border border-gray-300  text-sm text-[#121212] font-Poppins font-medium">
+                        {referral.date_created
+                          ? new Date(referral.date_created).toLocaleDateString('en-GB', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                            }).replace(/ /g, ' ').toLowerCase()
+                          : ''}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="p-6 text-center text-[#A09F9F] font-Poppins text-sm">
+                      No referral points data available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </CustomModal>

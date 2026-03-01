@@ -36,14 +36,14 @@ export const headerMenu = [
     path: '/'
   },
   {
-    name: 'Auction Deals',
-    path: '/auction'
+    name: 'Raffle Draw',
+    path: '/raffledraw'
   },
 
-  {
-    name: 'Categories',
-    path: '/categories'
-  },
+  // {
+  //   name: 'Categories',
+  //   path: '/categories'
+  // },
   {
     name: 'Recharge',
     path: '/recharge'
@@ -420,27 +420,27 @@ export const socialIcon = [
   {
     name: 'Facebook',
     icon: Social,
-    link: '#'
+    link: 'https://www.facebook.com/share/1BvVA6ERkU/'
   },
   {
     name: 'x',
     icon: Social1,
-    link: '#'
+    link: 'https://x.com/AjirobaTech'
   },
   {
     name: 'Instagram',
     icon: Social2,
-    link: '#'
+    link: 'https://www.instagram.com/ajirobatech?utm_source=qr&igsh=ODY5NWZtcmE0dDNk'
   },
   {
     name: 'Youtube',
     icon: Social3,
-    link: '#'
+    link: 'https://www.youtube.com/@AjirobaMedia'
   },
   {
     name: 'LinkedIn',
     icon: Social4,
-    link: '#'
+    link: 'https://www.linkedin.com/company/ajirobatech/'
   }
 ]
 
@@ -450,12 +450,12 @@ export const quickLinks = [
     links: '/'
   },
   {
-    name: 'Auction Deals',
-    links: '/auction'
+    name: 'Raffle Draw Deals',
+    links: '/raffledraw'
   },
   {
-    name: 'Category',
-    links: '/categories'
+    name: 'Recharge',
+    links: '/recharge'
   },
   {
     name: 'Raffle Draw Process',

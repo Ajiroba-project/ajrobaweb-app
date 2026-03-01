@@ -8,12 +8,48 @@ import { userNavStore, useAuthStore, AirtimePurchase } from '@/store/store'
 import { useRouter } from 'next/navigation'
 
 import { LuMenu } from 'react-icons/lu'
-import banner from '../asset/image/referral.svg'
+import banner from '../asset/image/referral.png'
 import TitleText from '../component/TitleText'
-import { FaLinkedinIn, FaPinterestP, FaEnvelope, FaWhatsapp, FaTwitter, FaFacebookF, FaLink } from 'react-icons/fa'
+import { FaLinkedinIn, FaPinterestP, FaEnvelope, FaWhatsapp, FaTwitter, FaFacebookF, FaLink, FaInstagram, FaTiktok } from 'react-icons/fa'
+import { FaX } from 'react-icons/fa6'
+import Cookies from 'js-cookie'
+import { generateReferralLink } from '@/utils/getBaseUrl'
+import { ReferralPointsModal } from '../wallet/components/ViewPoint'
+import { useGetDatanew, useGetPointData } from '@/hooks/useGetData'
+import PointsHistoryModal from '../wallet/components/PointsHistoryModal'
 
 const ReferralPage = () => {
     const setAirtimeStepper = AirtimePurchase(state => state.setAirtimeStepper)
+
+    const { user } = useAuthStore(state => ({
+        user: state.user
+    }))
+
+    // console.log(user, 'user')
+
+    const cookieUser = Cookies.get('user')
+
+
+
+    const userData = JSON.parse(cookieUser || '{}')
+
+
+
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+  
+    const tkn_: string = Cookies.get('token') as string;
+  
+    const {
+      data: userInfo,
+      isLoading: userLoading,
+      refetch,
+    } = useGetDatanew(url, "get_user_details", tkn_, {
+      cacheTime: 0,
+      staleTime: 0,
+    });
+
+
     const { userNavMenu, sidebar, toggleSidebar } = userNavStore(state => ({
         userNavMenu: state.userNav,
         sidebar: state.sidebar,
@@ -22,23 +58,34 @@ const ReferralPage = () => {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(true)
     const [friendInput, setFriendInput] = useState('')
-    const [referralLink] = useState('http://ajiroba/aff/5236780')
+    const [referralLink, setReferralLink] = useState('')
     const [copied, setCopied] = useState(false)
+    const [viewReferralActivities, setViewReferralActivities] = useState(false)
+
+    const [pointsUserId, setPointsUserId] = useState<string | undefined>(undefined);
+    const [isPointsModalOpen, setIsPointsModalOpen] = useState<boolean>(false);
 
     // Social share icons (using react-icons)
     const socialIcons = [
-        { icon: <FaLinkedinIn />, color: '#0077b5', label: 'LinkedIn' },
-        { icon: <FaPinterestP />, color: '#e60023', label: 'Pinterest' },
-        { icon: <FaEnvelope />, color: '#0072c6', label: 'Email' },
-        { icon: <FaWhatsapp />, color: '#25d366', label: 'WhatsApp' },
-        { icon: <FaTwitter />, color: '#1da1f2', label: 'Twitter' },
-        { icon: <FaFacebookF />, color: '#1877f3', label: 'Facebook' },
+        { icon: <FaLinkedinIn />, color: '#0077b5', label: 'LinkedIn' , link: 'https://www.linkedin.com/company/108669858/admin/dashboard/' },
+        { icon: <FaInstagram />, color: '#e60023', label: 'Instagram', link: 'https://www.instagram.com/ajirobatech?utm_source=qr&igsh=ODY5NWZtcmE0dDNk' },
+        // { icon: <FaEnvelope />, color: '#0072c6', label: 'Email' },
+        // { icon: <FaWhatsapp />, color: '#25d366', label: 'WhatsApp' },
+        {icon: <FaTiktok/>, color: '#e60023', label: 'TikTok', link: 'https://www.tiktok.com/@ajiroba.tech?_t=ZS-8yexHRqXwIs&_r=1'},
+        { icon: <FaX />, color: '#1da1f2', label: 'X', link: 'https://x.com/AjirobaTech' },
+        { icon: <FaFacebookF />, color: '#1877f3', label: 'Facebook', link: 'https://www.facebook.com/share/1BvVA6ERkU/' },
     ]
 
     useEffect(() => {
         setAirtimeStepper(0)
         setIsLoading(false)
-    }, [setAirtimeStepper])
+        
+        // Generate referral link with dynamic base URL
+        if (userData?.data?.referral_code) {
+            const link = generateReferralLink(userData.data.referral_code)
+            setReferralLink(link)
+        }
+    }, [setAirtimeStepper, userData?.data?.referral_code])
 
     const handleCopy = () => {
         navigator.clipboard.writeText(referralLink)
@@ -50,6 +97,11 @@ const ReferralPage = () => {
         // Implement refer logic here
         alert(`Referral sent to: ${friendInput}`)
         setFriendInput('')
+    }
+
+    const handleViewReferralActivities = () => {
+        setViewReferralActivities(true)
+        
     }
 
     if (isLoading) {
@@ -66,10 +118,18 @@ const ReferralPage = () => {
                 <Header />
             </section>
 
-            <main className='container mx-auto px-4'>
-                <section className='pt-[20vh]'>
+            <main className='container mx-auto '>
+
+              <div className='bg-[#F6F6F6]  pt-[20vh] content-container'>
+                <div className=''>
+                  <p onClick={() => router.back()} className='text-[#F25E26] underline '>Back</p>
+                  <TitleText text='Refer And Earn' />
+                </div>
+              </div>
+
+                {/* <section className='pt-[20vh]'>
                     <TitleText text='Refer And Earn' />
-                </section>
+                </section> */}
 
                 {/* Banner Card */}
                 <section className='py-8'>
@@ -78,7 +138,7 @@ const ReferralPage = () => {
 
                 {/* Refer Input */}
                 <section className="flex flex-col items-center gap-4 mt-8 mb-8">
-                    <div className="w-full max-w-2xl flex flex-col md:flex-row gap-2">
+                    {/* <div className="w-full max-w-2xl flex flex-col md:flex-row gap-2">
                         <input
                             type="text"
                             value={friendInput}
@@ -92,8 +152,8 @@ const ReferralPage = () => {
                         >
                             Refer A Friend
                         </button>
-                    </div>
-                    <div className="my-2 text-gray-500 font-semibold">OR</div>
+                    </div> 
+                    <div className="my-2 text-gray-500 font-semibold">OR</div> */}
                     {/* Referral Link */}
                     <div className="w-full max-w-2xl flex gap-2 items-center flex-wrap">
                         <div className="flex items-center bg-gray-100 border border-gray-300 rounded-md flex-1 px-4 py-3">
@@ -122,22 +182,47 @@ const ReferralPage = () => {
                         {socialIcons.map((item, idx) => (
                             <a
                                 key={idx}
-                                href="#"
+                                href={item.link}
                                 aria-label={item.label}
                                 className="rounded-full border border-gray-200 shadow-md bg-white w-12 h-12 flex items-center justify-center text-2xl transition-transform duration-200 hover:scale-110 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-400"
                                 style={{ color: item.color }}
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 {item.icon}
                             </a>
                         ))}
                     </div>
-                    <button className="bg-[#FCDFD4]  text-[#131313] text-sm px-8 py-3 rounded-md font-semibold hover:bg-orange-200 transition shadow-md w-full max-w-xs mt-2">
+                    <button 
+                        // onClick={handleViewReferralActivities}
+                        onClick={() => { setPointsUserId(userInfo?.data?.id || ""); setIsPointsModalOpen(true); }}
+                        className="bg-[#FCDFD4]  text-[#131313] text-sm px-8 py-3 rounded-md font-semibold hover:bg-orange-200 transition shadow-md w-full max-w-xs mt-2"
+                    >
                         View Referral Activities
                     </button>
                 </section>
             </main>
 
-            <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
+
+            {/* Referral Activities Modal */}
+            {/* {isPointsModalOpen && (
+               
+                <ReferralPointsModal
+                isOpen={isPointsModalOpen}
+                setIsOpen={setIsPointsModalOpen}
+                referralData={sampleReferralData}
+              />
+            )} */}
+
+
+<PointsHistoryModal
+        isOpen={isPointsModalOpen}
+        onClose={() => setIsPointsModalOpen(false)}
+        userId={pointsUserId}
+      />
         </Fragment>
     )
 }

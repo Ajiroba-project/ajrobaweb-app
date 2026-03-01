@@ -14,13 +14,15 @@ interface PaginationProps {
   onPageChange: (selectedItem: { selected: number }) => void;
   className?: string;
   pageRangeDisplayed?: number;
+  currentPage?: number;
 }
 
 export const Pagination = ({
   pageCount,
   onPageChange,
   className,
-  pageRangeDisplayed
+  pageRangeDisplayed,
+  currentPage = 0
 }: PaginationProps) => {
   return (
     <div className={`my-12`}>
@@ -37,8 +39,8 @@ export const Pagination = ({
         pageLinkClassName='px-5 py-3 bg-gray-100 text-2xl text-[#D2D2D2]'
         activeClassName='text-[#F25E26]  font-semibold'
         activeLinkClassName='border-[#f25e26] border-2 text-[#F25E26]'
-        nextClassName='px-5 py-3 bg-gray-100 text-[#D2D2D2] text-2xl'
-        nextLinkClassName=''
+        nextClassName={`px-5 py-3 bg-gray-100 text-2xl ${currentPage >= pageCount - 1 ? 'text-gray-400 cursor-not-allowed opacity-50' : 'text-[#D2D2D2]'}`}
+        nextLinkClassName={currentPage >= pageCount - 1 ? 'pointer-events-none' : ''}
         previousClassName='px-5 py-3 bg-gray-100 text-[#D2D2D2] text-xl'
         previousLinkClassName=''
       />
@@ -81,6 +83,7 @@ export const CustomPagination = ({
   onPageChange,
   className,
   pageRangeDisplayed,
+  currentPage = 0
 }: PaginationProps) => {
   return (
     <div className={`my-4`}>
@@ -96,8 +99,8 @@ export const CustomPagination = ({
         pageLinkClassName='px-5 py-3 rounded-md text-sm text-[#D2D2D2]'
         activeClassName='font-semibold'
         activeLinkClassName='border-[#f25e26] border-2 text-black'
-        nextClassName='px-5 py-3 rounded-md text-[#D2D2D2] text-sm'
-        nextLinkClassName='border rounded-md px-5 py-3 text-black'
+        nextClassName={`px-5 py-3 rounded-md text-sm ${currentPage >= pageCount - 1 ? 'text-gray-400 cursor-not-allowed opacity-50' : 'text-[#D2D2D2]'}`}
+        nextLinkClassName={`border rounded-md px-5 py-3 ${currentPage >= pageCount - 1 ? 'pointer-events-none text-gray-400' : 'text-black'}`}
         previousClassName='text-[#D2D2D2] text-sm'
         previousLinkClassName='border px-5 py-3 rounded-md text-black'
       />
@@ -109,13 +112,14 @@ export const CircularPagination = ({
   pageCount,
   onPageChange,
   className,
+  currentPage = 0
 }: PaginationProps) => {
   return (
     <div className={`my-4`}>
       <ReactPaginate
         breakLabel='...'
         nextLabel={
-          <FaArrowRight className='cursor-pointer rounded-full bg-[#F25E26] p-3 text-4xl ' />
+          <FaArrowRight className={`rounded-full p-3 text-4xl ${currentPage >= pageCount - 1 ? 'cursor-not-allowed bg-gray-400 opacity-50' : 'cursor-pointer bg-[#F25E26]'}`} />
         }
         previousLabel={
           <FaArrowLeft className='cursor-pointer rounded-full  bg-[#FCDFD4] p-3 text-4xl' />
@@ -129,8 +133,8 @@ export const CircularPagination = ({
         pageLinkClassName='hidden'
         activeClassName='hidden'
         activeLinkClassName='hidden'
-        nextClassName=' p-3 rounded-md text-[#D2D2D2] text-sm '
-        nextLinkClassName=' text-black'
+        nextClassName={`p-3 rounded-md text-sm ${currentPage >= pageCount - 1 ? 'pointer-events-none' : ''}`}
+        nextLinkClassName={currentPage >= pageCount - 1 ? 'pointer-events-none' : 'text-black'}
         previousClassName='  text-[#D2D2D2] text-sm'
         previousLinkClassName=' text-black'
       />

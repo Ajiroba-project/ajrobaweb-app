@@ -20,7 +20,7 @@ const LiveChatPage = () => {
   return (
     <Fragment>
       <Header />
-      <main className="">
+      <main className=" content-container">
         <div className=" bg-[#F6F6F6] py-4">
           <div className="">
             <p
@@ -35,7 +35,7 @@ const LiveChatPage = () => {
               Back
             </p>
             <div className="text-center">
-              <HeadingText title="Live Chat" />
+              <HeadingText title="Self Help" />
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@ const LiveChatPage = () => {
                 We&apos;re Here to Help:
               </h1>
               <h2 className="text-base font-semibold font-Poppins text-[#E84526] mb-4">
-                Ajiroba Technologies Live Chat
+                Ajiroba Technologies Self Help
               </h2>
               <p className="text-[#353131] text-sm font-Poppins mb-6 leading-relaxed">
                 For immediate assistance, click the &apos;Chat Now&apos; button below to connect
@@ -61,11 +61,11 @@ const LiveChatPage = () => {
               </p>
 
               <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-                <button onClick={() => { router.push("/mainlivechat") }}
+                {/* <button onClick={() => { router.push("/mainlivechat") }}
                   className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:bg-[#F25E26] hover:text-white text-[#2A2A2A] font-semibold font-Poppins rounded"
                 >
                   Chat Now
-                </button>
+                </button> */}
                 <button onClick={() => { router.push("/selfhelp") }}
                   className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:bg-[#F25E26] hover:text-white text-[#2A2A2A]  font-semibold rounded"
                 >
@@ -115,7 +115,9 @@ const LiveChatPage = () => {
 
 
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

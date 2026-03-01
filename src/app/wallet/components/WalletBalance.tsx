@@ -10,7 +10,7 @@ import { ChangePin } from "./ChangePin";
 import { CreatePin } from "./CreatePin";
 import { useAuthStore, userProfile } from "@/store/store";
 import success from "../../asset/verify.svg";
-import { useGetDatanew } from "@/hooks/useGetData";
+import { useGetDatanew, useGetPointData } from "@/hooks/useGetData";
 import Loading from "@/app/component/Loading";
 import { ReferralPointsModal } from "./ViewPoint";
 import { toast } from "react-toastify";
@@ -24,6 +24,9 @@ import { PrintReceipt } from "./PrintReceipt";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { formatCurrency } from "@/utils/formatCurrency";
+import PointsHistoryModal from "./PointsHistoryModal";
+
+
 
 type ConfirmationModalProps = {
   amount: string;
@@ -115,7 +118,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       const payload = { amount: Number(amount) };
 
       const response = await axios.post(
-        "https://staging.ajiroba.ng/v1/pay/fund_wallet/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/fund_wallet/`,
         payload,
         {
           headers: {
@@ -134,7 +137,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         setPaymentUrl(payment_url);
         setShowModalUp(true);
 
-        toast.success(`Payment initiated successfully`, {
+        toast.success(`Payment initiated, Kindly proceed to complete payment`, {
           closeButton: false,
         });
       } else {
@@ -153,7 +156,7 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     try {
       const tkn_: string = Cookies.get("token") as string;
       const response = await axios.get(
-        `https://staging.ajiroba.ng/v1/pay/verify_wallet_payment/${reference}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/verify_wallet_payment/${reference}/`,
         {
           headers: {
             Authorization: `token ${tkn_}`,
@@ -336,13 +339,24 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
 
 export const WalletBalance = () => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
-  const [showPin, setShowPin] = useState<boolean>(false);
+  // const [showPin, setShowPin] = useState<boolean>(false);
   const [createPin, setCreatePin] = useState<boolean>(false);
   const [printreceipt, setprintreceipt] = useState<boolean>(false);
   const [viewPoint, setViewPoint] = useState<boolean>(false);
   const [changePin, setChangePin] = useState<boolean>(false);
   const [deposite, setDeposite] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+
+
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
+  const [pointsUserId, setPointsUserId] = useState<string | undefined>(undefined);
+  const [isPointsModalOpen, setIsPointsModalOpen] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
+
+  // useAuthMiddleware(useRouter());
+
+
 
   const [depositAmount, setDepositAmount] = useState<string>("");
 
@@ -384,7 +398,11 @@ export const WalletBalance = () => {
   });
 
 
-  // console.log(userInfo?.data, 'userInfo');
+      // console.log(userInfo?.data, 'userInfo');
+
+  // Call points hook before any early returns to keep hook order stable
+  // const userToken = Cookies.get('token') as string;
+  // const { data: pointinfo, isLoading: pointsLoading, error: pointerror } = useGetPointData('/api/getpoints', "get_point_details", userToken);
 
   useEffect(() => {
     if (tkn_) {
@@ -406,12 +424,29 @@ export const WalletBalance = () => {
     return <Loading />;
   }
 
-  const sampleReferralData = [
-    { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
-    { name: "Rachel Jade", points: 50, date: "12 Feb, 2024" },
-    { name: "Malik Berry", points: 50, date: "12 Feb, 2024" },
-    { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
-  ];
+
+
+
+  // console.log(pointinfo?.data?.data, 'pointinfo');
+
+
+  // const sampleReferralData = pointinfo?.data?.data.map((item: any) => ({
+  //   name: item.description,
+  //   points: item.point,
+  //   date: item.date_created,
+  // }));
+
+
+  // console.log(sampleReferralData, 'sampleReferralData');
+
+
+
+  // const sampleReferralData = [
+  //   { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
+  //   { name: "Rachel Jade", points: 50, date: "12 Feb, 2024" },
+  //   { name: "Malik Berry", points: 50, date: "12 Feb, 2024" },
+  //   { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
+  // ];
 
   return (
     <div className="flex flex-col px-2">
@@ -452,20 +487,21 @@ export const WalletBalance = () => {
 
       <div className="flex justify-between py-4">
         <div className="flex flex-col">
-          <p className="text-sm capitalize leading-snug">ajiroba point</p>
+          <p className="text-sm capitalize leading-snug">ajiroba points</p>
           <p className="text-sm font-semibold slashed-zero">
-            {userInfo?.data?.my_wallet[0]?.point}
+            {formatCurrency(userInfo?.data?.my_wallet[0]?.balance || 0)} ({(userInfo?.data?.my_wallet[0]?.point || 0)}) Point{userInfo?.data?.my_wallet[0]?.point > 1 ? 's' : ''}
           </p>
         </div>
         <p
           className="cursor-pointer text-sm capitalize underline underline-offset-4 hover:text-[#f25e26]"
-          onClick={() => setViewPoint(!viewPoint)}
+          // onClick={() => setViewPoint(!viewPoint)}
+          onClick={() => { setPointsUserId(userInfo?.data?.id || ""); setIsPointsModalOpen(true); }}
         >
           view
         </p>
       </div>
 
-      <div className="mt-10 flex w-full flex-col justify-between gap-4 md:flex-row lg:flex-row">
+      <div className="mt-10 flex w-full flex-col justify-between gap-2 md:flex-row lg:flex-row">
         <IconButton
           text="add money"
           type="button"
@@ -532,13 +568,25 @@ export const WalletBalance = () => {
       {printreceipt && (
         <PrintReceipt receipt={receipt} setreceipt={setprintreceipt} />
       )}
-      {viewPoint && (
+
+
+      {/* {viewPoint && (
         <ReferralPointsModal
           isOpen={viewPoint}
           setIsOpen={setViewPoint}
           referralData={sampleReferralData}
         />
-      )}
+      )} */}
+
+
+
+<PointsHistoryModal
+        isOpen={isPointsModalOpen}
+        onClose={() => setIsPointsModalOpen(false)}
+        userId={pointsUserId}
+      />
+
+
 
       {successModal && (
         <div

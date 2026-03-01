@@ -314,11 +314,11 @@ export const AllOrder = ({ transac }: transacProps) => {
           No Available Order{" "}
         </h1>
       ) : (
-        <tr key={index} className="relative border-b">
-          <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+        <tr key={index} className="border-b">
+          <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
             {val?.order_id}
           </td>
-          <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+          <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
             {val.products.map((product, idx) => (
               <span key={idx}>
                 {product.name}
@@ -326,13 +326,13 @@ export const AllOrder = ({ transac }: transacProps) => {
               </span>
             ))}
           </td>
-          <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+          <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
             {formatCurrency(val.total_price)}
           </td>
-          <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
-            {new Date(val.order_date).toLocaleString()}
+          <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
+            {new Date(val.order_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </td>
-          <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+          <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
             <span
               className={`text-[12px] text-[#344054] font-Poppins font-medium ${
                 val.delivery_status.toLowerCase() === "pending"
@@ -347,7 +347,7 @@ export const AllOrder = ({ transac }: transacProps) => {
               {val.delivery_status}
             </span>
           </td>
-          <td className="absolute right-3 top-5 cursor-pointer rounded-md border text-sm">
+          <td className="py-3 px-2 text-right">
             <Dropdown
               onOptionClick={(option) => handleOptionClick(option, val)}
               transaction={val}

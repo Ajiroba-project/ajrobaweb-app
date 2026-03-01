@@ -12,16 +12,16 @@ import { useRouter } from "next/navigation";
 import { SideMenu } from "../components/SideMenu";
 import { LuMenu } from "react-icons/lu";
 import { stepperList } from "@/app/static-data";
-import { AirtimeDetails } from "../components/AirtimeDetails";
-import { AirtimePayment } from "../components/AirtimePayment";
-import { Receipt } from "../components/Receipt";
+// import { AirtimeDetails } from "../components/AirtimeDetails";
+// import { AirtimePayment } from "../components/AirtimePayment";
+// import { Receipt } from "../components/Receipt";
 import Loading from "@/app/component/Loading";
-import { DataDetails } from "../components/DataDetails";
-import { CablePayment } from "../components/CablePayment";
-import { DataPayment } from "../components/DataPayment";
-import { DataReceipt } from "../components/DataReceipt";
-import { CableDetails } from "../components/CableDetails";
-import { CableReceipt } from "../components/CableReceipt";
+// import { DataDetails } from "../components/DataDetails";
+// import { CablePayment } from "../components/CablePayment";
+// import { DataPayment } from "../components/DataPayment";
+// import { DataReceipt } from "../components/DataReceipt";
+// import { CableDetails } from "../components/CableDetails";
+// import { CableReceipt } from "../components/CableReceipt";
 import { ElectricityReceipt } from "../components/ElectricityReceipt"
 import { ElectricityDetails } from "../components/ElectricityDetails";
 import { ElectricityPayment } from "../components/ElectricityPayment";
@@ -79,7 +79,7 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
   const Step = ({ props }: any) => {
     return (
 
-             <div className="  flex  2xl:flex-col xl:flex-col md:flex-col lg:flex-col flex-col py-4 mt-14 gap-4 2xl:w-3/12 xl:w-3/12 md:w-auto lg:w-3/12 w-auto   ">
+             <div className="flex 2xl:flex-col xl:flex-col md:flex-row lg:flex-col flex-row py-4 mt-14 gap-4 2xl:w-3/12 xl:w-3/12 md:w-full lg:w-3/12 w-full">
         {stepperList.map((val, index) => (
           <div
             key={index}
@@ -98,11 +98,11 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
   const DataContentNew = () => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <section className="flex flex-col gap-4 2xl:flex-col  md:flex-col lg:flex-row  ">
+        <section className="flex flex-col gap-4 2xl:flex-row xl:flex-row md:flex-col lg:flex-row">
 
             <Step props={ElectricityStepper} />
 
-          <div className="w-full">
+          <div className="w-full 2xl:flex-1 xl:flex-1 lg:flex-1">
               {ElectricityStepper === 0 ? (
                 <ElectricityDetails />
               ) : ElectricityStepper === 1 ? (
@@ -122,15 +122,14 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
         <Header />
       </header>
 
-      <main className="relative flex pt-[20vh]">
+      <main className="relative flex pt-[20vh] content-container">
 
 
- <section
-      className={`${sidebar ? "absolute h-screen bg-[#F6F6F6]" : "absolute"} z-20 -mt-8  lg:relative`}
-
+      <section
+          className={`${sidebar ? 'absolute h-full bg-[#F6F6F6]' : 'absolute'} z-20 -mt-8  lg:relative`}
         >
           <div
-            className={`${sidebar ? "absolute  h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none" : "hidden h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none"} `}
+            className={`${sidebar ? 'absolute  h-full bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none' : 'shrink-0 self-stretch h-full bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none'} `}
           >
             <SideMenu />
           </div>
@@ -142,13 +141,15 @@ const ElectricityStepper = ElectricityPurchase((state) => state.ElectricityStepp
           </div>
         </section>
 
-        <section className="container -mt-8 h-full">
+        <section className="container -mt-8 h-full content-container">
           {!isLoggedIn ? <Reroute /> : <DataContentNew />}
 
         </section>
       </main>
 
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   );
 };

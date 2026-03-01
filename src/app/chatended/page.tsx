@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { Fragment, Suspense, useEffect, useState } from "react";
+import React, { Fragment, Suspense, useEffect, useState, useRef } from "react";
 import { Header } from "../component/Header";
 import { Footer } from "../component/Footer";
 import { HeadingText } from "../component/Heading";
@@ -11,22 +11,14 @@ import mesager from "@/app/asset/image/messager.png";
 import ing from "@/app/asset/image/instagram.png";
 import gmail from "@/app/asset/image/gmail.png";
 import "./style.css";
-import EmojiPicker from "emoji-picker-react";
+// Removed unused EmojiPicker import
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useMutateData } from "@/hooks/useMutateData";
+// Removed unused imports for form handling
 import axios, { AxiosError } from "axios";
 import { profilePhoto, useAuthStore, userProfile } from "@/store/store";
 import { useGetDatanew } from "@/hooks/useGetData";
 import chatended from "@/app/asset/image/chatendedicon.png";
-
-type ChatFormValues = {
-  text: string;
-  image?: string;
-};
 
 interface Message {
   type: "client" | "admin";
@@ -37,12 +29,13 @@ interface Message {
 const LiveChatPage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const hasLoadedHistory = useRef(false);
+  const hasInitialized = useRef(false);
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const chatSchema = yup.object().shape({
-    text: yup.string().required("text is required"),
-  });
+  // Removed unused chat schema
 
   const { userDetails } = userProfile((state) => ({
     userDetails: state.userDetails,
@@ -84,26 +77,23 @@ const LiveChatPage = () => {
   const userData = isLoggedIn ? userInfo?.data : userDetails;
   const userphoto = profileurl || userDetails?.profile_image_url || "";
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-    getValues,
-    reset,
-  } = useForm<ChatFormValues>({
-    resolver: yupResolver(chatSchema),
-  });
+  // Removed unused form handling
 
-  const submitForm = async () => {
+  // Load chat history when component mounts
+  const loadChatHistory = async () => {
+    // console.log("loadChatHistory called - isLoading:", isLoading, "hasLoadedHistory:", hasLoadedHistory.current);
+    
+    if (isLoading || hasLoadedHistory.current) return; // Prevent multiple calls
+    
+    setIsLoading(true);
+    
     try {
       const headers = {
         Authorization: `token ${userToken}`,
       };
 
       const response = await axios.get(
-        "https://staging.ajiroba.ng/v1/admin/messages/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/admin/messages/`,
         { headers },
       );
 
@@ -111,7 +101,7 @@ const LiveChatPage = () => {
         const NewMessage: Message[] = response.data.data.map(
           (item: { text: any; image: any; sender_role: any }) => {
             return {
-              type: item.sender_role === "client" ? "client" : "admin",
+              type: item.sender_role === "client" || item.sender_role === "customer" ? "client" : "admin",
               text: item.text,
               image: item.image,
             };
@@ -119,26 +109,14 @@ const LiveChatPage = () => {
         );
 
         setMessages([...NewMessage]);
-
-        toast.success(`${response.data.message || "Success"}`, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        reset();
+        hasLoadedHistory.current = true; // Mark as loaded
       } else {
-        alert("Failed to send message: " + response.data.message);
+        console.error("Failed to load chat history:", response.data.message);
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error("Error sending message:", error);
-        toast.error(`${error.response?.data?.message || "An Error Occured"}`, {
+    
+        toast.error(`${error.response?.data?.message || "Failed to load chat history"}`, {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -151,12 +129,20 @@ const LiveChatPage = () => {
       } else {
         console.log("An unexpected error occurred:", error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    submitForm();
-  }, []);
+    // Only load chat history once when component mounts
+
+    
+    if (userToken && !hasInitialized.current) {
+      hasInitialized.current = true;
+      loadChatHistory();
+    }
+  }, []); // Empty dependency array - only run once on mount
 
   // console.log(messages, "messages");
 
@@ -281,7 +267,23 @@ const LiveChatPage = () => {
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {messages.map((message, index) => (
+                        {/* Loading state */}
+                        {isLoading && (
+                          <div className="flex justify-center items-center py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E84526]"></div>
+                            <span className="ml-2 text-gray-600">Loading chat history...</span>
+                          </div>
+                        )}
+
+                        {/* No messages state */}
+                        {!isLoading && messages.length === 0 && (
+                          <div className="flex justify-center items-center py-8">
+                            <p className="text-gray-500 text-sm">No chat history available</p>
+                          </div>
+                        )}
+
+                        {/* Messages */}
+                        {!isLoading && messages.map((message, index) => (
                           <div
                             key={index}
                             className={`chat ${message.type === "admin" ? "chat-start" : "chat-end"} mb-4 `}
@@ -294,7 +296,7 @@ const LiveChatPage = () => {
                                     /*   src={
                                         "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                                       } */
-                                    src={message?.image ? `https://staging.ajiroba.ng${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                                    src={message?.image ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${message?.image}` : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
                                     }
                                     width={24}
                                     height={24}
@@ -310,7 +312,7 @@ const LiveChatPage = () => {
                                 <div className="mt-2 flex justify-end">
                                   <Image
                                     alt="Admin Avatar"
-                                    src={`https://staging.ajiroba.ng${message?.image}`}
+                                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${message?.image}`}
                                     width={24}
                                     height={24}
                                     className="w-24 h-24 object-cover rounded-md border"
@@ -367,7 +369,9 @@ const LiveChatPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   );
 };

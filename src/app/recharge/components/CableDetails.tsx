@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Airtimeschema, Cableschema, Rechargeschema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
-import { InputField, SelectField } from "./FormField";
+import { InputField, SelectField, CurrencyInputField } from "./FormField";
 import { AirtimePurchase, CablePurchase } from "@/store/store";
 import { Formtitle } from "./Formtitle";
 import { CustomModal, Modal } from "@/app/component/Modal";
@@ -20,9 +20,16 @@ import { StaticImageData } from "next/image";
 import mtnicon from "../../asset/mtnicon.svg";
 import ninemobileicon from "../../asset/ninemobileicon.png";
 import gloicon from "../../asset/gloicon.png";
+import gotvicon from '../../asset/gotvicon.jpeg'
+import dstvicon from '../../asset/dstvicon.jpeg'
+import showmaxicon from '../../asset/showmaxicon.png'
+import startimesicon from '../../asset/startimesicon.jpeg'
+import consattvicon from '../../asset/consattvicon.png'
+
 import { set } from "date-fns";
 import { Item } from "@radix-ui/react-select";
 import { fetchCableTVPackages } from "@/app/utils/fetchCableTVPackages";
+import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates';
 import { useDebounce } from "@/hooks/useDebounce";
 type DataProps = {
   decoder: string;
@@ -53,7 +60,7 @@ export const CableDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Cable`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=cable`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -69,19 +76,14 @@ export const CableDetails = () => {
     Etisalat: airtelicon,
     ninemobile: ninemobileicon,
     GLO: gloicon,
+    GOTV: gotvicon,
+    DSTV: dstvicon,
+    SHOWMAX: showmaxicon,
+    STARTIME: startimesicon,
+    "CONSAT TV": consattvicon,
   };
 
-  const transformedData = bensdata?.data?.map(
-    (item: { biller: string; number: any }, index: number) => {
-      const billerUpper = item.biller.trim().toUpperCase();
-      return {
-        id: index + 1,
-        number: item.number,
-        type: billerUpper,
-        icon: iconMap[billerUpper] || null,
-      };
-    },
-  );
+  const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
   const {
     reset,
@@ -126,7 +128,7 @@ export const CableDetails = () => {
     dataPlansData?.data?.data?.map(
       (subScriptionType: { subScriptionType: string; amount: number }) =>
         `${subScriptionType.subScriptionType} -₦${subScriptionType.amount}`,
-    ) || [];
+    ).filter((plan: string) => plan && plan.trim() !== '') || [];
 
   const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV"];
 
@@ -251,38 +253,47 @@ export const CableDetails = () => {
 
             <div className="p-6 bg-gray-100 min-h-screen">
               <div className="space-y-4">
-                {transformedData?.map((item: TransformedDataItem) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center">
-                      {item.icon && (
-                        <Image
-                          src={item.icon}
-                          alt={item.type}
-                          width={40}
-                          className="w-10 h-10 rounded-full mr-4"
-                          height={40}
-                        />
-                      )}
-
-                      <div>
-                        <p className="text-gray-900 font-semibold">
-                          {item.number}
-                        </p>
-                        <p className="text-gray-500 text-sm">{item.type}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleUseClick(item.number, item.type)}
-                      className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                {transformedData && transformedData.length > 0 ? (
+                  transformedData.map((item: TransformedDataItem) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     >
-                      Use
-                    </button>
+                      <div className="flex items-center">
+                        {item.icon && (
+                          <Image
+                            src={item.icon}
+                            alt={item.type}
+                            width={40}
+                            className="w-10 h-10 rounded-full mr-4"
+                            height={40}
+                          />
+                        )}
+
+                        <div>
+                          <p className="text-gray-900 font-semibold">
+                            {item.number}
+                          </p>
+                          <p className="text-gray-500 text-sm">{item.type}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleUseClick(item.number, item.type)}
+                        className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                      >
+                        Use
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg">
+                    <div className="text-center">
+                      <p className="text-gray-500 text-lg font-medium mb-2">No Beneficiaries Available</p>
+                      <p className="text-gray-400 text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </CustomModal>

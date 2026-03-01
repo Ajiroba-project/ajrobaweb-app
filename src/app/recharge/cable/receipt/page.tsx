@@ -290,7 +290,9 @@ const WrappedPage = () => {
 export default function Page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <WrappedPage />
+   <div className="content-container">
+    <WrappedPage />
+   </div>
     </Suspense>
   );
 }

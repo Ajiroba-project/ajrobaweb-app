@@ -5,10 +5,9 @@ import { Fragment, Suspense, useEffect, useState } from "react";
 import {
   userNavStore,
   useAuthStore,
-  DataPurchase,
-  CablePurchase,
+
   AirtimePurchase,
-  ElectricityPurchase,
+
 } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { SideMenu } from "../components/SideMenu";
@@ -64,16 +63,19 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
   const Step = ({ props }: any) => {
     return (
 
-             <div className="  flex  2xl:flex-col xl:flex-col md:flex-col lg:flex-col flex-col py-4 mt-14 gap-4 2xl:w-3/12 xl:w-3/12 md:w-auto lg:w-3/12 w-auto   ">
-        {stepperList.map((val, index) => (
-          <div
-            key={index}
-            className={`flex items-center gap-2 rounded-md border p-4 px-6 text-[#A09F9F] font-Poppins ${index === props || index <= props ? "cursor-pointer border-2 border-[#F25E26] bg-[#FCDFD4] text-[#E84526]" : "border-2 opacity-50"} border-[#A09F9F] `}
-          >
-            <div>{val.icons}</div>
-            <p className="w-max text-sm font-Poppins" onClick={() => setAirtimeStepper(val.step)}>{val.name}</p>
-          </div>
-        ))}
+      <div className="w-full lg:w-64 lg:flex-none py-2 mt-2">
+        <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pr-1">
+          {stepperList.map((val, index) => (
+            <div
+              key={index}
+              onClick={() => setAirtimeStepper(val.step)}
+              className={`${index === props || index <= props ? "border-[#F25E26] bg-[#FCDFD4] text-[#E84526]" : "border-[#A09F9F] text-[#A09F9F]"} shrink-0 lg:shrink lg:w-full whitespace-nowrap flex items-center gap-2 rounded-md border-2 px-4 py-3 font-Poppins`}
+            >
+              <div>{val.icons}</div>
+              <span className="text-sm">{val.name}</span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   };
@@ -81,11 +83,11 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
   const DataContentNew = () => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <section className="flex flex-col gap-4 2xl:flex-col  md:flex-col lg:flex-row  ">
+        <section className="flex flex-col lg:flex-row gap-6">
 
             <Step props={AirtimeStepper} />
 
-          <div className="w-full">
+          <div className="w-full 2xl:flex-1 xl:flex-1 lg:flex-1">
               {AirtimeStepper === 0 ? (
                 <AirtimeDetails />
               ) : AirtimeStepper === 1 ? (
@@ -105,33 +107,51 @@ const AirtimeStepper = AirtimePurchase((state) => state.AirtimeStepper);
         <Header />
       </header>
 
-      <main className="relative flex pt-[20vh]">
+      {/* Spacer to offset fixed header height on small/medium screens */}
+      <div className="h-24 md:h-28 lg:h-32"></div>
 
-
- <section
-      className={`${sidebar ? "absolute h-screen bg-[#F6F6F6]" : "absolute"} z-20 -mt-8  lg:relative`}
-
-        >
-          <div
-            className={`${sidebar ? "absolute  h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none" : "hidden h-screen bg-[#F6F6F6] p-6 shadow-md lg:block lg:w-max lg:shadow-none"} `}
-          >
-            <SideMenu />
-          </div>
-          <div
-            className=" absolute left-4 top-5 cursor-pointer text-[#f25e26] lg:hidden"
+      <main className="container my-4 content-container">
+        {/* Mobile menu trigger */}
+        <div className="mb-4 lg:hidden">
+          <button
+            className="inline-flex items-center gap-2 rounded-md border border-[#F25E26] text-[#F25E26] px-3 py-2"
             onClick={() => toggleSidebar(!sidebar)}
+            aria-label="Open menu"
           >
-            <LuMenu className="text-3xl" />
+            <LuMenu className="text-2xl" />
+            <span className="font-Poppins text-sm">Menu</span>
+          </button>
+        </div>
+
+        {/* Responsive layout: sidebar on desktop, content on right */}
+        <section className="flex flex-col lg:flex-row gap-6">
+          {/* Desktop static sidebar */}
+          <aside className="hidden lg:block w-72 shrink-0 self-stretch">
+            <div className="bg-[#F6F6F6] h-full p-6 shadow-none rounded-md">
+              <SideMenu />
+            </div>
+          </aside>
+
+          {/* Main content */}
+          <div className="flex-1 min-w-0">
+            {!isLoggedIn ? <Reroute /> : <DataContentNew />}
           </div>
-        </section>
-
-        <section className="container -mt-8 h-full">
-          {!isLoggedIn ? <Reroute /> : <DataContentNew />}
-
         </section>
       </main>
 
-      <Footer />
+      {/* Mobile overlay sidebar */}
+      {sidebar && (
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 bg-black/40" onClick={() => toggleSidebar(false)}></div>
+          <div className="absolute left-0 top-0 h-full w-80 max-w-[90vw] bg-[#F6F6F6] p-6 shadow-2xl overflow-y-auto">
+            <SideMenu />
+          </div>
+        </div>
+      )}
+
+<div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   );
 };

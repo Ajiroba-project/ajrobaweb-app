@@ -8,7 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 // import Input from "../component/Input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateData";
 import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -18,12 +18,17 @@ import { Input } from "@nextui-org/react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 
 import { state_and_LGA } from "../../app/static-data";
-import { useState } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { ModalProfile, ModalTerms } from "../profile/components/ModalProfile";
 import { IoIosClose } from "react-icons/io";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { pickersDayClasses } from "@mui/x-date-pickers/PickersDay";
+import { format } from "date-fns";
 
-function Page() {
+const WrappedPage = () => {
   type dataProps = {
     first_name: string;
     last_name: string;
@@ -37,8 +42,10 @@ function Page() {
     residential?: string;
     gender?: boolean;
     agree_terms?: boolean;
+    date_of_birth: string;
   };
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const schema = yup.object().shape({
     first_name: yup
@@ -78,6 +85,58 @@ function Page() {
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/,
         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
       ),
+    date_of_birth: yup
+      .string()
+      .required("Date of birth is required")
+      .test("valid-date", "Please select a valid date", (value) => {
+        if (!value) {
+          return false;
+        }
+        const parts = value.split("-");
+        if (parts.length !== 3) {
+          return false;
+        }
+        const [year, month, day] = parts.map(Number);
+        if (
+          parts.some((part) => part.trim() === "") ||
+          [year, month, day].some((num) => Number.isNaN(num))
+        ) {
+          return false;
+        }
+        const constructedDate = new Date(year, month - 1, day);
+        return (
+          constructedDate.getFullYear() === year &&
+          constructedDate.getMonth() === month - 1 &&
+          constructedDate.getDate() === day
+        );
+      })
+      .test("age", "You must be at least 18 years old", (value) => {
+        if (!value) {
+          return false;
+        }
+        const parts = value.split("-");
+        if (parts.length !== 3) {
+          return false;
+        }
+        const [year, month, day] = parts.map(Number);
+        if (
+          parts.some((part) => part.trim() === "") ||
+          [year, month, day].some((num) => Number.isNaN(num))
+        ) {
+          return false;
+        }
+        const birthDate = new Date(year, month - 1, day);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+          age -= 1;
+        }
+        return age >= 18;
+      }),
     gender: yup.boolean().required("Gender is required"),
     agree_terms: yup
       .boolean()
@@ -162,6 +221,7 @@ function Page() {
   );
 
   const sumbitForm = (data: dataProps) => {
+    // console.log(data, 'dddd')
     mutate({
       url: "/api/auth",
       payload: data,
@@ -170,6 +230,20 @@ function Page() {
 
   const [selectedState, setSelectedState] = useState("");
   const [lgas, setLgas] = useState<string[]>([]);
+
+  const maxDate = useMemo(() => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 18);
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }, []);
+
+  const maxDateValue = useMemo(() => {
+    const [year, month, day] = maxDate.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }, [maxDate]);
 
   const handleStateChange = (value: string) => {
     setSelectedState(value);
@@ -187,9 +261,19 @@ function Page() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  // Get referral code from URL parameters
+  const referralCodeFromUrl = searchParams.get('ref');
+
+  // Set referral code from URL when component mounts
+  useEffect(() => {
+    if (referralCodeFromUrl) {
+      setValue('referral', referralCodeFromUrl);
+    }
+  }, [referralCodeFromUrl, setValue]);
+
   return (
     <>
-      <div className="px-4 py-8">
+      <div className="px-4 py-8 content-container">
         <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
           <Link href={"/"}>
             <Image src={Brand} alt="brand-logo" />
@@ -344,6 +428,11 @@ function Page() {
               <div className="flex flex-col">
                 <label className="text-sm" htmlFor="referral">
                   Referal code (Optional)
+                  {referralCodeFromUrl && (
+                    <span className="text-green-600 text-xs ml-2">
+                      ✓ Pre-filled from referral link
+                    </span>
+                  )}
                 </label>
                 <Controller
                   name="referral"
@@ -482,8 +571,118 @@ function Page() {
                 </small>
               </div>
 
+              <div className="flex flex-col">
+                <label className="text-sm" htmlFor="date_of_birth">
+                  Date of Birth*
+                </label>
+                <Controller
+                  name="date_of_birth"
+                  control={control}
+                  render={({ field }) => {
+                    const parsedValue = field.value ? new Date(field.value) : null;
+                    const dateValue =
+                      parsedValue && !Number.isNaN(parsedValue.getTime())
+                        ? parsedValue
+                        : null;
+
+                    return (
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          value={dateValue}
+                          maxDate={maxDateValue}
+                          disableFuture
+                          onChange={(date) => {
+                            if (date && !Number.isNaN(date.getTime())) {
+                              field.onChange(format(date, "yyyy-MM-dd"));
+                            } else {
+                              field.onChange("");
+                            }
+                          }}
+                          slotProps={{
+                            textField: {
+                              onBlur: field.onBlur,
+                              placeholder: "Select your DOB",
+                              fullWidth: true,
+                              size: "small",
+                              error: Boolean(errors?.date_of_birth),
+                              helperText: null,
+                              sx: {
+                                "& .MuiOutlinedInput-root": {
+                                  borderRadius: "0.5rem",
+                                  fontSize: "0.875rem",
+                                  fontFamily: "Inter, sans-serif",
+                                },
+                                "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    borderColor: "#D9D9D9",
+                                  },
+                                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    borderColor: "#F25E26",
+                                  },
+                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    borderColor: "#F25E26",
+                                  },
+                                "& .MuiInputBase-input": {
+                                  padding: "10px 12px",
+                                },
+                              },
+                            },
+                            day: {
+                              sx: {
+                                [`&.${pickersDayClasses.selected}`]: {
+                                  backgroundColor: "#F25E26",
+                                  color: "#FFFFFF",
+                                },
+                                [`&.${pickersDayClasses.selected}:hover`]: {
+                                  backgroundColor: "#E84526",
+                                },
+                                "&:hover": {
+                                  backgroundColor: "rgba(242, 94, 38, 0.1)",
+                                },
+                              },
+                            },
+                            actionBar: {
+                              actions: ["clear"],
+                              sx: {
+                                "& .MuiButton-root": {
+                                  color: "#F25E26",
+                                },
+                                "& .MuiButton-root:hover": {
+                                  backgroundColor: "rgba(242, 94, 38, 0.08)",
+                                },
+                              },
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    );
+                  }}
+                />
+                <small className="text-xs text-[#6E6E6E] mt-1">
+                  Must be at least 18 years old (Format: DD/MM/YYYY)
+                </small>
+                <div className="text-xs text-red-700">
+                  {errors?.date_of_birth?.message &&
+                    String(errors.date_of_birth.message)}
+                </div>
+              </div>
+
               <div className="flex flex-col gap-4">
              <div>
+
+
+
+
+
+
+
+
+
+
+
+              
              <label className="text-sm" htmlFor="gender">
                  Gender
                 </label>
@@ -665,14 +864,13 @@ function Page() {
                 <div>
                   <div>
                     <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Auction Winning
+                      Raffle Draw Winning
                     </h1>
                   </div>
 
                   <div>
                     <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                      There is no guarantee that you win the item you bid for as the auction
-                      process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
+                    There is no guarantee that you win the item you bid for as the raffle draw process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
                     </p>
                   </div>
                 </div>
@@ -704,4 +902,10 @@ function Page() {
   );
 }
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WrappedPage />
+    </Suspense>
+  );
+}

@@ -47,7 +47,7 @@ export async function GET(request) {
     const authorizationHeader = request.headers.get('Authorization');
 
     const tkn = request.headers.get('Params')
-    console.log(tkn, 'tkn')
+    // console.log(tkn, 'tkn')
     const cacheBuster = `cache=${Date.now()}`;
 
 

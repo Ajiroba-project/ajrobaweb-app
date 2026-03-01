@@ -453,7 +453,7 @@ const Page = ({ params }: any) => {
                 <div key={key} className="flex gap-2">
                   <div className="">
                     <Image
-                      src={`https://staging.ajiroba.ng${item?.user?.profile_image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${item?.user?.profile_image}`}
                       height={40}
                       width={40}
                       alt="Profile Image"
@@ -530,8 +530,6 @@ const Page = ({ params }: any) => {
   };
 
   // console.log(productdata, 'datatatat')
-
-
 
   return (
     <main>

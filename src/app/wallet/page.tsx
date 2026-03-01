@@ -28,7 +28,9 @@ const WalletePage = () => {
                 margin: '0 auto',
                 marginTop: '20px'
             }}>
-                <Profile />
+                <div className='content-container'>
+                    <Profile />
+                </div>
             </main>
 
             {profile && <PhotoUpload />}

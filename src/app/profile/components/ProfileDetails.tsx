@@ -80,27 +80,27 @@ const tkn_: string = Cookies.get('token') as string;
   }
 
   return (
-    <section className="md:full mb-6 w-full lg:w-[50dvw]">
+    <section className="md:full mb-6 w-full lg:w-[50dvw]  rounded-lg p-4">
       {!editProfile ? (
-        <div className="mt-4 flex flex-col gap-8 p-8 shadow-lg">
+        <div className="mt-4 flex flex-col gap-8 p-8 shadow-lg border border-gray-300 rounded-lg">
           <div>
-            <h3 className="capitalize text-[#6E6E6E]">First Name</h3>
+            <h3 className="capitalize text-[#6E6E6E]">First Name*</h3>
             <p className="text-semibold capitalize">{userData?.first_name || userData?.firstname}</p>
           </div>
           <div>
-            <h3 className="capitalize text-[#6E6E6E]">Last Name</h3>
+            <h3 className="capitalize text-[#6E6E6E]">Last Name*</h3>
             <p className="text-semibold capitalize">{userData?.last_name || userData?.lastname}</p>
           </div>
           <div>
-            <h3 className="capitalize text-[#6E6E6E]">Email</h3>
+            <h3 className="capitalize text-[#6E6E6E]">Email*</h3>
             <p className="text-semibold">{userData?.email}</p>
           </div>
           <div>
-            <h3 className="capitalize text-[#6E6E6E]">Phone</h3>
+            <h3 className="capitalize text-[#6E6E6E]">Phone*</h3>
             <p className="text-semibold capitalize">{userData?.phone}</p>
           </div>
           <div>
-            <h3 className="capitalize text-[#6E6E6E]">Address</h3>
+            <h3 className="capitalize text-[#6E6E6E]">Address*</h3>
             <p className="text-semibold capitalize">{userData?.address}</p>
           </div>
           <div>

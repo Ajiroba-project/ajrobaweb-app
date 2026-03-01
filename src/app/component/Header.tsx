@@ -50,8 +50,10 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -72,14 +74,28 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
     };
   }, [dropdownRef]);
 
-  // Debounced search function
-  const performSearch = async (query: string) => {
+  // Debounced search with timeout so spinner never hangs
+  const SEARCH_TIMEOUT_MS = 10000;
+
+  const performSearch = useCallback(async (query: string) => {
     if (!query || query.trim().length < 2) {
       setSearchResults([]);
+      setSearchError(null);
       return;
     }
 
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setIsSearching(true);
+    setSearchError(null);
+
+    const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+
     try {
       const token = Cookies.get("token") as string;
       const headers: { [key: string]: string } = {
@@ -93,33 +109,40 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
       const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&type=all`, {
         method: "GET",
         headers: headers,
+        signal: controller.signal,
       });
 
-      if (response.ok) {
-        const data: SearchResponse = await response.json();
-        setSearchResults(data.data.results);
-      } else {
-        setSearchResults([]);
+      const data = await response.json();
+      const results = data?.data?.results ?? [];
+      setSearchResults(Array.isArray(results) ? results : []);
+      if (!response.ok) {
+        setSearchError('Search is temporarily unavailable. Please try again.');
       }
-    } catch (error) {
-      console.error('Search error:', error);
+    } catch (error: unknown) {
+      if ((error as Error)?.name === 'AbortError') {
+        setSearchError('Search took too long. Please try again.');
+      } else {
+        setSearchError('Search is temporarily unavailable. Please try again.');
+      }
       setSearchResults([]);
+      console.error('Search error:', error);
     } finally {
+      clearTimeout(timeoutId);
+      abortControllerRef.current = null;
       setIsSearching(false);
     }
-  };
+  }, [isLoggedIn]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setSearchInput(input);
+    setSearchError(null);
     setIsDropdownOpen(true);
 
-    // Clear previous timeout
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Debounce search
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(input);
     }, 300);
@@ -137,7 +160,7 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
   };
 
   const handleResultClick = (result: SearchResult) => {
-    router.push(result.url);
+    // router.push(result.url);
     setIsDropdownOpen(false);
     onClose?.();
   };
@@ -228,13 +251,18 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
                 </div>
               )}
             </div>
-          ) : searchInput && searchInput.length >= 2 ? (
-            <div className={`p-4 text-sm text-gray-500 ${isMobile ? 'text-base' : ''}`}>
-              No results found for &quot;{searchInput}&quot;
+          ) : searchError ? (
+            <div className={`p-4 text-sm text-amber-700 bg-amber-50 ${isMobile ? 'text-base' : ''}`}>
+              {searchError}
+            </div>
+          ) : searchInput && searchInput.trim().length >= 2 ? (
+            <div className={`p-4 text-sm text-gray-600 ${isMobile ? 'text-base' : ''}`}>
+              <p className="font-medium text-[#2A2A2A]">No results found for &quot;{searchInput.trim()}&quot;</p>
+              <p className="mt-1 text-gray-500">Try different keywords or check your spelling.</p>
             </div>
           ) : (
             <div className={`p-4 text-sm text-gray-500 ${isMobile ? 'text-base' : ''}`}>
-              Start typing to search...
+              Type at least 2 characters to search...
             </div>
           )}
         </div>
@@ -260,6 +288,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [previousNotificationCount, setPreviousNotificationCount] = useState(0);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
+  const [loadingNotifications, setLoadingNotifications] = useState<Record<string, boolean>>({});
+  const [notificationMessages, setNotificationMessages] = useState<Record<string, { type: 'success' | 'error'; message: string }>>({});
   const [windowWidth, setWindowWidth] = useState(0);
   const [showDesktopNav, setShowDesktopNav] = useState(false);
   const [navigationWidth, setNavigationWidth] = useState(0);
@@ -586,17 +616,19 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       
       const transformedNotifications = notificationsData.data.map((notification: any, index: number) => ({
         ...notification,
-        id: index + 1, // Generate an ID since the real API doesn't provide one
-        read: false, // Default to unread since the real API doesn't track read status
+        id: notification.id || index + 1, // Use actual ID from API or fallback to index
+        read: notification.read || false, // Use actual read status from API or default to false
         type: 'notification', // Default type
         url: '/profile' // Default URL for navigation
       }));
       
      
       
+      // Count only unread notifications
+      const unreadCount = transformedNotifications.filter(n => !n.read).length;
+      
       // Check for new notifications
-      const newCount = transformedNotifications.length;
-      if (previousNotificationCount > 0 && newCount > previousNotificationCount) {
+      if (previousNotificationCount > 0 && unreadCount > previousNotificationCount) {
         setHasNewNotifications(true);
 
         
@@ -607,8 +639,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       }
       
       setNotifications(transformedNotifications);
-      setNotificationCount(newCount);
-      setPreviousNotificationCount(newCount);
+      setNotificationCount(unreadCount);
+      setPreviousNotificationCount(unreadCount);
       setNotificationError(null);
     } else if (notificationsData?.status === 'success' && (!notificationsData.data || notificationsData.data.length === 0)) {
       // Successful response but no notifications
@@ -666,7 +698,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://staging.ajiroba.ng/v1/commerce/cart/?session_key=${sessionKey}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
       headers: headers,
     };
 
@@ -696,18 +728,83 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   }, [cartRefreshTrigger, fetchCartItems]);
 
   // Handle notification accordion toggle
-  const toggleNotification = (index: number) => {
+  // The API determines read/unread status automatically
+  // When expanding a notification, if it's unread, call API to mark as read
+  // If API returns success, notification will be marked as read
+  // If API returns error, notification stays unread
+  // Notifications will be updated automatically via background polling
+  const toggleNotification = async (index: number) => {
+    const notification = notifications[index];
+    const notificationId = notification?.id?.toString();
+    
+    // Expand/collapse the notification immediately for better UX
     setExpandedNotifications(prev => 
       prev.includes(index) 
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
+    
+    // If expanding the notification and it's not read, mark it as read via API
+    if (!expandedNotifications.includes(index) && notification && !notification.read && notificationId) {
+      // Set loading state
+      setLoadingNotifications(prev => ({ ...prev, [notificationId]: true }));
+      // Clear any previous messages
+      setNotificationMessages(prev => {
+        const updated = { ...prev };
+        delete updated[notificationId];
+        return updated;
+      });
+      
+      // Call API to mark as read on backend
+      const result = await markNotificationAsRead(notificationId);
+      
+      // Clear loading state
+      setLoadingNotifications(prev => {
+        const updated = { ...prev };
+        delete updated[notificationId];
+        return updated;
+      });
+      
+      // Show success or error message
+      if (result.success) {
+        setNotificationMessages(prev => ({
+          ...prev,
+          [notificationId]: { type: 'success', message: result.message || 'Marked as read' }
+        }));
+        
+        // Clear success message after 2 seconds
+        setTimeout(() => {
+          setNotificationMessages(prev => {
+            const updated = { ...prev };
+            delete updated[notificationId];
+            return updated;
+          });
+        }, 2000);
+      } else {
+        setNotificationMessages(prev => ({
+          ...prev,
+          [notificationId]: { type: 'error', message: result.message || 'Failed to mark as read' }
+        }));
+        
+        // Clear error message after 3 seconds
+        setTimeout(() => {
+          setNotificationMessages(prev => {
+            const updated = { ...prev };
+            delete updated[notificationId];
+            return updated;
+          });
+        }, 3000);
+      }
+    }
   };
 
   // Handle notification modal close
   const closeNotificationModal = () => {
     setShowNotificationModal(false);
     setExpandedNotifications([]);
+    // Clear loading states and messages when modal closes
+    setLoadingNotifications({});
+    setNotificationMessages({});
   };
 
   // Handle keyboard navigation
@@ -735,9 +832,61 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Mark single notification as read
-  const markAsRead = (id: number) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-    setNotificationCount(prev => Math.max(0, prev - 1));
+  const markAsRead = (id: string | number) => {
+    setNotifications(prev => {
+      const updated = prev.map(n => {
+        if (n.id === id && !n.read) {
+          return { ...n, read: true };
+        }
+        return n;
+      });
+      
+      // Only decrease count if we actually marked a notification as read
+      const wasUnread = prev.find(n => n.id === id && !n.read);
+      if (wasUnread) {
+        setNotificationCount(prevCount => Math.max(0, prevCount - 1));
+      }
+      
+      return updated;
+    });
+  };
+
+  // Mark notification as read via API
+  // The API determines read/unread status - if success, notification is marked as read
+  // If error/failed, notification stays unread
+  // Notifications are automatically updated in the background via polling
+  const markNotificationAsRead = async (notificationId: string): Promise<{ success: boolean; message?: string }> => {
+    try {
+      const token = Cookies.get("token") as string;
+      if (!token) return { success: false, message: 'No authentication token' };
+
+      const response = await fetch(`/api/read_notification/${notificationId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // If API returns success, notification is marked as read on backend
+        // Refetch notifications to get updated read/unread status from backend
+        if (data.status === 'success') {
+          refetchNotifications();
+          return { success: true, message: 'Notification marked as read' };
+        } else {
+          return { success: false, message: data.message || 'Failed to mark notification as read' };
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        // If API returns error, notification stays unread
+        return { success: false, message: errorData.message || 'Failed to mark notification as read' };
+      }
+    } catch (error) {
+      // On error, notification stays unread
+      return { success: false, message: 'An error occurred. Please try again.' };
+    }
   };
 
   // Clear all notifications
@@ -748,8 +897,17 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   };
 
   // Handle notification click
-  const handleNotificationClick = (notification: any) => {
-    markAsRead(notification.id);
+  // The API determines read/unread status automatically
+  // No manual read/unread handling needed - backend controls the state
+  const handleNotificationClick = async (notification: any) => {
+    // Call API to mark as read on backend
+    // If API returns success, notification will be marked as read
+    // If API returns error, notification stays unread
+    // Notifications will be updated automatically via background polling
+    if (notification.id && typeof notification.id === 'string') {
+      await markNotificationAsRead(notification.id);
+    }
+    
     if (notification.url) {
       router.push(notification.url);
       closeNotificationModal();
@@ -776,10 +934,10 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   return (
     <>
-      <section className='relative w-full'>
+      <section className='relative w-full content-container  '>
         {/* Top Bar - Responsive */}
         <div className='bg-[#2A2A2A] p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
-          <div className='flex items-center justify-between gap-1 sm:gap-2 md:gap-3 px-1 sm:px-2 md:px-4 lg:px-7 max-w-full'>
+          <div className=' flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
             {/* Marquee - Takes available space */}
             <div className='flex-1 min-w-0 overflow-hidden'>
               <AuctionMarquee info={marqueeInfo} />
@@ -788,23 +946,30 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             {/* Social Icons - Hidden on mobile, shown on larger screens */}
             <div className='hidden md:flex gap-1 lg:gap-2 xl:gap-3 flex-shrink-0'>
               {socialIcon.map((val, index) => (
-                <div key={index} className='w-3 lg:w-4 flex-shrink-0'>
-                  <Image src={val.icon} alt={'socials'} className='w-full h-auto' />
-                </div>
+                <a 
+                  key={index} 
+                  href={val.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className='w-3 lg:w-4 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity'
+                >
+                  <Image src={val.icon} alt={val.name} className='w-full h-auto' />
+                </a>
               ))}
             </div>
           </div>
         </div>
 
+
         {/* Main Header - Responsive */}
-        <div className='relative bg-white shadow-md overflow-visible'>
+        <div className='relative bg-white shadow-md overflow-visible '>
           {/* Mobile Menu Overlay */}
           {isOpen && !showDesktopNav && (
             <div className='fixed inset-0 bg-black bg-opacity-50 z-40' onClick={hamburgerfunc} />
           )}
 
           <div className='relative z-50'>
-            <div className='flex w-full items-center justify-between gap-1 sm:gap-2 md:gap-3 lg:gap-4 p-2 sm:p-3 lg:p-4 px-2 sm:px-4 lg:px-7 max-w-full overflow-visible'>
+            <div className=' flex w-full py-2 overflow-visible'>
               
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>
@@ -903,7 +1068,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
                 {/* Mobile Search Button - Show when desktop nav is hidden */}
                 <button 
-                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2 hover:bg-gray-100 rounded-full transition-colors duration-200`}
+                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200`}
                   onClick={() => setShowMobileSearch(!showMobileSearch)}
                 >
                   <CiSearch className='text-xl text-[#A09F9F]' />
@@ -911,7 +1076,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
                 {/* Notifications */}
                 <button 
-                  className='relative p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                  className='relative p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200'
                   onClick={() => isLoggedIn && setShowNotificationModal(true)}
                   title="Notifications"
                   aria-label={`Notifications (${notificationCount} unread)`}
@@ -934,8 +1099,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                 </button>
 
                 {/* Cart */}
-                <button 
-                  className='relative p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                {/* <button 
+                  className='relative p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200'
                   onClick={() => router.push('/cart')}
                 >
                   <IoCartOutline className='text-xl text-[#A09F9F] hover:text-[#F25E26] transition-colors duration-200' />
@@ -944,11 +1109,11 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       {cartCount > 99 ? '99+' : cartCount}
                     </span>
                   )}
-                </button>
+                </button> */}
 
                 {/* Mobile Menu Toggle - Show when desktop nav is hidden */}
                 <button 
-                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2 hover:bg-gray-100 rounded-full transition-colors duration-200`}
+                  className={`${!showDesktopNav ? 'block' : 'hidden'} p-2.5 h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors duration-200`}
                   onClick={hamburgerfunc}
                 >
                   {isOpen ? (
@@ -963,7 +1128,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
           {/* Mobile Navigation Menu */}
           <div
-            className={`fixed top-0 right-0 h-full w-72 sm:w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+            className={`fixed top-0 right-0 h-full w-80 sm:w-96 max-w-[92vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
               !showDesktopNav ? 'block' : 'hidden'
             } ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -1055,15 +1220,15 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
           {/* Mobile Search Overlay */}
           {showMobileSearch && !showDesktopNav && (
-            <div className='absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40'>
-              <div className='p-3 sm:p-4'>
+            <div className='absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40 rounded-b-lg'>
+              <div className='p-3 sm:p-4 mx-auto max-w-[1200px]'>
                 <div className='flex items-center gap-2 sm:gap-3'>
                   <div className='flex-1 min-w-0'>
                     <Search isMobile={true} onClose={() => setShowMobileSearch(false)} />
                   </div>
                   <button 
                     onClick={() => setShowMobileSearch(false)}
-                    className='p-2 text-gray-500 hover:text-gray-700 flex-shrink-0'
+                    className='p-2.5 h-10 w-10 flex items-center justify-center text-gray-500 hover:text-gray-700 flex-shrink-0 rounded-full hover:bg-gray-100'
                   >
                     <IoClose className='text-xl' />
                   </button>
@@ -1072,6 +1237,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           )}
         </div>
+
 
         {/* Notification Modal - Full Page Overlay */}
         {showNotificationModal && (
@@ -1173,6 +1339,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                         <button
                           onClick={() => toggleNotification(index)}
                           className='w-full p-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200 rounded-t-lg'
+                          disabled={loadingNotifications[notification.id?.toString() || '']}
                         >
                           <div className='flex-1'>
                             <h4 className={`font-Poppins text-base ${
@@ -1194,17 +1361,40 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                            {/*  {!notification.read && (
                               <div className='w-2 h-2 bg-[#F25E26] rounded-full'></div>
                             )} */}
-                            <IoIosArrowDown 
-                              className={`text-lg text-[#A09F9F] transition-transform duration-200 ${
-                                expandedNotifications.includes(index) ? 'rotate-180' : ''
-                              }`} 
-                            />
+                            {loadingNotifications[notification.id?.toString() || ''] ? (
+                              <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-[#F25E26]'></div>
+                            ) : (
+                              <IoIosArrowDown 
+                                className={`text-lg text-[#A09F9F] transition-transform duration-200 ${
+                                  expandedNotifications.includes(index) ? 'rotate-180' : ''
+                                }`} 
+                              />
+                            )}
                           </div>
                         </button>
 
                         {/* Notification Content (Accordion) */}
                         {expandedNotifications.includes(index) && (
                           <div className='px-4 pb-4 border-t border-gray-100'>
+                            {/* Loading indicator */}
+                            {loadingNotifications[notification.id?.toString() || ''] && (
+                              <div className='flex items-center gap-2 mt-3 mb-2'>
+                                <div className='animate-spin rounded-full h-3 w-3 border-b-2 border-[#F25E26]'></div>
+                                <p className='text-xs text-gray-500 font-Poppins'>Marking as read...</p>
+                              </div>
+                            )}
+                            
+                            {/* Success/Error message */}
+                            {notificationMessages[notification.id?.toString() || ''] && !loadingNotifications[notification.id?.toString() || ''] && (
+                              <div className={`mt-3 mb-2 px-3 py-2 rounded-md text-xs font-Poppins ${
+                                notificationMessages[notification.id?.toString() || '']?.type === 'success'
+                                  ? 'bg-green-50 text-green-700 border border-green-200'
+                                  : 'bg-red-50 text-red-700 border border-red-200'
+                              }`}>
+                                {notificationMessages[notification.id?.toString() || '']?.message}
+                              </div>
+                            )}
+                            
                             <p className='text-sm text-[#504D4D] font-Poppins leading-relaxed mt-3'>
                               {notification.message}
                             </p>

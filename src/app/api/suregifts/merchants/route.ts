@@ -12,7 +12,7 @@ export async function GET(request: Request) {
         }
 
         const response = await fetch(
-            "https://staging.ajiroba.ng/v1/pay/suregifts/merchants/",
+            `${process.env.NEXT_PUBLIC_BASE_URL}/pay/suregifts/merchants/`,
             {
                 headers: {
                     Authorization: `token ${token}`,

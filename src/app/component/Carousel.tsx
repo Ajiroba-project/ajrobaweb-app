@@ -1,11 +1,11 @@
 'use client'
 import Image from 'next/image'
-import carousel from '../asset/image/carousel.png'
-import buyticket from '../asset/image/buy_ticket.svg'
-import auction_one from '../asset/image/auction_one.svg'
-import auction_and_win from '../asset/image/enter_and_win.png'
-import rafledraw from '../asset/image/raffle_draw.svg'
-import recharge_and_win from '../asset/image/recharge_and_win.svg'
+// import carousel from '../asset/image/carousel.png'
+import buyticket from '../asset/image/buy_ticket.webp'
+import auction_one from '../asset/image/raffledraw.webp'
+import auction_and_win from '../asset/image/enter_and_win_main_demo.webp'
+import rafledraw from '../asset/image/raffle_draw.webp'
+import recharge_and_win from '../asset/image/recharge_and_win.webp'
 import {
   Navigation,
   Pagination,
@@ -20,8 +20,14 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
+import { CarouselSkeleton } from './LoadingSkeleton'
 
 export const CarouselSwiper = () => {
+
+  // Responsive sizes for better performance - optimized for 1440px desktop
+  // Ensures images load at proper sizes for each breakpoint without distortion
+  const imageSizes = "(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, (max-width: 1440px) 1440px, 1440px"
+  
   return (
     <Swiper
       // install Swiper modules
@@ -41,57 +47,93 @@ export const CarouselSwiper = () => {
         prevEl: '.swiper-button-prev',
         disabledClass: 'swiper-button-disabled'
       }}
+      className="h-[220px] sm:h-[280px] md:h-[360px] lg:h-[620px] w-full"
     >
       <SwiperSlide>
-        {/* Mobile: default size */}
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={auction_one} alt="carousel" />
-        </div>
-        {/* Desktop: fill container */}
-        <div className="relative w-full aspect-[16/6] hidden lg:block">
-          <Image src={auction_one} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-full">
+          <Image 
+            src={auction_one} 
+            alt="Auction carousel" 
+            fill 
+            priority
+            quality={100}
+            sizes={imageSizes}
+            className="object-cover object-center"
+            unoptimized={false}
+          />
         </div>
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={buyticket} alt="carousel" />
-        </div>
-        <div className="relative w-full aspect-[16/6] hidden lg:block">
-          <Image src={buyticket} alt="carousel" fill style={{ objectFit: 'cover' }} />
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={auction_and_win} alt="carousel" />
-        </div>
-        <div className="relative w-full aspect-[16/6] hidden lg:block">
-          <Image src={auction_and_win} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-full">
+          <Image 
+            src={buyticket} 
+            alt="Buy ticket carousel" 
+            fill 
+            priority
+            quality={100}
+            sizes={imageSizes}
+            className="object-cover object-center"
+            unoptimized={false}
+          />
         </div>
       </SwiperSlide>
+      
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={rafledraw} alt="carousel" />
-        </div>
-        <div className="relative w-full aspect-[16/6] hidden lg:block">
-          <Image src={rafledraw} alt="carousel" fill style={{ objectFit: 'cover' }} />
+        <div className="relative w-full h-full">
+          <Image 
+            src={auction_and_win} 
+            alt="Enter and win carousel" 
+            fill 
+            priority
+            quality={100}
+            sizes={imageSizes}
+            className="object-cover object-center"
+            unoptimized={false}
+          />
         </div>
       </SwiperSlide>
+      
       <SwiperSlide>
-        <div className="relative w-auto h-auto block lg:hidden">
-          <Image src={recharge_and_win} alt="carousel" />
+        <div className="relative w-full h-full">
+          <Image 
+            src={rafledraw} 
+            alt="Raffle draw carousel" 
+            fill 
+            priority
+            quality={100}
+            sizes={imageSizes}
+            className="object-cover object-center"
+            unoptimized={false}
+          />
         </div>
-        <div className="relative w-full aspect-[16/6] hidden lg:block">
-          <Image src={recharge_and_win} alt="carousel" fill style={{ objectFit: 'cover' }} />
+      </SwiperSlide>
+      
+      <SwiperSlide>
+        <div className="relative w-full h-full">
+          <Image 
+            src={recharge_and_win} 
+            alt="Recharge and win carousel" 
+            fill 
+            priority
+            quality={100}
+            sizes={imageSizes}
+            className="object-cover object-center"
+            unoptimized={false}
+          />
         </div>
       </SwiperSlide>
     </Swiper>
   )
 }
 
-export const Carousel = () => {
+export const Carousel = ({ isLoading = false }: { isLoading?: boolean }) => {
+  if (isLoading) {
+    return <CarouselSkeleton />
+  }
+
   return (
-    <div className='relative '>
+    <div className='relative h-[220px] sm:h-[280px] md:h-[360px] lg:h-[620px] w-full'>
       <CarouselSwiper />
       <div className='swiper-button-next  !w-[35px]  rounded-full bg-[#fcdfd4] !p-[10px] !text-[15px] !h-auto !text-[#f25e26] after:!text-[15px]'></div>
       <div className='swiper-button-prev  !w-[35px]  rounded-full border-2 border-white bg-transparent !p-[10px] !text-[15px] !text-white after:!text-[15px] !h-auto'></div>

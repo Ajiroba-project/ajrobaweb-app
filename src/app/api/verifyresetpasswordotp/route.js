@@ -5,7 +5,6 @@ export async function POST(request) {
         const body = await request.json();
         const cacheBuster = `cache=${Date.now()}`;
 
-        // https://staging.ajiroba.ng/v1/auth/verify_reset_password_code/
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify_reset_password_code/?${cacheBuster}`, {
             method: 'POST',

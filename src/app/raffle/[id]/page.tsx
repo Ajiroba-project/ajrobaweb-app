@@ -128,13 +128,65 @@ const Page = ({ params }: any) => {
     }
   }, [userToken, product_id, router]);
 
+  // Start countdown timer
+  const startCountdown = useCallback(() => {
+    let count = 5;
+    setCountdownValue(count);
+    
+    const timer = setInterval(() => {
+      count--;
+      setCountdownValue(count);
+      
+      if (count <= 0) {
+        clearInterval(timer);
+        // Navigate to winners page
+        router.push(`/raffle/${product_id}/winners`);
+      }
+    }, 1000);
+  }, [product_id, router]);
+
+  // Check if raffle is about to start (within 5 seconds)
+  const checkRaffleAboutToStart = useCallback(() => {
+    if (!productdatanew?.start_date || !productdatanew?.start_time) return;
+
+    const now = new Date();
+    const startDate = new Date(productdatanew.start_date + " " + productdatanew.start_time);
+    const timeUntilStart = startDate.getTime() - now.getTime();
+    
+    // If raffle starts in 5 seconds or less, show countdown
+    if (timeUntilStart <= 5000 && timeUntilStart > 0) {
+      setShowCountdown(true);
+      startCountdown();
+    }
+  }, [productdatanew, startCountdown]);
+
+  // Check if enforced time has passed
+  const checkEnforcedTime = useCallback(() => {
+    if (enforceTime === 0 || raffleStartTime === 0) return;
+    
+    const now = Date.now();
+    const timeSinceRaffleStarted = now - raffleStartTime;
+    const remaining = Math.max(0, enforceTime - timeSinceRaffleStarted);
+    setRemainingEnforceTime(remaining);
+    
+    // Check if we're in the enforced period
+    if (timeSinceRaffleStarted >= 0 && timeSinceRaffleStarted < enforceTime) {
+      // We're in the enforced period, show countdown
+      // console.log('In enforced period, remaining time:', remaining);
+    } else if (timeSinceRaffleStarted >= enforceTime) {
+      // Enforced time has passed, redirect to winners page
+    /*   console.log('Redirecting due to enforced time completion'); */
+      router.push(`/raffle/${product_id}/winners`);
+    }
+  }, [enforceTime, raffleStartTime, product_id, router]);
+
   useEffect(() => {
    /*  console.log('Page loaded, fetching raffle data'); */
     
     const fetchData = async () => {
       try {
         const data = await fetchWithAuth(
-          `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`,
         );
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -153,7 +205,7 @@ const Page = ({ params }: any) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [productdatanew]);
+  }, [productdatanew, checkRaffleAboutToStart]);
 
   // Check enforced time every second
   useEffect(() => {
@@ -173,7 +225,7 @@ const Page = ({ params }: any) => {
  /*      console.log('Clearing enforced time interval'); */
       clearInterval(interval);
     };
-  }, [enforceTime, raffleStartTime]);
+  }, [enforceTime, raffleStartTime, checkEnforcedTime]);
 
 
 
@@ -225,66 +277,7 @@ const Page = ({ params }: any) => {
     }
   };
 
-  // Check if raffle is about to start (within 5 seconds)
-  const checkRaffleAboutToStart = () => {
-    if (!productdatanew?.start_date || !productdatanew?.start_time) return;
 
-    const now = new Date();
-    const startDate = new Date(productdatanew.start_date + " " + productdatanew.start_time);
-    const timeUntilStart = startDate.getTime() - now.getTime();
-    
-    // If raffle starts in 5 seconds or less, show countdown
-    if (timeUntilStart <= 5000 && timeUntilStart > 0) {
-      setShowCountdown(true);
-      startCountdown();
-    }
-  };
-
-  // Check if enforced time has passed
-  const checkEnforcedTime = () => {
-    if (enforceTime === 0 || raffleStartTime === 0) return;
-    
-    const now = Date.now();
-    const timeSinceRaffleStarted = now - raffleStartTime;
-    const remaining = Math.max(0, enforceTime - timeSinceRaffleStarted);
-    setRemainingEnforceTime(remaining);
-    
-    // Check if we're in the enforced period
-    if (timeSinceRaffleStarted >= 0 && timeSinceRaffleStarted < enforceTime) {
-      // We're in the enforced period, show countdown
-      // console.log('In enforced period, remaining time:', remaining);
-    } else if (timeSinceRaffleStarted >= enforceTime) {
-      // Enforced time has passed, redirect to winners page
-    /*   console.log('Redirecting due to enforced time completion'); */
-      router.push(`/raffle/${product_id}/winners`);
-    }
-    
-    // console.log('Enforced time check:', {
-    //   enforceTime,
-    //   raffleStartTime: new Date(raffleStartTime).toLocaleString(),
-    //   now: new Date(now).toLocaleString(),
-    //   timeSinceRaffleStarted,
-    //   remaining,
-    //   shouldRedirect: timeSinceRaffleStarted >= enforceTime
-    // });
-  };
-
-  // Start countdown timer
-  const startCountdown = () => {
-    let count = 5;
-    setCountdownValue(count);
-    
-    const timer = setInterval(() => {
-      count--;
-      setCountdownValue(count);
-      
-      if (count <= 0) {
-        clearInterval(timer);
-        // Navigate to winners page
-        router.push(`/raffle/${product_id}/winners`);
-      }
-    }, 1000);
-  };
 
   const handleVideoControl = () => {
     if (iframeRef.current) {
@@ -394,7 +387,7 @@ const Page = ({ params }: any) => {
       <header className="fixed z-50 w-full">
         <Header />
       </header>
-      <div className="w-full bg-[#F6F6F6] pt-[20vh]">
+      <div className="w-full bg-[#F6F6F6] pt-[20vh] content-container">
         <div className="container flex flex-col">
           <p
             onClick={() => router.back()}
@@ -532,12 +525,12 @@ const Page = ({ params }: any) => {
                 <p className="text-lg text-gray-600 mb-4">
                   Please watch the video completely to participate in the raffle
                 </p>
-                <DefaultButton
+                {/* <DefaultButton
                   text={playState ? "Stop Video" : "Play Video"}
                   className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"
                   type="button"
                   handleClick={handleVideoControl}
-                />
+                /> */}
               </div>
             )}
           </>
@@ -576,7 +569,10 @@ const Page = ({ params }: any) => {
         handleOk={() => setViewCountdown(false)}
         handleCancel={() => setViewCountdown(false)}
       />
-      <Footer />
+
+      <div className='content-container'>
+        <Footer />
+      </div>
     </section>
   );
 };

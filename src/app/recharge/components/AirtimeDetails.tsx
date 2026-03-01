@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { Airtimeschema } from './YupValidations'
 import { DefaultButton } from '../../component/Button'
-import { InputField, SelectField } from './FormField'
+import { InputField, SelectField, CurrencyInputField } from './FormField'
 import { AirtimePurchase } from '@/store/store'
 import { Formtitle } from './Formtitle'
 import { CustomModal, Modal } from '@/app/component/Modal'
@@ -18,9 +18,11 @@ import airtelicon from '../../asset/airtelicon.png'
 import { StaticImageData } from 'next/image'
 import mtnicon from '../../asset/mtnicon.svg'
 import ninemobileicon from '../../asset/ninemobileicon.png'
+import './style.css'
 import gloicon from '../../asset/gloicon.png'
 import { set } from 'date-fns'
 import { Item } from '@radix-ui/react-select'
+import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates'
 
 
 type AirtimeProps = {
@@ -44,7 +46,7 @@ export const AirtimeDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Airtime`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=airtime`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -61,19 +63,13 @@ export const AirtimeDetails = () => {
     Smile: airtelicon,
     Virgin: airtelicon,
     Etisalat: airtelicon,
-    ninemobile: ninemobileicon,
+    "9MOBILE": ninemobileicon,
     GLO: gloicon
-  }
+  };
 
-  const transformedData = bensdata?.data?.map((item: { biller: string; number: any }, index: number) => {
-    const billerUpper = item.biller.trim().toUpperCase(); // Trim whitespace & ensure uppercase
-    return {
-      id: index + 1,
-      number: item.number,
-      type: billerUpper,
-      icon: iconMap[billerUpper] || null, // Default to null if not found
-    };
-  });
+  // console.log(bensdata?.data, 'bensdata?.data');
+
+  const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
 
 
@@ -136,7 +132,7 @@ export const AirtimeDetails = () => {
             showlabel={false}
             value={watch("network")} // Ensure value updates
             onChange={(e) => setValue("network", e.target.value)} // Update manually
-            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F] selector"
           />
 
 
@@ -147,13 +143,12 @@ export const AirtimeDetails = () => {
             type='text'
             placeholder='Phone Number'
           />
-          <InputField
+          <CurrencyInputField
             name='amount'
             register={register}
             errors={errors}
             type='text'
             placeholder='Amount'
-
           />
           <p onClick={() => setprintreceipt(!printreceipt)} className='text-end text-[#f25e26] underline cursor-pointer text-sm font-Poppins'>Beneficiaries</p>
 
@@ -169,50 +164,49 @@ export const AirtimeDetails = () => {
 
           <CustomModal isOpen={printreceipt}>
 
-            <section className='container flex flex-col '>
-              <div className='flex justify-between items-center'>
+            <section className='flex flex-col'>
+              <div className='flex items-center justify-between'>
                 <Image src={Brand} alt='brand-logo' />
-                <h2 className=' font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize'>{'Beneficiaries'}</h2>
+                <h2 className='font-Poppins text-[#2A2A2A] font-medium text-base md:text-xl leading-none'>Beneficiaries</h2>
               </div>
-              <p className="brand1 py-4 cursor-pointer font-Poppins text-sm underline" onClick={() => setprintreceipt(false)}>Back</p>
+              <button className='text-left text-[#E84526] underline mt-3 font-Poppins text-sm' onClick={() => setprintreceipt(false)}>Back</button>
             </section>
 
 
 
-
-            <div className="p-6 bg-gray-100 min-h-screen">
-              <div className="space-y-4">
-
-                {transformedData?.map((item: TransformedDataItem) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    {/* Icon and details */}
-                    <div className="flex items-center">
-                      {item.icon && (
-                        <Image src={item.icon} alt={item.type} width={40} className="w-10 h-10 rounded-full mr-4" height={40} />
-                      )}
-
-                      {/*  <Image
-                src={item.icon as string}
-                alt={item.type}
-                className="w-10 h-10 rounded-full mr-4"
-                width={40}
-                height={40}
-              /> */}
-                      <div>
-                        <p className="text-gray-900 font-semibold">{item.number}</p>
-                        <p className="text-gray-500 text-sm">{item.type}</p>
+            <div className="pt-2">
+              <div className="space-y-5">
+                {transformedData && transformedData.length > 0 ? (
+                  transformedData.map((item: TransformedDataItem) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between rounded-xl bg-[#F8F8F8] px-6 py-5 border border-[#F0F0F0]"
+                    >
+                      <div className="flex items-center gap-4">
+                        {item.icon && (
+                          <Image src={item.icon} alt={item.type} width={44} height={44} className="w-11 h-11 rounded-full" />
+                        )}
+                        <div className="leading-tight">
+                          <p className="text-[15px] md:text-base text-[#2A2A2A] font-medium tracking-[0.2px]">{item.number}</p>
+                          <p className="text-xs text-[#8C8C8C] mt-1">{item.type}</p>
+                        </div>
                       </div>
+                      <button
+                        onClick={() => handleUseClick(item.number, item.type)}
+                        className="px-5 py-2 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] text-sm font-medium hover:opacity-90"
+                      >
+                        Use
+                      </button>
                     </div>
-
-                    {/* Action button */}
-                    <button onClick={() => handleUseClick(item.number, item.type)} className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]">
-                      Use
-                    </button>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="text-center">
+                      <p className="text-[#8C8C8C] text-lg font-medium mb-2">No Beneficiaries Available</p>
+                      <p className="text-[#8C8C8C] text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 

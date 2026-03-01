@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { SetStateAction, useEffect, useMemo, useState, useRef } from "react";
+import { SetStateAction, useEffect, useMemo, useState, useRef, useCallback } from "react";
 
 import { Header } from "../component/Header";
 import { Title } from "../component/Title";
@@ -57,7 +57,7 @@ const Page = () => {
     triggerCartRefresh: state.triggerCartRefresh,
   }));
 
-  const fetchCartItems = async () => {
+  const fetchCartItems = useCallback(async () => {
     const tkn_: string = Cookies.get("token") as string;
 
     if (!tkn_) {
@@ -86,7 +86,7 @@ const Page = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://staging.ajiroba.ng/v1/commerce/checkout/`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/checkout/`,
       headers: headers,
     };
 
@@ -96,7 +96,7 @@ const Page = () => {
         /*   console.log(response.data, "response"); */
         const { data } = response.data;
 
-        // console.log(data, 'data', data?.status)
+      /*    console.log(data, 'data', data?.status) */
 
         if (data?.status === 400) {
           router.push("/my-order");
@@ -109,7 +109,7 @@ const Page = () => {
 
       })
       .catch((error) => {
-        // console.log(error, 'error', error.status);
+       /*   console.log(error, 'error', error.status); */
 
         if (error.status === 400) {
           router.push("/my-order");
@@ -121,11 +121,11 @@ const Page = () => {
 
       })
       .finally(() => setLoading(false));
-  };
+  }, [router]);
 
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, [fetchCartItems]);
 
   const handlePaymentSelection = (method: SetStateAction<string>) => {
     setPaymentMethod(method);
@@ -168,6 +168,18 @@ const Page = () => {
     setConfirmOrder(false);
   };
 
+  const handleWalletPayment = () => {
+    // Check if pin is already verified
+    const verifiedPin = Cookies.get("nvd");
+    if (verifiedPin) {
+      // Pin is already verified, proceed directly to order placement
+      handleOrderbutton();
+    } else {
+      // Pin not verified, show modal for verification
+      showConfirmOrder();
+    }
+  };
+
   const schema = yup.object().shape({
     password: yup
       .string()
@@ -196,7 +208,8 @@ const Page = () => {
       data?.data?.status === 200 ||
       data.status === 201
     ) {
-      localStorage.setItem("pin_id", "yes");
+      // Close the wallet pin modal
+      setConfirmOrder(false);
       setSuccessModal(!successModal);
       toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
         position: "top-right",
@@ -291,6 +304,132 @@ const Page = () => {
     reset();
   };
 
+  // Separate handlers for pin verification and order placement
+  const handlePinVerificationSuccess = (data: any) => {
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      // Close the wallet pin modal
+      setConfirmOrder(false);
+      toast.success(`${data?.data?.message || "PIN verified successfully"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+      
+      // User needs to manually click "Confirm Order" again to place the order
+    } else if (
+      data?.data?.status === 400 ||
+      data?.data?.status === 409 ||
+      data.status === 400 ||
+      data.status === 409
+    ) {
+      toast.error(`${data?.data?.message || "Password doesnt match"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 401) {
+      toast.error(`${data?.data?.message || "Authentication error"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else if (data.status === 500) {
+      toast.error(`${data?.data?.message || "old_password"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    } else {
+      toast.error(`${"An Error Occured"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      reset();
+    }
+  };
+
+  const handleOrderSuccess = (data: any) => {
+    if (
+      data.status === 200 ||
+      data?.data?.status === 201 ||
+      data?.data?.status === 200 ||
+      data.status === 201
+    ) {
+      // Clear the verified pin cookie after successful order
+      Cookies.remove("nvd");
+      
+      setSuccessModal(!successModal);
+      toast.success(`${data?.data?.message || "Order placed successfully"} `, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+          if (
+            data?.data?.message &&
+            data.data.message.includes("Order placed successfully. Order Code")
+          ) {
+            // Clear cart count after successful order placement
+            triggerCartRefresh();
+            router.push("/my-order");
+          } else {
+            router.push("/paymentpage");
+          }
+        },
+      });
+    } else {
+      toast.error(`${data?.data?.message || "Order placement failed"}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   const { isLoggedIn, user, token } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
     user: state.user,
@@ -308,7 +447,16 @@ const Page = () => {
     isSuccess,
     mutate,
     status,
-  } = useMutateData("verifywalletpin", handleSuccess, handleError);
+  } = useMutateData("verifywalletpin", handlePinVerificationSuccess, handleError);
+
+  const {
+    data: orderData,
+    error: orderError,
+    isError: isOrderError,
+    isSuccess: isOrderSuccess,
+    mutate: mutateOrder,
+    status: orderStatus,
+  } = useMutateData("orderpayment", handleOrderSuccess, handleError);
 
   const submitForm = (data: any) => {
     Cookies.set("nvd", data?.password, { expires: 1 });
@@ -334,7 +482,7 @@ const Page = () => {
       payment_method: "Wallet",
     };
 
-    mutate({
+    mutateOrder({
       url: "/api/orderpayment",
       payload: { payload: payload, token: userToken },
       token: userToken,
@@ -394,7 +542,7 @@ const Page = () => {
       };
 
       const response = await axios.post(
-   "https://staging.ajiroba.ng/v1/commerce/order/",
+   `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/order/`,
         payload,
         {
           headers: {
@@ -416,7 +564,7 @@ const Page = () => {
         
         setShowConfirmation(false);
 
-        toast.success(response.data.message || `Payment initiated successfully`, {
+        toast.success(response.data.message || `Payment initiated, Kindly proceed to complete payment`, {
           closeButton: false,
         });
       } else {
@@ -543,7 +691,7 @@ const Page = () => {
         };
   
         const response = await axios.post(
-          "https://staging.ajiroba.ng/v1/commerce/order/",
+          `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/order/`,
           payload,
           {
             headers: {
@@ -561,7 +709,7 @@ const Page = () => {
           setPaymentUrl(payment_url);
           setShowModalUp(true);
   
-          toast.success(`Payment initiated successfully, please wait for the payment to be verified`, {
+          toast.success(`Payment initiated, Kindly proceed to complete payment`, {
             closeButton: false,
           });
         } else {
@@ -583,7 +731,7 @@ const Page = () => {
       try {
         const tkn_: string = Cookies.get("token") as string;
         const response = await axios.get(
-          `https://staging.ajiroba.ng/v1/commerce/verify_product_payment/${reference}/`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/verify_product_payment/${reference}/`,
           {
             headers: {
               Authorization: `token ${tkn_}`,
@@ -1024,20 +1172,14 @@ const Page = () => {
                   </div>
 
                   <button
-                    onClick={() => {
-                      if (localStorage.getItem("pin_id") === "yes") {
-                        handleOrderbutton();
-                      } else {
-                        showConfirmOrder();
-                      }
-                    }}
+                    onClick={handleWalletPayment}
                     className={`w-full mt-4 px-12 py-2 text-sm font-Poppins font-normal rounded ${isPaymentMethodConfirmed
                       ? "bg-[#E84526] text-[#FFFFFF] cursor-pointer"
                       : "bg-[#D2D2D2] text-[#F6F6F6] cursor-not-allowed"
                       }`}
                     disabled={!isPaymentMethodConfirmed}
                   >
-                    {status === "pending" ? "..." : "Confirm Order"}
+                    {orderStatus === "pending" ? "Processing..." : "Confirm Order"}
                   </button>
                 </div>
               ) : paymentMethod === "card" ? (
@@ -1211,7 +1353,7 @@ const Page = () => {
                 </div>
               </div>
 
-              <div className="flex mt-4 gap-4">
+              {/* <div className="flex mt-4 gap-4">
                 <div>
                   <IoLocationOutline color="#F25E26" size={24} />
                 </div>
@@ -1220,10 +1362,10 @@ const Page = () => {
                   <p className="text-[#2A2A2A]">
                     32, Ajiroba street,Arepo,lagos
                   </p>
-                </div>
-              </div>
+                </div> 
+              </div> */}
 
-              <div className="flex mt-4 gap-4">
+              {/* <div className="flex mt-4 gap-4">
                 <div>
                   <IoLocationOutline color="#F25E26" size={24} />
                 </div>
@@ -1231,7 +1373,7 @@ const Page = () => {
                 <div>
                   <p className="text-[#2A2A2A]">45, jasper james, lekki</p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex gap-4 justify-center mt-4">
                 <div>

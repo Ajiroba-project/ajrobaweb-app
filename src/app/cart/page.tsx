@@ -15,11 +15,18 @@ import { toast } from "react-toastify";
 import AuthMiddleware from '@/hooks/useAuthCart'
 import { useAuthStore } from '@/store/store';
 import  Loading  from "../component/Loading";
+import { formatCurrency } from "@/utils/formatCurrency";
+
+// Small loading spinner component for individual operations
+const SmallSpinner = () => (
+  <div className="inline-block w-4 h-4 border-2 border-gray-300 border-t-[#E36414] rounded-full animate-spin"></div>
+);
 
 const Page = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [operationLoading, setOperationLoading] = useState<{ [key: number]: boolean }>({});
 
   const [cartItemsn, setCartItemsn] = useState<any[]>([]);
 
@@ -54,7 +61,7 @@ const Page = () => {
     let config = {
       method: "GET",
       maxBodyLength: Infinity,
-      url: `https://staging.ajiroba.ng/v1/commerce/cart/?session_key=${sessionKey}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
       headers: headers,
     };
 
@@ -94,10 +101,9 @@ const Page = () => {
 
   // Function to handle quantity increase
   const handleIncrement = async (id: number, quantity: number) => {
-    // const sessionKey = Cookies.get("session_key");
-
+    setOperationLoading(prev => ({ ...prev, [id]: true }));
+    
     let sessionKey = Cookies.get("session_key");
-
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
     };
@@ -105,8 +111,9 @@ const Page = () => {
     if (tkn_) {
       headers["Authorization"] = `token ${tkn_}`;
     }
+
     try {
-      const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/increase_item_quantity/", {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/increase_item_quantity/`, {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
@@ -114,23 +121,17 @@ const Page = () => {
         headers: headers,
       });
 
-      const successMessage = response.data?.message || "Item quantity increased successfully!";
-      toast.success(`${successMessage}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        onClose: () => router.push('/cart')
-      })
-      fetchCartItems(); // Refresh cart items after updating
-      triggerCartRefresh(); // Trigger header cart refresh
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-      toast.error(`${errorMessage}`, {
+      // Update local state immediately for better UX
+      setCartItemsn(prevItems => 
+        prevItems.map(item => 
+          item.id === id 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+
+      const successMessage = response.data?.message || "Quantity increased successfully!";
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -139,17 +140,40 @@ const Page = () => {
         draggable: true,
         progress: undefined,
         theme: 'light'
-      })
-      setError("Error increasing quantity");
+      });
+
+      triggerCartRefresh(); // Trigger header cart refresh
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      });
+    } finally {
+      setOperationLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
   // Function to handle quantity decrease
   const handleDecrement = async (id: number, quantity: number) => {
-    // const sessionKey = Cookies.get("session_key");
+    if (quantity <= 1) {
+      toast.warning("Quantity cannot be less than 1. Use delete to remove item.", {
+        position: 'top-right',
+        autoClose: 3000,
+        theme: 'light'
+      });
+      return;
+    }
 
+    setOperationLoading(prev => ({ ...prev, [id]: true }));
+    
     let sessionKey = Cookies.get("session_key");
-
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
     };
@@ -157,8 +181,9 @@ const Page = () => {
     if (tkn_) {
       headers["Authorization"] = `token ${tkn_}`;
     }
+
     try {
-      const response = await axios.put("https://staging.ajiroba.ng/v1/commerce/decrease_item_quantity/", {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/decrease_item_quantity/`, {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
@@ -166,23 +191,17 @@ const Page = () => {
         headers: headers,
       });
 
-      const successMessage = response.data?.message || "Item quantity increased successfully!";
-      toast.success(`${successMessage}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        onClose: () => router.push('/cart')
-      })
-      fetchCartItems(); // Refresh cart items after updating
-      triggerCartRefresh(); // Trigger header cart refresh
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-      toast.error(`${errorMessage}`, {
+      // Update local state immediately for better UX
+      setCartItemsn(prevItems => 
+        prevItems.map(item => 
+          item.id === id 
+            ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+            : item
+        )
+      );
+
+      const successMessage = response.data?.message || "Quantity decreased successfully!";
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -191,15 +210,35 @@ const Page = () => {
         draggable: true,
         progress: undefined,
         theme: 'light'
-      })
-      setError("Error increasing quantity");
+      });
+
+      triggerCartRefresh(); // Trigger header cart refresh
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Error decreasing item quantity.";
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+      });
+    } finally {
+      setOperationLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
   // Function to delete a cart item
   const handleDelete = async (id: number, quantity: number) => {
-    let sessionKey = Cookies.get("session_key");
+    // Show confirmation dialog
+    const confirmed = window.confirm("Are you sure you want to remove this item from your cart?");
+    if (!confirmed) return;
 
+    setOperationLoading(prev => ({ ...prev, [id]: true }));
+    
+    let sessionKey = Cookies.get("session_key");
     let headers: { [key: string]: string } = {
       "Content-Type": "application/json",
     };
@@ -208,20 +247,21 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-
     try {
-      const response = await axios.delete("https://staging.ajiroba.ng/v1/commerce/remove_from_cart/", {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/remove_from_cart/`, {
         data: {
           cart_item_id: id,
-          session_key: sessionKey || null,  // Ensure the session_key is not empty
+          session_key: sessionKey || null,
           quantity: quantity
         },
         headers: headers,
       });
 
+      // Update local state immediately for better UX
+      setCartItemsn(prevItems => prevItems.filter(item => item.id !== id));
 
       const successMessage = response.data?.message || "Item removed successfully!";
-      toast.success(`${successMessage}`, {
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -229,16 +269,13 @@ const Page = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light',
-        onClose: () => router.push('/cart'),
+        theme: 'light'
       });
 
-      fetchCartItems(); // Refresh cart items after updating
       triggerCartRefresh(); // Trigger header cart refresh
     } catch (error: any) {
-
       const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
-      toast.error(`${errorMessage}`, {
+      toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 2000,
         hideProgressBar: false,
@@ -246,10 +283,10 @@ const Page = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'light',
+        theme: 'light'
       });
-
-      setError("Error removing item");
+    } finally {
+      setOperationLoading(prev => ({ ...prev, [id]: false }));
     }
   };
 
@@ -287,9 +324,6 @@ const Page = () => {
 
 
                 {
-
-
-
                   loading ? (
                     <p>Loading cart items...</p>
                   ) : error ? (
@@ -298,12 +332,12 @@ const Page = () => {
                     paginatedCartInfo?.map((item) => (
                       <div
                         key={item.id}
-                        className="border rounded border-[#D2D2D2] px-4 py-2 my-4"
+                        className="border rounded border-[#D2D2D2] px-3 py-3 sm:px-4 sm:py-2 my-4"
                       >
-                        <div className="flex justify-between flex-wrap 2xl:flex-row xl:flex-row lg:flex-row md:flex-row flex-col gap-4">
-                          <div>
+                        <div className="grid grid-cols-[64px_1fr] sm:flex sm:flex-row justify-between gap-3 sm:gap-6 overflow-hidden">
+                          <div className="col-span-1">
                             <Image
-                              className="w-100 h-100 object-cover"
+                              className="w-16 h-16 sm:w-[100px] sm:h-[100px] object-cover rounded"
                               src={`https://staging.ajiroba.ng/media/${item?.product?.images[0]?.image}`}
                               alt="Product Thumbnail"
                               height={100}
@@ -313,49 +347,88 @@ const Page = () => {
                             <div className="flex items-center mt-2">
                               <button
                                 onClick={() => handleDecrement(item.id, item.quantity)}
-                                className="px-2  bg-white text-[#111111] rounded border border-[#DEDEDE]"
+                                disabled={operationLoading[item.id] || item.quantity <= 1}
+                                className={`px-2 bg-white text-[#111111] rounded border border-[#DEDEDE] ${
+                                  operationLoading[item.id] || item.quantity <= 1 
+                                    ? 'opacity-50 cursor-not-allowed' 
+                                    : 'hover:bg-gray-50'
+                                }`}
                               >
-                                -
+                                {operationLoading[item.id] ? <SmallSpinner /> : '-'}
                               </button>
                               <input
                                 type="text"
                                 value={item.quantity}
                                 readOnly
-                                className="w-12 text-center  border-gray-300"
+                                className="w-10 sm:w-12 text-center border-gray-300"
                               />
                               <button
                                 onClick={() => handleIncrement(item.id, item.quantity)}
-                                className="px-2  bg-[#E36414] text-white rounded border-[#E36414]"
+                                disabled={operationLoading[item.id]}
+                                className={`px-2 bg-[#E36414] text-white rounded border-[#E36414] ${
+                                  operationLoading[item.id] 
+                                    ? 'opacity-50 cursor-not-allowed' 
+                                    : 'hover:bg-[#d55a12]'
+                                }`}
                               >
-                                +
+                                {operationLoading[item.id] ? <SmallSpinner /> : '+'}
                               </button>
                             </div>
                           </div>
 
-                          <div className="flex justify-center items-center flex-col 2xl:w-3/12 xl:w-3/12 lg:w-3/12 md:w-3/12 w-auto">
-                            <p className="text-[#111111]  font-Poppins font-medium text-base mt-4">
+                          <div className="flex justify-start items-start flex-col sm:w-5/12 w-full pr-1">
+                            <p className="text-[#111111] font-Poppins font-medium text-sm sm:text-base mt-0 sm:mt-4 leading-5 sm:leading-6">
                               {item?.product?.name}
                             </p>
 
-                            <h1 className="text-[#b4a3a3] text-sm  mt-4">Food Stuff . In Stock</h1>
+                            <h1 className="text-[#6B7280] text-xs sm:text-sm mt-1 sm:mt-2">Food Stuff • In stock</h1>
                           </div>
 
-                          <div>
+                          {/* Desktop price + delete */}
+                          <div className="hidden sm:block text-right min-w-[180px] md:min-w-[220px]">
                             <h1 className="text-[#111111] font-Poppins text-xl mt-2 font-semibold">
-                              N{" "}
-                              {calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString()}
+                              {formatCurrency(calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString())}
                             </h1>
                             <h1 className="text-[#111111] text-lg mt-2 line-through">
-                              N {item?.product?.price?.toLocaleString()}
+                              {formatCurrency(item?.product?.price)}
                             </h1>
 
                             <div
-                              className="flex items-center gap-2 mt-8 cursor-pointer"
-                              onClick={() => handleDelete(item.id, item.quantity)}
+                              className={`flex items-center justify-end gap-2 mt-6 ${
+                                operationLoading[item.id] 
+                                  ? 'cursor-not-allowed opacity-50' 
+                                  : 'cursor-pointer hover:opacity-80'
+                              }`}
+                              onClick={() => !operationLoading[item.id] && handleDelete(item.id, item.quantity)}
                             >
                               <RiDeleteBin6Line color="#E84526" />
-                              <h1 className="text-[#E84526]">Delete</h1>
+                              <h1 className="text-[#E84526]">
+                                {operationLoading[item.id] ? 'Removing...' : 'Delete'}
+                              </h1>
                             </div>
+                          </div>
+                        
+                          {/* Mobile price + delete */}
+                          <div className="sm:hidden w-full border-t border-[#E5E7EB] pt-3 mt-2 flex items-center justify-between">
+                            <div>
+                              <h1 className="text-[#111111] font-Poppins text-base font-semibold">
+                                {formatCurrency(calculateTotalPrice(item?.product?.discount, item.quantity).toLocaleString())}
+                              </h1>
+                              <h1 className="text-[#111111] text-sm line-through">
+                                {formatCurrency(item?.product?.price)}
+                              </h1>
+                            </div>
+                            <button
+                              className={`flex items-center gap-2 ${
+                                operationLoading[item.id] 
+                                  ? 'cursor-not-allowed opacity-50' 
+                                  : 'cursor-pointer hover:opacity-80'
+                              }`}
+                              onClick={() => !operationLoading[item.id] && handleDelete(item.id, item.quantity)}
+                            >
+                              <RiDeleteBin6Line color="#E84526" />
+                              <span className="text-[#E84526] text-sm">{operationLoading[item.id] ? 'Removing...' : 'Delete'}</span>
+                            </button>
                           </div>
                         </div>
                       </div>

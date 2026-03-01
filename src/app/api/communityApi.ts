@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'https://staging.ajiroba.ng/v1/user';
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/user`; 
 
 // Function to get trending posts
 export const getTrendingPosts = async (authToken: string) => {

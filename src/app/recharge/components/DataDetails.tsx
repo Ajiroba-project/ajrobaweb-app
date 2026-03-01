@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Airtimeschema, Dataschema, Rechargeschema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
-import { InputField, SelectField } from "./FormField";
+import { InputField, SelectField, CurrencyInputField } from "./FormField";
 import { AirtimePurchase, CablePurchase, DataPurchase } from "@/store/store";
 import { Formtitle } from "./Formtitle";
 import { CustomModal, Modal } from "@/app/component/Modal";
@@ -22,6 +22,7 @@ import ninemobileicon from "../../asset/ninemobileicon.png";
 import gloicon from "../../asset/gloicon.png";
 import { set } from "date-fns";
 import { Item } from "@radix-ui/react-select";
+import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates';
 
 type DataProps = {
   datanetwork: string;
@@ -49,7 +50,7 @@ export const DataDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Data`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=data`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -67,17 +68,7 @@ export const DataDetails = () => {
     GLO: gloicon,
   };
 
-  const transformedData = bensdata?.data?.map(
-    (item: { biller: string; number: any }, index: number) => {
-      const billerUpper = item.biller.trim().toUpperCase(); // Trim whitespace & ensure uppercase
-      return {
-        id: index + 1,
-        number: item.number,
-        type: billerUpper,
-        icon: iconMap[billerUpper] || null, // Default to null if not found
-      };
-    },
-  );
+  const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
   const {
     reset,
@@ -98,15 +89,15 @@ export const DataDetails = () => {
 
   const discourl = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/electric_discos/`;
 
-  const { data: discosdata, isLoading: discosLoading } = useGetDatanew(
-    discourl,
-    "get_electric_discos",
-    userToken || " ",
-  );
+  // const { data: discosdata, isLoading: discosLoading } = useGetDatanew(
+  //   discourl,
+  //   "get_electric_discos",
+  //   userToken || " ",
+  // );
 
 
 
-  const providersList = discosdata?.data?.map((provider: { name: any; }) => provider.name);
+  // const providersList = discosdata?.data?.map((provider: { name: any; }) => provider.name);
 
 
 
@@ -115,11 +106,11 @@ export const DataDetails = () => {
 
 
 
-  const { data: data_plansdata, isLoading: data_plansLoading } = useGetDatanew(
-    discourl,
-    "get_data_plans",
-    userToken || " ",
-  );
+  // const { data: data_plansdata, isLoading: data_plansLoading } = useGetDatanew(
+  //   discourl,
+  //   "get_data_plans",
+  //   userToken || " ",
+  // );
 
 
 
@@ -131,7 +122,17 @@ export const DataDetails = () => {
 
   // console.log(dataPlansData, 'dataPlansData')
 
-  const dataPlan = dataPlansData?.data?.map((plan: { plan: string; code: number }) => `${plan.plan} -₦${plan.code}`) || [];
+  const dataPlan = dataPlansData?.data?.map((plan: { plan: string; code: number }) => `${plan.plan} -₦${plan.code}`).filter((plan: any) => plan && plan.trim() !== '') || [];
+
+  const extractAmountFromPlan = (planText: string): string | null => {
+    if (!planText) return null;
+    const match = planText.match(/₦\s*([\d,]+)/);
+    if (!match) return null;
+    return match[1].replace(/,/g, "");
+  };
+
+
+  // console.log(dataPlan, 'datatta')
 
 
   // console.log(dataPlan, 'dataPlannew')
@@ -185,10 +186,19 @@ export const DataDetails = () => {
             <SelectField
               name="datadata"
               register={register}
-              errors="errors"
+              errors={errors}
               options={dataPlan}
               label="Data Bundle"
               showlabel={false}
+              value={watch("datadata")}
+              onChange={(e) => {
+                const selected = e.target.value;
+                setValue("datadata", selected);
+                const amt = extractAmountFromPlan(selected);
+                if (amt) {
+                  setValue("dataamount", amt, { shouldValidate: true, shouldDirty: true });
+                }
+              }}
               className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
             />
           </div>
@@ -209,12 +219,14 @@ export const DataDetails = () => {
 
 
           <div className="w-full max-w-[350px]">
-            <InputField
+            <CurrencyInputField
               name="dataamount"
               register={register}
               errors={errors}
               type="text"
               placeholder="Amount"
+              value={watch("dataamount")}
+              isdisabled
             />
 
           </div>
@@ -254,39 +266,48 @@ export const DataDetails = () => {
 
             <div className="p-6 bg-gray-100 min-h-screen">
               <div className="space-y-4">
-                {transformedData?.map((item: TransformedDataItem) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    {/* Icon and details */}
-                    <div className="flex items-center">
-                      {item.icon && (
-                        <Image
-                          src={item.icon}
-                          alt={item.type}
-                          width={40}
-                          className="w-10 h-10 rounded-full mr-4"
-                          height={40}
-                        />
-                      )}
-
-                      <div>
-                        <p className="text-gray-900 font-semibold">
-                          {item.number}
-                        </p>
-                        <p className="text-gray-500 text-sm">{item.type}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleUseClick(item.number, item.type)}
-                      className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                {transformedData && transformedData.length > 0 ? (
+                  transformedData.map((item: TransformedDataItem) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     >
-                      Use
-                    </button>
+                      {/* Icon and details */}
+                      <div className="flex items-center">
+                        {item.icon && (
+                          <Image
+                            src={item.icon}
+                            alt={item.type}
+                            width={40}
+                            className="w-10 h-10 rounded-full mr-4"
+                            height={40}
+                          />
+                        )}
+
+                        <div>
+                          <p className="text-gray-900 font-semibold">
+                            {item.number}
+                          </p>
+                          <p className="text-gray-500 text-sm">{item.type}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleUseClick(item.number, item.type)}
+                        className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                      >
+                        Use
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg">
+                    <div className="text-center">
+                      <p className="text-gray-500 text-lg font-medium mb-2">No Beneficiaries Available</p>
+                      <p className="text-gray-400 text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </CustomModal>

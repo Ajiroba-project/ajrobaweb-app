@@ -80,8 +80,8 @@ export const Profile = () => {
 
   const menu = [
     { name: 'my profile', path: '/profile' },
-    { name: 'auction wins', path: '/auction-wins' },
-    { name: 'my order', path: '/my-order' },
+    { name: 'auction wins', path: '/raffledraw-wins' },
+    // { name: 'my order', path: '/my-order' },
     { name: 'wallet', path: '/wallet' },
     { name: 'community', path: '/community' }
   ];

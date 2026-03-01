@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { FaRegEye } from 'react-icons/fa6'
 import { FiUpload } from 'react-icons/fi'
+import './style.css'
 
 type inputProps = {
   name: string
@@ -208,32 +210,106 @@ export const SelectField = ({
   multiple,
   style,
   className,
-  value, // Accept value prop
-  onChange, // Accept onChange handler
+  isdisabled,
+  value,
+  onChange,
 }: selectProps & { style?: React.CSSProperties; value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) => {
+  // Controlled value to sync with RHF and external value
+  const [selectedValue, setSelectedValue] = useState<string>(value ?? '')
+  useEffect(() => {
+    if (typeof value === 'string') setSelectedValue(value)
+  }, [value])
+
+  const normalizedOptions: { value: string; label: string }[] = Array.isArray(options)
+    ? options.reduce((acc: { value: string; label: string }[], option: any) => {
+        if (!option) return acc
+        if (typeof option === 'string') {
+          const trimmed = option.trim()
+          if (!trimmed) return acc
+          acc.push({ value: trimmed, label: trimmed })
+          return acc
+        }
+
+        const rawValue = option.value ?? option.id ?? option.name ?? ''
+        const rawLabel = option.label ?? option.name ?? option.value ?? ''
+
+        if (rawValue === null || rawValue === undefined || rawValue === '') return acc
+        const valueString = String(rawValue)
+        const labelString = String(rawLabel || rawValue)
+
+        if (!valueString.trim()) return acc
+        acc.push({ value: valueString, label: labelString })
+        return acc
+      }, [])
+    : []
+
+  // For multiple selection, keep native select to avoid behavior changes
+  if (multiple) {
+    return (
+      <div className='relative flex flex-col'>
+        {showlabel && <label className='py-2 text-sm'>{label} </label>}
+        <select
+          {...register(name, { required: true })}
+          name={name}
+          multiple
+          disabled={isdisabled}
+          style={style}
+          value={value}
+          onChange={onChange}
+          className={
+            className
+              ? className
+              : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`
+          }
+        >
+          <option value='' className='text-wdc-textbody'>
+            {label ? ` ${label}` : ''}
+          </option>
+          {normalizedOptions.map(({ value, label }, key: number) => (
+            <option key={key} className='text-wdc-textbody' value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+        <div className='pt-1 text-xs text-rose-500'>{errors?.[name]?.message}</div>
+      </div>
+    )
+  }
+
+  const reg = register(name, { required: true })
+
+  const handleValueChange = (val: string) => {
+    setSelectedValue(val)
+    // Update RHF hidden input
+    if (typeof reg.onChange === 'function') {
+      reg.onChange({ target: { value: val, name } } as any)
+    }
+    // Support existing onChange signature from native select
+    if (onChange) {
+      onChange({ target: { value: val, name } } as any)
+    }
+  }
+
   return (
     <div className='relative flex flex-col'>
       {showlabel && <label className='py-2 text-sm'>{label} </label>}
-      <select style={style}
-        {...register(name, { required: true })}
-        name={name}
-        value={value} // Bind value prop
-        onChange={onChange} // Bind onChange prop
-        className={
-          className
-            ? className
-            : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`
-        }
-      >
-        <option value='' className='text-wdc-textbody'>
-          {label ? ` ${label}` : ''}
-        </option>
-        {options?.map((val: string, key: number) => (
-          <option key={key} className='text-wdc-textbody' value={val}>
-            {val}
-          </option>
-        ))}
-      </select>
+
+      {/* Hidden input preserves RHF registration */}
+      <input type='hidden' name={name} value={selectedValue} ref={reg.ref} />
+
+      <Select value={selectedValue} onValueChange={handleValueChange} disabled={isdisabled}>
+        <SelectTrigger className={`${className ? className : 'xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'} selector`} style={style}>
+          <SelectValue placeholder={label ? ` ${label}` : ''} />
+        </SelectTrigger>
+        <SelectContent className='' style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
+          {normalizedOptions.map(({ value, label }) => (
+            <SelectItem key={value} value={value} className='text-[#2A2A2A] data-[highlighted]:bg-[#FCDFD4]  data-[state=checked]:bg-[#FCDFD4] data-[state=checked]:text-[#111827]'>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
       <div className='pt-1 text-xs text-rose-500'>{errors?.[name]?.message}</div>
     </div>
   )
@@ -301,6 +377,187 @@ export const MutipleUpload = ({
         {errors?.[name]?.message}
       </div>
     </div>
+  )
+}
+
+// Currency formatting utility
+const formatCurrencyInput = (value: string): string => {
+  // Remove all non-numeric characters except decimal point
+  const numericValue = value.replace(/[^0-9.]/g, '');
+  
+  // Handle empty or invalid input
+  if (!numericValue || numericValue === '.') return '';
+  
+  // Parse the number
+  const number = parseFloat(numericValue);
+  
+  // Handle invalid numbers
+  if (isNaN(number)) return '';
+  
+  // Format with Nigerian Naira symbol and commas
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(number);
+};
+
+// Extract numeric value from formatted currency string
+const extractNumericValue = (formattedValue: string): string => {
+  return formattedValue.replace(/[^0-9.]/g, '');
+};
+
+export const CurrencyInputField = ({
+  label,
+  placeholder,
+  name,
+  register,
+  errors,
+  classname,
+  value,
+  isdisabled,
+  maxLength,
+  onKeyDown,
+  onInput,
+  onPaste
+}: inputProps) => {
+  const [displayValue, setDisplayValue] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
+
+  // Get the register function
+  const { onChange, onBlur, ref } = register(name, { 
+    required: true,
+    setValueAs: (value: string) => extractNumericValue(value)
+  })
+
+  // Handle input change with real-time formatting
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const numericValue = extractNumericValue(inputValue)
+    
+    // Update the display value with formatting
+    const formattedValue = formatCurrencyInput(numericValue)
+    setDisplayValue(formattedValue)
+    
+    // Create a new event with the numeric value for the form
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: numericValue
+      }
+    }
+    
+    // Call the register's onChange with the numeric value
+    onChange(syntheticEvent)
+    
+    // Call the original onInput if provided
+    if (onInput) {
+      onInput(e)
+    }
+  }
+
+  // Handle focus - show raw value for easier editing
+  const handleFocus = () => {
+    setIsFocused(true)
+    const numericValue = extractNumericValue(displayValue)
+    setDisplayValue(numericValue)
+  }
+
+  // Handle blur - format the value
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false)
+    const numericValue = extractNumericValue(displayValue)
+    const formattedValue = formatCurrencyInput(numericValue)
+    setDisplayValue(formattedValue)
+    
+    // Call the register's onBlur
+    onBlur(e)
+  }
+
+  // Handle key down events
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow: backspace, delete, tab, escape, enter, decimal point
+    if ([8, 9, 27, 13, 46, 110, 190].indexOf(e.keyCode) !== -1 ||
+        // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        (e.keyCode === 65 && e.ctrlKey === true) ||
+        (e.keyCode === 67 && e.ctrlKey === true) ||
+        (e.keyCode === 86 && e.ctrlKey === true) ||
+        (e.keyCode === 88 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right, down, up
+        (e.keyCode >= 35 && e.keyCode <= 40)) {
+      return
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      e.preventDefault()
+    }
+    
+    if (onKeyDown) {
+      onKeyDown(e)
+    }
+  }
+
+  // Handle paste events
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const pastedData = e.clipboardData.getData('text')
+    const numericValue = extractNumericValue(pastedData)
+    const formattedValue = formatCurrencyInput(numericValue)
+    setDisplayValue(formattedValue)
+    
+    // Create a synthetic event for the form
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: numericValue
+      }
+    }
+    
+    // Call the register's onChange with the numeric value
+    onChange(syntheticEvent)
+    
+    if (onPaste) {
+      onPaste(e)
+    }
+  }
+
+  // Initialize display value when component mounts or value prop changes
+  useEffect(() => {
+    if (value && typeof value === 'string') {
+      const numericValue = extractNumericValue(value)
+      const formattedValue = formatCurrencyInput(numericValue)
+      setDisplayValue(formattedValue)
+    }
+  }, [value])
+
+  return (
+    <>
+      <div className='relative flex flex-col'>
+        {label && <label className='py-2 text-sm'>{label}</label>}
+        <input
+          ref={ref}
+          name={name}
+          type="text"
+          placeholder={placeholder}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          value={displayValue}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
+          disabled={isdisabled}
+          maxLength={maxLength}
+        />
+
+        <div className='pt-1 text-xs text-rose-500'>
+          {errors?.[name]?.message}
+        </div>
+      </div>
+    </>
   )
 }
 

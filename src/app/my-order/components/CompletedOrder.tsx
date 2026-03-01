@@ -1,79 +1,3 @@
-// import React from 'react'
-// import { CiMenuKebab } from 'react-icons/ci'
-
-// type transacProps = {
-//   transac: any[]
-// }
-
-// export const CompletedOrder = ({ transac }: transacProps) => {
-//   return transac.map((val, index) => (
-//     <tr key={index} className=' relative border-b'>
-//       <td className='p-6 text-left text-sm  tracking-wide'>1221389</td>
-//       <td className='p-6 text-left text-sm  tracking-wide'>{val.title}</td>
-//       <td className='p-6 text-left text-sm  tracking-wide'>₦ {val.amount}</td>
-//       <td className='p-6 text-left text-sm  tracking-wide'>{val.time}</td>
-//       {val.status.map((val: string) => (
-//         <td key={val} className={`text-xs p-6`}>
-//           <span
-//             className={` ${val === 'pending' ? 'bg-gray-200 text-gray-800' : ' bg-green-200 text-emerald-800'} rounded-full px-3 py-1 capitalize`}
-//           >
-//             {val}
-//           </span>
-//         </td>
-//       ))}
-//       <td className='absolute right-3 top-2 cursor-pointer rounded-md border p-2  text-sm'>
-//         <CiMenuKebab />
-//       </td>
-//     </tr>
-//   ))
-// }
-
-
-// import React from 'react'
-// import { CiMenuKebab } from 'react-icons/ci'
-// import Dropdown from './Dropdown'
-
-// type transacProps = {
-//   transac: any[]
-// }
-
-// export const AllOrder = ({ transac }: transacProps) => {
-
-//   console.log(transac, 'transss')
-
-//     const handleOptionClick = (option: string, transaction: any) => {
-//     // Handle the option click here
-//     // For example, you can show a confirmation dialog for "Delete"
-//     console.log(`${option} clicked for transaction:`, transaction);
-//   };
-
-//   return transac?.map((val, index) => (
-//     <tr key={index} className=' relative border-b '>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>{val?.order_id}</td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>{val.title}</td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>₦ {val.amount}</td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>{val.time}</td>
-//       {val.status.map((val: string) => (
-//         <td key={val} className={`p-6 text-xs`}>
-
-//           <span
-//             className={`text-[12px] text-[#344054] font-Poppins font-medium ${val === 'pending' ? 'bg-[#D0D5DD] text-gray-800' : val === "completed" ? ' bg-green-200 text-emerald-800'  : val === "delivered" ? ' bg-lime-200 text-emerald-800' : ' bg-green-200 text-emerald-800'} rounded-full px-3 py-1 capitalize`}
-//           >
-//             {val}
-//           </span>
-//         </td>
-//       ))}
-//     {/*   <td className='absolute right-3 top-2 cursor-pointer rounded-md border p-2  text-sm'>
-//         <CiMenuKebab />
-//       </td> */}
-//        <td className='absolute right-3 top-5 cursor-pointer rounded-md border   text-sm'>
-//             <Dropdown onOptionClick={(option) => handleOptionClick(option, val)} />
-//           </td>
-//     </tr>
-//   ))
-// }
-
-
 "use client";
 import React, { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
@@ -97,6 +21,7 @@ import * as yup from "yup";
 import { FaStar } from "react-icons/fa";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import { formatCurrency } from "@/utils/formatCurrency";
+import DropdownCompleted from "./DropDownCompleted";
 
 type Product = {
   name: string;
@@ -113,44 +38,6 @@ type Order = {
 type transacProps = {
   transac: Order[];
 };
-
-
-// export const CompletedOrder = ({ transac }: transacProps) => {
-//   console.log(transac, 'transss');
-
-//   const handleOptionClick = (option: string, transaction: Order) => {
-//     // Handle the option click here
-//     // For example, you can show a confirmation dialog for "Delete"
-//     console.log(`${option} clicked for transaction:`, transaction);
-//   };
-
-//   return transac?.map((val, index) => (
-//     <tr key={index} className='relative border-b'>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>{val?.order_id}</td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>
-//         {val.products.map((product, idx) => (
-//           <span key={idx}>{product.name}{idx < val.products.length - 1 ? ', ' : ''}</span>
-//         ))}
-//       </td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>₦ {val.total_price}</td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>{new Date(val.order_date).toLocaleString()}</td>
-//       <td className='p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium'>
-//         <span
-//           className={`text-[12px] text-[#344054] font-Poppins font-medium ${
-//             val.delivery_status.toLowerCase() === 'pending' ? 'bg-[#D0D5DD] text-gray-800' :
-//             val.delivery_status.toLowerCase() === 'completed' ? 'bg-green-200 text-emerald-800' :
-//             val.delivery_status.toLowerCase() === 'delivered' ? 'bg-lime-200 text-emerald-800' : 'bg-green-200 text-emerald-800'
-//           } rounded-full px-3 py-1 capitalize`}
-//         >
-//           {val.delivery_status}
-//         </span>
-//       </td>
-//       <td className='absolute right-3 top-5 cursor-pointer rounded-md border text-sm'>
-//         <Dropdown onOptionClick={(option) => handleOptionClick(option, val)} />
-//       </td>
-//     </tr>
-//   ));
-// };
 
 
 export const CompletedOrder = ({ transac }: transacProps) => {
@@ -430,11 +317,11 @@ const submitFormdelete = async (data: any, event: any) => {
   return transac?.map((val, index) => (
     <>
   {/*    <ToastContainer closeOnClick limit={1} /> */}
-      <tr key={index} className="relative border-b">
-        <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+      <tr key={index} className="border-b">
+        <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
           {val?.order_id}
         </td>
-        <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+        <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
           {val.products.map((product, idx) => (
             <span key={idx}>
               {product.name}
@@ -442,13 +329,13 @@ const submitFormdelete = async (data: any, event: any) => {
             </span>
           ))}
         </td>
-        <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+        <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
             {formatCurrency(val.total_price)}
         </td>
-        <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
-          {new Date(val.order_date).toLocaleString()}
+        <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
+          {new Date(val.order_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
         </td>
-        <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
+        <td className="py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium">
           <span
             className={`text-[12px] text-[#344054] font-Poppins font-medium ${
               val.delivery_status.toLowerCase() === "pending"
@@ -463,8 +350,8 @@ const submitFormdelete = async (data: any, event: any) => {
             {val.delivery_status}
           </span>
         </td>
-        <td className="absolute right-3 top-5 cursor-pointer rounded-md border text-sm">
-          <Dropdown
+        <td className="py-3 px-2 text-right">
+          <DropdownCompleted
             onOptionClick={(option) => handleOptionClick(option, val)}
             transaction={val}
           />

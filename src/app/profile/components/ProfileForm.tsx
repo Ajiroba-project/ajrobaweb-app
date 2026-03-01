@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { InputField} from '@/app/recharge/components/FormField';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Modal } from '../../component/Modal';
 import { DefaultButton } from '@/app/component/Button';
 import { userProfile } from '@/store/store';
@@ -17,6 +17,11 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/store'
 import Cookies from 'js-cookie';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { pickersDayClasses } from "@mui/x-date-pickers/PickersDay";
+import { format } from "date-fns";
 
 type ProfileFormValues = {
   first_name: string;
@@ -29,6 +34,7 @@ type ProfileFormValues = {
   state: string;
   lga: string;
   residential?: string;
+  date_of_birth: string;
 }
 
 interface ProfileFormProps {
@@ -65,7 +71,62 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
     lga: yup.string().required('Local Government Area is required'),
     gender: yup.boolean().required("Gender is required"),
     residential: yup.string().optional(),
+    date_of_birth: yup
+      .string()
+      .required("Date of birth is required")
+      .test("valid-date", "Please select a valid date", (value) => {
+        if (!value) {
+          return false;
+        }
+        const parts = value.split("-");
+        if (parts.length !== 3) {
+          return false;
+        }
+        const [year, month, day] = parts.map(Number);
+        if (
+          parts.some((part) => part.trim() === "") ||
+          [year, month, day].some((num) => Number.isNaN(num))
+        ) {
+          return false;
+        }
+        const constructedDate = new Date(year, month - 1, day);
+        return (
+          constructedDate.getFullYear() === year &&
+          constructedDate.getMonth() === month - 1 &&
+          constructedDate.getDate() === day
+        );
+      })
+      .test("age", "You must be at least 18 years old", (value) => {
+        if (!value) {
+          return false;
+        }
+        const parts = value.split("-");
+        if (parts.length !== 3) {
+          return false;
+        }
+        const [year, month, day] = parts.map(Number);
+        if (
+          parts.some((part) => part.trim() === "") ||
+          [year, month, day].some((num) => Number.isNaN(num))
+        ) {
+          return false;
+        }
+        const birthDate = new Date(year, month - 1, day);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+          age -= 1;
+        }
+        return age >= 18;
+      }),
   });
+
+
+  // console.log(userData, 'userdata', Boolean(userData?.gender))
 
 
   // Prepare default values from userData
@@ -79,6 +140,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
     state: userData?.state || '',
     lga: userData?.lga || '',
     residential: userData?.residential || userData?.residency || '',
+    date_of_birth: userData?.date_of_birth || userData?.dob || '',
   };
 
   const {
@@ -96,6 +158,21 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
 
   const [selectedState, setSelectedState] = useState(userData?.state || "");
   const [lgas, setLgas] = useState<string[]>([]);
+
+
+  const maxDate = useMemo(() => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 18);
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }, []);
+
+  const maxDateValue = useMemo(() => {
+    const [year, month, day] = maxDate.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }, [maxDate]);
 
   const handleStateChange = (value: string) => {
     setSelectedState(value);
@@ -256,6 +333,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
             errors={errors}
           />
         </div>
+
+   
 
         <div className="flex flex-col   mt-2">
           <label className='  mb-2 text-sm text-[#111111] font-Poppins font-medium'>Gender</label>
@@ -423,6 +502,102 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
             </p>
           </div>
         </div>
+
+
+        <div className="flex flex-col mt-2 w-2/6">
+          <label className='mb-2 text-sm text-[#111111] font-Poppins font-medium'>Date of Birth*</label>
+          <Controller
+            name="date_of_birth"
+            control={control}
+            render={({ field }) => {
+              const parsedValue = field.value ? new Date(field.value) : null;
+              const dateValue =
+                parsedValue && !Number.isNaN(parsedValue.getTime())
+                  ? parsedValue
+                  : null;
+
+              return (
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    value={dateValue}
+                    maxDate={maxDateValue}
+                    disableFuture
+                    onChange={(date) => {
+                      if (date && !Number.isNaN(date.getTime())) {
+                        field.onChange(format(date, "yyyy-MM-dd"));
+                      } else {
+                        field.onChange("");
+                      }
+                    }}
+                    slotProps={{
+                      textField: {
+                        onBlur: field.onBlur,
+                        placeholder: "Select your DOB",
+                        fullWidth: true,
+                        size: "small",
+                        error: Boolean(errors?.date_of_birth),
+                        helperText: null,
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: "0.5rem",
+                            fontSize: "0.875rem",
+                            fontFamily: "Inter, sans-serif",
+                          },
+                          "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#D9D9D9",
+                          },
+                          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#F25E26",
+                          },
+                          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#F25E26",
+                          },
+                          "& .MuiInputBase-input": {
+                            padding: "10px 12px",
+                          },
+                        },
+                      },
+                      day: {
+                        sx: {
+                          [`&.${pickersDayClasses.selected}`]: {
+                            backgroundColor: "#F25E26",
+                            color: "#FFFFFF",
+                          },
+                          [`&.${pickersDayClasses.selected}:hover`]: {
+                            backgroundColor: "#E84526",
+                          },
+                          "&:hover": {
+                            backgroundColor: "rgba(242, 94, 38, 0.1)",
+                          },
+                        },
+                      },
+                      actionBar: {
+                        actions: ["clear"],
+                        sx: {
+                          "& .MuiButton-root": {
+                            color: "#F25E26",
+                          },
+                          "& .MuiButton-root:hover": {
+                            backgroundColor: "rgba(242, 94, 38, 0.08)",
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
+              );
+            }}
+          />
+          <small className="text-xs text-[#6E6E6E] mt-1">
+            Must be at least 18 years old (Format: DD/MM/YYYY)
+          </small>
+          <div className="text-xs text-red-700 py-1">
+            {errors?.date_of_birth?.message && String(errors.date_of_birth.message)}
+          </div>
+        </div>
+
+
+
         <div className='mt-8 flex w-full justify-center'>
           <DefaultButton
             text={status === 'pending' ? 'loading...' : "Update Profile"}

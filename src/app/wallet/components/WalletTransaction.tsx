@@ -124,6 +124,7 @@ import { useAuthStore } from '@/store/store';
 import { useGetDatanew } from '@/hooks/useGetData';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 export const WalletTransaction = () => {
   const TransactionTemplate = () => {
@@ -144,6 +145,8 @@ export const WalletTransaction = () => {
     const currentData = transactions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   /*   console.log(currentData, 'cccccddd') */
+
+  // console.log(transactions, 'transactions')
 
     const totalPages = Math.ceil(transactions.length / pageSize);
 
@@ -178,24 +181,24 @@ export const WalletTransaction = () => {
               {/* Left: Icon and Description */}
               <div className="flex items-center gap-3 w-full sm:w-1/2">
                 <div className={`flex items-center justify-center rounded-full p-2
-                  ${val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet"
+                  ${val.description === "Fund Wallet"
                     ? 'bg-emerald-200'
                     : 'bg-amber-200'}`}>
-                  {val.description === 'Purchase Product' || val.description === "Auction Bid" || val.description === "Fund Wallet" ? (
+                  {val.description === "Fund Wallet" ? (
                     <GoArrowDownLeft className="text-lg font-semibold text-green-700" />
                   ) : (
                     <GoArrowUpRight className="text-lg font-semibold text-amber-700" />
                   )}
                 </div>
                 <div className="flex flex-col justify-center">
-                  <p className="truncate text-sm font-medium text-[#101928]">{val.description}</p>
+                  <p className="text-sm font-medium text-[#101928] ">{val.description}</p>
                   <p className="text-xs text-[#111111]">{val.channel}</p>
                 </div>
               </div>
 
               {/* Right: Amount, Time, and Receipt Link */}
               <div className="flex flex-col items-start sm:items-end w-full sm:w-1/2 mt-2 sm:mt-0">
-                <p className="font-medium text-sm text-[#101928]">₦ {val.amount}</p>
+                <p className="font-medium text-sm text-[#101928]"> {formatCurrency(val.amount)}</p>
                 <p className="text-xs text-[#111111]">{formatDateTo12Hour(val.date)}</p>
                 <button
                   className="brand1 mt-2 text-xs underline text-[#F25E26] hover:text-[#EA7000] transition"

@@ -1,15 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useMutateData } from "@/hooks/useMutateData";
+import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Airtimeschema, Cableschema, Electricitychema, Rechargeschema } from "./YupValidations";
+import { Electricitychema } from "./YupValidations";
 import { DefaultButton } from "../../component/Button";
-import { InputField, SelectField } from "./FormField";
+import { InputField, SelectField, CurrencyInputField } from "./FormField";
 import { AirtimePurchase, ElectricityPurchase } from "@/store/store";
 import { Formtitle } from "./Formtitle";
 import { CustomModal, Modal } from "@/app/component/Modal";
-import { Header } from "../airtime/receipt/component/Header";
 import Image from "next/image";
 import Brand from "../../asset/ajirobalogo.png";
 import { useRouter } from "next/navigation";
@@ -20,9 +18,18 @@ import { StaticImageData } from "next/image";
 import mtnicon from "../../asset/mtnicon.svg";
 import ninemobileicon from "../../asset/ninemobileicon.png";
 import gloicon from "../../asset/gloicon.png";
-import { set } from "date-fns";
-import { Item } from "@radix-ui/react-select";
-import { fetchCableTVPackages } from "@/app/utils/fetchCableTVPackages";
+import ibedcicon from '../../asset/ibedcicon.png'
+import ikejaicon from '../../asset/ikejaicon.png'
+import beninicon from '../../asset/beninicon.png'
+import enuguicon from '../../asset/enuguicon.jpeg'
+import ekedcicon from '../../asset/ekedcicon.jpeg'
+import kadunaicon from '../../asset/kadunaicon.jpeg'
+import kanoicon from '../../asset/kedcoicon.png'
+import aedcicon from '../../asset/aedc.png'
+import jedicon from '../../asset/jedicon.jpeg'
+import phedcicon from '../../asset/phedicon.jpeg'
+
+import { removeDuplicateBeneficiaries } from '@/utils/removeDuplicates';
 import { useDebounce } from "@/hooks/useDebounce";
 type DataProps = {
   decoder: string;
@@ -57,7 +64,7 @@ export const ElectricityDetails = () => {
 
   const userToken = (Cookies.get("token") as string) || "";
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=Electricity`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/pay/beneficiaries/?type=electricity`;
 
   const { data: bensdata, isLoading: bensLoading } = useGetDatanew(
     url,
@@ -73,19 +80,19 @@ export const ElectricityDetails = () => {
     Etisalat: airtelicon,
     ninemobile: ninemobileicon,
     GLO: gloicon,
+    IBEDC: ibedcicon,
+    IKEJA: ikejaicon,
+    BENIN: beninicon,
+    ENUGU: enuguicon,
+    EKEDC: ekedcicon,
+    KADUNA: kadunaicon,
+    KANO: kanoicon,
+    AEDC: aedcicon,
+    JED: jedicon,
+    PHEDC: phedcicon,
   };
 
-  const transformedData = bensdata?.data?.map(
-    (item: { biller: string; number: any }, index: number) => {
-      const billerUpper = item.biller.trim().toUpperCase();
-      return {
-        id: index + 1,
-        number: item.number,
-        type: billerUpper,
-        icon: iconMap[billerUpper] || null,
-      };
-    },
-  );
+  const transformedData = removeDuplicateBeneficiaries(bensdata?.data, iconMap);
 
   const {
     reset,
@@ -110,22 +117,38 @@ export const ElectricityDetails = () => {
   );
 
 
-  const providersList = discosdata?.data?.map((provider: { id: any; }) => provider.id) || [];
+
+
+ const providersList = Array.isArray(discosdata?.data)
+    ? discosdata?.data?.map((provider: { id: any; name: any; code?: any; identifier?: any; slug?: any }) => ({
+        value: String(provider?.id ?? ''),
+        label: provider?.name ?? '',
+        meta: provider
+      }))
+        .filter(provider => provider.value && provider.label)
+    : [];
 
   // console.log(providersList, "providersList")
 
   const customerId = watch("iucnumber");
-  const selectedNetwork = watch("decoder");
+ const selectedNetwork = watch("decoder");
 
-  const extractedContent = selectedNetwork?.match(/\((.*?)\)/)?.[1] || '';
+ const selectedProvider = providersList.find(provider => provider.value === selectedNetwork);
+
+ const discoQueryValue = selectedProvider?.meta?.code
+    || selectedProvider?.meta?.identifier
+    || selectedProvider?.meta?.slug
+    || selectedProvider?.label
+    || selectedProvider?.value
+    || '';
 
   // console.log(extractedContent, 'extractedContent');
 
 
   // console.log(selectedNetwork, 'selectedNetwork')
 
-  const dataplanurl = selectedNetwork
-    ? `/api/fetchcable?disco=${selectedNetwork}`
+ const dataplanurl = discoQueryValue
+    ? `/api/fetchcable?disco=${discoQueryValue}`
     : "";
 
   const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(
@@ -142,18 +165,18 @@ export const ElectricityDetails = () => {
     dataPlansData?.data?.data?.map(
       (subScriptionType: { subScriptionType: string; amount: number }) =>
         `${subScriptionType.subScriptionType} -₦${subScriptionType.amount}`,
-    ) || [];
+    ).filter((plan: string) => plan && plan.trim() !== '') || [];
 
-  const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV"];
+  const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV", "IBEDC", "IKEDC", "BENIN", "ENUGU", "EKEDC", "KADUNA", "KANO", "AEDC", "JED", "PHEDC"];
 
 
   // Debounce the customerId to delay API call
   const debouncedCustomerId = useDebounce(customerId, 1000); // 800ms delay
 
 
-  const customerdetailsurl =
-    debouncedCustomerId && selectedNetwork
-      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${extractedContent}`
+ const customerdetailsurl =
+    debouncedCustomerId && discoQueryValue
+      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${discoQueryValue}`
       : "";
 
   // Call API only when the user stops typing (debounced value changes)
@@ -169,19 +192,24 @@ export const ElectricityDetails = () => {
 
 
   const sumbitForm = (data: DataProps) => {
-    // console.log("data=>", data);
+    //  console.log("data=>", data);
     //  console.log(errors, 'eeeee')
-    setElectricityDetails(data)
-    setElectricityStepper(1)
-    // console.log(customerdetailsData, "customerdetailsData");
-    setElectricityCustomerDetails(customerdetailsData?.data?.data);
+     setElectricityDetails(data)
+     setElectricityStepper(1)
+    // // console.log(customerdetailsData, "customerdetailsData");
+     setElectricityCustomerDetails(customerdetailsData?.data?.data);
   };
 
   const router = useRouter();
 
-  const handleUseClick = (number: string, type: string) => {
+ const handleUseClick = (number: string, type: string) => {
     setValue("iucnumber", number);
-    setValue("decoder", type);
+    const matchingProvider = providersList.find(provider => provider.label?.toLowerCase() === type?.toLowerCase());
+    if (matchingProvider) {
+      setValue("decoder", matchingProvider.value);
+    } else {
+      setValue("decoder", type);
+    }
     setprintreceipt(false);
   };
 
@@ -197,6 +225,10 @@ export const ElectricityDetails = () => {
           className="flex flex-col gap-3"
           onSubmit={handleSubmit(sumbitForm)}
         >
+
+          {/* {
+            console.log(providersList, 'providersList')
+          } */}
 
 
           <div className="w-full max-w-[350px]">
@@ -258,12 +290,13 @@ export const ElectricityDetails = () => {
 
 
           <div className="w-full max-w-[350px]">
-            <InputField
+            <CurrencyInputField
               name="elecamount"
               register={register}
               errors={errors}
               type="text"
               placeholder="Amount"
+              // isdisabled
             />
 
           </div>
@@ -317,38 +350,47 @@ export const ElectricityDetails = () => {
 
             <div className="p-6 bg-gray-100 min-h-screen">
               <div className="space-y-4">
-                {transformedData?.map((item: TransformedDataItem) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center">
-                      {item.icon && (
-                        <Image
-                          src={item.icon}
-                          alt={item.type}
-                          width={40}
-                          className="w-10 h-10 rounded-full mr-4"
-                          height={40}
-                        />
-                      )}
-
-                      <div>
-                        <p className="text-gray-900 font-semibold">
-                          {item.number}
-                        </p>
-                        <p className="text-gray-500 text-sm">{item.type}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleUseClick(item.number, item.type)}
-                      className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                {transformedData && transformedData.length > 0 ? (
+                  transformedData.map((item: TransformedDataItem) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                     >
-                      Use
-                    </button>
+                      <div className="flex items-center">
+                        {item.icon && (
+                          <Image
+                            src={item.icon}
+                            alt={item.type}
+                            width={40}
+                            className="w-10 h-10 rounded-full mr-4"
+                            height={40}
+                          />
+                        )}
+
+                        <div>
+                          <p className="text-gray-900 font-semibold">
+                            {item.number}
+                          </p>
+                          <p className="text-gray-500 text-sm">{item.type}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleUseClick(item.number, item.type)}
+                        className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
+                      >
+                        Use
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg">
+                    <div className="text-center">
+                      <p className="text-gray-500 text-lg font-medium mb-2">No Beneficiaries Available</p>
+                      <p className="text-gray-400 text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </CustomModal>

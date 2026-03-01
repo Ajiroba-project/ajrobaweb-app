@@ -1,27 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { FaThumbsUp, FaRegCommentDots, FaShareAlt } from "react-icons/fa";
+import { FaThumbsUp, FaRegCommentDots } from "react-icons/fa";
 import { FiBookmark } from "react-icons/fi";
-import clock from "../../asset/image/clock.svg";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/navigation";
-import * as yup from "yup";
 import { useAuthStore } from "@/store/store";
 import { useMutateData } from "@/hooks/useMutateData";
 import { useGetOrderData } from "@/hooks/useGetData";
-import { BsEmojiSmile } from "react-icons/bs";
 import { AiOutlineClose, AiOutlinePicture } from "react-icons/ai";
 import Loading from "@/app/component/Loading";
 import { formatDistanceToNow } from "date-fns";
 import Cookies from "js-cookie";
-
-type CommentFormValues = {
-  comment: string;
-  commentImage?: string;
-  post_id?: string;
-};
 
 const TabComponent = ({
   activeTab,
@@ -34,27 +22,23 @@ const TabComponent = ({
 
   const tabs = ["Trending", "Liked", "Bookmarked"];
 
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-  };
-
   return (
-    <div className="flex justify-center mb-6  w-full ">
-      <div className="flex w-full   rounded-lg border border-gray-300">
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            /*        onClick={() => handleTabClick(tab)} */
-            onClick={() => setActiveTab(tab)}
-            className={`w-1/3 py-2 text-center font-Poppins text-sm font-medium border-r-1 ${activeTab === tab
-              ? "bg-[#f25e26] text-white rounded-tl-md" // Active tab
-              : "bg-white text-[#475367] hover:bg-gray-100" // Inactive tabs
-              } ${index === 0 ? "rounded-l-lg" : ""} ${index === tabs.length - 1 ? "rounded-r-lg" : ""
-              }`}
-          >
-            {tab}
-          </button>
-        ))}
+    <div className="mb-6 w-full">
+      <div className="w-full overflow-x-auto">
+        <div className="mx-auto flex min-w-[260px] max-w-full gap-2 rounded-lg border border-gray-300 bg-white p-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 min-w-[120px] whitespace-nowrap rounded-md py-2 px-3 text-center font-Poppins text-xs font-medium transition-colors sm:text-sm ${activeTab === tab
+                ? "bg-[#f25e26] text-white shadow-sm"
+                : "bg-transparent text-[#475367] hover:bg-gray-100"
+                }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -63,1271 +47,579 @@ const TabComponent = ({
 
 const ITEMS_PER_PAGE = 5;
 
-// const ContentPost = ({ activeTab }: { activeTab: string }) => {
-//   const router = useRouter();
-
-//   const commentSchema = yup.object().shape({
-//       comment: yup.string().required('Comment is required'),
-//   });
-
-//   // State to manage comment input per post
-//   const [commentState, setCommentState] = useState({});
-
-//   const {
-//       register,
-//       handleSubmit,
-//       formState: { errors },
-//       setValue,
-//       reset,
-//   } = useForm<CommentFormValues>({
-//       resolver: yupResolver(commentSchema),
-//   });
-
-//   const handleSuccess = (data?: any) => {
-//  /*    console.log(data, 'data') */
-//       setComment('');
-//       setCommentImage('');
-//       setSelectedImage(null);
-//       if (data.status === 200 || data.status === 201) {
-//           toast.success(`${data?.data?.message || data?.data?.detail}`, {
-//               position: 'top-right',
-//               autoClose: 2000,
-//               hideProgressBar: false,
-//               closeOnClick: true,
-//               pauseOnHover: true,
-//               draggable: true,
-//               progress: undefined,
-//               theme: 'light',
-//               onClose: () => router.push('/community'),
-//           });
-//           refetch();
-//       } else if (
-//           data.status === 403 ||
-//           data.status === 404 ||
-//           data.status === 401 ||
-//           data.status === 409 ||
-//           data.status === 500
-//       ) {
-//           setComment('');
-//           setCommentImage('');
-//           setSelectedImage(null);
-//           toast.error(`${data?.data?.message || data?.data?.detail}`, {
-//               position: 'top-right',
-//               autoClose: 2000,
-//               hideProgressBar: false,
-//               closeOnClick: true,
-//               pauseOnHover: true,
-//               draggable: true,
-//               progress: undefined,
-//               theme: 'light',
-//           });
-//           refetch();
-//       } else {
-//           setComment('');
-//           setCommentImage('');
-//           toast.error(`${data?.data?.detail}`, {
-//               position: 'top-right',
-//               autoClose: 2000,
-//               hideProgressBar: false,
-//               closeOnClick: true,
-//               pauseOnHover: true,
-//               draggable: true,
-//               progress: undefined,
-//               theme: 'light',
-//           });
-//           refetch();
-//       }
-//   };
-
-//   const handleError = (error?: any) => {
-//       console.log(error, 'errr');
-//       setComment('');
-//       setCommentImage('');
-//       setSelectedImage(null);
-//       toast.error(`${data?.data?.detail || error || 'An Error Occured'}`, {
-//           position: 'top-right',
-//           autoClose: 2000,
-//           hideProgressBar: false,
-//           closeOnClick: true,
-//           pauseOnHover: true,
-//           draggable: true,
-//           progress: undefined,
-//           theme: 'light',
-//       });
-//       refetch();
-//   };
-
-//   const { isLoggedIn, user, token } = useAuthStore((state) => ({
-//       isLoggedIn: state.isLoggedIn,
-//       user: state.user,
-//       token: state.token,
-//   }));
-
-//   // const userToken = token;
-//   const userToken = Cookies.get('token') as string;
-
-//   const { data, error, isError, isSuccess, mutate, status } = useMutateData(
-//       'comment_on_post',
-//       handleSuccess,
-//       handleError,
-//   );
-
-//   const [comment, setComment] = useState<string>('');
-//   const [commentImage, setCommentImage] = useState<string>('');
-
-//   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-//       const file = event.target.files?.[0];
-//       if (file) {
-//           const reader = new FileReader();
-//           reader.onloadend = () => {
-//               const base64String = reader.result as string;
-//               setSelectedImage(base64String);
-//               setValue('commentImage', base64String);
-//           };
-//           reader.readAsDataURL(file);
-//       }
-//   };
-
-//   const {
-//       data: trendingrinfo,
-//       isLoading: trendingLoading,
-//       error: trendingerror,
-//       refetch,
-//   } = useGetOrderData('/api/trendingposts', 'get_trending_posts', userToken);
-
-//   const {
-//       data: notinfo,
-//       isLoading: notLoading,
-//       error: noterror,
-//       refetch: notrefetch,
-//   } = useGetOrderData(
-//       '/api/communitynotifications',
-//       'get_trending_posts',
-//       userToken,
-//   );
-
-//   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-//   const onSubmit = (data: CommentFormValues) => {
-//       const payload = {
-//           post_id: data.post_id,
-//           comment: data.comment,
-//           comment_images: [data.commentImage],
-//       };
-
-//       mutate({
-//           url: '/api/commentonpost/',
-//           payload: { payload, tkn: userToken },
-//           token: userToken,
-//       });
-
-//       setComment('');
-//       setCommentImage('');
-//       reset();
-//   };
-
-//   const { mutate: likedmutate, status: likedstatus } = useMutateData(
-//       'like_or_unlike_post',
-//       handleSuccess,
-//       handleError,
-//   );
-
-//   const { mutate: dislikedmutate, status: dislikedstatus } = useMutateData(
-//       'dislike_post',
-//       handleSuccess,
-//       handleError,
-//   );
-
-//   const { mutate: bookmarkmutate, status: bookmarkedstatus } = useMutateData(
-//       'bookmark_post',
-//       handleSuccess,
-//       handleError,
-//   );
-
-//   const { mutate: unbookmarkmutate, status: unbookmarkedstatus } =
-//       useMutateData('unbookmark_post', handleSuccess, handleError);
-
-//   const [postLikes, setPostLikes] = useState<{
-//       [key: string]: { count: number; liked: boolean };
-//   }>({});
-
-//   const handleLike = (postId: string, liked: boolean) => {
-//       likedmutate({
-//           url: `/api/likepost/`,
-//           payload: { post_id: postId, tkn: userToken },
-//           token: userToken,
-//       });
-
-//   };
-
-//   const handledisLike = (postId: string, liked: boolean) => {
-//       dislikedmutate({
-//           url: `/api/dislikepost/`,
-//           payload: { post_id: postId, tkn: userToken },
-//           token: userToken,
-//       });
-//   };
-
-//   const handleBookMark = (postId: string, liked: boolean) => {
-//       bookmarkmutate({
-//           url: `/api/bookmark/`,
-//           payload: { post_id: postId, tkn: userToken },
-//           token: userToken,
-//       });
-//   };
-
-//   const handleUnBookMark = (postId: string, liked: boolean) => {
-//       unbookmarkmutate({
-//           url: `/api/unbookmark/`,
-//           payload: { post_id: postId, tkn: userToken },
-//           token: userToken,
-//       });
-//   };
-
-//   // Set default content as trending posts
-//   let posts = trendingrinfo?.data?.data?.posts || [];
-
-// /*   console.log(posts, 'posttt') */
-
-//   // Conditionally render posts based on active tab
-//   if (activeTab === 'Liked') {
-//     // console.log(trendingrinfo?.data?.data?.liked_posts, 'liked_posts')
-//       posts = trendingrinfo?.data?.data?.liked_posts || [];
-//   } else if (activeTab === 'Bookmarked') {
-//   /*   console.log(trendingrinfo?.data?.data?.bookmarked_posts, 'bookmarked_posts') */
-//       posts = trendingrinfo?.data?.data?.bookmarked_posts || [];
-//   }
-
-//   // Normalize shape for Liked/Bookmarked where items may be wrapped under `post`
-//   if (activeTab === 'Liked' || activeTab === 'Bookmarked') {
-//       posts = (posts || []).map((p: any) => (p && p.post ? p.post : p));
-//   }
-
-//   const [paginationState, setPaginationState] = useState<{ [key: string]: number }>({});
-
-//   if (trendingLoading) {
-//       return <Loading />;
-//   }
-
-//   // Ensure posts array exists
-//   if (!posts || posts.length === 0) {
-//       return (
-//           <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-//               <p className="text-gray-500 font-medium">No posts available</p>
-//           </div>
-//       );
-//   }
-
-//   return (
-//       <div className="w-full space-y-6">
-//           {posts.map((item: { id: any; likes_count: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; is_liked_by_current_user: any; comments: { length: number; slice: (arg0: number, arg1: number) => never[]; }; content: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; images: { image: any; }[]; user_liked: any; comments_count: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; user_bookmarked: any; }) => {
-//               const postId = item.id;
-//               const postLikeData = postLikes[postId] || {
-//                   count: item.likes_count,
-//                   liked: item.is_liked_by_current_user,
-//               };
-
-//               // Use post-specific pagination state
-//               const currentPage = paginationState[postId] || 1;
-//               const totalComments = item.comments?.length || 0;
-//               const totalPages = Math.ceil(totalComments / ITEMS_PER_PAGE);
-//               const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-//               const paginatedComments = item.comments?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
-
-//               return (
-//                   activeTab === 'Trending' ? (
-//                       <div
-//                           key={postId}
-//                           className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-//                       >
-//                           {/* Post Content */}
-//                           <div className="mb-4">
-//                               <p className="text-gray-800 text-sm leading-relaxed font-normal">
-//                                   {item?.content}
-//                               </p>
-//                           </div>
-
-//                           {/* Post Image */}
-//                           {item?.images?.[0]?.image && (
-//                               <div className="mb-4 flex justify-center">
-//                                   <div className="w-full max-w-md bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-//                                       <Image
-//                                           src={`https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`}
-//                                           alt="Post image"
-//                                           width={300}
-//                                           height={300}
-//                                           className="max-w-full h-auto object-contain"
-//                                       />
-                                      
-//                                   </div>
-//                               </div>
-//                           )}
-
-//                           {/* Engagement Metrics */}
-//                           <div className="flex items-center justify-between py-3 border-t border-gray-100">
-//                               <button
-//                                   className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-//                                   onClick={() =>
-//                                       !item?.user_liked
-//                                           ? handleLike(postId, postLikeData.liked)
-//                                           : handledisLike(postId, postLikeData.liked)
-//                                   }
-//                               >
-//                                   <FaThumbsUp
-//                                       className={`text-lg ${item?.user_liked ? 'text-[#F56630]' : 'text-gray-500'}`}
-//                                   />
-//                                   <span className="text-sm font-medium">
-//                                       {item?.likes_count} Kudos
-//                                   </span>
-//                               </button>
-
-//                               <div className="flex items-center gap-2 text-gray-600">
-//                                   <FaRegCommentDots className="text-lg" />
-//                                   <span className="text-sm font-medium">
-//                                       {item?.comments_count} Comments
-//                                   </span>
-//                               </div>
-
-//                               <button className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors">
-//                                   <FaShareAlt className="text-lg" />
-//                                   <span className="text-sm font-medium">Share</span>
-//                               </button>
-
-//                               <button
-//                                   className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-//                                   onClick={() =>
-//                                       !item?.user_bookmarked
-//                                           ? handleBookMark(postId, postLikeData.liked)
-//                                           : handleUnBookMark(postId, postLikeData.liked)
-//                                   }
-//                               >
-//                                   <FiBookmark
-//                                       className={`text-lg ${item?.user_bookmarked ? 'text-[#F56630]' : 'text-gray-500'}`}
-//                                   />
-//                                   <span className="text-sm font-medium">Bookmark</span>
-//                               </button>
-//                           </div>
-
-//                           {/* Comment Input */}
-//                           <form
-//                               onSubmit={handleSubmit((data) => onSubmit({ ...data, post_id: postId }))}
-//                               className="mt-4"
-//                           >
-//                               <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-//                                   <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-//                                       <span className="text-xs text-gray-600">👤</span>
-//                                   </div>
-//                                   <input
-//                                       type="text"
-//                                       placeholder="Write your comment"
-//                                       {...register('comment')}
-//                                       className="flex-1 bg-transparent border-none outline-none text-sm text-gray-700 placeholder-gray-500"
-//                                   />
-//                                   <div className="flex items-center gap-2">
-//                                       <label htmlFor={`imageUpload-${postId}`} className="cursor-pointer">
-//                                           <AiOutlinePicture className="text-xl text-gray-500 hover:text-gray-700 transition-colors" />
-//                                       </label>
-//                                       <input
-//                                           type="file"
-//                                           id={`imageUpload-${postId}`}
-//                                           accept="image/*"
-//                                           className="hidden"
-//                                           onChange={handleImageUpload}
-//                                       />
-//                                   </div>
-//                               </div>
-//                               {errors.comment && (
-//                                   <p className="text-red-500 text-xs mt-1">{errors.comment.message}</p>
-//                               )}
-
-//                               {selectedImage && (
-//                                   <div className="mt-3">
-//                                       <Image
-//                                           src={selectedImage}
-//                                           alt="Selected"
-//                                           width={80}
-//                                           height={80}
-//                                           className="w-20 h-20 object-cover rounded-lg"
-//                                       />
-//                                   </div>
-//                               )}
-//                           </form>
-
-//                           {/* Comments Section */}
-//                           {paginatedComments.length > 0 && (
-//                               <div className="mt-6 space-y-4">
-//                                   {paginatedComments.map((comment: { id: React.Key | null | undefined; user: { profile_image: any; fullname: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; comment: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
-//                                       <div key={comment.id} className="flex gap-3">
-//                                           <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
-//                                          {/*      <span className="text-xs text-gray-600">👤</span> */}
-//                                              <Image
-//                                             src={
-//                                               comment?.user?.profile_image
-//                                                 ? `${comment?.user?.profile_image}`
-//                                                 : ""
-//                                             }
-//                                             alt="Commenter"
-//                                             width={40}
-//                                             height={40}
-//                                             className="rounded-full"
-//                                           />
-//                                           </div>
-//                                           <div className="flex-1">
-//                                               <div className="bg-gray-50 rounded-lg p-3">
-//                                                   <div className="flex items-center gap-2 mb-1">
-//                                                       <span className="font-semibold text-sm text-gray-800">
-//                                                           {comment?.user?.fullname}
-//                                                       </span>
-//                                                   </div>
-//                                                   <p className="text-sm text-gray-700 leading-relaxed">
-//                                                       {comment?.comment}
-//                                                   </p>
-//                                               </div>
-//                                               <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-//                                                   <button className="flex items-center gap-1 hover:text-[#F56630] transition-colors">
-//                                                       <FaThumbsUp className="text-sm" />
-//                                                       <span>0 Kudos</span>
-//                                                   </button>
-//                                                   <button className="flex items-center gap-1 hover:text-[#F56630] transition-colors">
-//                                                       <span>Reply</span>
-//                                                   </button>
-//                                               </div>
-//                                           </div>
-//                                       </div>
-//                                   ))}
-//                               </div>
-//                           )}
-
-//                           {/* Pagination Controls */}
-//                           {totalPages > 1 && (
-//                               <div className="mt-6 flex justify-center gap-4">
-//                                   <button
-//                                       onClick={() =>
-//                                           setPaginationState((prevState) => ({
-//                                               ...prevState,
-//                                               [postId]: Math.max((prevState[postId] || 1) - 1, 1),
-//                                           }))
-//                                       }
-//                                       disabled={currentPage === 1}
-//                                       className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-300 transition-colors text-sm"
-//                                   >
-//                                       Previous
-//                                   </button>
-
-//                                   <span className="flex items-center px-4 py-2 text-sm font-medium text-gray-600">
-//                                       Page {currentPage} of {totalPages}
-//                                   </span>
-
-//                                   <button
-//                                       onClick={() =>
-//                                           setPaginationState((prevState) => ({
-//                                               ...prevState,
-//                                               [postId]: Math.min(
-//                                                   (prevState[postId] || 1) + 1,
-//                                                   totalPages,
-//                                               ),
-//                                           }))
-//                                       }
-//                                       disabled={currentPage === totalPages}
-//                                       className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-300 transition-colors text-sm"
-//                                   >
-//                                       Next
-//                                   </button>
-//                               </div>
-//                           )}
-//                       </div>
-//                   ) : activeTab === 'Liked' ? (
-//                       // Similar structure for Liked posts
-//                       <div
-//                           key={postId}
-//                           className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-//                       >
-//                           {/* Render for liked posts - same structure as Trending */}
-//                           <div className="mb-4">
-//                               <p className="text-gray-800 text-sm leading-relaxed font-normal">
-//                                   {item?.content}
-//                               </p>
-//                           </div>
-
-//                           {item?.images?.[0]?.image && (
-//                               <div className="mb-4 flex justify-center">
-//                                   <div className="w-full max-w-md bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-//                                       <Image
-//                                           src={`https://staging.ajiroba.ng/v1/media/${item?.images?.[0]?.image}`}
-//                                           alt="Post image"
-//                                           width={300}
-//                                           height={300}
-//                                           className="max-w-full h-auto object-contain"
-//                                       />
-//                                   </div>
-//                               </div>
-//                           )}
-
-//                           <div className="flex items-center justify-between py-3 border-t border-gray-100">
-//                               <button
-//                                   className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-//                                   onClick={() =>
-//                                       !item?.user_liked
-//                                           ? handleLike(postId, postLikeData.liked)
-//                                           : handledisLike(postId, postLikeData.liked)
-//                                   }
-//                               >
-//                                   <FaThumbsUp
-//                                       className={`text-lg ${item?.user_liked ? 'text-[#F56630]' : 'text-gray-500'}`}
-//                                   />
-//                                   <span className="text-sm font-medium">
-//                                       {item?.likes_count} Kudos
-//                                   </span>
-//                               </button>
-
-//                               <div className="flex items-center gap-2 text-gray-600">
-//                                   <FaRegCommentDots className="text-lg" />
-//                                   <span className="text-sm font-medium">
-//                                       {item?.comments_count} Comments
-//                                   </span>
-//                               </div>
-
-//                               <button className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors">
-//                                   <FaShareAlt className="text-lg" />
-//                                   <span className="text-sm font-medium">Share</span>
-//                               </button>
-
-//                               <button
-//                                   className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-//                                   onClick={() =>
-//                                       !item?.user_bookmarked
-//                                           ? handleBookMark(postId, postLikeData.liked)
-//                                           : handleUnBookMark(postId, postLikeData.liked)
-//                                   }
-//                               >
-//                                   <FiBookmark
-//                                       className={`text-lg ${item?.user_bookmarked ? 'text-[#F56630]' : 'text-gray-500'}`}
-//                                   />
-//                                   <span className="text-sm font-medium">Bookmark</span>
-//                               </button>
-//                           </div>
-//                       </div>
-//                   ) : activeTab === 'Bookmarked' ? (
-//                       // Similar structure for Bookmarked posts
-//                       <div
-//                           key={postId}
-//                           className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-//                       >
-//                           {/* Render for bookmarked posts - same structure as Trending */}
-//                           <div className="mb-4">
-//                               <p className="text-gray-800 text-sm leading-relaxed font-normal">
-//                                   {item?.content}
-//                               </p>
-//                           </div>
-
-//                           {item?.images?.[0]?.image && (
-//                               <div className="mb-4 flex justify-center">
-//                                   <div className="w-full max-w-md bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-//                                       <Image
-//                                           src={`https://staging.ajiroba.ng/v1/media/${item?.images?.[0]?.image}`}
-//                                           alt="Post image"
-//                                           width={300}
-//                                           height={300}
-//                                           className="max-w-full h-auto object-contain"
-//                                       />
-//                                   </div>
-//                               </div>
-//                           )}
-
-//                           <div className="flex items-center justify-between py-3 border-t border-gray-100">
-//                               <button
-//                                   className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-//                                   onClick={() =>
-//                                       !item?.user_liked
-//                                           ? handleLike(postId, postLikeData.liked)
-//                                           : handledisLike(postId, postLikeData.liked)
-//                                   }
-//                               >
-//                                   <FaThumbsUp
-//                                       className={`text-lg ${item?.user_liked ? 'text-[#F56630]' : 'text-gray-500'}`}
-//                                   />
-//                                   <span className="text-sm font-medium">
-//                                       {item?.likes_count} Kudos
-//                                   </span>
-//                               </button>
-
-//                               <div className="flex items-center gap-2 text-gray-600">
-//                                   <FaRegCommentDots className="text-lg" />
-//                                   <span className="text-sm font-medium">
-//                                       {item?.comments_count} Comments
-//                                   </span>
-//                               </div>
-
-//                               <button className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors">
-//                                   <FaShareAlt className="text-lg" />
-//                                   <span className="text-sm font-medium">Share</span>
-//                               </button>
-
-//                               <button
-//                                   className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-//                                   onClick={() =>
-//                                       !item?.user_bookmarked
-//                                           ? handleBookMark(postId, postLikeData.liked)
-//                                           : handleUnBookMark(postId, postLikeData.liked)
-//                                   }
-//                               >
-//                                   <FiBookmark
-//                                       className={`text-lg ${item?.user_bookmarked ? 'text-[#F56630]' : 'text-gray-500'}`}
-//                                   />
-//                                   <span className="text-sm font-medium">Bookmark</span>
-//                               </button>
-//                           </div>
-//                       </div>
-//                   ) : (
-//                       <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-//                           <p className="text-gray-500 font-medium">No data Available</p>
-//                       </div>
-//                   )
-//               );
-//           })}
-//       </div>
-//   );
-// };
-
-
-const ContentPost = ({ activeTab }: { activeTab: string }) => {
-    const router = useRouter();
-
-    
-
-    // Per-post state for comment input, image and errors
-    const [commentByPost, setCommentByPost] = useState<{ [key: string]: string }>({});
-    const [selectedImageByPost, setSelectedImageByPost] = useState<{ [key: string]: string | null }>({});
-    const [errorByPost, setErrorByPost] = useState<{ [key: string]: string | null }>({});
-
-    
-
-    const handleSuccess = (data?: any) => {
-        setComment('');
-        setCommentImage('');
-        setSelectedImage(null);
-        if (data.status === 200 || data.status === 201) {
-            toast.success(`${data?.data?.message || data?.data?.detail}`, {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-                onClose: () => router.push('/community'),
-            });
-            refetch();
-        } else if (
-            data.status === 403 ||
-            data.status === 404 ||
-            data.status === 401 ||
-            data.status === 409 ||
-            data.status === 500
-        ) {
-            setComment('');
-            setCommentImage('');
-            setSelectedImage(null);
-            toast.error(`${data?.data?.message || data?.data?.detail}`, {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-            });
-            refetch();
-        } else {
-            setComment('');
-            setCommentImage('');
-            toast.error(`${data?.data?.detail}`, {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-            });
-            refetch();
-        }
-    };
-
-    const handleError = (error?: any) => {
-        console.log(error, 'errr', data, 'daaaattt');
-        setComment('');
-        setCommentImage('');
-        setSelectedImage(null);
-        toast.error(`${data?.data?.detail || error || 'An Error Occured'}`, {
-            position: 'top-right',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-        });
-        refetch();
-    };
-
-    const { isLoggedIn, user, token } = useAuthStore((state) => ({
-        isLoggedIn: state.isLoggedIn,
-        user: state.user,
-        token: state.token,
-    }));
-
-    // const userToken = token;
-    const userToken = Cookies.get('token') as string;
-
-    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
-        'comment_on_post',
-        handleSuccess,
-        handleError,
-    );
-
-    const [comment, setComment] = useState<string>('');
-    const [commentImage, setCommentImage] = useState<string>('');
-
-    const handleImageUpload = (postId: string, event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setSelectedImageByPost(prev => ({ ...prev, [postId]: base64String }));
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const removeImageForPost = (postId: string) => {
-        setSelectedImageByPost(prev => ({ ...prev, [postId]: null }));
-    };
-
-    const handleCommentChange = (postId: string, value: string) => {
-        setCommentByPost(prev => ({ ...prev, [postId]: value }));
-        if (errorByPost[postId]) {
-            setErrorByPost(prev => ({ ...prev, [postId]: null }));
-        }
-    };
-
-    const submitComment = (postId: string) => {
-        const text = (commentByPost[postId] || '').trim();
-        if (!text) {
-            setErrorByPost(prev => ({ ...prev, [postId]: 'Comment is required' }));
-            return;
-        }
-        const image = selectedImageByPost[postId] || '';
-        const payload = {
-            post_id: postId,
-            comment: text,
-            comment_images: [image],
-        };
-        mutate({
-            url: '/api/commentonpost/',
-            payload: { payload, tkn: userToken },
-            token: userToken,
-        });
-        // Optimistically clear per-post inputs
-        setCommentByPost(prev => ({ ...prev, [postId]: '' }));
-        setSelectedImageByPost(prev => ({ ...prev, [postId]: null }));
-        setErrorByPost(prev => ({ ...prev, [postId]: null }));
-    };
-
-    const {
-        data: trendingrinfo,
-        isLoading: trendingLoading,
-        error: trendingerror,
-        refetch,
-    } = useGetOrderData('/api/trendingposts', 'get_trending_posts', userToken);
-
-    const {
-        data: notinfo,
-        isLoading: notLoading,
-        error: noterror,
-        refetch: notrefetch,
-    } = useGetOrderData(
-        '/api/communitynotifications',
-        'get_trending_posts',
-        userToken,
-    );
-
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-    
-
-    const { mutate: likedmutate, status: likedstatus } = useMutateData(
-        'like_or_unlike_post',
-        handleSuccess,
-        handleError,
-    );
-
-    const { mutate: dislikedmutate, status: dislikedstatus } = useMutateData(
-        'dislike_post',
-        handleSuccess,
-        handleError,
-    );
-
-    const { mutate: bookmarkmutate, status: bookmarkedstatus } = useMutateData(
-        'bookmark_post',
-        handleSuccess,
-        handleError,
-    );
-
-    const { mutate: unbookmarkmutate, status: unbookmarkedstatus } =
-        useMutateData('unbookmark_post', handleSuccess, handleError);
-
-    const [postLikes, setPostLikes] = useState<{
-        [key: string]: { count: number; liked: boolean };
-    }>({});
-
-    const handleLike = (postId: string, liked: boolean) => {
-        likedmutate({
-            url: `/api/likepost/`,
-            payload: { post_id: postId, tkn: userToken },
-            token: userToken,
-        });
-    };
-
-    const handledisLike = (postId: string, liked: boolean) => {
-        dislikedmutate({
-            url: `/api/dislikepost/`,
-            payload: { post_id: postId, tkn: userToken },
-            token: userToken,
-        });
-    };
-
-    const handleBookMark = (postId: string, liked: boolean) => {
-        bookmarkmutate({
-            url: `/api/bookmark/`,
-            payload: { post_id: postId, tkn: userToken },
-            token: userToken,
-        });
-    };
-
-    const handleUnBookMark = (postId: string, liked: boolean) => {
-        unbookmarkmutate({
-            url: `/api/unbookmark/`,
-            payload: { post_id: postId, tkn: userToken },
-            token: userToken,
-        });
-    };
-
-    // Set default content as trending posts
-    let posts = trendingrinfo?.data?.data?.posts || [];
-
-  /*   console.log(posts, 'posttt') */
-
-    // Conditionally render posts based on active tab
-    if (activeTab === 'Liked') {
-        const liked = trendingrinfo?.data?.data?.liked_posts || [];
-        // API returns { id, post: {...} } — extract the nested post objects
-        posts = liked.map((entry: any) => entry?.post).filter(Boolean);
-    } else if (activeTab === 'Bookmarked') {
-        const bookmarked = trendingrinfo?.data?.data?.bookmarked_posts || [];
-        posts = bookmarked.map((entry: any) => entry?.post).filter(Boolean);
-    }
-
-    const [paginationState, setPaginationState] = useState<{ [key: string]: number }>({});
-
-    if (trendingLoading) {
-        return <Loading />;
-    }
-
-    // Ensure posts array exists
-    if (!posts || posts.length === 0) {
-        return (
-            <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                <p className="text-gray-500 font-medium">No posts available</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="w-full space-y-6">
-            {posts.map((item: { id: any; likes_count: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; is_liked_by_current_user: any; comments: { length: number; slice: (arg0: number, arg1: number) => never[]; }; content: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; images: { image: any; }[]; user_liked: any; comments_count: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; user_bookmarked: any; }) => {
-                const postId = item.id;
-                const postLikeData = postLikes[postId] || {
-                    count: item.likes_count,
-                    liked: item.is_liked_by_current_user,
-                };
-
-                // Use post-specific pagination state
-                const currentPage = paginationState[postId] || 1;
-                const totalComments = item.comments?.length || 0;
-                const totalPages = Math.ceil(totalComments / ITEMS_PER_PAGE);
-                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-                const paginatedComments = item.comments?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
-
-                return (
-                    activeTab === 'Trending' ? (
-                        <div
-                            key={postId}
-                            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-                        >
-                            {/* Post Content */}
-                            <div className="mb-4">
-                                <p className="text-gray-800 text-sm leading-relaxed font-normal">
-                                    {item?.content}
-                                </p>
-                            </div>
-
-                            {/* Post Image */}
-                            {item?.images?.[0]?.image && (
-                                <div className="mb-4 flex justify-center">
-                                    <div className="w-full max-w-md bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-                                        <Image
-                                            src={`https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`}
-                                            alt="Post image"
-                                            width={300}
-                                            height={300}
-                                            className="max-w-full h-auto object-contain"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Engagement Metrics */}
-                            <div className="flex items-center justify-between py-3 border-t border-gray-100">
-                                <button
-                                    className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-                                    onClick={() =>
-                                        !item?.user_liked
-                                            ? handleLike(postId, postLikeData.liked)
-                                            : handledisLike(postId, postLikeData.liked)
-                                    }
-                                >
-                                    <FaThumbsUp
-                                        className={`text-lg ${item?.user_liked ? 'text-[#F56630]' : 'text-gray-500'}`}
-                                    />
-                                    <span className="text-sm font-medium">
-                                        {item?.likes_count} Kudos
-                                    </span>
-                                </button>
-
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <FaRegCommentDots className="text-lg" />
-                                    <span className="text-sm font-medium">
-                                        {item?.comments_count} Comments
-                                    </span>
-                                </div>
-
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors">
-                                    <FaShareAlt className="text-lg" />
-                                    <span className="text-sm font-medium">Share</span>
-                                </button>
-
-                                <button
-                                    className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-                                    onClick={() =>
-                                        !item?.user_bookmarked
-                                            ? handleBookMark(postId, postLikeData.liked)
-                                            : handleUnBookMark(postId, postLikeData.liked)
-                                    }
-                                >
-                                    <FiBookmark
-                                        className={`text-lg ${item?.user_bookmarked ? 'text-[#F56630]' : 'text-gray-500'}`}
-                                    />
-                                    <span className="text-sm font-medium">Bookmark</span>
-                                </button>
-                            </div>
-
-                            {/* Comment Input */}
-                            <form
-                                onSubmit={(e) => { e.preventDefault(); submitComment(postId); }}
-                                className="mt-4"
-                            >
-                                <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                                        <span className="text-xs text-gray-600">👤</span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        placeholder="Write your comment"
-                                        value={commentByPost[postId] || ''}
-                                        onChange={(e) => handleCommentChange(postId, e.target.value)}
-                                        className="flex-1 bg-transparent border-none outline-none text-sm text-gray-700 placeholder-gray-500"
-                                    />
-                                    <div className="flex items-center gap-2">
-                                        <label htmlFor={`imageUpload-${postId}`} className="cursor-pointer">
-                                            <AiOutlinePicture className="text-xl text-gray-500 hover:text-gray-700 transition-colors" />
-                                        </label>
-                                        <input
-                                            type="file"
-                                            id={`imageUpload-${postId}`}
-                                            accept="image/*"
-                                            className="hidden"
-                                            onChange={(e) => handleImageUpload(postId, e)}
-                                        />
-                                        <button
-                                            type="submit"
-                                            disabled={status === 'pending'}
-                                            className="px-3 py-1 rounded-md text-sm text-white bg-[#F56630] hover:bg-[#E84526] disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            Post
-                                        </button>
-                                    </div>
-                                </div>
-                                {errorByPost[postId] && (
-                                    <p className="text-red-500 text-xs mt-1">{errorByPost[postId]}</p>
-                                )}
-
-                                {selectedImageByPost[postId] && (
-                                    <div className="mt-3 relative inline-block">
-                                        <Image
-                                            src={selectedImageByPost[postId] as string}
-                                            alt="Selected"
-                                            width={80}
-                                            height={80}
-                                            className="w-20 h-20 object-cover rounded-lg"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeImageForPost(postId)}
-                                            className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow text-gray-600 hover:text-gray-800"
-                                            aria-label="Remove image"
-                                        >
-                                            <AiOutlineClose className="text-sm" />
-                                        </button>
-                                    </div>
-                                )}
-                            </form>
-
-                            {/* Comments Section */}
-                            {paginatedComments.length > 0 && (
-                                <div className="mt-6 space-y-4">
-                                    {paginatedComments.map((comment: { id: React.Key | null | undefined; user: { profile_image: any; fullname: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; comment: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
-                                        <div key={comment.id} className="flex gap-3">
-                                            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
-                                                <span className="text-xs text-gray-600">👤</span>
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="bg-gray-50 rounded-lg p-3">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <span className="font-semibold text-sm text-gray-800">
-                                                            {comment?.user?.fullname}
-                                                        </span>
-                                                    </div>
-                                                    <p className="text-sm text-gray-700 leading-relaxed">
-                                                        {comment?.comment}
-                                                    </p>
-                                                </div>
-                                                <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                                    <button className="flex items-center gap-1 hover:text-[#F56630] transition-colors">
-                                                        <FaThumbsUp className="text-sm" />
-                                                        <span>0 Kudos</span>
-                                                    </button>
-                                                    <button className="flex items-center gap-1 hover:text-[#F56630] transition-colors">
-                                                        <span>Reply</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Pagination Controls */}
-                            {totalPages > 1 && (
-                                <div className="mt-6 flex justify-center gap-4">
-                                    <button
-                                        onClick={() =>
-                                            setPaginationState((prevState) => ({
-                                                ...prevState,
-                                                [postId]: Math.max((prevState[postId] || 1) - 1, 1),
-                                            }))
-                                        }
-                                        disabled={currentPage === 1}
-                                        className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-300 transition-colors text-sm"
-                                    >
-                                        Previous
-                                    </button>
-
-                                    <span className="flex items-center px-4 py-2 text-sm font-medium text-gray-600">
-                                        Page {currentPage} of {totalPages}
-                                    </span>
-
-                                    <button
-                                        onClick={() =>
-                                            setPaginationState((prevState) => ({
-                                                ...prevState,
-                                                [postId]: Math.min(
-                                                    (prevState[postId] || 1) + 1,
-                                                    totalPages,
-                                                ),
-                                            }))
-                                        }
-                                        disabled={currentPage === totalPages}
-                                        className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-300 transition-colors text-sm"
-                                    >
-                                        Next
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ) : activeTab === 'Liked' ? (
-                        // Similar structure for Liked posts
-                        <div
-                            key={postId}
-                            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-                        >
-                            {/* Render for liked posts - same structure as Trending */}
-                            <div className="mb-4">
-                                <p className="text-gray-800 text-sm leading-relaxed font-normal">
-                                    {item?.content}
-                                </p>
-                            </div>
-
-                            {item?.images?.[0]?.image && (
-                                <div className="mb-4 flex justify-center">
-                                    <div className="w-full max-w-md bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-                                        <Image
-                                            src={`https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`}
-                                            alt="Post image"
-                                            width={300}
-                                            height={300}
-                                            className="max-w-full h-auto object-contain"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="flex items-center justify-between py-3 border-t border-gray-100">
-                                <button
-                                    className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-                                    onClick={() =>
-                                        !item?.user_liked
-                                            ? handleLike(postId, postLikeData.liked)
-                                            : handledisLike(postId, postLikeData.liked)
-                                    }
-                                >
-                                    <FaThumbsUp
-                                        className={`text-lg ${item?.user_liked ? 'text-[#F56630]' : 'text-gray-500'}`}
-                                    />
-                                    <span className="text-sm font-medium">
-                                        {item?.likes_count} Kudos
-                                    </span>
-                                </button>
-
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <FaRegCommentDots className="text-lg" />
-                                    <span className="text-sm font-medium">
-                                        {item?.comments_count} Comments
-                                    </span>
-                                </div>
-
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors">
-                                    <FaShareAlt className="text-lg" />
-                                    <span className="text-sm font-medium">Share</span>
-                                </button>
-
-                                <button
-                                    className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-                                    onClick={() =>
-                                        !item?.user_bookmarked
-                                            ? handleBookMark(postId, postLikeData.liked)
-                                            : handleUnBookMark(postId, postLikeData.liked)
-                                    }
-                                >
-                                    <FiBookmark
-                                        className={`text-lg ${item?.user_bookmarked ? 'text-[#F56630]' : 'text-gray-500'}`}
-                                    />
-                                    <span className="text-sm font-medium">Bookmark</span>
-                                </button>
-                            </div>
-                        </div>
-                    ) : activeTab === 'Bookmarked' ? (
-                        // Similar structure for Bookmarked posts
-                        <div
-                            key={postId}
-                            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-                        >
-                            {/* Render for bookmarked posts - same structure as Trending */}
-                            <div className="mb-4">
-                                <p className="text-gray-800 text-sm leading-relaxed font-normal">
-                                    {item?.content}
-                                </p>
-                            </div>
-
-                            {item?.images?.[0]?.image && (
-                                <div className="mb-4 flex justify-center">
-                                    <div className="w-full max-w-md bg-gray-100 rounded-lg p-8 flex items-center justify-center">
-                                        <Image
-                                            src={`https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`}
-                                            alt="Post image"
-                                            width={300}
-                                            height={300}
-                                            className="max-w-full h-auto object-contain"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="flex items-center justify-between py-3 border-t border-gray-100">
-                                <button
-                                    className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-                                    onClick={() =>
-                                        !item?.user_liked
-                                            ? handleLike(postId, postLikeData.liked)
-                                            : handledisLike(postId, postLikeData.liked)
-                                    }
-                                >
-                                    <FaThumbsUp
-                                        className={`text-lg ${item?.user_liked ? 'text-[#F56630]' : 'text-gray-500'}`}
-                                    />
-                                    <span className="text-sm font-medium">
-                                        {item?.likes_count} Kudos
-                                    </span>
-                                </button>
-
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <FaRegCommentDots className="text-lg" />
-                                    <span className="text-sm font-medium">
-                                        {item?.comments_count} Comments
-                                    </span>
-                                </div>
-
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors">
-                                    <FaShareAlt className="text-lg" />
-                                    <span className="text-sm font-medium">Share</span>
-                                </button>
-
-                                <button
-                                    className="flex items-center gap-2 text-gray-600 hover:text-[#F56630] transition-colors"
-                                    onClick={() =>
-                                        !item?.user_bookmarked
-                                            ? handleBookMark(postId, postLikeData.liked)
-                                            : handleUnBookMark(postId, postLikeData.liked)
-                                    }
-                                >
-                                    <FiBookmark
-                                        className={`text-lg ${item?.user_bookmarked ? 'text-[#F56630]' : 'text-gray-500'}`}
-                                    />
-                                    <span className="text-sm font-medium">Bookmark</span>
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                            <p className="text-gray-500 font-medium">No data Available</p>
-                        </div>
-                    )
-                );
-            })}
-        </div>
-    );
+type PostMeta = {
+  likesCount: number;
+  liked: boolean;
+  bookmarked: boolean;
+  commentsCount: number;
 };
 
+const TOAST_OPTIONS = {
+  position: "top-right" as const,
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined as undefined,
+  theme: "light" as const,
+};
 
+const ContentPost = ({ activeTab }: { activeTab: string }) => {
+  // Per-post state for comment input, image and errors
+  const [commentByPost, setCommentByPost] = useState<Record<string, string>>({});
+  const [selectedImageByPost, setSelectedImageByPost] = useState<
+    Record<string, string | null>
+  >({});
+  const [errorByPost, setErrorByPost] = useState<Record<string, string | null>>(
+    {},
+  );
+  const [postMeta, setPostMeta] = useState<Record<string, PostMeta>>({});
+  const [paginationState, setPaginationState] = useState<Record<string, number>>(
+    {},
+  );
+  const [likeLoading, setLikeLoading] = useState<Record<string, boolean>>({});
+  const [bookmarkLoading, setBookmarkLoading] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [commentLoading, setCommentLoading] = useState<Record<string, boolean>>(
+    {},
+  );
 
+  const userToken = Cookies.get("token") as string;
 
+  const { mutateAsync: commentMutateAsync } = useMutateData("comment_on_post");
+  const { mutateAsync: likeMutateAsync } = useMutateData("like_or_unlike_post");
+  const { mutateAsync: dislikeMutateAsync } = useMutateData("dislike_post");
+  const { mutateAsync: bookmarkMutateAsync } = useMutateData("bookmark_post");
+  const { mutateAsync: unbookmarkMutateAsync } = useMutateData(
+    "unbookmark_post",
+  );
 
+  const {
+    data: trendingResponse,
+    isLoading: trendingLoading,
+    error: trendingError,
+    refetch,
+  } = useGetOrderData("/api/trendingposts", "get_trending_posts", userToken);
 
+  const buildMetaFromPost = (post: any): PostMeta => ({
+    likesCount: Number(post?.likes_count ?? 0),
+    liked: Boolean(post?.user_liked ?? post?.is_liked_by_current_user),
+    bookmarked: Boolean(post?.user_bookmarked),
+    commentsCount: Number(
+      post?.comments_count ?? post?.comments?.length ?? 0,
+    ),
+  });
+
+  // Set default content as trending posts
+  let posts = trendingResponse?.data?.data?.posts || [];
+
+  // Conditionally render posts based on active tab
+  if (activeTab === "Liked") {
+    const liked = trendingResponse?.data?.data?.liked_posts || [];
+    // API returns { id, post: {...} } — extract the nested post objects
+    posts = liked.map((entry: any) => entry?.post).filter(Boolean);
+  } else if (activeTab === "Bookmarked") {
+    const bookmarked = trendingResponse?.data?.data?.bookmarked_posts || [];
+    posts = bookmarked.map((entry: any) => entry?.post).filter(Boolean);
+  }
+
+  useEffect(() => {
+    if (!posts || posts.length === 0) {
+      setPostMeta({});
+      return;
+    }
+
+    setPostMeta((prev) => {
+      const next: Record<string, PostMeta> = {};
+      let hasChanges = posts.length !== Object.keys(prev).length;
+
+      posts.forEach((post: any) => {
+        const postId = String(post?.id);
+        const serverMeta = buildMetaFromPost(post);
+        const existing = prev[postId];
+
+        if (
+          !existing ||
+          existing.likesCount !== serverMeta.likesCount ||
+          existing.liked !== serverMeta.liked ||
+          existing.bookmarked !== serverMeta.bookmarked ||
+          existing.commentsCount !== serverMeta.commentsCount
+        ) {
+          hasChanges = true;
+          next[postId] = serverMeta;
+        } else {
+          next[postId] = existing;
+        }
+      });
+
+      return hasChanges ? next : prev;
+    });
+  }, [posts, activeTab]);
+
+  const handleImageUpload = (
+    postId: string,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setSelectedImageByPost((prev) => ({
+          ...prev,
+          [postId]: base64String,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImageForPost = (postId: string) => {
+    setSelectedImageByPost((prev) => ({ ...prev, [postId]: null }));
+  };
+
+  const handleCommentChange = (postId: string, value: string) => {
+    setCommentByPost((prev) => ({ ...prev, [postId]: value }));
+    if (errorByPost[postId]) {
+      setErrorByPost((prev) => ({ ...prev, [postId]: null }));
+    }
+  };
+
+  const getErrorMessage = (error: any, fallback: string) =>
+    error?.message ||
+    error?.data?.message ||
+    error?.data?.detail ||
+    error?.data?.data?.detail ||
+    fallback;
+
+  const toggleLike = async (post: any) => {
+    const postId = String(post?.id);
+    const currentMeta = postMeta[postId] ?? buildMetaFromPost(post);
+    const previousMeta: PostMeta = { ...currentMeta };
+
+    const nextLiked = !currentMeta.liked;
+    const nextLikesCount = Math.max(
+      0,
+      currentMeta.likesCount + (nextLiked ? 1 : -1),
+    );
+
+    setPostMeta((prev) => ({
+      ...prev,
+      [postId]: {
+        ...currentMeta,
+        liked: nextLiked,
+        likesCount: nextLikesCount,
+      },
+    }));
+    setLikeLoading((prev) => ({ ...prev, [postId]: true }));
+
+    try {
+      const mutationFn = nextLiked ? likeMutateAsync : dislikeMutateAsync;
+      const response = await mutationFn({
+        url: nextLiked ? "/api/likepost/" : "/api/dislikepost/",
+        payload: { post_id: postId, tkn: userToken },
+        token: userToken,
+      });
+
+      const successMessage =
+        response?.message ||
+        response?.data?.message ||
+        (nextLiked ? "Post liked" : "Like removed");
+
+      toast.success(successMessage, TOAST_OPTIONS);
+      refetch();
+    } catch (error: any) {
+      setPostMeta((prev) => ({
+        ...prev,
+        [postId]: previousMeta,
+      }));
+      const message = getErrorMessage(
+        error,
+        nextLiked ? "Unable to like this post" : "Unable to unlike this post",
+      );
+      toast.error(message, TOAST_OPTIONS);
+    } finally {
+      setLikeLoading((prev) => ({ ...prev, [postId]: false }));
+    }
+  };
+
+  const toggleBookmark = async (post: any) => {
+    const postId = String(post?.id);
+    const currentMeta = postMeta[postId] ?? buildMetaFromPost(post);
+    const previousMeta: PostMeta = { ...currentMeta };
+    const nextBookmarked = !currentMeta.bookmarked;
+
+    setPostMeta((prev) => ({
+      ...prev,
+      [postId]: {
+        ...currentMeta,
+        bookmarked: nextBookmarked,
+      },
+    }));
+    setBookmarkLoading((prev) => ({ ...prev, [postId]: true }));
+
+    try {
+      const mutationFn = nextBookmarked
+        ? bookmarkMutateAsync
+        : unbookmarkMutateAsync;
+      const response = await mutationFn({
+        url: nextBookmarked ? "/api/bookmark/" : "/api/unbookmark/",
+        payload: { post_id: postId, tkn: userToken },
+        token: userToken,
+      });
+
+      const successMessage =
+        response?.message ||
+        response?.data?.message ||
+        (nextBookmarked ? "Post bookmarked" : "Bookmark removed");
+
+      toast.success(successMessage, TOAST_OPTIONS);
+      refetch();
+    } catch (error: any) {
+      setPostMeta((prev) => ({
+        ...prev,
+        [postId]: previousMeta,
+      }));
+      const message = getErrorMessage(
+        error,
+        nextBookmarked
+          ? "Unable to bookmark this post"
+          : "Unable to remove bookmark",
+      );
+      toast.error(message, TOAST_OPTIONS);
+    } finally {
+      setBookmarkLoading((prev) => ({ ...prev, [postId]: false }));
+    }
+  };
+
+  const submitComment = async (post: any) => {
+    const postId = String(post?.id);
+    const text = (commentByPost[postId] || "").trim();
+
+    if (!text) {
+      setErrorByPost((prev) => ({ ...prev, [postId]: "Comment is required" }));
+      return;
+    }
+
+    const selectedImage = selectedImageByPost[postId];
+    const commentPayload = {
+      post_id: postId,
+      comment: text,
+      comment_images: selectedImage ? [selectedImage] : [],
+    };
+
+    setCommentLoading((prev) => ({ ...prev, [postId]: true }));
+
+    try {
+      const response = await commentMutateAsync({
+        url: "/api/commentonpost/",
+        payload: { payload: commentPayload, tkn: userToken },
+        token: userToken,
+      });
+
+      const successMessage =
+        response?.message ||
+        response?.data?.message ||
+        "Comment added successfully";
+
+      toast.success(successMessage, TOAST_OPTIONS);
+      setCommentByPost((prev) => ({ ...prev, [postId]: "" }));
+      setSelectedImageByPost((prev) => ({ ...prev, [postId]: null }));
+      setErrorByPost((prev) => ({ ...prev, [postId]: null }));
+      setPostMeta((prev) => ({
+        ...prev,
+        [postId]: {
+          ...(prev[postId] ?? buildMetaFromPost(post)),
+          commentsCount: (prev[postId]?.commentsCount ?? 0) + 1,
+        },
+      }));
+      refetch();
+    } catch (error: any) {
+      const message = getErrorMessage(error, "Unable to post comment");
+      toast.error(message, TOAST_OPTIONS);
+    } finally {
+      setCommentLoading((prev) => ({ ...prev, [postId]: false }));
+    }
+  };
+
+  if (trendingLoading) {
+    return <Loading />;
+  }
+
+  if (trendingError) {
+    return (
+      <div className="w-full rounded-lg border border-red-200 bg-white p-8 text-center">
+        <p className="text-sm font-medium text-red-500">
+          Unable to fetch community posts right now. Please try again shortly.
+        </p>
+      </div>
+    );
+  }
+
+  // Ensure posts array exists
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="w-full rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm sm:p-8">
+        <div className="flex min-h-[200px] w-full flex-col items-center justify-center gap-2">
+          <p className="text-base font-medium text-gray-600">
+            No posts available
+          </p>
+          <p className="text-sm text-gray-500">
+            Check back later or start the conversation.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full space-y-6">
+      {posts.map((item: any) => {
+        const postId = String(item?.id);
+        const meta = postMeta[postId] ?? buildMetaFromPost(item);
+
+        // Use post-specific pagination state
+        const currentPage = paginationState[postId] || 1;
+        const totalComments = item?.comments?.length || 0;
+        const totalPages = Math.ceil(totalComments / ITEMS_PER_PAGE);
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const paginatedComments =
+          item?.comments?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
+
+        const isLikePending = likeLoading[postId];
+        const isBookmarkPending = bookmarkLoading[postId];
+        const isCommentPending = commentLoading[postId];
+
+        const postContent = (
+          <div
+            key={postId}
+            className="space-y-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6"
+          >
+            {/* Post Content */}
+            <div className="text-sm font-normal leading-relaxed text-gray-800">
+              {item?.content}
+            </div>
+
+            {/* Post Image */}
+            {item?.images?.[0]?.image && (
+              <div className="flex justify-center">
+                <div className="flex w-full max-w-md items-center justify-center rounded-lg bg-gray-100 p-4 sm:p-8">
+                  <Image
+                    src={`https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`}
+                    alt="Post image"
+                    width={300}
+                    height={300}
+                    className="h-auto max-h-[320px] w-full max-w-full object-contain"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Engagement Metrics */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-3">
+              <button
+                className="flex items-center gap-2 text-gray-600 transition-colors hover:text-[#F56630]"
+                onClick={() => toggleLike(item)}
+                disabled={isLikePending}
+              >
+                {isLikePending ? (
+                  <span className="inline-flex h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                ) : (
+                  <FaThumbsUp
+                    className={`text-lg ${meta.liked ? "text-[#F56630]" : "text-gray-500"}`}
+                  />
+                )}
+                <span className="text-sm font-medium">
+                  {meta.likesCount} Kudos
+                </span>
+              </button>
+
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <FaRegCommentDots className="text-lg" />
+                <span>{meta.commentsCount} Comments</span>
+              </div>
+
+              <button
+                className="flex items-center gap-2 text-gray-600 transition-colors hover:text-[#F56630]"
+                onClick={() => toggleBookmark(item)}
+                disabled={isBookmarkPending}
+              >
+                {isBookmarkPending ? (
+                  <span className="inline-flex h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                ) : (
+                  <FiBookmark
+                    className={`text-lg ${meta.bookmarked ? "text-[#F56630]" : "text-gray-500"}`}
+                  />
+                )}
+                <span className="text-sm font-medium">Bookmark</span>
+              </button>
+            </div>
+
+            {/* Comment Input */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                submitComment(item);
+              }}
+              className="mt-2 space-y-3"
+            >
+              <div className="flex flex-wrap items-center gap-3 rounded-lg bg-gray-50 p-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-300">
+                  <span className="text-xs text-gray-600">👤</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Write your comment"
+                  value={commentByPost[postId] || ""}
+                  onChange={(e) => handleCommentChange(postId, e.target.value)}
+                  className="min-w-[160px] flex-1 border-none bg-transparent text-sm text-gray-700 placeholder-gray-500 outline-none"
+                />
+                <div className="flex items-center gap-2">
+                  <label
+                    htmlFor={`imageUpload-${postId}`}
+                    className="cursor-pointer"
+                  >
+                    <AiOutlinePicture className="text-xl text-gray-500 transition-colors hover:text-gray-700" />
+                  </label>
+                  <input
+                    type="file"
+                    id={`imageUpload-${postId}`}
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleImageUpload(postId, e)}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isCommentPending}
+                    className="flex items-center gap-2 rounded-md bg-[#F56630] px-3 py-1 text-sm text-white transition-colors hover:bg-[#E84526] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isCommentPending ? (
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Posting…
+                      </>
+                    ) : (
+                      "Post"
+                    )}
+                  </button>
+                </div>
+              </div>
+              {errorByPost[postId] && (
+                <p className="text-xs text-red-500">{errorByPost[postId]}</p>
+              )}
+
+              {selectedImageByPost[postId] && (
+                <div className="relative inline-flex">
+                  <Image
+                    src={selectedImageByPost[postId] as string}
+                    alt="Selected"
+                    width={80}
+                    height={80}
+                    className="h-20 w-20 rounded-lg object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImageForPost(postId)}
+                    className="absolute -right-2 -top-2 rounded-full bg-white p-1 text-gray-600 shadow transition-colors hover:text-gray-800"
+                    aria-label="Remove image"
+                  >
+                    <AiOutlineClose className="text-sm" />
+                  </button>
+                </div>
+              )}
+            </form>
+
+            {/* Comments Section */}
+            {paginatedComments.length > 0 && (
+              <div className="space-y-4">
+                {paginatedComments.map((comment: any) => (
+                  <div key={comment?.id} className="flex gap-3">
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-300">
+                      <span className="text-xs text-gray-600">👤</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="rounded-lg bg-gray-50 p-3">
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="text-sm font-semibold text-gray-800">
+                            {comment?.user?.fullname}
+                          </span>
+                        </div>
+                        <p className="break-words text-sm leading-relaxed text-gray-700">
+                          {comment?.comment}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-center">
+                <button
+                  onClick={() =>
+                    setPaginationState((prevState) => ({
+                      ...prevState,
+                      [postId]: Math.max((prevState[postId] || 1) - 1, 1),
+                    }))
+                  }
+                  disabled={currentPage === 1}
+                  className="rounded-lg bg-gray-200 px-4 py-2 text-sm transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Previous
+                </button>
+
+                <span className="text-sm font-medium text-gray-600">
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                <button
+                  onClick={() =>
+                    setPaginationState((prevState) => ({
+                      ...prevState,
+                      [postId]: Math.min(
+                        (prevState[postId] || 1) + 1,
+                        totalPages,
+                      ),
+                    }))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="rounded-lg bg-gray-200 px-4 py-2 text-sm transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        );
+
+        if (activeTab === "Trending") {
+          return postContent;
+        }
+
+        if (activeTab === "Liked") {
+          return postContent;
+        }
+
+        if (activeTab === "Bookmarked") {
+          return postContent;
+        }
+
+        return (
+          <div
+            key={postId}
+            className="w-full rounded-lg border border-gray-200 bg-white p-8 text-center"
+          >
+            <p className="text-gray-500 font-medium">No data available</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 const NotificationSidebar = () => {
   const { isLoggedIn, user, token } = useAuthStore((state) => ({
     isLoggedIn: state.isLoggedIn,
@@ -1367,37 +659,42 @@ const NotificationSidebar = () => {
 
 
   return (
-    <div className="w-[250px] p-4 bg-white border rounded-lg shadow-md">
-      <h4 className="font-semibold text-lg mb-4">Notifications</h4>
+    <div className="w-full rounded-lg border bg-white p-4 shadow-md lg:w-[280px]">
+      <h4 className="mb-4 text-lg font-semibold">Notifications</h4>
 
       {notinfo?.data?.data?.length === 0 ? (
-        <h1>No Data Available</h1>
+        <p className="text-sm text-gray-500">No Data Available</p>
       ) : (
-        paginatedNotifications?.map(
-          (item: any, key: React.Key | null | undefined) => {
-            const timeAgo = formatDistanceToNow(new Date(item?.date_created), {
-              addSuffix: true,
-            });
+        <ul className="space-y-4">
+          {paginatedNotifications?.map(
+            (item: any, key: React.Key | null | undefined) => {
+              const timeAgo = formatDistanceToNow(new Date(item?.date_created), {
+                addSuffix: true,
+              });
 
-            return (
-              <ul key={key} className="space-y-4 ">
-                <li className="pb-4">
-                  <p className="font-medium">{item.message}</p>
-                  <span className="text-sm text-gray-500 ">{timeAgo}</span>
+              return (
+                <li
+                  key={key}
+                  className="rounded-lg border border-gray-100 p-3"
+                >
+                  <p className="text-sm font-medium text-gray-800 break-words">
+                    {item.message}
+                  </p>
+                  <span className="text-xs text-gray-500">{timeAgo}</span>
                 </li>
-              </ul>
-            );
-          },
-        )
+              );
+            },
+          )}
+        </ul>
       )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex justify-between mt-4">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`px-3 py-1 border rounded-md ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+            className={`rounded-md border px-3 py-1 text-sm ${currentPage === 1 ? "cursor-not-allowed text-gray-400" : "hover:bg-gray-100"
               }`}
           >
             Prev
@@ -1408,7 +705,7 @@ const NotificationSidebar = () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className={`px-3 py-1 border rounded-md ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+            className={`rounded-md border px-3 py-1 text-sm ${currentPage === totalPages ? "cursor-not-allowed text-gray-400" : "hover:bg-gray-100"
               }`}
           >
             Next
@@ -1434,12 +731,12 @@ const MainLayout = () => {
       </div>
     </div> */
 
-    <section className="md:full mb-6 flex w-full flex-col gap-4 lg:w-[60dvw] lg:flex-row ">
-      <div className=" p-4   flex-1 h-max grow">
+    <section className="mb-6 flex w-full flex-col gap-4 lg:flex-row lg:items-start">
+      <div className="flex-1 space-y-4 rounded-xl bg-transparent p-4 lg:p-0">
         <TabComponent activeTab={activeTab} setActiveTab={setActiveTab} />
         <ContentPost activeTab={activeTab} />
       </div>
-      <div className="  p-4  bg-white ">
+      <div className="w-full lg:max-w-xs">
         <NotificationSidebar />
       </div>
     </section>

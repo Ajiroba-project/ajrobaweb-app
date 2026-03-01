@@ -407,7 +407,7 @@ const submitFormdelete = async (data: any, event: any) => {
             {formatCurrency(val.total_price)}
         </td>
         <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
-          {new Date(val.order_date).toLocaleString()}
+        {new Date(val.order_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
         </td>
         <td className="p-6 text-left text-sm tracking-wide text-[12px] text-[#344054] font-Poppins font-medium">
           <span

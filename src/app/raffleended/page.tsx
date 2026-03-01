@@ -128,63 +128,6 @@ const Page = ({ params }: any) => {
     }
   }, [userToken, product_id, router]);
 
-//   useEffect(() => {
-//    /*  console.log('Page loaded, fetching raffle data'); */
-    
-//     const fetchData = async () => {
-//       try {
-//         const data = await fetchWithAuth(
-//           `https://staging.ajiroba.ng/v1/auction/view_auction/${product_id}/`,
-//         );
-//       } catch (error) {
-//         console.error("Failed to fetch data:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, [product_id, fetchWithAuth]);
-
-//   // Check raffle timing every second
-//   useEffect(() => {
-//     if (!productdatanew?.start_date || !productdatanew?.start_time) return;
-
-//     const interval = setInterval(() => {
-//       checkRaffleAboutToStart();
-//     }, 1000);
-
-//     return () => clearInterval(interval);
-//   }, [productdatanew]);
-
-//   // Check enforced time every second
-//   useEffect(() => {
-//     // console.log('Enforced time useEffect triggered:', { enforceTime, raffleStartTime });
-    
-//     if (enforceTime === 0 || raffleStartTime === 0) {
-//      /*  console.log('Enforced time or raffle start time is 0, not starting interval'); */
-//       return;
-//     }
-
-//     // console.log('Starting enforced time interval');
-//     const interval = setInterval(() => {
-//       checkEnforcedTime();
-//     }, 1000);
-
-//     return () => {
-//  /*      console.log('Clearing enforced time interval'); */
-//       clearInterval(interval);
-//     };
-//   }, [enforceTime, raffleStartTime]);
-
-
-
-//   useEffect(() => {
-//     const filtered = raffle.filter((val) => val.host === params.id);
-//     setData(filtered);
-//   }, [params.id]);
-
-  // Handle video end event
-  
-  
   
   const handleVideoEnded = () => {
     setVideoWatched(true);
@@ -521,7 +464,7 @@ const Page = ({ params }: any) => {
 
             <div className="flex flex-col justify-center mb-8">
               <DefaultButton
-                handleClick={() => router.push("/auction")}
+                handleClick={() => router.push("/raffledraw")}
                 text="Back to Auction"
                 type="button"
                 className="h-14 w-60 rounded-lg bg-[#FCDFD4] p-2 transition delay-300 duration-300 ease-in-out hover:bg-[#F25E26] hover:text-white hover:transition-all"

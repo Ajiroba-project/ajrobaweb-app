@@ -31,6 +31,7 @@ import { useForm } from 'react-hook-form'
 import { useMutateData } from '@/hooks/useMutateData'
 import Cookies from 'js-cookie'
 import { formatCurrency } from '@/utils/formatCurrency'
+import { GridSkeleton, LoadingSpinner, ProductCardSkeleton, CategoryCardSkeleton } from './LoadingSkeleton'
 
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '900'] })
@@ -86,7 +87,7 @@ interface AuctionResponse {
   // add other fields as necessary
 }
 
-export const ProductCard = ({ cardInfo }: any) => {
+export const ProductCard = ({ cardInfo, isLoading = false }: any) => {
   const [hoverState, setHoverState] = useState<string>('')
   const [cardCartState, setCardCartState] = useState<boolean>(false)
   const [cardAddCartState, setCardAddCartState] = useState<any>()
@@ -303,6 +304,16 @@ export const ProductCard = ({ cardInfo }: any) => {
 
 
 
+  if (isLoading) {
+    return (
+      <div className={`${poppins.className} lg:full my-4`}>
+        <div className="grid h-fit w-72 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4">
+          <GridSkeleton type="product" count={4} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       {cardInfo && <div
@@ -310,32 +321,33 @@ export const ProductCard = ({ cardInfo }: any) => {
       >
         {cardInfo?.map((value: any, index: number) => (
           <div
-            className=' relative w-full rounded bg-[#F6F6F6] shadow-md'
+            className=' relative w-full rounded bg-[#F6F6F6] shadow-md flex flex-col h-full'
             key={index}
             onMouseEnter={() => setHoverState(value.name)}
             onMouseLeave={() => setHoverState('')}
           >
             {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
-            <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
-              <div className='z-auto flex items-center justify-center'>
-                {/*  <Image
-                  src={value.image}
-                  alt='product'
-                  className='w-fit bg-contain '
-                /> */}
-                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
-                  height={100} />
+            <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='relative h-48 rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
+              <div className='z-auto flex items-center justify-center h-full'>
+                <div className='relative w-full h-full flex items-center justify-center'>
+                  <Image 
+                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    alt='product' 
+                    fill
+                    className='object-contain p-4'
+                  />
+                </div>
               </div>
               {/* cart */}
               {hoverState === value.name ? (
                 <>
                   <IoCartOutline
-                    className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
+                    className='absolute right-2 top-2 z-30 rounded-full bg-white p-2 text-4xl text-black '
                     /*       onClick={() => handleCartNotification(value)} */
                     onClick={() => onSubmit(value)}
                   />
                   {isLoggedIn && (
-                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
+                    <FaHeart className='absolute right-14 top-2 z-30 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
                   )}
                 </>
               ) : (
@@ -356,7 +368,7 @@ export const ProductCard = ({ cardInfo }: any) => {
               </>
 
               <hr />
-              <div className='z-10 h-fit bg-[#F6F6F6] py-3 shadow-inner'>
+              <div className='z-10 flex-1 bg-[#F6F6F6] py-3 shadow-inner flex flex-col justify-between'>
                 <div className='flex flex-col gap-2 px-2'>
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
@@ -626,33 +638,34 @@ export const TopDealsCard = ({ cardInfo }: any) => {
       >
         {cardInfo?.map((value: any, index: number) => (
           <div
-            className=' relative w-full rounded bg-[#F6F6F6] shadow-md'
+            className=' relative w-full rounded bg-[#F6F6F6] shadow-md flex flex-col h-full'
             key={index}
             onMouseEnter={() => setHoverState(value.name)}
             onMouseLeave={() => setHoverState('')}
             onClick={() => router.push(`/categories/productdetails/${value.id}`)}
           >
             {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
-            <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
-              <div className='z-auto flex items-center justify-center'>
-                {/*  <Image
-                  src={value.image}
-                  alt='product'
-                  className='w-fit bg-contain '
-                /> */}
-                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
-                  height={100} />
+            <div className='relative h-48 rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
+              <div className='z-auto flex items-center justify-center h-full'>
+                <div className='relative w-full h-full flex items-center justify-center'>
+                  <Image 
+                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    alt='product' 
+                    fill
+                    className='object-contain p-4'
+                  />
+                </div>
               </div>
               {/* cart */}
               {hoverState === value.name ? (
                 <>
                   <IoCartOutline
-                    className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
+                    className='absolute right-2 top-2 z-30 rounded-full bg-white p-2 text-4xl text-black '
                     /*   onClick={() => handleCartNotification(value)} */
                     onClick={() => onSubmit(value)}
                   />
                   {isLoggedIn && (
-                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
+                    <FaHeart className='absolute right-14 top-2 z-30 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
                   )}
                 </>
               ) : (
@@ -673,7 +686,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
               </>
 
               <hr />
-              <div className='z-10 h-fit bg-[#F6F6F6] py-3 shadow-inner'>
+              <div className='z-10 flex-1 bg-[#F6F6F6] py-3 shadow-inner flex flex-col justify-between'>
                 <div className='flex flex-col gap-2 px-2'>
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
@@ -938,33 +951,34 @@ export const TopWeakCard = ({ cardInfo }: any) => {
       >
         {cardInfo?.map((value: any, index: number) => (
           <div
-            className=' relative w-full rounded bg-[#F6F6F6] shadow-md'
+            className=' relative w-full rounded bg-[#F6F6F6] shadow-md flex flex-col h-full'
             key={index}
             onMouseEnter={() => setHoverState(value.name)}
             onMouseLeave={() => setHoverState('')}
             onClick={() => router.push(`/categories/productdetails/${value.id}`)}
           >
             {/* {console.log(cardInfo, 'cardinfo----featuredproduct')} */}
-            <div className='relative h-min rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
-              <div className='z-auto flex items-center justify-center'>
-                {/*  <Image
-                  src={value.image}
-                  alt='product'
-                  className='w-fit bg-contain '
-                /> */}
-                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
-                  height={100} />
+            <div className='relative h-48 rounded pt-2 transition delay-200 duration-200 hover:bg-[#0000002a] hover:transition-all'>
+              <div className='z-auto flex items-center justify-center h-full'>
+                <div className='relative w-full h-full flex items-center justify-center'>
+                  <Image 
+                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    alt='product' 
+                    fill
+                    className='object-contain p-4'
+                  />
+                </div>
               </div>
               {/* cart */}
               {hoverState === value.name ? (
                 <>
                   <IoCartOutline
-                    className='absolute right-2 top-2  rounded-full bg-white p-2 text-4xl text-black '
+                    className='absolute right-2 top-2 z-30 rounded-full bg-white p-2 text-4xl text-black '
                     /*    onClick={() => handleCartNotification(value)} */
                     onClick={() => onSubmit(value)}
                   />
                   {isLoggedIn && (
-                    <FaHeart className='absolute right-14 top-2 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
+                    <FaHeart className='absolute right-14 top-2 z-30 rounded-full  bg-white p-2 text-4xl text-gray-300 hover:text-[#E84526] ' />
                   )}
                 </>
               ) : (
@@ -985,7 +999,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
               </>
 
               <hr />
-              <div className='z-10 h-fit bg-[#F6F6F6] py-3 shadow-inner'>
+              <div className='z-10 flex-1 bg-[#F6F6F6] py-3 shadow-inner flex flex-col justify-between'>
                 <div className='flex flex-col gap-2 px-2'>
                   <div className='flex  w-full items-center justify-between gap-3 capitalize'>
                     {/* product name */}
@@ -1178,11 +1192,15 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
                 </p>
               </div>
 
-              <div className='flex items-center justify-center mb-4'>
-
-                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
-                  height={100} />
-
+              <div className='flex items-center justify-center mb-4 h-48'>
+                <div className='relative w-full h-full flex items-center justify-center'>
+                  <Image 
+                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    alt='product' 
+                    fill
+                    className='object-contain p-4'
+                  />
+                </div>
               </div>
             </div>
 
@@ -1324,11 +1342,15 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
                 </p>
               </div>
 
-              <div className='flex items-center justify-center mb-4'>
-
-                <Image src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} alt='product' className='w-fit' width={100}
-                  height={100} />
-
+              <div className='flex items-center justify-center mb-4 h-48'>
+                <div className='relative w-full h-full flex items-center justify-center'>
+                  <Image 
+                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    alt='product' 
+                    fill
+                    className='object-contain p-4'
+                  />
+                </div>
               </div>
             </div>
 
@@ -1453,13 +1475,23 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
 }
 
 
-export const CatFeatCard: React.FC<CardDetails> = ({ cardInfo }) => {
+export const CatFeatCard: React.FC<CardDetails & { isLoading?: boolean }> = ({ cardInfo, isLoading = false }) => {
   const images_ = [foodstufficon, fashionandbeauty, phonessvg, motherandchild];
 
 
   // console.log(cardInfo, 'cardInfo')
 
   const router = useRouter()
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 4 }, (_, i) => (
+          <CategoryCardSkeleton key={i} />
+        ))}
+      </div>
+    )
+  }
 
   return (
 
@@ -1511,7 +1543,7 @@ type CommentFormValues = {
   post_id?: string;
 };
 
-export const ProductCardMain = ({ cardInfo }: any) => {
+export const ProductCardMain = ({ cardInfo, isLoading = false }: any) => {
   const [hoverState, setHoverState] = useState<number | null>(null); // Use index or id for hover state
   const [cardCartState, setCardCartState] = useState<boolean>(false);
   const [cardAddCartState, setCardAddCartState] = useState<any>();
@@ -1734,6 +1766,16 @@ export const ProductCardMain = ({ cardInfo }: any) => {
   };
 
 
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }, (_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
+      </div>
+    )
+  }
+
   return (
     <>
       {cardInfo && (
@@ -1752,7 +1794,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                   <div className="flex justify-end cursor-pointer">
                     {hoverState === index && ( // Only show the cart icon for the hovered card
                       <IoCartOutline
-                        className="absolute right-2 top-2 rounded-full bg-white p-2 text-4xl text-black hover:text-[#ffffff] hover:bg-[#E84526]"
+                        className="absolute right-2 top-2 z-30 rounded-full bg-white p-2 text-4xl text-black hover:text-[#ffffff] hover:bg-[#E84526]"
                         /*  onClick={() => handleCartNotification(value)} */
                         onClick={() => onSubmit(value)}
                       />
@@ -1769,7 +1811,7 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                   </div>
 
                   <motion.div
-                    className="flex justify-center items-center m-3"
+                    className="flex justify-center items-center m-3 h-48"
                     whileHover={{ scale: 1.1 }} // Enlarge the image on hover
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   >
@@ -1777,15 +1819,14 @@ export const ProductCardMain = ({ cardInfo }: any) => {
                       onClick={() =>
                         router?.push(`/categories/productdetails/${value.id}`)
                       }
-                      className="p-0"
+                      className="p-0 w-full h-full"
                     >
-                      <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
+                      <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent w-full h-full relative">
                         <Image
                           src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
-                          width={100}
-                          height={100}
+                          fill
                           alt="image"
-                          className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"
+                          className="object-contain p-4"
                         />
                       </div>
                     </div>
@@ -2094,7 +2135,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                   <div className="flex justify-end cursor-pointer">
                     {hoverStates[index] ? (
                       <IoCartOutline
-                        className="hover:text-[#ffffff] hover:bg-[#E84526] rounded-full absolute right-2 top-2 p-2 text-4xl text-black"
+                        className="hover:text-[#ffffff] hover:bg-[#E84526] rounded-full absolute right-2 top-2 z-30 p-2 text-4xl text-black"
                         /*  onClick={() => handleCartNotification(value)} */
                         onClick={() => onSubmit(value)}
                       />
@@ -2118,7 +2159,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                   </div>
 
                   <motion.div
-                    className="flex justify-center items-center m-3"
+                    className="flex justify-center items-center m-3 h-48"
                     whileHover={{ scale: 1.1 }} // Enlarge the image on hover
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   >
@@ -2126,27 +2167,16 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                       onClick={() =>
                         router?.push(`/categories/productdetails/${value.id}`)
                       }
-                      className="p-0"
+                      className="p-0 w-full h-full"
                     >
-                      {hoverStates[index] ? (
-                        <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent">
-                          <Image
-                            src={`https://staging.ajiroba.ng/media/${value?.image}`}
-                            width={100}
-                            height={100}
-                            alt="image"
-                            className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent"
-                          />
-                        </div>
-                      ) : (
+                      <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent w-full h-full relative">
                         <Image
                           src={`https://staging.ajiroba.ng/media/${value?.image}`}
-                          width={100}
-                          height={100}
-                          alt="human hair"
-                          className=" cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent"
+                          fill
+                          alt="image"
+                          className="object-contain p-4"
                         />
-                      )}
+                      </div>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -2280,23 +2310,22 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                     )}
                   </div>
 
-                  <div className="flex justify-center items-center m-3 h-auto sm:h-48 w-full">
+                  <div className="flex justify-center items-center m-3 h-48 w-full">
                     <div
                       onClick={() =>
                         router?.push(`/categories/${value.name}?cat_id=${value.id}`)
                         /*   href={`/categories/${value.name}?cat_id=${value.id}`} */
                       }
-                      className="p-0"
+                      className="p-0 w-full h-full relative"
                     >
                       <Image
-                        width={100}
-                        height={100}
+                        fill
                         src={`https://staging.ajiroba.ng/media/${value?.images
                           ? value?.images[0]?.image
                           : value?.image[0]?.image
                           }`}
                         alt="image"
-                        className="cursor-pointer filter brightness-95 opacity-75 bg-[#FCFCFC] hover:bg-transparent object-cover h-auto w-full"
+                        className="object-contain p-4"
                       />
                     </div>
                   </div>

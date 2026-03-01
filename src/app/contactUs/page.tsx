@@ -264,7 +264,9 @@ const ContactUsPage = () => {
           <ChatBox isOpen={isOpen} />
         </div>
       </main>
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

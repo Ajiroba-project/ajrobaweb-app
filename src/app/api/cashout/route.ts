@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         }
 
         const response = await fetch(
-            "https://staging.ajiroba.ng/v1/pay/nomba/cashout/",
+            `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/cashout/`,
             {
                 method: "POST",
                 headers: {

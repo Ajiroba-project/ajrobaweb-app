@@ -46,6 +46,9 @@ const WrappedPage = () => {
     userToken || " ",
   );
 
+
+  // console.log(transdata, 'transdata')
+
   if (transLoading) {
     return <div className="text-center">Loading...</div>;
   }
@@ -297,7 +300,9 @@ const WrappedPage = () => {
 export default function Page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <WrappedPage />
+   <div className="content-container">
+    <WrappedPage />
+   </div>
     </Suspense>
   );
 }

@@ -47,7 +47,7 @@ const RechargePage = () => {
           <TitleText text='Ajiroba Recharge' />
         </section>
 
-        <section className='py-8'>
+        <section className='py-8 '>
           <AuctionBanner text='Ajiroba Recharge' banner={banner} />
         </section>
 
@@ -60,7 +60,9 @@ const RechargePage = () => {
         </section>
       </main>
 
-      <Footer />
+      <div className='content-container'>
+        <Footer />
+      </div>
     </Fragment>
   )
 }

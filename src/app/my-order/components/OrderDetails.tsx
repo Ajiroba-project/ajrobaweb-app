@@ -11,15 +11,15 @@ import { useGetOrderData } from '@/hooks/useGetData';
 import Cookies from 'js-cookie'
 
 export const OrderDetails = () => {
-  const orderSwitch = ['all', 'Completed', 'Pending'];
-  const tableHeader = ['orderID', 'product details', 'amount', 'date', 'status', ' '];
+  const orderSwitch = useMemo(() => ['all', 'Completed', 'Pending'], []);
+  const tableHeader = ['orderID', 'product details', 'amount', 'date', 'delivery status', 'actions'];
   const [pipeline, setPipeline] = useState<string>('all');
   const [completedFilter, setCompletedFilter] = useState<any[]>([]);
   const [allordeerFilter, setAllorderFilter] = useState<any[]>([]);
   const [pendingFilter, setPendingFilter] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isExporting, setIsExporting] = useState<boolean>(false);
-  const itemsPerPage = 2; // Number of items per page
+  const itemsPerPage = 15; // Number of items per page
 
   const { isLoggedIn, user, token } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -30,7 +30,7 @@ export const OrderDetails = () => {
   // const userToken = token;
   const userToken = Cookies.get('token') as string;
 
-  const tkn_: string = Cookies.get('token') as string;
+  
 
   const { data: orderinfo, isLoading: ordersLoading, error: ordererror } = useGetOrderData('/api/getallorders', "get_order_details", userToken);
 
@@ -126,7 +126,7 @@ export const OrderDetails = () => {
       setCompletedFilter(completedOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[1])));
       setPendingFilter(pendingOrders.filter((transac: { delivery_status: string | string[]; }) => transac.delivery_status.includes(orderSwitch[2])));
     }
-  }, [orderinfo]); // Add only necessary dependencies
+  }, [orderinfo, orderSwitch]); // Add orderSwitch to dependencies
 
 
   const handlePageChange = (selectedItem: { selected: number }) => {
@@ -169,7 +169,8 @@ export const OrderDetails = () => {
             disabled={isExporting}
           />
           <span className='text-xs text-gray-500 font-Poppins'>
-            Exports current view ({(() => {
+            Export current view 
+            {/* ({(() => {
               if (pipeline === orderSwitch[0]) {
                 return orderinfo?.data?.data?.data?.all_orders?.length || 0;
               } else if (pipeline === orderSwitch[1]) {
@@ -177,7 +178,7 @@ export const OrderDetails = () => {
               } else {
                 return orderinfo?.data?.data?.data?.pending_order?.length || 0;
               }
-            })()} {pipeline} transactions)
+            })()} {pipeline} transactions) */}
           </span>
         </div>
       </div>
@@ -185,13 +186,21 @@ export const OrderDetails = () => {
 
       <div className='relative mt-6 w-full overflow-x-auto'>
         <div className='mb-6 min-w-[720px] rounded-xl bg-white shadow-[0_12px_30px_rgba(16,24,40,0.08)] ring-1 ring-gray-100 overflow-hidden'>
-        <table className='w-full table-auto'>
+        <table className='w-full table-fixed'>
+          <colgroup>
+            <col className='w-[12%]' />
+            <col className='w-[38%]' />
+            <col className='w-[15%]' />
+            <col className='w-[15%]' />
+            <col className='w-[12%]' />
+            <col className='w-[8%]' />
+          </colgroup>
           <thead className='table-header-group rounded-t-xl bg-[#F0F2F5]'>
             <tr className='tracking-wide'>
               {tableHeader.map((val, index) => (
                 <th
                   key={index}
-                  className='mb-2 w-max p-6 text-left text-[12px] text-[#344054] font-Poppins font-medium capitalize tracking-wide'
+                  className='py-3 px-4 text-left text-[12px] text-[#344054] font-Poppins font-medium capitalize tracking-wide'
                   scope='col'
                 >
                   {val}

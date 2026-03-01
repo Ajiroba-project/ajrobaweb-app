@@ -39,6 +39,7 @@ import Brand from "../asset/logo.svg";
 import RaffleTicket from "./RaffleTicket";
 import { Package } from "lucide-react";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { GridSkeleton, LoadingSpinner, AuctionCardSkeleton } from "./LoadingSkeleton";
 
 
 interface cardDetails {
@@ -54,6 +55,7 @@ interface cardDetails {
   currentPage: number;
   cardsNum: number;
   onLoadingChange?: (loading: boolean) => void;
+  isLoading?: boolean;
 }
 
 interface BidInfoResponse {
@@ -158,7 +160,7 @@ const CountdownTimer = ({ startsIn = "0 Days, 0 Hr: 0 Mins Left", date = "May 4 
 };
 
 // Auction Component
-export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange = () => { } }: cardDetails) => {
+export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange = () => { }, isLoading = false }: cardDetails) => {
   const router = useRouter();
   const [loadingdata, setLoadingData] = useState<boolean>(false);
 
@@ -181,6 +183,8 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
   const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null);
   const [makepayment, setmakepayment] = useState(false);
   const [successbid, setSuccessbid] = useState(false);
+
+  // console.log(ticketData,)
 
   const tkn_: string = Cookies.get("token") as string;
 
@@ -569,7 +573,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
       } else {
         setLoadingData(false);
         console.warn("Unknown status:", data.data.status);
-        toast.error("Unknown response status", {
+        toast.error("Unknown response status from the api call", {
           position: "top-right",
           progress: 4,
         });
@@ -668,10 +672,15 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
 
   return (
     <>
-      {/*  {loadingdata && <Loading />} */}
-      {
-      
-      cardInfo && cardInfo.length > 0 ? (
+      {isLoading ? (
+        <section>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }, (_, i) => (
+              <AuctionCardSkeleton key={i} />
+            ))}
+          </div>
+        </section>
+      ) : cardInfo && cardInfo.length > 0 ? (
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {cardInfo?.map(
@@ -712,7 +721,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                 <motion.div
                   key={index}
                   /*  className="rounded-lg bg-[#FFFFFF] border border-[#F6F6F6] cursor-pointer" */
-                  className="rounded-lg bg-[#fdfdfd] border border-[#F6F6F6] cursor-pointer"
+                  className="rounded-lg bg-[#fdfdfd] border border-[#F6F6F6] cursor-pointer flex flex-col h-full"
                   whileHover={{
                     scale: 1.05,
                     boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)",
@@ -744,26 +753,25 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     }
  */}
                     <div
-                      className="flex justify-center items-center m-3"
+                      className="flex justify-center items-center m-3 h-48"
                       onClick={() =>
-                        router.push(`/auction/productdetails/${value.id}`)
+                        router.push(`/raffledraw/productdetails/${value.id}`)
                       }
                     >
-                      <div className="bg-transparent p-0">
+                      <div className="bg-transparent p-0 w-full h-full relative">
                         <Image
                           src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
-                          width={100}
-                          height={100}
+                          fill
                           alt="human hair"
-                          className=""
+                          className="object-contain p-4"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div>
-                    <div className="bg-[#F6F6F6] px-4 py-4 cursor-pointer"   onClick={() =>
-                        router.push(`/auction/productdetails/${value.id}`)
+                  <div className="flex-1 flex flex-col">
+                    <div className="bg-[#F6F6F6] px-4 py-4 cursor-pointer flex-1"   onClick={() =>
+                        router.push(`/raffledraw/productdetails/${value.id}`)
                       }>
                       <div className="flex justify-between items-center">
                         <div>
@@ -850,7 +858,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     <div className="relative w-48 h-60 rounded-md flex justify-center items-center">
                  
                       <Image
-                        src={`https://staging.ajiroba.ng${bidData?.images[0] || ''}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${bidData?.images[0] || ''}`}
                         alt={bidData?.name || "Product Image"}
                         fill
                         className="object-cover rounded-md"
@@ -1014,7 +1022,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
 
 
                 {/* Ticket Info Row */}
-                <div className="flex flex-row items-center justify-between gap-8 my-8">
+                <div className="flex flex-col md:flex-row sm:flex-row items-center justify-between gap-8 my-8">
                   {/* Ticket Price */}
                   <div className="flex flex-col items-center">
                     <label className="font-Poppins text-gray-700 mb-2">Ticket Price (₦)</label>
@@ -1050,7 +1058,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
                     <label className="font-Poppins text-gray-700 mb-2">Amount (₦)</label>
                     <input
                       type="text"
-                      value={formatCurrency(ticketData?.data?.ticket_amount)}
+                      value={formatCurrency(ticketData?.data?.total_amount)}
                       readOnly
                       className="w-24 text-center font-bold text-sm bg-gray-300 border border-gray-400 rounded"
                       style={{ color: '#888' }}
@@ -1304,7 +1312,7 @@ export const AuctionComp = ({ cardInfo, currentPage, cardsNum, onLoadingChange =
       : (
         <div className="flex flex-col items-center justify-center py-20 text-gray-500">
           <Package className="w-12 h-12 text-gray-400 mx-auto" aria-hidden="true" />
-          <p className="mt-4 text-lg font-Poppins">No auctions available right now</p>
+          <p className="mt-4 text-lg font-Poppins">No raffle draw products available right now</p>
         </div>
       )
       
