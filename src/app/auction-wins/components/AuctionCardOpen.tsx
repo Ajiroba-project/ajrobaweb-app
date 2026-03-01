@@ -24,6 +24,7 @@ import bikecode from '@/app/asset/image/bikecode.svg'
 import DropDownAuctionWin from "./DropDownAuctionWin";
 import WinningAdviceModal from "./WinningAdviceModal";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { escapeHtml } from "@/utils/escapeHtml";
 import deliveryicon from '@/app/asset/deliveryicon.svg';
 
 type AuctionProps = {
@@ -1016,19 +1017,20 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     handleClick={() => {
                                         // Create a PDF or image of the voucher
                                         const voucherContent = document.createElement('div');
+                                        const e = (s: unknown) => escapeHtml(String(s ?? ''));
                                         voucherContent.innerHTML = `
                       <div style="padding: 20px; border: 2px solid #F25E26; border-radius: 8px;">
                         <h2 style="text-align: center; color: #F25E26;">Gift Voucher</h2>
-                        <p style="text-align: center;">Order #${voucherData.data.orderNumber}</p>
-                        <p style="text-align: center; font-size: 12px;">Reference: ${voucherData.data.reference}</p>
-                        <p style="text-align: center; font-size: 12px;">Status: ${voucherData.data.status}</p>
+                        <p style="text-align: center;">Order #${e(voucherData.data.orderNumber)}</p>
+                        <p style="text-align: center; font-size: 12px;">Reference: ${e(voucherData.data.reference)}</p>
+                        <p style="text-align: center; font-size: 12px;">Status: ${e(voucherData.data.status)}</p>
                         ${voucherData.data.vouchers.map((voucher: any) => `
                           <div style="margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                            <p><strong>Value:</strong> ₦${voucher.value.toLocaleString()}</p>
-                            <p><strong>Expiry Date:</strong> ${new Date(voucher.expiryDate).toLocaleDateString()}</p>
-                            <p><strong>PIN:</strong> ${voucher.pin}</p>
-                            <p><strong>Code:</strong> ${voucher.code}</p>
-                            <p><strong>Serial Number:</strong> ${voucher.serial}</p>
+                            <p><strong>Value:</strong> ₦${e(voucher.value?.toLocaleString?.() ?? voucher.value)}</p>
+                            <p><strong>Expiry Date:</strong> ${e(voucher.expiryDate && new Date(voucher.expiryDate).toLocaleDateString())}</p>
+                            <p><strong>PIN:</strong> ${e(voucher.pin)}</p>
+                            <p><strong>Code:</strong> ${e(voucher.code)}</p>
+                            <p><strong>Serial Number:</strong> ${e(voucher.serial)}</p>
                           </div>
                         `).join('')}
                       </div>

@@ -51,7 +51,8 @@ export const useAuthStore = create((set, get) => ({
   setLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
 
   setUser: (user) => {
-    Cookies.set('user', JSON.stringify(user), { sameSite: 'strict' });
+    const isSecure = typeof window !== 'undefined' && window?.location?.protocol === 'https:';
+    Cookies.set('user', JSON.stringify(user), { sameSite: 'strict', secure: isSecure });
     set({ user });
   },
 
@@ -62,17 +63,16 @@ export const useAuthStore = create((set, get) => ({
   triggerCartRefresh: () => set((state) => ({ cartRefreshTrigger: state.cartRefreshTrigger + 1 })), // Add cart refresh trigger
 
   setAuthCookie: (token, user, expirationDate) => {
-
-    // cookies().set('token_new', token)
+    const isSecure = typeof window !== 'undefined' && window?.location?.protocol === 'https:';
     Cookies.set('token', token, {
       expires: expirationDate,
-      sameSite: 'strict' // Additional security measure
+      sameSite: 'strict',
+      secure: isSecure,
     });
-
-
     Cookies.set('user', JSON.stringify(user), {
       expires: expirationDate,
-      sameSite: 'strict' // Additional security measure
+      sameSite: 'strict',
+      secure: isSecure,
     });
 
 

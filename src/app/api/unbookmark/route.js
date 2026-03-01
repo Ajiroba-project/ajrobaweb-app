@@ -7,7 +7,7 @@ export async function POST(request) {
 
         const cacheBuster = `cache=${Date.now()}`;
 
-        console.log(body, 'bodyyy')
+ 
 
         /*  console.log(body, 'bodyyy')
          console */

@@ -127,7 +127,7 @@ export const AllOrder = ({ transac }: transacProps) => {
     reset();
 
     if (data.status === 201 || data.status === 200 || data.status === 204) {
-      console.log(data, "data");
+  
       setSuccess(true);
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
@@ -287,7 +287,7 @@ export const AllOrder = ({ transac }: transacProps) => {
     event.preventDefault();
 
     console.log(errors);
-    console.log(data, "datata");
+
 
     //  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
 

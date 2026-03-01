@@ -150,8 +150,8 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
   );
 
   const submitForm = (data: any) => {
-    console.log(data);
-    console.log(error, errors)
+   
+
      const payload = {
       pin: data?.newpass,
       // pin: data?.newpass,

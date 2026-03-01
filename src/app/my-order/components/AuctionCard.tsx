@@ -4,6 +4,7 @@ import Image from "next/image";
 import { CiMenuKebab } from "react-icons/ci";
 import Dropdown from "./Dropdown";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { escapeHtml } from "@/utils/escapeHtml";
 
 import DropDownAuction from "./DropDownAuction";
 import { ModalProfile } from "./ModalProfile";
@@ -1028,6 +1029,7 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                     voucherContent.style.top = '-9999px';
                     document.body.appendChild(voucherContent);
 
+                    const e = (s: unknown) => escapeHtml(String(s ?? ''));
                     voucherContent.innerHTML = `
                       <div style="padding: 20px; border: 2px solid #F25E26; border-radius: 8px; background: white; max-width: 600px; margin: 0 auto;">
                         <div style="text-align: center; margin-bottom: 20px;">
@@ -1035,32 +1037,32 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
                           <h2 style="color: #F25E26; margin: 0; font-size: 24px;">Gift Voucher</h2>
                         </div>
                         <div style="border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 20px;">
-                          <p style="text-align: center; margin: 5px 0; font-size: 16px;">Order #${voucherData?.orderNumber}</p>
-                          <p style="text-align: center; margin: 5px 0; font-size: 14px; color: #666;">Reference: ${voucherData?.reference}</p>
-                          <p style="text-align: center; margin: 5px 0; font-size: 14px; color: #666;">Status: ${voucherData?.status}</p>
+                          <p style="text-align: center; margin: 5px 0; font-size: 16px;">Order #${e(voucherData?.orderNumber)}</p>
+                          <p style="text-align: center; margin: 5px 0; font-size: 14px; color: #666;">Reference: ${e(voucherData?.reference)}</p>
+                          <p style="text-align: center; margin: 5px 0; font-size: 14px; color: #666;">Status: ${e(voucherData?.status)}</p>
                         </div>
                         ${voucherData?.vouchers?.map((voucher: any) => `
                           <div style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                               <div>
                                 <p style="margin: 5px 0; color: #666; font-size: 14px;">Value</p>
-                                <p style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #F25E26;">₦${voucher.value.toLocaleString()}</p>
+                                <p style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #F25E26;">₦${e(voucher.value?.toLocaleString?.() ?? voucher.value)}</p>
                               </div>
                               <div>
                                 <p style="margin: 5px 0; color: #666; font-size: 14px;">Expiry Date</p>
-                                <p style="margin: 5px 0; font-size: 16px;">${new Date(voucher.expiryDate).toLocaleDateString()}</p>
+                                <p style="margin: 5px 0; font-size: 16px;">${e(voucher.expiryDate && new Date(voucher.expiryDate).toLocaleDateString())}</p>
                               </div>
                               <div>
                                 <p style="margin: 5px 0; color: #666; font-size: 14px;">PIN</p>
-                                <p style="margin: 5px 0; font-size: 16px; font-family: monospace;">${voucher.pin}</p>
+                                <p style="margin: 5px 0; font-size: 16px; font-family: monospace;">${e(voucher.pin)}</p>
                               </div>
                               <div>
                                 <p style="margin: 5px 0; color: #666; font-size: 14px;">Code</p>
-                                <p style="margin: 5px 0; font-size: 16px; font-family: monospace;">${voucher.code}</p>
+                                <p style="margin: 5px 0; font-size: 16px; font-family: monospace;">${e(voucher.code)}</p>
                               </div>
                               <div>
                                 <p style="margin: 5px 0; color: #666; font-size: 14px;">Serial Number</p>
-                                <p style="margin: 5px 0; font-size: 16px; font-family: monospace;">${voucher.serial}</p>
+                                <p style="margin: 5px 0; font-size: 16px; font-family: monospace;">${e(voucher.serial)}</p>
                               </div>
                             </div>
                           </div>

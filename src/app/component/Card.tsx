@@ -286,11 +286,7 @@ export const ProductCard = ({ cardInfo, isLoading = false }: any) => {
       session_key: sessionKey,
     };
 
-    /*    console.log(data, 'dattaaa')
-       console.log(payload, 'payload')
-    */
-
-    /*    console.log(payload, 'payload') */
+   
     mutate({
       url: "/api/addtocart/",
       payload: { payload: payload, tkn: userToken },
@@ -614,11 +610,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
       session_key: sessionKey,
     };
 
-    /*    console.log(data, 'dattaaa')
-       console.log(payload, 'payload')
-    */
 
-    // console.log(payload, 'payload')
     mutate({
       url: "/api/addtocart/",
       payload: { payload: payload, tkn: userToken },
@@ -927,11 +919,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
       session_key: sessionKey,
     };
 
-    /*    console.log(data, 'dattaaa')
-       console.log(payload, 'payload')
-    */
 
-    /*      console.log(payload, 'payload') */
     mutate({
       url: "/api/addtocart/",
       payload: { payload: payload, tkn: userToken },

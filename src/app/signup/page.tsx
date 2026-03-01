@@ -160,8 +160,7 @@ const WrappedPage = () => {
 
   const handleSuccess = (data: any) => {
 
- /*    console.log(data, 'dddd')
-    console.log(data.status) */
+ 
 
     if (data.status === 201) {
       reset();

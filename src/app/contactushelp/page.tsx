@@ -62,9 +62,6 @@ const LiveChatPage = () => {
 
 
 
-const handleClick = (data: any) =>{
-console.log(data, 'data')
-}
 
 
   const helpOptions = [
