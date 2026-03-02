@@ -115,7 +115,7 @@ const LiveChatPage = () => {
 
 
       </main>
-      <div className='content-container'>
+      <div className=''>
         <Footer />
       </div>
     </Fragment>

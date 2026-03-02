@@ -22,12 +22,20 @@ const WalletePage = () => {
                 <Header />
             </header>
 
-            <main className='container ' style={{
+            {/* <main className='container ' style={{
                 width: '95%',
                 maxWidth: '100%',
                 margin: '0 auto',
                 marginTop: '20px'
+            }}> */}
+
+<main className=' mt-8' style={{
+                // width: '95%',
+                // maxWidth: '100%',
+                // margin: '0 auto',
+                // marginTop: '20px'
             }}>
+
                 <div className='content-container'>
                     <Profile />
                 </div>

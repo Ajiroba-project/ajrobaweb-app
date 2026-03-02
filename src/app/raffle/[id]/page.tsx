@@ -570,7 +570,7 @@ const Page = ({ params }: any) => {
         handleCancel={() => setViewCountdown(false)}
       />
 
-      <div className='content-container'>
+      <div className=''>
         <Footer />
       </div>
     </section>

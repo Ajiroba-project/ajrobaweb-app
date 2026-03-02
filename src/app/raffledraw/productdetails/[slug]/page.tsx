@@ -2359,7 +2359,7 @@ const Page = ({ params }: any) => {
         />
       )}
 
-      <div className='content-container'>
+      <div className=''>
         <Footer />
       </div>
     </main>

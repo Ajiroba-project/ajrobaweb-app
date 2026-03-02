@@ -38,20 +38,20 @@ export const Hero = () => {
   return (
     <>
       <section className='flex flex-col mt-4 md:mt-0 '>
-        <div className=' flex flex-col'>
+        <div className=' flex flex-col content-container'>
           <div className='w-full lg:h-[620px]'>
             <Carousel isLoading={false} />
           </div>
         </div>
 
         <div className='my-4 bg-[#F25E26] p-4 text-white '>
-          <div className=''>
+          <div className='content-container'>
             <AuctionMarquee info={marqueeInfo} isLoading={false} />
           </div>
         </div>
       </section>
 
-      <section className='relative overflow-hidden  pb-20 pt-16 sm:pt-20 lg:pt-24 content-container'>
+      <section className='relative overflow-hidden  pb-20 pt-16 sm:pt-20 lg:pt-24 '>
         {/* Background Image */}
         <div className='absolute inset-0 z-0'>
           <Image
@@ -172,11 +172,12 @@ export const Hero = () => {
       </section>
 
       <section className='bg-white py-16 sm:py-20 lg:py-24'>
-        <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
-          <div className='text-center'>
+      <div className='flex items-start content-container flex-col'>
             <h2 className='text-2xl sm:text-3xl font-semibold text-[#F25E26]'>Our Key Attribute</h2>
             <p className='mt-2 text-sm sm:text-base text-[#4B4848]'>Our key attributes are:</p>
           </div>
+        <div className='container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px]'>
+         
 
           <div className='mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5 lg:gap-12'>
             <div className='flex flex-col items-center text-center space-y-3 transition-transform duration-200 hover:scale-105'>

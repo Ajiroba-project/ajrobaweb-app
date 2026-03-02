@@ -66,7 +66,7 @@ const FAQPage = () => {
           />
         </div>
       </main>
-      <div className='content-container'>
+      <div className=''>
         <Footer />
       </div>
     </Fragment>

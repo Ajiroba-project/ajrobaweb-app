@@ -24,7 +24,7 @@ const CommunityPage = () => {
                 <Header />
             </header>
 
-            <main className='content-container ' style={{
+            <main className='r ' style={{
                 // width: '95%',
                 // maxWidth: '100%',
                 // margin: '0 auto',

@@ -144,7 +144,7 @@ const DataPage = () => {
         </section>
       </main>
 
-      <div className='content-container'>
+      <div className=''>
         <Footer />
       </div>
     </Fragment>
