@@ -116,7 +116,7 @@ export default function RootLayout({
             {children}
             <GlobalLoadingOverlay />
             {/* Tawk chat: load after page is idle so mobile and low-network users get faster first paint */}
-            {/* <Script id="tawk-to" strategy="lazyOnload">
+            <Script id="tawk-to" strategy="lazyOnload">
               {`
                 var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
                 (function(){
@@ -128,7 +128,7 @@ export default function RootLayout({
                   s0.parentNode.insertBefore(s1,s0);
                 })();
               `}
-            </Script> */}
+            </Script>
           </Providers>
         </body>
       </RQProviders>

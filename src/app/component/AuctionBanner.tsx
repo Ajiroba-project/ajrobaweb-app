@@ -8,7 +8,7 @@ type BannerProps = {
 export const AuctionBanner = ({ text, banner }: BannerProps) => {
   return (
     <>
-      <section className=' w-full content-container'>
+      <section className=' w-full '>
         <h2 className='sr-only'>{text}</h2>
         <div className='relative h-40 w-full overflow-hidden sm:h-48 md:h-56 lg:h-64 xl:h-72'>
           <Image

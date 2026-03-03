@@ -934,10 +934,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   return (
     <>
-      <section className='relative w-full content-container  '>
+      <section className='relative w-full   '>
         {/* Top Bar - Responsive */}
-        <div className='bg-[#2A2A2A] p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
-          <div className=' flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
+     <section className='bg-[#2A2A2A]'>
+
+     <div className='  p-1 sm:p-2 md:p-3 text-xs sm:text-sm text-white'>
+          <div className='content-container flex items-center justify-between gap-1 sm:gap-2 md:gap-3'>
             {/* Marquee - Takes available space */}
             <div className='flex-1 min-w-0 overflow-hidden'>
               <AuctionMarquee info={marqueeInfo} />
@@ -960,9 +962,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           </div>
         </div>
 
+     </section>
+
 
         {/* Main Header - Responsive */}
-        <div className='relative bg-white shadow-md overflow-visible '>
+       <section className='bg-white shadow-md'>
+       <div className='relative  overflow-visible content-container '>
           {/* Mobile Menu Overlay */}
           {isOpen && !showDesktopNav && (
             <div className='fixed inset-0 bg-black bg-opacity-50 z-40' onClick={hamburgerfunc} />
@@ -1237,6 +1242,8 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </div>
           )}
         </div>
+
+       </section>
 
 
         {/* Notification Modal - Full Page Overlay */}

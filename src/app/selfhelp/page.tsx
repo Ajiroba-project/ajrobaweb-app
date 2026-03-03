@@ -497,7 +497,7 @@ By following these steps, you can easily register, purchase products and tickets
 }
 
       </main>
-      <div className='content-container'>
+      <div className=''>
         <Footer />
       </div>
     </Fragment>
