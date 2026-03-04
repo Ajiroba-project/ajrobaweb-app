@@ -134,7 +134,7 @@ const AboutUsPage = () => {
   )
 }
 
-// export default Page
+
 
 export default function Page() {
   return (
