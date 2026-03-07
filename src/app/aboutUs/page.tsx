@@ -134,8 +134,6 @@ const AboutUsPage = () => {
   )
 }
 
-
-
 export default function Page() {
   return (
     <Suspense>
