@@ -173,7 +173,7 @@ export const CableDetails = () => {
   return (
     <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
       <Formtitle
-        className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
+        // className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
         title="Buy Cable Subscription"
         subtitle="Enjoy your best  TV programs by purchasing your subscription on our platform"
       />
