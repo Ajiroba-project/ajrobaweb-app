@@ -216,7 +216,7 @@ export const ElectricityDetails = () => {
   return (
     <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
       <Formtitle
-        className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
+        // className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
         title="Electricity Recharge"
         subtitle="Recharge your electricity with ease"
       />
