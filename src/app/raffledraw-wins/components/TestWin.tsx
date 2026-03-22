@@ -351,11 +351,10 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
 
               {/* Footer Contact Info */}
-<div className='flex items-center justify-between overflow-x-auto rounded-md bg-[#F1F1F1] p-3 text-xs'>
-  {/* Contact Information Row */}
-  <div className='flex min-w-0 flex-1 items-center gap-4'>
-    {/* Customer careline */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-0.5'>
+<div className='rounded-md bg-[#F1F1F1] p-3 text-xs'>
+  {/* Contact: 2×2 grid on mobile, inline row on desktop */}
+  <div className='grid grid-cols-2 gap-3 sm:flex sm:items-center sm:gap-4'>
+    <div className='flex items-center gap-1.5 sm:border-r sm:border-gray-400 sm:pr-4'>
       <PhoneCall size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -367,8 +366,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* Email */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+    <div className='flex items-center gap-1.5 sm:border-r sm:border-gray-400 sm:pr-4'>
       <MailIcon size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -380,8 +378,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* Instagram */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+    <div className='flex items-center gap-1.5 sm:border-r sm:border-gray-400 sm:pr-4'>
       <BsInstagram size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -393,8 +390,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* Website */}
-    <div className='flex min-w-0 items-center gap-1.5 pr-4'>
+    <div className='flex items-center gap-1.5'>
       <GlobeIcon size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -408,8 +404,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
   </div>
 
   {/* App Stores */}
-  <div className='flex flex-shrink-0 gap-2'>
-    {/* Google Play Store */}
+  <div className='mt-3 flex justify-center gap-2 sm:mt-0 sm:justify-end'>
     <div className='flex items-center gap-1.5 rounded bg-black px-3 py-1.5'>
       <SmartphoneIcon size={14} className='flex-shrink-0 text-white' />
       <div className='flex flex-col leading-tight'>
@@ -422,7 +417,6 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* App Store */}
     <div className='flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5'>
       <BsApple size={14} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
@@ -495,7 +489,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
               {/* Title */}
               <div className='mb-6 sm:mb-8'>
-                <h1 className='text-lg font-black text-black sm:text-xl'>
+                <h1 className='text-center text-lg font-black text-black sm:text-left sm:text-xl'>
                   STEPS FOR REDEEMING YOUR PRODUCT
                 </h1>
               </div>
@@ -592,11 +586,10 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
 
               {/* Footer Contact Info */}
-<div className='flex items-center justify-between overflow-x-auto rounded-md bg-[#F1F1F1] p-3 text-xs'>
-  {/* Contact Information Row */}
-  <div className='flex min-w-0 flex-1 items-center gap-4'>
-    {/* Customer careline */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-0.5'>
+<div className='rounded-md bg-[#F1F1F1] p-3 text-xs'>
+  {/* Contact: 2×2 grid on mobile, inline row on desktop */}
+  <div className='grid grid-cols-2 gap-3 sm:flex sm:items-center sm:gap-4'>
+    <div className='flex items-center gap-1.5 sm:border-r sm:border-gray-400 sm:pr-4'>
       <PhoneCall size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -608,8 +601,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* Email */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+    <div className='flex items-center gap-1.5 sm:border-r sm:border-gray-400 sm:pr-4'>
       <MailIcon size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -621,8 +613,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* Instagram */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+    <div className='flex items-center gap-1.5 sm:border-r sm:border-gray-400 sm:pr-4'>
       <BsInstagram size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -634,8 +625,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* Website */}
-    <div className='flex min-w-0 items-center gap-1.5 pr-4'>
+    <div className='flex items-center gap-1.5'>
       <GlobeIcon size={12} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>
         <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
@@ -649,8 +639,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
   </div>
 
   {/* App Stores */}
-  <div className='flex flex-shrink-0 gap-2'>
-    {/* Google Play Store */}
+  <div className='mt-3 flex justify-center gap-2 sm:mt-0 sm:justify-end'>
     <div className='flex items-center gap-1.5 rounded bg-black px-3 py-1.5'>
       <SmartphoneIcon size={14} className='flex-shrink-0 text-white' />
       <div className='flex flex-col leading-tight'>
@@ -663,7 +652,6 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
       </div>
     </div>
 
-    {/* App Store */}
     <div className='flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5'>
       <BsApple size={14} className='flex-shrink-0 text-black' />
       <div className='flex flex-col leading-tight'>

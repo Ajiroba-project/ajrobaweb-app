@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { use, useEffect, useMemo, useRef, useState } from "react";
 import { raffleWinner } from "@/app/static-data";
 import { DefaultButton } from "@/app/component/Button";
 import { useRouter } from "next/navigation";
@@ -51,8 +51,8 @@ interface AuctionResponse {
   subcategory?: any;
 }
 
-const Page = ({ params }: any) => {
-  const product_id = params?.id;
+const Page = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id: product_id } = use(params);
   const userToken = (Cookies.get("token") as string) || "";
 
   const router = useRouter();
@@ -685,7 +685,7 @@ const renderRows = () => {
 
         <div className="w-full sm:w-8/12 md:w-6/12 lg:w-4/12 mx-auto flex justify-center items-center gap-2 mt-4">
           <div className="border border-orange-300 px-4 py-2 rounded">
-            <p className="text-black font-bold text-center">Total Winners</p>
+            <p className="text-black font-bold text-center whitespace-nowrap text-sm sm:text-base">Total Winners</p>
           </div>
           <div className="border border-orange-300 px-4 py-2 rounded">
             <p className="text-black font-bold text-center">{displayedData?.length}</p>

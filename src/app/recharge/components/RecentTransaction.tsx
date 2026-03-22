@@ -317,13 +317,13 @@ export const RecentTransaction = () => {
 
                           </div> */}
 
-                          <div className='flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-white mr-3 sm:mr-4'>
+                          <div className='flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-1.5 mr-3 sm:mr-4 sm:h-14 sm:w-14 sm:p-2'>
                             <Image
                               src={icon}
                               alt={iconAlt}
                               width={60}
                               height={60}
-                              className='object-contain'
+                              className='h-full w-full object-contain'
                             />
                           </div>
                           <div className='flex min-w-0 flex-col'>

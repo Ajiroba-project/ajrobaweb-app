@@ -17,7 +17,9 @@ import { Products, categories } from './static-data'
 import { Header } from './component/Header'
 import { Footer } from './component/Footer'
 import exploreBg from './asset/expoloresectionbg.png'
+import exploreBgMobile from './asset/explorebgmobile.png'
 import brandWhite from './asset/logoWhite.svg'
+import brandColor from './asset/logo.svg'
 import { useState, useEffect, useCallback } from 'react'
 import './globals.css'
 import { Suspense } from 'react'
@@ -302,8 +304,51 @@ const Page = () => {
             </div>
           </section>
 
-          <section className=' relative mt-20 min-h-[420px] overflow-hidden sm:min-h-[480px] lg:min-h-[560px]'>
-            {/* Full-bleed background */}
+          {/* Mobile: image-driven layout (no crop, no shrink) */}
+          <section className='relative mt-20 sm:hidden'>
+            <Image
+              src={exploreBgMobile}
+              alt='Explore Ajiroba background'
+              className='w-full h-auto'
+              priority
+              sizes='100vw'
+              quality={90}
+            />
+            {/* Content overlaid — scales with image via vw units */}
+            <div className='absolute inset-0 z-10 flex items-center justify-end' style={{ padding: '2vw' }}>
+              <div className='w-[55%] flex flex-col items-center text-center'>
+                <Image
+                  src={brandColor}
+                  alt='Ajiroba logo'
+                  className='w-auto'
+                  style={{ height: '5.5vw' }}
+                  priority
+                  quality={90}
+                />
+                <p className='text-[#333]' style={{ marginTop: '1.5vw', fontSize: '2.8vw', lineHeight: 1.35 }}>
+                  Ajiroba brings to you a world of affordability. You can get
+                  the best product at affordable prices, by simply bidding for a
+                  product to enter raffle draw.
+                </p>
+                <p className='text-[#333]' style={{ marginTop: '1.5vw', fontSize: '2.8vw', lineHeight: 1.35 }}>
+                  Every raffle draw is guaranteed a winner. Your chance of
+                  winning increasing by buying multiple ticket.
+                </p>
+                <div style={{ marginTop: '2.5vw' }}>
+                  <button
+                    onClick={() => router.push('/raffledraw')}
+                    className='inline-flex items-center justify-center bg-[#121212] font-medium text-white transition-all duration-200 hover:bg-[#F25E26]'
+                    style={{ borderRadius: '2vw', paddingInline: '6vw', paddingBlock: '1.8vw', fontSize: '3vw' }}
+                  >
+                    Explore
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Desktop: original layout with dark overlay */}
+          <section className='relative mt-20 hidden sm:block sm:min-h-[480px] lg:min-h-[560px] overflow-hidden'>
             <div className='absolute inset-0 bg-[#FCE2D6]'>
               <Image
                 src={exploreBg}
@@ -317,11 +362,10 @@ const Page = () => {
               <div className='absolute inset-0 bg-black/45' />
             </div>
 
-            {/* Content aligned with rest of page */}
-            <div className='content-container relative z-10 flex min-h-[420px] flex-col items-center justify-center gap-10 py-12 text-white sm:min-h-[480px] sm:flex-row sm:justify-end sm:gap-12 sm:py-16 lg:min-h-[560px] lg:py-20'>
+            <div className='content-container relative z-10 flex min-h-[480px] flex-row items-center justify-end gap-12 py-16 text-white lg:min-h-[560px] lg:py-20'>
               <div className='hidden md:block md:flex-1' />
 
-              <div className=' flex w-full max-w-xl flex-col items-center text-center md:max-w-lg md:items-end md:text-right'>
+              <div className='flex w-full max-w-xl flex-col items-center text-center md:max-w-lg md:items-end md:text-right'>
                 <Image
                   src={brandWhite}
                   alt='Ajiroba logo'
@@ -329,12 +373,12 @@ const Page = () => {
                   priority
                   quality={90}
                 />
-                <p className='mt-6 text-sm leading-relaxed text-[#F9F9F9] sm:text-base lg:text-lg'>
+                <p className='mt-6 text-base leading-relaxed text-[#F9F9F9] lg:text-lg'>
                   Ajiroba brings to you a world of affordability. You can get
                   the best product at affordable prices, by simply bidding for a
                   product to enter raffle draw.
                 </p>
-                <p className='mt-4 text-sm leading-relaxed text-[#F9F9F9] sm:text-base lg:text-lg'>
+                <p className='mt-4 text-base leading-relaxed text-[#F9F9F9] lg:text-lg'>
                   Every raffle draw is guaranteed a winner. Your chance of
                   winning increases by buying multiple tickets.
                 </p>

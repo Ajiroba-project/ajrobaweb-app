@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { FaThumbsUp, FaRegCommentDots } from "react-icons/fa";
 import { FiBookmark } from "react-icons/fi";
@@ -24,21 +24,19 @@ const TabComponent = ({
 
   return (
     <div className="mb-6 w-full">
-      <div className="w-full overflow-x-auto">
-        <div className="mx-auto flex min-w-[260px] max-w-full gap-2 rounded-lg border border-gray-300 bg-white p-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`flex-1 min-w-[120px] whitespace-nowrap rounded-md py-2 px-3 text-center font-Poppins text-xs font-medium transition-colors sm:text-sm ${activeTab === tab
-                ? "bg-[#f25e26] text-white shadow-sm"
-                : "bg-transparent text-[#475367] hover:bg-gray-100"
-                }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+      <div className="flex w-full gap-1 rounded-lg border border-gray-300 bg-white p-1 sm:gap-2">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 rounded-md py-2 px-2 text-center font-Poppins text-xs font-medium transition-colors sm:px-3 sm:text-sm ${activeTab === tab
+              ? "bg-[#f25e26] text-white shadow-sm"
+              : "bg-transparent text-[#475367] hover:bg-gray-100"
+              }`}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -112,18 +110,17 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     ),
   });
 
-  // Set default content as trending posts
-  let posts = trendingResponse?.data?.data?.posts || [];
-
-  // Conditionally render posts based on active tab
-  if (activeTab === "Liked") {
-    const liked = trendingResponse?.data?.data?.liked_posts || [];
-    // API returns { id, post: {...} } — extract the nested post objects
-    posts = liked.map((entry: any) => entry?.post).filter(Boolean);
-  } else if (activeTab === "Bookmarked") {
-    const bookmarked = trendingResponse?.data?.data?.bookmarked_posts || [];
-    posts = bookmarked.map((entry: any) => entry?.post).filter(Boolean);
-  }
+  const posts = useMemo(() => {
+    if (activeTab === "Liked") {
+      const liked = trendingResponse?.data?.data?.liked_posts || [];
+      return liked.map((entry: any) => entry?.post).filter(Boolean);
+    }
+    if (activeTab === "Bookmarked") {
+      const bookmarked = trendingResponse?.data?.data?.bookmarked_posts || [];
+      return bookmarked.map((entry: any) => entry?.post).filter(Boolean);
+    }
+    return trendingResponse?.data?.data?.posts || [];
+  }, [trendingResponse, activeTab]);
 
   useEffect(() => {
     if (!posts || posts.length === 0) {
@@ -620,21 +617,14 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
     </div>
   );
 };
-const NotificationSidebar = () => {
-  const { isLoggedIn, user, token } = useAuthStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    user: state.user,
-    token: state.token,
-  }));
 
-  // const userToken = token;
+
+
+const NotificationContent = () => {
   const userToken = Cookies.get("token") as string;
 
   const {
     data: notinfo,
-    isLoading: notLoading,
-    error: noterror,
-    refetch: notrefetch,
   } = useGetOrderData(
     "/api/communitynotifications",
     "get_trending_posts",
@@ -642,42 +632,31 @@ const NotificationSidebar = () => {
   );
 
   const ITEMS_PER_PAGE = 10;
-
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Extract notifications array
   const notifications = notinfo?.data?.data || [];
-
-  // Calculate total pages
   const totalPages = Math.ceil(notifications.length / ITEMS_PER_PAGE);
-
-  // Get paginated notifications
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedNotifications = notifications.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-
-
   return (
-    <div className="w-full rounded-lg border bg-white p-4 shadow-md lg:w-[280px]">
-      <h4 className="mb-4 text-lg font-semibold">Notifications</h4>
-
-      {notinfo?.data?.data?.length === 0 ? (
-        <p className="text-sm text-gray-500">No Data Available</p>
+    <>
+      {notifications.length === 0 ? (
+        <p className="text-sm text-gray-500">No notifications yet</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           {paginatedNotifications?.map(
-            (item: any, key: React.Key | null | undefined) => {
+            (item: any, index: number) => {
               const timeAgo = formatDistanceToNow(new Date(item?.date_created), {
                 addSuffix: true,
               });
 
               return (
                 <li
-                  key={key}
+                  key={index}
                   className="rounded-lg border border-gray-100 p-3"
                 >
-                  <p className="text-sm font-medium text-gray-800 break-words">
+                  <p className="break-words text-sm font-medium text-gray-800">
                     {item.message}
                   </p>
                   <span className="text-xs text-gray-500">{timeAgo}</span>
@@ -688,14 +667,12 @@ const NotificationSidebar = () => {
         </ul>
       )}
 
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`rounded-md border px-3 py-1 text-sm ${currentPage === 1 ? "cursor-not-allowed text-gray-400" : "hover:bg-gray-100"
-              }`}
+            className={`rounded-md border px-3 py-1 text-sm ${currentPage === 1 ? "cursor-not-allowed text-gray-400" : "hover:bg-gray-100"}`}
           >
             Prev
           </button>
@@ -705,41 +682,91 @@ const NotificationSidebar = () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className={`rounded-md border px-3 py-1 text-sm ${currentPage === totalPages ? "cursor-not-allowed text-gray-400" : "hover:bg-gray-100"
-              }`}
+            className={`rounded-md border px-3 py-1 text-sm ${currentPage === totalPages ? "cursor-not-allowed text-gray-400" : "hover:bg-gray-100"}`}
           >
             Next
           </button>
         </div>
       )}
-    </div>
+    </>
   );
+};
+
+const useNotificationCount = () => {
+  const userToken = Cookies.get("token") as string;
+  const { data: notinfo } = useGetOrderData(
+    "/api/communitynotifications",
+    "get_trending_posts",
+    userToken,
+  );
+  return notinfo?.data?.data?.length || 0;
 };
 
 const MainLayout = () => {
   const [activeTab, setActiveTab] = useState<string>("Trending");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const notificationCount = useNotificationCount();
+
   return (
-    /*  <div className="flex gap-8 mx-auto max-w-7xl p-4">
-       <div className="flex-1 w-auto 2xl:w-[500px] lg:w-[500px] md:w-[500px] sm:w-[500px] " >
-         <TabComponent activeTab={activeTab} setActiveTab={setActiveTab} />
+    <>
+      <section className="relative mb-6 flex w-full flex-col gap-4 lg:flex-row lg:items-start">
+        <div className="flex-1 space-y-4 rounded-xl bg-transparent p-4 lg:p-0">
+          <TabComponent activeTab={activeTab} setActiveTab={setActiveTab} />
           <ContentPost activeTab={activeTab} />
-      </div>
+        </div>
 
+        {/* Desktop sidebar */}
+        <div className="hidden w-full lg:block lg:max-w-xs">
+          <div className="rounded-lg border bg-white p-4 shadow-md">
+            <h4 className="mb-4 text-lg font-semibold">Notifications</h4>
+            <NotificationContent />
+          </div>
+        </div>
+      </section>
 
-      <div className="hidden lg:block">
-        <NotificationSidebar />
-      </div>
-    </div> */
+      {/* Mobile floating bell */}
+      <button
+        onClick={() => setDrawerOpen(true)}
+        className="fixed bottom-24 right-4 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-[#F25E26] text-white shadow-[0_4px_14px_rgba(242,94,38,0.5)] transition-transform hover:scale-105 active:scale-95 lg:hidden"
+        aria-label="Open notifications"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-6 w-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </svg>
+        {notificationCount > 0 && (
+          <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+            {notificationCount > 99 ? "99+" : notificationCount}
+          </span>
+        )}
+      </button>
 
-    <section className="mb-6 flex w-full flex-col gap-4 lg:flex-row lg:items-start">
-      <div className="flex-1 space-y-4 rounded-xl bg-transparent p-4 lg:p-0">
-        <TabComponent activeTab={activeTab} setActiveTab={setActiveTab} />
-        <ContentPost activeTab={activeTab} />
-      </div>
-      <div className="w-full lg:max-w-xs">
-        <NotificationSidebar />
-      </div>
-    </section>
+      {/* Mobile drawer overlay */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-[10000] lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setDrawerOpen(false)}
+          />
+          <div className="absolute bottom-0 right-0 top-0 flex w-full max-w-sm flex-col bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b px-4 py-4">
+              <h4 className="font-Poppins text-lg font-semibold text-[#2A2A2A]">Notifications</h4>
+              <button
+                onClick={() => setDrawerOpen(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
+                aria-label="Close notifications"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <NotificationContent />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

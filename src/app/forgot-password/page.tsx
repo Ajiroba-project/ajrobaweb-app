@@ -3,18 +3,15 @@ import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import passwordlock from "../asset/passwordlock.svg";
 import Image from "next/image";
-import AuthHero, { HeroSubText } from "../component/AuthHero";
+import { HeroSubText } from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import Input from "../component/Input";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { HiArrowLongLeft } from "react-icons/hi2";
 import { useMutateData } from "@/hooks/useMutateData";
-import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function Page() {
   type dataProps = {
@@ -34,16 +31,15 @@ function Page() {
 
   const {
     reset,
-    register,
     control,
     handleSubmit,
     formState: { errors },
-    trigger,
-    watch,
-    setValue,
   } = useForm({
     mode: "all",
     resolver: yupResolver(schema),
+    defaultValues: {
+      email: '',
+    },
   });
 
   const handleSuccess = (data: any) => {
@@ -100,7 +96,7 @@ function Page() {
     reset();
   };
 
-  const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+  const { mutate, status } = useMutateData(
     "signup",
     handleSuccess,
     handleError,
@@ -115,25 +111,20 @@ function Page() {
 
   return (
     <>
-      <div className="px-8">
-        {/*  <ToastContainer closeOnClick /> */}
-        <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
+      <div className="px-4 content-container">
+        <nav className="flex justify-center py-4 md:block md:px-7 lg:px-14">
           <Link href={"/"}>
             <Image src={Brand} alt="brand-logo" />
           </Link>
         </nav>
 
-        <div className="flex justify-center items-center flex-col min-h-[80vh]">
-          {/*   <AuthHero
-                    title="Forgot your Password?"
-                    menu="No worries! An OTP will be sent to reset your password"
-                /> */}
+        <div className="flex flex-col items-center justify-center py-8 sm:py-12">
           <HeroSubText
             title="Forgot your Password?"
             menu="No worries! An OTP will be sent to reset your password"
           />
 
-          <section className="flex justify-center items-center pt-8">
+          <section className="flex items-center justify-center pt-6">
             <Image
               src={passwordlock}
               alt="password-logo"
@@ -142,22 +133,13 @@ function Page() {
             />
           </section>
 
-       <div className=" flex justify-center w-full">
+          <div className="flex w-full justify-center">
             <form
               onSubmit={handleSubmit(sumbitForm)}
-              className="w-full max-w-sm  p-8"
+              className="w-full max-w-md px-2 py-6 sm:px-4"
             >
-            {/*   <div className="grid xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 2xl:grid-cols-1 grid-cols-1 gap-8 px-3 "> */}
-                <div className="mt-4 grid grid-cols-1 gap-8">
+              <div className="mt-4 grid grid-cols-1 gap-6">
                 <div className="flex flex-col">
-                  {/*   <Input
-                                    label="Email Address*"
-                                    type="text"
-                                    name="email"
-                                    placeholder="Enter Email Address"
-                                    register={register}
-                                    errors={errors.email}
-                                /> */}
                   <label className="text-sm" htmlFor="email">
                     Email Address*
                   </label>
@@ -192,7 +174,7 @@ function Page() {
               </div>
             </form>
           </div>
-          <div className="flex cursor-pointer justify-center items-center  ">
+          <div className="flex cursor-pointer items-center justify-center">
             <nav
               onClick={() => router.back()}
               className="flex items-center gap-2"

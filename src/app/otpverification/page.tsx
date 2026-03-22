@@ -2,15 +2,14 @@
 import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import Image from "next/image";
-import AuthHero from "../component/AuthHero";
+import { HeroSubText } from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { HiArrowLongLeft } from "react-icons/hi2";
 import { useMutateData } from "@/hooks/useMutateData";
-import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -65,23 +64,18 @@ function Page() {
         }
     };
 
-    const handleBackspace = (
+    const handleOtpKeyDown = (
         index: number,
         event: React.KeyboardEvent<HTMLInputElement>,
     ) => {
-        if (index > 0 && event.keyCode === 8 && !event.currentTarget.value) {
-            inputRefs.current[index - 1]?.focus();
-        }
-    };
-
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        // Allow only numbers (0-9), backspace, delete, tab, escape, enter
         const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
         const isNumber = /^[0-9]$/.test(event.key);
         const isAllowedKey = allowedKeys.includes(event.key);
-        
         if (!isNumber && !isAllowedKey) {
             event.preventDefault();
+        }
+        if (index > 0 && event.key === 'Backspace' && !event.currentTarget.value) {
+            inputRefs.current[index - 1]?.focus();
         }
     };
 
@@ -175,7 +169,7 @@ function Page() {
 
     };
 
-    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+    const { mutate, status } = useMutateData(
         "signup",
         handleSuccess,
         handleError,
@@ -206,23 +200,22 @@ function Page() {
     return (
         <>
 
-            <div className="px-8">
-                {/*      <ToastContainer closeOnClick /> */}
-                <nav className="Brand-logo p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block flex justify-center">
+            <div className="px-4 content-container">
+                <nav className="flex justify-center py-4 md:block md:px-7 lg:px-14">
                     <Link href={"/"}>
                         <Image src={Brand} alt="brand-logo" />
                     </Link>
                 </nav>
 
-                <AuthHero
-                    title="OTP Verification"
-                    menu="Please provide the 6-digit security code sents to your e-mail address"
-                />
+                <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+                    <HeroSubText
+                        title="OTP Verification"
+                        menu="Please provide the 6-digit security code sents to your e-mail address"
+                    />
 
-                <div className="flex justify-center mb-20 mt-12">
-                    <div className="flex flex-col">
-                        <form onSubmit={handleSubmit(handleVerify)}>
-                            <div className="flex space-x-2 gap-4 items-center justify-center flex-wrap">
+                    <div className="flex w-full max-w-md flex-col items-center px-2 pt-8 sm:px-4">
+                        <form className="flex w-full flex-col items-center" onSubmit={handleSubmit(handleVerify)}>
+                            <div className="flex items-center justify-center gap-2 sm:gap-3">
                                 {[...Array(6)].map((_, index) => (
                                     <input
                                         key={index}
@@ -230,9 +223,8 @@ function Page() {
                                         inputMode="numeric"
                                         pattern="[0-9]*"
                                         maxLength={1}
-                                        className="shadow-md border w-12 border-gray-300 px-2 h-10 rounded-md mx-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
-                                        onKeyDown={(e) => handleBackspace(index, e)}
-                                        onKeyPress={handleKeyPress}
+                                        className="shadow border w-10 h-10 sm:w-12 sm:h-12 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+                                        onKeyDown={(e) => handleOtpKeyDown(index, e)}
                                         onPaste={(e) => handlePaste(index, e)}
                                         {...register(`otp.${index}`)}
                                         ref={(el) => {
@@ -245,18 +237,11 @@ function Page() {
                                 ))}
                             </div>
                             {errors.otp && <div className="text-red-500">{errors.otp.message}</div>}
-                            <div className="flex justify-center items-center mt-12">
-                                {/* <DefaultButton
-                                    type="submit"
-                                    className="w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
-                                    text={status === 'pending' ? 'loading...' : 'Verify'}
-                                    handleClick={() => handleVerify()}
-                                /> */}
+                            <div className="flex w-full items-center justify-center mt-10">
                                 <DefaultButton type="submit"
                                     className="w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
                                     text={status === 'pending' ? 'loading...' : 'Verify'}
                                 />
-
                             </div>
                         </form>
 

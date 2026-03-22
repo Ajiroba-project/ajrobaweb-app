@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import {
   useState,
@@ -6,39 +5,28 @@ import {
   useMemo,
   useCallback,
   useRef,
-  SetStateAction,
-  Key
+  use,
+  memo,
 } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import { Breadcrumb, ProductBreadcrumb } from '@/app/component/Breadcrumb'
+import { useRouter } from 'next/navigation'
+import { ProductBreadcrumb } from '@/app/component/Breadcrumb'
 import { Header } from '@/app/component/Header'
 import { Footer } from '@/app/component/Footer'
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
-import { Title } from '@/app/component/Title'
-import image2 from '../../../asset/image/rice2.jpeg'
-import image4 from '../../../asset/image/rice4.jpeg'
 import './style.css'
 import { FaStar } from 'react-icons/fa6'
-import { RelatedProducts } from '@/app/component/RelatedProducts'
-import { Bounce, ToastContainer, toast } from 'react-toastify'
-import { useQueryData } from '@/hooks/useQueryData'
+import { toast } from 'react-toastify'
 import { parseISO, format } from 'date-fns'
-// import { RelatedProductsDetails } from "@/app/component/RelatedProductsDetails";
 import { RelatedAuctionDetails } from '@/app/component/RelatedAuctionDetails'
-import { RelatedProductsAuction } from '@/app/component/RelatedProductsAuction'
 import Loading from '@/app/component/Loading'
 import Cookies from 'js-cookie'
 import ModalComponent from '@/app/component/ModalComponent'
-import { IoLocationOutline } from 'react-icons/io5'
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Input from '@/app/component/Input'
 import { useMutateData } from '@/hooks/useMutateNewData'
-import axios from 'axios'
-import AuthMiddleware from '@/hooks/useAuth'
 import { DefaultButton } from '@/app/component/Button'
 import InputAction from '@/app/component/InputAction'
 import verify from '@/app/asset/verify.svg'
@@ -48,48 +36,16 @@ import { useGetDatanew } from '@/hooks/useGetData'
 import RaffleTicket from '@/app/component/RaffleTicket'
 import { formatCurrency } from '@/utils/formatCurrency'
 
-interface CardInfoItem {
-  weight: string
-  id: number
-  title: string
-  description?: string
-  imageUrl: string
-  name?: string
-  image?: string
-  price?: string
-  images?: { id: string; product: string; image: string }[]
-  discount?: string
-  reviews?: string
-  message?: string
-  category?: string
-  delivery_estimation: string
-  related_products: []
-  ticket_price?: string
-  auction_reviews?: any
-  starts_in?: any
-  category_name?: any
-  subcategory_name?: any
-  auction_date?: any
-  auction_time?: any
-}
-
-interface AuctionResponse {
-  message: any
-  data: CardInfoItem
-  category?: any
-  subcategory?: any
-}
+// ── Stable references outside component ──────────────────────────────
 
 interface ProductData {
   id?: string
   name?: string
   price?: number
   data?: any
-  // Add other properties as needed
 }
 
 interface BidInfoResponse {
-  // Define the structure based on the response you expect from the API.
   data: any
   category: any
   name: any
@@ -100,7 +56,6 @@ interface BidInfoResponse {
 }
 
 interface TicketInfoResponse {
-  // Define the structure based on the response you expect from the API.
   data?: any
   category?: any
   name?: any
@@ -111,153 +66,314 @@ interface TicketInfoResponse {
   ticket_name?: any
 }
 
-const Page = ({ params }: any) => {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const [path, setPath] = useState<string | null>(null)
-  const sub = searchParams.get('sub')
-  const query = searchParams.get('query')
-  const selectedBrands = searchParams.get('selectedBrands')
-  const min_max = searchParams.get('min_max')
-  const [successModal, setSuccessModal] = useState(false)
+const walletPinSchema = yup.object().shape({
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(6, "Can't be lesser than 6 digits")
+})
+
+function parseStartsIn(startsIn = '0 Days, 0 Hr: 3 Mins Left') {
+  const daysMatch = startsIn.match(/(\d+)\s*Days/)
+  const hoursMatch = startsIn.match(/(\d+)\s*Hr/)
+  const minutesMatch = startsIn.match(/(\d+)\s*Mins/)
+
+  const daysLeft = daysMatch ? parseInt(daysMatch[1], 10) : 0
+  const hoursLeft = hoursMatch ? parseInt(hoursMatch[1], 10) : 0
+  const minutesLeft = minutesMatch ? parseInt(minutesMatch[1], 10) : 0
+
+  return {
+    totalMinutes: daysLeft * 24 * 60 + hoursLeft * 60 + minutesLeft,
+    daysLeft,
+    hoursLeft,
+    minutesLeft
+  }
+}
+
+const AjirobaLogo = () => (
+  <div className='mb-4'>
+    <Link href='/'>
+      <Image src={Brand} alt='brand-logo' />
+    </Link>
+  </div>
+)
+
+const CountdownTimer = memo(({ startsIn = '0 Days, 0 Hr: 0 Mins Left' }: { startsIn?: string }) => {
+  const { totalMinutes: initialTotalMinutes } = parseStartsIn(startsIn)
+  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60)
+
+  useEffect(() => {
+    if (initialTotalMinutes <= 0) return
+    const timer = setInterval(() => {
+      setTimeLeft(prev => Math.max(prev - 1, 0))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [initialTotalMinutes])
+
+  const daysLeft = Math.floor(timeLeft / 86400)
+  const hoursLeft = Math.floor((timeLeft % 86400) / 3600)
+  const minutesLeft = Math.floor((timeLeft % 3600) / 60)
+
+  const progress =
+    initialTotalMinutes > 0
+      ? (timeLeft / (initialTotalMinutes * 60)) * 100
+      : 0
+
+  return (
+    <div className='mb-3'>
+      <p className='mb-2 text-xs capitalize'>
+        <span className='font-medium'>{daysLeft}</span> dy:{' '}
+        <span className='font-medium'>{hoursLeft}</span> Hr:{' '}
+        <span className='font-medium'>{minutesLeft}</span> Min{' '}
+        <span className='font-medium'>Left</span>
+      </p>
+      <div className='h-2.5 w-full rounded-full border border-[#B7B7B7]'>
+        <div
+          className='h-2 rounded-full bg-[#F25E26]'
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
+  )
+})
+CountdownTimer.displayName = 'CountdownTimer'
+
+const CustomerReview = memo(({ data }: any) => {
+  const [selectedStars, setSelectedStars] = useState<number | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const reviewsPerPage = 2
+
+  const sortedRatings = useMemo(
+    () => [...(data?.data?.rating_counts || [])].sort(
+      (a: { stars: number }, b: { stars: number }) => b.stars - a.stars
+    ),
+    [data?.data?.rating_counts]
+  )
+
+  const filteredReviews = useMemo(
+    () => selectedStars
+      ? (data?.data?.reviews || []).filter((review: any) => review.rating === selectedStars)
+      : data?.data?.reviews || [],
+    [data?.data?.reviews, selectedStars]
+  )
+
+  const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage)
+  const currentReviews = filteredReviews.slice(
+    (currentPage - 1) * reviewsPerPage,
+    currentPage * reviewsPerPage
+  )
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedStars])
+
+  return (
+    <div className='container py-4'>
+      <h1 className='text-center font-Poppins text-lg font-medium text-[#353131] md:text-start'>
+        Customer Review
+      </h1>
+
+      <div className='mt-6 flex flex-col gap-8 sm:mt-8 md:flex-row md:items-start md:gap-12'>
+        <div className='w-full md:w-1/2'>
+          <p className='mt-4 flex items-center gap-1 text-sm text-[#111111]'>
+            {Array.from(
+              { length: data?.data?.product_reviews?.average_ratings || 0 },
+              (_, index) => (
+                <span key={index}>
+                  <FaStar className='text-[#F25E26]' />
+                </span>
+              )
+            )}
+            <span className='ml-4 font-Poppins text-[8px] font-normal text-[#2A2A2A]'>
+              ({data?.data?.product_reviews?.total_reviews}) Reviews
+            </span>
+          </p>
+
+          {sortedRatings.map(
+            (item: { stars: number; customers: number }, index: number) => (
+              <div key={index} className='flex items-center gap-4 py-2'>
+                <span className='font-Poppins text-[16px] text-[#353131]'>
+                  {item.stars} stars
+                </span>
+                <div className='flex-1'>
+                  <div className='h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700'>
+                    <div
+                      className='h-2.5 rounded-full bg-[#E84526]'
+                      style={{ width: `${item.customers}%` }}
+                    />
+                  </div>
+                </div>
+                <small className='font-Poppins text-[16px] text-[#353131]'>
+                  {item.customers}
+                </small>
+              </div>
+            )
+          )}
+
+          <div className='mt-4'>
+            <p>Filter By:</p>
+          </div>
+
+          <div className='flex flex-wrap gap-2'>
+            {sortedRatings.map((item: { stars: number }) => (
+              <button
+                key={item.stars}
+                onClick={() => setSelectedStars(item.stars)}
+                className={`mt-4 border border-[#D2D2D2] px-4 py-2 font-Poppins text-[16px] text-sm ${
+                  selectedStars === item.stars
+                    ? 'bg-[#F25E26] font-bold text-white'
+                    : 'bg-white font-normal text-black'
+                } rounded`}
+              >
+                {item.stars} Star
+              </button>
+            ))}
+            <button
+              onClick={() => setSelectedStars(null)}
+              className={`mt-4 border border-[#D2D2D2] px-4 py-2 font-Poppins text-[16px] text-sm ${
+                selectedStars === null
+                  ? 'bg-[#F25E26] font-bold text-white'
+                  : 'bg-white font-normal text-black'
+              } rounded`}
+            >
+              All Stars
+            </button>
+          </div>
+        </div>
+
+        <div className='w-full md:w-1/2'>
+          {currentReviews.map((item: any, key: number) => {
+            const date = item?.date_created ? parseISO(item.date_created) : null
+            const formattedDate = date ? format(date, 'dd/MM/yyyy') : 'Invalid Date'
+
+            return (
+              <div key={key} className='flex gap-2'>
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${item?.user?.profile_image}`}
+                  height={40}
+                  width={40}
+                  alt='Profile Image'
+                  className='rounded-full object-cover'
+                  style={{ borderRadius: '50%' }}
+                />
+                <div className='mb-8 flex-1'>
+                  <p className='font-Poppins text-[16px] font-bold text-[#2A2A2A]'>
+                    {`${item.user.first_name}  ${item.user.last_name}`}
+                  </p>
+                  <p className='mt-4 flex items-center gap-1 font-Poppins text-sm text-[#2A2A2A]'>
+                    {Array.from({ length: item?.rating }, (_, index) => (
+                      <span key={index}>
+                        <FaStar className='text-[#F25E26]' />
+                      </span>
+                    ))}
+                    {formattedDate}
+                  </p>
+                  <p className='font-Poppins text-[13px] font-normal'>
+                    {item.comment}
+                  </p>
+                </div>
+              </div>
+            )
+          })}
+
+          <div className='mt-4 flex justify-end'>
+            <h1 className='text-center text-[#E84526]'>Pages</h1>
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1
+              return (
+                <h1
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  className={`cursor-pointer px-2 ${
+                    currentPage === pageNumber
+                      ? 'font-bold text-[#353131]'
+                      : 'text-[#353131]'
+                  }`}
+                >
+                  {pageNumber}
+                </h1>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+})
+CustomerReview.displayName = 'CustomerReview'
+
+// ── Main Page Component ──────────────────────────────────────────────
+
+const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug: product_id } = use(params)
+  const router = useRouter()
+
   const [makepayment, setmakepayment] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('')
 
-  const AjirobaLogo = () => (
-    <div className=' mb-4'>
-      <Link href={'/'} className={``}>
-        <Image src={Brand} alt='brand-logo' />
-      </Link>
-    </div>
-  )
-
-  const handlePaymentSelection = (method: SetStateAction<string>) => {
-    setPaymentMethod(method)
-  }
-
-  const router = useRouter()
-
-  /*  useAuthMiddleware(router) */
-  //   AuthMiddleware(router)
-
-  const star = [1, 2, 3, 4, 5]
-  const rating = 4
-
-  const decodedPaths = pathname
-    .split('/')
-    .filter(path => path !== '')
-    .map(path => decodeURIComponent(path))
-
-  const paths = useMemo(
-    () => [...decodedPaths, sub, query, min_max, selectedBrands],
-    [decodedPaths, sub, query, min_max, selectedBrands]
-  )
-
-  const verifiedpaths = useMemo(
-    () => [...decodedPaths, sub],
-    [decodedPaths, sub]
-  )
-
-  const product_id = params.slug
-  const cacheBuster = `cache=${Date.now()}`
-
-  const {
-    data: productdata,
-    isLoading: productdataLoading,
-    isFetching: productdatafetching,
-    error,
-    status,
-    refetch: viewauctionrefetch
-  } = useQueryData<AuctionResponse>(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/?${cacheBuster}`,
-    ['product_details', product_id],
-    true
-  )
-
   const [productdatanew, setProductDataNew] = useState<ProductData | null>(null)
   const [loadingdata, setLoadingData] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
-  // console.log(productdatanew?.data?.related_products,   'relatedproducts')
+  const [bidopen, setbidopen] = useState(false)
+  const [bidData, setBidData] = useState<BidInfoResponse | null>(null)
+  const [viewticket, setViewTicket] = useState(false)
+  const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null)
+  const [ticketPrice, setTicketPrice] = useState(0)
+  const [selectedTicket, setSelectedTicket] = useState<any>(null)
+  const [showTicketModal, setShowTicketModal] = useState(false)
+  const [successbid, setSuccessbid] = useState(false)
+  const [ticketCount, setTicketCount] = useState(1)
+  const [auctionId, setAuctionId] = useState('')
+  const [confirmordermodal, setConfirmOrder] = useState(false)
 
-  //   const fetchWithAuth = async (url: string) => {
-  //     setLoadingData(true); // Indicate loading start
+  const totalAmount = ticketPrice * ticketCount
 
-  //     const requestOptions: RequestInit = {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `token ${userToken}`, // Simplified header creation
-  //       },
-  //       redirect: "follow",
-  //     };
+  const userToken = (Cookies.get('token') as string) || ''
 
-  //     try {
-  //       const response = await fetch(url, requestOptions);
-
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-
-  //       const result = await response.json(); // Parse JSON response
-  //       console.log(result, 'resulttt')
-  //       setProductDataNew(result); // Update state with result
-  //       return result; // Return result for external use
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //       throw error; // Re-throw for the caller to handle
-  //     } finally {
-  //       setLoadingData(false); // Ensure loading is stopped
-  //     }
-  //   };
+  // ── Data Fetching ────────────────────────────────────────────────
 
   const fetchWithAuth = useCallback(async (url: string) => {
-    setLoadingData(true) // Indicate loading start
-
+    setLoadingData(true)
     const token = Cookies.get('token') as string
     const requestOptions: RequestInit = {
       method: 'GET',
-      headers: token ? { Authorization: `token ${token}` } : undefined, // Conditionally add header
+      headers: token ? { Authorization: `token ${token}` } : undefined,
       redirect: 'follow'
     }
 
     try {
       const response = await fetch(url, requestOptions)
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-
-      const result = await response.json() // Parse JSON response
-      /*  console.log(result, "resulttt"); */
-      setProductDataNew(result) // Update state with result
-      return result // Return result for external use
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      throw error // Re-throw for the caller to handle
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+      const result = await response.json()
+      setProductDataNew(result)
+      setError(null)
+      return result
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Fetch failed'))
+      throw err
     } finally {
-      setLoadingData(false) // Ensure loading is stopped
+      setLoadingData(false)
     }
   }, [])
 
   const fetchData = useCallback(async () => {
     try {
-      const data = await fetchWithAuth(
+      return await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auction/view_auction/${product_id}/`
       )
-      /*    console.log("Fetched data:", data); */
-      return data
-    } catch (error) {
-      console.error('Failed to fetch data:', error)
+    } catch {
       return null
     }
-  }, [product_id])
+  }, [product_id, fetchWithAuth])
 
-  // Initial data fetch
   useEffect(() => {
     fetchData()
-    viewauctionrefetch()
-  }, [product_id, fetchData, viewauctionrefetch]) // Refetch whenever product_id changes
+  }, [fetchData])
 
-  // Smart polling: Only poll when raffle hasn't started or ended
+  // ── Smart Polling ────────────────────────────────────────────────
+
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const isPollingActiveRef = useRef(false)
 
@@ -270,20 +386,15 @@ const Page = ({ params }: any) => {
       typeof startsIn === 'string' &&
       startsIn.includes('Left')
 
-    // Clear existing interval if any
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current)
       pollingIntervalRef.current = null
     }
 
-    // Start polling if needed
     if (shouldPoll && !isPollingActiveRef.current) {
       isPollingActiveRef.current = true
-
-      // Poll every 30 seconds (adjust as needed)
       pollingIntervalRef.current = setInterval(async () => {
         const data = await fetchData()
-        // Stop polling if raffle has started or ended
         if (
           data?.data?.starts_in === 'Raffle Started' ||
           data?.data?.starts_in === 'Raffle Ended'
@@ -294,13 +405,11 @@ const Page = ({ params }: any) => {
             pollingIntervalRef.current = null
           }
         }
-      }, 30000) // 30 seconds
+      }, 30000)
     } else if (!shouldPoll) {
-      // Stop polling if raffle has started or ended
       isPollingActiveRef.current = false
     }
 
-    // Cleanup on unmount or when dependencies change
     return () => {
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current)
@@ -310,939 +419,222 @@ const Page = ({ params }: any) => {
     }
   }, [productdatanew?.data?.starts_in, fetchData])
 
-  //   console.log(productdata, "productdata");
-  /*   console.log(productdatanew, "productdatanew"); */
+  // ── Image Selection ──────────────────────────────────────────────
 
   useEffect(() => {
-    if (paths.length > 0) {
-      const newPath = paths[paths.length - 1]
-      if (newPath !== path) {
-        setPath(newPath)
-      }
-    } else if (path !== null) {
-      setPath(null)
-    }
-  }, [paths, path]) // Notice the added dependency on `path`
-
-  const [selectedImage, setSelectedImage] = useState(0)
-  const images = [image4, image2]
-
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0) // Step 1: State to track the selected image
-
-  // Debug effect to monitor selectedImageIndex changes
-  useEffect(() => {
-    /*   console.log('selectedImageIndex changed to:', selectedImageIndex);
-    console.log('Available images:', productdatanew?.data?.images); */
-    if (productdatanew?.data?.images?.[selectedImageIndex]) {
-      console.log('')
-    }
-  }, [selectedImageIndex, productdatanew?.data?.images])
-
-  // Set initial selected image when product data loads
-  useEffect(() => {
-    if (productdatanew?.data?.images && productdatanew.data.images.length > 0) {
+    if (productdatanew?.data?.images?.length > 0) {
       setSelectedImageIndex(0)
-      /* console.log('Setting initial selectedImageIndex to 0'); */
     }
   }, [productdatanew?.data?.images])
 
-  const handleImageClick = (index: SetStateAction<number>) => {
-    /*  console.log('Image clicked, index:', index);
-    console.log('Current selectedImageIndex:', selectedImageIndex); */
-    setSelectedImage(index)
+  const handleImageClick = useCallback((index: number) => {
     setSelectedImageIndex(index)
-    /*  console.log('Setting selectedImageIndex to:', index); */
-  }
+  }, [])
 
-  const notify = () => {
-    toast("🦄 ‘Mama Gold Rice' has been added to cart", {
-      position: 'top-center',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'colored',
-      transition: Bounce,
-      style: {
-        backgroundColor: '#08B504',
-        color: '#FFFFFF'
-      }
-    })
-  }
-
-  if (error) {
-    console.error('Error fetching product data:', error)
-  }
-
-  const nigerianCurrencyFormat = new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN'
-  })
-
-  const productPrice = productdatanew?.data?.price
-    ? Number(productdatanew?.data.price)
-    : 0
-  const productDiscount = productdatanew?.data?.discount
-    ? Number(productdatanew?.data.discount)
-    : 0
-
-  const formattedPrice = nigerianCurrencyFormat.format(productPrice)
-  const formattedDiscount = nigerianCurrencyFormat.format(productDiscount)
-
-  const basePrice = productdatanew?.data?.discount
-    ? Number(productdatanew?.data.discount)
-    : 0
-  const [quantity, setQuantity] = useState(1)
-  const totalPrice = basePrice * quantity
-
-  const handleIncrement = () => {
-    setQuantity(quantity + 1)
-  }
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-    }
-  }
-
-  const [confirmordermodal, setConfirmOrder] = useState(false)
-
-  const showConfirmOrder = () => {
-    setConfirmOrder(true)
-  }
-
-  const handlecloseOrder = () => {
-    setConfirmOrder(false)
-  }
-
-  const schema = yup.object().shape({
-    password: yup
-      .string()
-      .required('Password is required')
-      .min(6, "Can't be lesser than 6 digits")
-  })
+  // ── Form Setup ───────────────────────────────────────────────────
 
   const {
     reset,
     register,
-    control,
     handleSubmit,
-    formState: { errors },
-    trigger,
-    watch,
-    setValue
+    formState: { errors }
   } = useForm({
     mode: 'all',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(walletPinSchema)
   })
 
-  const handleSuccess = (data: any) => {
-    if (
-      data.status === 200 ||
-      data?.data?.status === 201 ||
-      data?.data?.status === 200 ||
-      data.status === 201
-    ) {
-      setBidData(null)
-      localStorage.setItem('pin_id', 'yes')
-      setSuccessModal(!successModal)
-      toast.success(`${data?.data?.message || 'PIN verified successfully'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        onClose: () => {
-          if (
-            data?.data?.message &&
-            data.data.message.includes('Order placed successfully. Order Code')
-          ) {
-            router.push('/profile')
-          } else {
-            router.push('/paymentpage')
-          }
-        }
-      })
-      reset()
-    } else if (
-      data?.data?.status === 400 ||
-      data?.data?.status === 409 ||
-      data.status === 400 ||
-      data.status === 409
-    ) {
-      toast.error(`${data?.data?.message || 'Password doesnt match'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
-    } else if (data.status === 401) {
-      toast.error(`${data?.data?.message || 'Authentication error'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
-    } else if (data.status === 500) {
-      toast.error(`${data?.data?.message || 'old_password'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
-    } else {
-      toast.error(`${'An Error Occured'}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
-    }
-  }
+  // ── User Info ────────────────────────────────────────────────────
 
-  const handleError = (error: any) => {
-    toast.error(`${'An Error Occured'}`, {
+  const profileUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`
+  const { data: userInfo } = useGetDatanew(
+    profileUrl,
+    'get_user_details',
+    userToken || ' '
+  )
+
+  // ── Ticket Count Handlers ────────────────────────────────────────
+
+  const handleIncrease = useCallback(() => {
+    setTicketCount(prev => prev + 1)
+  }, [])
+
+  const handleDecrease = useCallback(() => {
+    setTicketCount(prev => (prev > 1 ? prev - 1 : prev))
+  }, [])
+
+  useEffect(() => {
+    if (bidData?.ticket_price) {
+      const initialPrice = Number(bidData.ticket_price)
+      setTicketPrice(initialPrice)
+      setAuctionId(bidData.id)
+      setTicketCount(1)
+    }
+  }, [bidData])
+
+  // ── API Callbacks ────────────────────────────────────────────────
+
+  const showToast = useCallback((type: 'success' | 'error', message: string, onClose?: () => void) => {
+    toast[type](message, {
       position: 'top-right',
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
-      theme: 'light'
+      theme: 'light',
+      onClose
     })
+  }, [])
+
+  const handleSuccess = useCallback((data: any) => {
+    const status = data?.data?.status || data?.status
+    if ([200, 201].includes(status)) {
+      setBidData(null)
+      localStorage.setItem('pin_id', 'yes')
+      showToast('success', data?.data?.message || 'PIN verified successfully', () => {
+        if (data?.data?.message?.includes('Order placed successfully. Order Code')) {
+          router.push('/profile')
+        } else {
+          router.push('/paymentpage')
+        }
+      })
+    } else {
+      showToast('error', data?.data?.message || 'An error occurred')
+    }
     reset()
-  }
+  }, [reset, router, showToast])
 
-  const userToken = (Cookies.get('token') as string) || ''
+  const handleError = useCallback(() => {
+    showToast('error', 'An error occurred')
+    reset()
+  }, [reset, showToast])
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`
-
-  const { data: userInfo, isLoading: userLoading } = useGetDatanew(
-    url,
-    'get_user_details',
-    userToken || ' '
+  const { mutate, status: verifystatus } = useMutateData(
+    'verifywalletpin',
+    handleSuccess,
+    handleError
   )
 
-  const [bidopen, setbidopen] = useState(false)
-
-  const [bidData, setBidData] = useState<BidInfoResponse | null>(null)
-  const [viewticket, setViewTicket] = useState(false)
-  const [ticketData, setTicketData] = useState<TicketInfoResponse | null>(null)
-  const [ticketPrice, setTicketPrice] = useState(0)
-  const [selectedTicket, setSelectedTicket] = useState<any>(null)
-  const [showTicketModal, setShowTicketModal] = useState(false)
-
-  const [successbid, setSuccessbid] = useState(false)
-
-  const [ticketCount, setTicketCount] = useState(1)
-
-  const [totalAmount, setTotalAmount] = useState(0)
-  const [auctionId, setAuctionId] = useState('')
-
-  // console.log(totalAmount, 'totalamount')
-
-  const handleSuccessbidpayment = (data: any) => {
-    /*   console.log(data, "datatatat");  */
-    if (
-      data.status === 200 ||
-      data?.data?.status === 201 ||
-      data?.data?.status === 200 ||
-      data.status === 201
-    ) {
+  const handleSuccessbidpayment = useCallback((data: any) => {
+    const status = data?.data?.status || data?.status
+    if ([200, 201].includes(status)) {
       setTicketData(data?.data)
-      setSuccessbid(!successbid)
-      toast.success(`${data?.data?.message} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-
-        /*    onClose: () => {
-                        if (
-                            data?.data?.message &&
-                            data.data.message.includes(
-                                "Order placed successfully. Order Code",
-                            )
-                        ) {
-                            router.push("/profile");
-                        } else {
-                            router.push("/paymentpage");
-                        }
-                    }, */
-      })
-      reset()
-    } else if (
-      data?.data?.status === 400 ||
-      data?.data?.status === 409 ||
-      data.status === 400 ||
-      data.status === 409
-    ) {
-      toast.error(`${data?.data?.message} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
-    } else if (data.status === 401) {
-      toast.error(`${data?.data?.message} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
-    } else if (data.status === 500) {
-      toast.error(`${data?.data?.message} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
+      setSuccessbid(true)
+      showToast('success', data?.data?.message || 'Bid payment successful')
     } else {
-      toast.error(`${'An Error Occured'}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      reset()
+      showToast('error', data?.data?.message || 'An error occurred')
     }
-  }
-
-  const handleErrorbidpayment = (error: any) => {
-    toast.error(`${'An Error Occured'}`, {
-      position: 'top-right',
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light'
-    })
     reset()
-  }
+  }, [reset, showToast])
 
-  const {
-    data: bidpaymentdata,
-    error: bidpaymenterror,
-    error: bidpaymentterror,
-    isError: bidpaymentiserror,
-    isSuccess: bidpaymentsuccess,
-    mutate: bidpaymentmutate,
-    status: bidpaymentstatus
-  } = useMutateData(
+  const handleErrorbidpayment = useCallback(() => {
+    showToast('error', 'An error occurred')
+    reset()
+  }, [reset, showToast])
+
+  const { mutate: bidpaymentmutate } = useMutateData(
     'bidpayment',
     handleSuccessbidpayment,
     handleErrorbidpayment
   )
 
-  // Handler to increase ticket count
-  const handleIncrease = () => {
-    setTicketCount(prevCount => prevCount + 1)
-    setTotalAmount(prevTotal => prevTotal + ticketPrice)
-  }
-
-  // Handler to decrease ticket count, ensuring count doesn't go below 1
-  const handleDecrease = () => {
-    if (ticketCount > 1) {
-      setTicketCount(prevCount => prevCount - 1)
-      setTotalAmount(prevTotal => prevTotal - ticketPrice)
-    }
-  }
-
-  useEffect(() => {
-    if (bidData && bidData.ticket_price) {
-      const initialPrice = Number(bidData.ticket_price)
-      setTicketPrice(initialPrice)
-      setTotalAmount(initialPrice * ticketCount)
-      setAuctionId(bidData.id)
-    }
-  }, [bidData, ticketCount])
-
-  const {
-    data,
-    error: walleterror,
-    isError,
-    isSuccess,
-    mutate,
-    status: verifystatus
-  } = useMutateData('verifywalletpin', handleSuccess, handleError)
-
-  // Handle API success
-  const handleSuccesspayment = (data?: any) => {
-    //  console.log(data)
-
-    if (
-      data.status === 200 ||
-      data?.data?.status === 201 ||
-      data?.data?.status === 200 ||
-      data.status === 201
-    ) {
-      setBidData(null) // Store the API response in bidData for modal usage
-
-      setbidopen(false) // Open modal after successful API response
+  const handleSuccesspayment = useCallback((data?: any) => {
+    const status = data?.data?.status || data?.status
+    if ([200, 201].includes(status)) {
+      setBidData(null)
+      setbidopen(false)
       setmakepayment(false)
-      /*   console.log(data?.data, 'auctionidddd') */
-
-      /*    console.log(paymentMethod, 'paymentmeethodddd')
-      console.log(auctionId, 'auctioniddddd')
-      console.log(ticketCount, 'ticketCount')
-      console.log(totalAmount, 'total amount')
-      console.log(userToken, 'tokennnn') */
-
-      toast.success(`${data?.data?.message || 'PIN verified successfully'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-        /*  onClose: () => {
-          if (
-            data?.data?.message &&
-            data.data.message.includes("Order placed successfully. Order Code")
-          ) {
-            router.push("/profile");
-          } else {
-            router.push("/paymentpage");
-          }
-        }, */
-      })
+      showToast('success', data?.data?.message || 'PIN verified successfully')
 
       const payWithMethod =
         paymentMethod === 'wallet_balance' ? 'wallet_balance' : 'wallet_point'
 
-      const payload = {
-        auction: auctionId,
-        ticket_quantity: ticketCount,
-        total_amount: Number(totalAmount),
-        pay_with: payWithMethod
-      }
-
       bidpaymentmutate({
         url: '/api/bidpayment',
-        payload: { payload: payload, token: userToken },
+        payload: {
+          payload: {
+            auction: auctionId,
+            ticket_quantity: ticketCount,
+            total_amount: totalAmount,
+            pay_with: payWithMethod
+          },
+          token: userToken
+        },
         token: userToken
       })
-      resetpayment()
-    } else if (
-      data?.data?.status === 400 ||
-      data?.data?.status === 409 ||
-      data.status === 400 ||
-      data.status === 409
-    ) {
-      setBidData(null)
-      setbidopen(false)
-      setmakepayment(false)
-      toast.error(`${data?.data?.message || 'Password doesnt match'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      resetpayment()
-    } else if (data.status === 401) {
-      setbidopen(false)
-      setmakepayment(false)
-      toast.error(`${data?.data?.message || 'Authentication error'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      resetpayment()
-    } else if (data.status === 500) {
-      setbidopen(false)
-      setmakepayment(false)
-      toast.error(`${data?.data?.message || 'old_password'} `, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      resetpayment()
     } else {
       setbidopen(false)
       setmakepayment(false)
-      toast.error(`${'An Error Occured'}`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-      resetpayment()
+      showToast('error', data?.data?.message || 'An error occurred')
     }
-  }
-
-  // Handle API error
-  const handleErrorpayment = (error?: any) => {
-    console.log(error, 'Error occurred during bid')
-    setbidopen(false)
-
-    toast.error(`${'An Error Occured'}`, {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light'
-    })
     resetpayment()
-  }
+  }, [paymentMethod, auctionId, ticketCount, totalAmount, userToken, bidpaymentmutate, showToast])
+
+  const handleErrorpayment = useCallback(() => {
+    setbidopen(false)
+    showToast('error', 'An error occurred')
+    resetpayment()
+  }, [showToast])
 
   const {
-    data: paymentdata,
-    error: paymenterror,
-    isError: paymentisError,
-    isSuccess: paymentisSuccess,
     mutate: mutatev,
     status: paymentstatus,
     reset: resetpayment
   } = useMutateData('verifywalletpin', handleSuccesspayment, handleErrorpayment)
 
-  const submitForm = (data: any) => {
-    Cookies.set('nvd', data?.password, { expires: 1 })
-    const payload = {
-      wallet_pin: data?.password
-    }
+  // ── Form Submissions ─────────────────────────────────────────────
 
+  const submitForm = useCallback((data: any) => {
+    Cookies.set('nvd', data?.password, { expires: 1 })
     mutate({
       url: '/api/verifywalletpin',
-      payload: { payload: payload, token: userToken },
+      payload: { payload: { wallet_pin: data?.password }, token: userToken },
       token: userToken
     })
-  }
+  }, [mutate, userToken])
 
-  const submitFormf = (data: any) => {
-    /*   console.log(data, 'dddd', paymentMethod, 'paymmm'); */
-
-    // mutate(data)
-
+  const submitFormf = useCallback((data: any) => {
     Cookies.set('pvd', data?.password, { expires: 1 })
-    const payload = {
-      wallet_pin: data?.password
-    }
-
     mutatev({
       url: '/api/verifywalletpin',
-      payload: { payload: payload, token: userToken },
+      payload: { payload: { wallet_pin: data?.password }, token: userToken },
       token: userToken
     })
-  }
+  }, [mutatev, userToken])
 
-  // const handleOrderbutton = () => {
-  //   let pin = Cookies.get("nvd");
-  //   console.log("yes....", pin);
-  // };
+  // ── Bid Click Handler ────────────────────────────────────────────
 
-  const CustomerReview = ({ data }: any) => {
-    const [selectedStars, setSelectedStars] = useState<number | null>(null)
-
-    const sortedRatings = [...data?.data?.rating_counts].sort(
-      (a: { stars: number }, b: { stars: number }) => b.stars - a.stars
-    )
-
-    const filteredReviews = selectedStars
-      ? data?.data?.reviews.filter(
-          (review: any) => review.rating === selectedStars
-        )
-      : data?.data?.reviews
-
-    const [currentPage, setCurrentPage] = useState(1)
-    const reviewsPerPage = 2
-
-    const totalReviews = filteredReviews.length
-    const totalPages = Math.ceil(totalReviews / reviewsPerPage)
-
-    const indexOfLastReview = currentPage * reviewsPerPage
-    const indexOfFirstReview = indexOfLastReview - reviewsPerPage
-    const currentReviews = filteredReviews.slice(
-      indexOfFirstReview,
-      indexOfLastReview
-    )
-
-    const handlePageClick = (pageNumber: number) => {
-      setCurrentPage(pageNumber)
-    }
-
-    return (
-      <div className='container py-4'>
-        <div>
-          <h1 className='text-center font-Poppins text-lg font-medium text-[#353131] md:text-start lg:text-start xl:text-start 2xl:text-start'>
-            Customer Review
-          </h1>
-        </div>
-
-        <div className='mt-8 flex flex-col items-center gap-12 md:flex-row md:items-start lg:flex-row lg:items-start xl:flex-row xl:items-start 2xl:flex-row 2xl:items-start'>
-          <div className=' w-auto md:w-1/2 lg:w-1/2 xl:w-1/2 2xl:w-1/2'>
-            <p className='mt-4 flex items-center gap-1 text-sm text-[#111111]'>
-              {Array.from(
-                {
-                  length: data?.data?.product_reviews?.average_ratings
-                },
-                (_, index) => (
-                  <span key={index}>
-                    <FaStar className='text-[#F25E26]' />
-                  </span>
-                )
-              )}
-              <span className='ml-4 font-Poppins text-[8px] font-normal text-[#2A2A2A]'>
-                ({data?.data?.product_reviews?.total_reviews}) Reviews
-              </span>
-            </p>
-
-            {sortedRatings.map(
-              (item: { stars: number; customers: number }, index: number) => (
-                <div key={index} className='flex items-center gap-4 py-2'>
-                  <div>
-                    <span className='font-Poppins text-[16px] text-[#353131]'>
-                      {item.stars} stars
-                    </span>
-                  </div>
-
-                  <div className='flex-1'>
-                    <div className='h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700'>
-                      <div
-                        className='h-2.5 rounded-full bg-[#E84526]'
-                        style={{
-                          width: `${item.customers}%`
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <small className='font-Poppins text-[16px] text-[#353131]'>
-                      {item.customers}
-                    </small>
-                  </div>
-                </div>
-              )
-            )}
-
-            <div className='mt-4'>
-              <p>Filter By:</p>
-            </div>
-
-            <div className='flex flex-wrap gap-2'>
-              {sortedRatings.map((item: { stars: number }) => (
-                <button
-                  key={item.stars}
-                  onClick={() => setSelectedStars(item.stars)}
-                  className={`mt-4 border border-[#D2D2D2] px-4 py-2 font-Poppins text-[16px] text-sm ${
-                    selectedStars === item.stars
-                      ? 'bg-[#F25E26] font-bold text-white'
-                      : 'bg-white font-normal text-black'
-                  } rounded`}
-                >
-                  {item.stars} Star
-                </button>
-              ))}
-
-              <button
-                onClick={() => setSelectedStars(null)}
-                className={`mt-4 border border-[#D2D2D2] px-4 py-2 font-Poppins text-[16px] text-sm ${
-                  selectedStars === null
-                    ? 'bg-[#F25E26] font-bold text-white'
-                    : 'bg-white font-normal text-black'
-                } rounded`}
-              >
-                All Stars
-              </button>
-            </div>
-          </div>
-
-          <div className=' w-auto md:w-1/2 lg:w-1/2 xl:w-1/2 2xl:w-1/2'>
-            {currentReviews.map((item: any, key: number) => {
-              const date = item?.date_created
-                ? parseISO(item.date_created)
-                : null
-              const formattedDate = date
-                ? format(date, 'dd/MM/yyyy')
-                : 'Invalid Date'
-
-              return (
-                <div key={key} className='flex gap-2'>
-                  <div className=''>
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${item?.user?.profile_image}`}
-                      height={40}
-                      width={40}
-                      alt='Profile Image'
-                      className='rounded-full object-cover'
-                      style={{ borderRadius: '50%' }}
-                    />
-                  </div>
-
-                  <div className='mb-8 flex-1'>
-                    <p className='font-Poppins text-[16px] font-bold text-[#2A2A2A]'>{`${item.user.first_name}  ${item.user.last_name} `}</p>
-                    <p className='mt-4 flex items-center gap-1 font-Poppins text-sm text-[#2A2A2A]'>
-                      {Array.from({ length: item?.rating }, (_, index) => (
-                        <span key={index}>
-                          <FaStar className='text-[#F25E26]' />
-                        </span>
-                      ))}
-
-                      {formattedDate}
-                    </p>
-                    <p className='font-Poppins text-[13px] font-normal'>
-                      {item.comment}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-
-            <div className='mt-4 flex justify-end'>
-              <h1 className=' 4 text-center text-[#E84526]'>Pages</h1>
-              {Array.from({ length: totalPages }, (_, index) => {
-                const pageNumber = index + 1
-
-                return (
-                  <div key={index} className='flex '>
-                    <h1
-                      key={pageNumber}
-                      onClick={() => handlePageClick(pageNumber)}
-                      className={` cursor-pointer px-2 ${
-                        currentPage === pageNumber
-                          ? ' font-bold text-[#353131]'
-                          : ' text-[#353131]'
-                      }`}
-                    >
-                      {pageNumber}
-                    </h1>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const RelatedProduct = ({ data }: any) => {
-    return (
-      <div className='container mb-12 py-4 '>
-        <div>
-          <h1 className='text-center font-Poppins text-lg font-medium text-[#353131] md:text-start lg:text-start xl:text-start 2xl:text-start '>
-            Other Related Products
-          </h1>
-        </div>
-
-        <div>
-          <RelatedProductsAuction cardInfo={data} />
-        </div>
-      </div>
-    )
-  }
-
-  function parseStartsIn(startsIn = '0 Days, 0 Hr: 3 Mins Left') {
-    const daysMatch = startsIn.match(/(\d+)\s*Days/)
-    const hoursMatch = startsIn.match(/(\d+)\s*Hr/)
-    const minutesMatch = startsIn.match(/(\d+)\s*Mins/)
-
-    const daysLeft = daysMatch ? parseInt(daysMatch[1], 10) : 0
-    const hoursLeft = hoursMatch ? parseInt(hoursMatch[1], 10) : 0
-    const minutesLeft = minutesMatch ? parseInt(minutesMatch[1], 10) : 0
-
-    return {
-      totalMinutes: daysLeft * 24 * 60 + hoursLeft * 60 + minutesLeft,
-      daysLeft,
-      hoursLeft,
-      minutesLeft
-    }
-  }
-
-  // Countdown Timer component
-  const CountdownTimer = ({ startsIn = '0 Days, 0 Hr: 0 Mins Left' }) => {
-    const {
-      totalMinutes: initialTotalMinutes,
-      daysLeft: initialDaysLeft,
-      hoursLeft: initialHoursLeft,
-      minutesLeft: initialMinutesLeft
-    } = parseStartsIn(startsIn)
-
-    // Convert total minutes to seconds for the countdown
-    const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60)
-
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setTimeLeft(prev => Math.max(prev - 1, 0)) // Decrease time left, but don't go below 0
-      }, 1000)
-
-      return () => clearInterval(timer)
-    }, [])
-
-    // Convert seconds back to days, hours, and minutes for display
-    const totalSeconds = timeLeft
-    const minutesLeft = Math.floor((totalSeconds % 3600) / 60)
-    const hoursLeft = Math.floor((totalSeconds % 86400) / 3600)
-    const daysLeft = Math.floor(totalSeconds / 86400)
-
-    // Progress should be 0% when timeLeft is 0 or when the total time is 0
-    const progress =
-      initialTotalMinutes > 0
-        ? (timeLeft / (initialTotalMinutes * 60)) * 100
-        : 0
-
-    return (
-      <div className='mb-3'>
-        <p className='mb-2 text-xs capitalize '>
-          <span className='font-medium'>{daysLeft}</span> dy:{' '}
-          <span className='font-medium'>{hoursLeft}</span> Hr:{' '}
-          <span className='font-medium'>{minutesLeft}</span> Min{' '}
-          <span className='font-medium'>Left</span>
-        </p>
-        <div className='h-2.5 w-full rounded-full border border-[#B7B7B7] '>
-          <div
-            className='h-2 rounded-full bg-[#F25E26]'
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-      </div>
-    )
-  }
-
-  const handleBidClick = async (productId: any) => {
+  const handleBidClick = useCallback(async (productId: any) => {
     if (!userToken) {
-      console.error('Token is undefined')
-      toast.error('Please sign in before you can bid', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
+      showToast('error', 'Please sign in before you can bid')
       return
     }
 
     try {
       const response = await fetch('/api/bidinfo', {
         method: 'GET',
-        headers: {
-          Authorization: `${userToken}`,
-          Params: productId
-        },
+        headers: { Authorization: `${userToken}`, Params: productId },
         cache: 'no-cache'
       })
 
-      if (!response.ok) {
-        console.error('Error in the request:', response)
-        return
-      }
+      if (!response.ok) return
 
       const data = await response.json()
 
       if (data.data.status === 'failed') {
-        console.log('Failed:')
-        toast.error(`${data.data.message}`, {
-          position: 'top-right',
-          progress: 4
-        })
-        setTimeout(() => {
-          // Optionally navigate back if needed
-          // router.back();
-        }, 2000)
+        showToast('error', data.data.message)
       } else if (data.data.status === 'success') {
         setbidopen(true)
         setBidData(data?.data?.data)
-        /*    console.log("Success:", data?.data?.data); */
-
         setTicketPrice(Number(data?.data?.data?.ticket_price))
-
-        // Display a success toast message if needed
-        /*     toast.success("Bid information retrieved successfully!", {
-                position: "top-right",
-                progress: 4
-            }); */
-      } else {
-        console.warn('Unknown status:', data.data.status)
       }
-
-      return data
-    } catch (error) {
-      console.error('Error during fetch:', error)
-      toast.error('An unexpected error occurred. Please try again.', {
-        position: 'top-right',
-        progress: 4
-      })
+    } catch {
+      showToast('error', 'An unexpected error occurred. Please try again.')
     }
-  }
+  }, [userToken, showToast])
 
-  // Memoized Raffle Button Component - Prevents unnecessary re-renders and layout shifts
+  // ── Memoized Raffle Button ───────────────────────────────────────
+
   const raffleStartedButton = useMemo(() => {
     const startsIn = productdatanew?.data?.starts_in
     const bidded = productdatanew?.data?.bidded
@@ -1252,20 +644,10 @@ const Page = ({ params }: any) => {
         <div className='mt-4 flex min-h-[48px] items-center justify-center'>
           <button
             onClick={() => {
-              // Check if user has bid before allowing access to raffle
               if (bidded === 'false') {
                 toast.error(
                   "You need to bid first before you can watch the raffle! But, Unfortunately, The bidding start time has been reached, you can't enter the raffle again.",
-                  {
-                    position: 'top-center',
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'light'
-                  }
+                  { position: 'top-center', autoClose: 5000, theme: 'light' }
                 )
               } else {
                 router.push(`/raffle/${product_id}`)
@@ -1279,12 +661,15 @@ const Page = ({ params }: any) => {
       )
     }
     return null
-  }, [
-    productdatanew?.data?.starts_in,
-    productdatanew?.data?.bidded,
-    product_id,
-    router
-  ])
+  }, [productdatanew?.data?.starts_in, productdatanew?.data?.bidded, product_id, router])
+
+  // ── Error logging ────────────────────────────────────────────────
+
+  if (error) {
+    console.error('Error fetching product data:', error)
+  }
+
+  // ── Render ───────────────────────────────────────────────────────
 
   return (
     <main className='content-container'>
@@ -1297,63 +682,71 @@ const Page = ({ params }: any) => {
       </div>
 
       <div onClick={() => router.back()}>
-        <div
-          className=' container flex  cursor-pointer justify-start'
-          style={{
-            margin: '0 auto',
-            width: '94%',
-            maxWidth: '100%'
-          }}
-        >
+        <div className='container mx-auto flex w-[92%] sm:w-[94%] cursor-pointer justify-start'>
           <p className='relative bottom-10 text-base text-[#E84526] underline'>
             Back
           </p>
         </div>
       </div>
 
-      <div
-        style={{
-          margin: '0 auto',
-          width: '90%',
-          maxWidth: '100%'
-        }}
-        className='font-Poppins text-sm font-semibold text-[#363636]'
-      >
+      <div className='mx-auto w-[92%] sm:w-[90%] font-Poppins text-sm font-semibold text-[#363636]'>
         {productdatanew?.data?.category_name} |{' '}
         {productdatanew?.data?.subcategory_name}
       </div>
 
-      <section
-        style={{
-          margin: '0 auto',
-          width: '80%'
-        }}
-      >
-        {productdata ? (
+      <section className='mx-auto w-[92%] sm:w-[90%] lg:w-[80%]'>
+        {productdatanew ? (
           <>
-            <div className='mt-8 flex flex-col justify-between md:flex-row lg:flex-row 2xl:flex-row'>
-              <div>
-                <div className=' flex flex-col gap-8 '>
+            <div className='mt-6 flex flex-col gap-6 md:mt-8 md:flex-row md:justify-between'>
+              <div className='flex w-full flex-col md:w-3/5'>
+                <div className='w-full overflow-hidden rounded-lg'>
+                  {productdatanew?.data?.images?.[selectedImageIndex] ? (
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[selectedImageIndex].image}`}
+                      alt='Product Image'
+                      width={600}
+                      height={600}
+                      sizes='(max-width: 768px) 92vw, (max-width: 1200px) 50vw, 560px'
+                      quality={90}
+                      priority
+                      className='w-full h-auto object-cover rounded-lg'
+                    />
+                  ) : productdatanew?.data?.images?.[0] ? (
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[0].image}`}
+                      alt='Product Image'
+                      width={600}
+                      height={600}
+                      sizes='(max-width: 768px) 92vw, (max-width: 1200px) 50vw, 560px'
+                      quality={90}
+                      priority
+                      className='w-full h-auto object-cover rounded-lg'
+                    />
+                  ) : (
+                    <p>No main image available</p>
+                  )}
+                </div>
+
+                <div className='mt-3 flex gap-3 overflow-x-auto pb-2 md:flex-wrap md:overflow-x-visible'>
                   {productdatanew?.data?.images?.map(
                     (image: any, index: number) => (
-                      // console.log(image, "image"),
                       <div
                         key={index}
-                        className={`thumbnail-image flex cursor-pointer items-center justify-center transition-all duration-200 md:block lg:block xl:block 2xl:block ${
+                        className={`flex-shrink-0 cursor-pointer rounded-lg border-2 transition-all duration-200 ${
                           selectedImageIndex === index
-                            ? 'scale-105 ring-2 ring-[#F25E26]'
-                            : 'hover:scale-105'
+                            ? 'border-[#F25E26] ring-1 ring-[#F25E26]'
+                            : 'border-transparent hover:border-gray-300'
                         }`}
                         onClick={() => handleImageClick(index)}
                       >
                         <Image
-                          className='images-map h-32 w-32 rounded-lg object-cover'
+                          className='h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20 md:h-24 md:w-24'
                           src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${image.image}`}
                           alt='Product Thumbnail'
-                          width={128}
-                          height={128}
-                          sizes='128px'
-                          quality={90}
+                          width={96}
+                          height={96}
+                          sizes='96px'
+                          quality={80}
                         />
                       </div>
                     )
@@ -1361,183 +754,92 @@ const Page = ({ params }: any) => {
                 </div>
               </div>
 
-              <div className='  mt-6  flex items-center justify-center px-12 md:mt-4 lg:mt-4 xl:mt-4 2xl:mt-4 '>
-                <div className='thumbnail-images w-auto     '>
-                  <div className='main-image '>
-                    {productdatanew?.data?.images?.[selectedImageIndex] ? (
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data.images[selectedImageIndex].image}`}
-                        alt='Product Image'
-                        width={600}
-                        height={600}
-                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 560px'
-                        quality={90}
-                        className='w-full h-auto object-cover'
-                      />
-                    ) : productdatanew?.data?.images?.[0] ? (
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data.images[0].image}`}
-                        alt='Product Image'
-                        width={600}
-                        height={600}
-                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 560px'
-                        quality={90}
-                        className='w-full h-auto object-cover'
-                      />
-                    ) : (
-                      <p>No main image available</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {productdata && (
-                <div className=' container mt-8 flex w-auto  flex-wrap justify-center md:mt-0 md:block md:w-2/5 lg:mt-0 lg:block lg:w-2/5 xl:mt-0 xl:block xl:w-2/5 2xl:mt-0 2xl:block 2xl:w-2/5'>
-                  <div className=''>
-                    <h1 className='font-Poppins text-[20px]  font-medium text-[#111111] '>
+              {productdatanew && (
+                <div className='w-full md:w-2/5 md:pl-6'>
+                  <div>
+                    <h1 className='font-Poppins text-lg font-medium text-[#111111] sm:text-xl'>
                       {productdatanew?.data?.name}
                     </h1>
-                    <p className='mt-4 flex items-center gap-1 font-Poppins text-sm font-normal text-[#111111]'></p>
 
-                    <div className='mt-2 flex flex-wrap items-center gap-2'>
-                      <small className='font-Poppins text-base font-normal text-[#111111] '>
+                    <div className='mt-3 flex items-center gap-2'>
+                      <span className='font-Poppins text-sm font-normal text-[#111111]'>
                         Ticket Price
-                      </small>
-                      <h1 className='font-Poppins text-xl  font-semibold text-[#111111] '>
+                      </span>
+                      <span className='font-Poppins text-xl font-semibold text-[#111111]'>
                         &#x20A6;{' '}
                         {productdatanew?.data?.ticket_price?.toLocaleString()}
-                      </h1>
+                      </span>
                     </div>
 
                     <hr className='mt-4' />
 
-                    <p className='mt-4 text-base text-[#111111] '>Weight</p>
-
-                    <h1 className='mt-2 font-Poppins text-base font-bold text-[#111111]'>
-                      {`${productdatanew?.data?.weight}` || 'NA'}
-                    </h1>
-
-                    <p className='mt-4 text-base text-[#111111] '>Product ID</p>
-
-                    <h1 className='mt-2 font-Poppins text-base font-bold text-[#111111]'>
-                      {`${productdatanew?.data?.product_no}` || 'NA'}
-                    </h1>
-
-                    <div className='flex flex-row flex-wrap justify-between'>
+                    <div className='mt-4 grid grid-cols-2 gap-x-4 gap-y-3'>
                       <div>
-                        <p className='mt-4 text-base text-[#111111] '>
-                          Raffle Date
+                        <p className='text-sm text-[#777]'>Weight</p>
+                        <p className='mt-1 font-Poppins text-sm font-bold text-[#111111]'>
+                          {`${productdatanew?.data?.weight}` || 'NA'}
                         </p>
-                        <h1 className='mt-2 font-Poppins text-base font-bold text-[#111111]'>
+                      </div>
+                      <div>
+                        <p className='text-sm text-[#777]'>Product ID</p>
+                        <p className='mt-1 font-Poppins text-sm font-bold text-[#111111]'>
+                          {`${productdatanew?.data?.product_no}` || 'NA'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-sm text-[#777]'>Raffle Date</p>
+                        <p className='mt-1 font-Poppins text-sm font-bold text-[#111111]'>
                           {productdatanew?.data?.start_date || 'NA'}
-                        </h1>
+                        </p>
                       </div>
                       <div>
-                        <p className='mt-4 text-base text-[#111111] '>
-                          Raffle Time
-                        </p>
-                        <h1 className='mt-2 font-Poppins text-base font-bold text-[#111111]'>
+                        <p className='text-sm text-[#777]'>Raffle Time</p>
+                        <p className='mt-1 font-Poppins text-sm font-bold text-[#111111]'>
                           {productdatanew?.data?.start_time || 'NA'}
-                        </h1>
+                        </p>
                       </div>
                     </div>
 
                     <hr className='mt-4' />
 
-                    <div className='mt-4 bg-[#f6f6f6] '>
-                      <CountdownTimer
-                        startsIn={productdatanew?.data?.starts_in}
-                      />
+                    <div className='mt-4 rounded-lg bg-[#f6f6f6] p-3'>
+                      <CountdownTimer startsIn={productdatanew?.data?.starts_in} />
                     </div>
 
-                    {/* Memoized Raffle Button Component - Prevents unnecessary re-renders and layout shifts */}
                     {raffleStartedButton}
                     {productdatanew?.data?.starts_in !== 'Raffle Started' &&
                       (productdatanew?.data?.starts_in === 'Raffle Ended' ? (
-                        <div className='mt-4 flex items-center justify-center'>
+                        <div className='mt-4 flex items-center justify-center md:justify-start'>
                           <button
-                            /*  onClick={notify} */
-
                             disabled
-                            className='mt-4 rounded-lg bg-[#71605A] px-12 py-2 font-Poppins text-sm font-normal text-[#FCDFD4] transition delay-300 duration-300 ease-in-out hover:bg-[#71605A] hover:text-white hover:transition-all'
+                            className='w-full rounded-lg bg-[#71605A] px-8 py-3 font-Poppins text-sm font-normal text-[#FCDFD4] sm:w-auto sm:px-12'
                           >
                             Raffle Ended
                           </button>
                         </div>
                       ) : (
-                        <div className='mt-4 flex items-center justify-center'>
-                          {/*   {console.log(productdatanew?.data?.starts_in, !productdatanew?.data?.bidded)} */}
+                        <div className='mt-4 flex items-center justify-center md:justify-start'>
                           {productdatanew?.data?.starts_in !== 'Raffle Ended' &&
-                          productdatanew?.data?.bidded === 'false' ? (
+                          (productdatanew?.data?.bidded === 'false' || productdatanew?.data?.bidded === 'true') ? (
                             <button
-                              /*         onClick={() => setmakepayment(!makepayment)} */
                               onClick={() => {
-                                // Check if raffle has started before allowing bid
-                                if (
-                                  productdatanew?.data?.starts_in ===
-                                  'Raffle Started'
-                                ) {
+                                if (productdatanew?.data?.starts_in === 'Raffle Started') {
                                   toast.error(
                                     "The bidding start time has been reached, you can't enter the raffle again.",
-                                    {
-                                      position: 'top-center',
-                                      autoClose: 5000,
-                                      hideProgressBar: false,
-                                      closeOnClick: true,
-                                      pauseOnHover: true,
-                                      draggable: true,
-                                      progress: undefined,
-                                      theme: 'light'
-                                    }
+                                    { position: 'top-center', autoClose: 5000, theme: 'light' }
                                   )
                                 } else {
                                   handleBidClick(product_id)
                                 }
                               }}
-                              className='mt-4 rounded-lg bg-[#FCDFD4] px-12 py-2 font-Poppins text-sm font-normal transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all'
-                            >
-                              Bid
-                            </button>
-                          ) : productdatanew?.data?.bidded === 'true' ? (
-                            /*  <button
-                              disabled
-                              className="mt-4 px-12 text-sm font-normal font-Poppins rounded-lg bg-[#71605A] py-2 transition delay-300 duration-300 ease-in-out text-[#FCDFD4] hover:bg-[#71605A] hover:text-white hover:transition-all"
-                            >
-                              Bidded
-                            </button> */
-                            <button
-                              /*         onClick={() => setmakepayment(!makepayment)} */
-                              onClick={() => {
-                                // Check if raffle has started before allowing bid
-                                if (
-                                  productdatanew?.data?.starts_in ===
-                                  'Raffle Started'
-                                ) {
-                                  toast.error(
-                                    "The bidding start time has been reached, you can't enter the raffle again.",
-                                    {
-                                      position: 'top-center',
-                                      autoClose: 5000,
-                                      hideProgressBar: false,
-                                      closeOnClick: true,
-                                      pauseOnHover: true,
-                                      draggable: true,
-                                      progress: undefined,
-                                      theme: 'light'
-                                    }
-                                  )
-                                } else {
-                                  handleBidClick(product_id)
-                                }
-                              }}
-                              className='mt-4 rounded-lg bg-[#FCDFD4] px-12 py-2 font-Poppins text-sm font-normal transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white hover:transition-all'
+                              className='w-full rounded-lg bg-[#FCDFD4] px-8 py-3 font-Poppins text-sm font-medium transition-all duration-200 hover:bg-[#E84526] hover:text-white sm:w-auto sm:px-12'
                             >
                               Bid
                             </button>
                           ) : (
                             <button
                               disabled
-                              className='mt-4 rounded-lg bg-[#71605A] px-12 py-2 font-Poppins text-sm font-normal text-[#FCDFD4] transition delay-300 duration-300 ease-in-out hover:bg-[#71605A] hover:text-white hover:transition-all'
+                              className='w-full rounded-lg bg-[#71605A] px-8 py-3 font-Poppins text-sm font-normal text-[#FCDFD4] sm:w-auto sm:px-12'
                             >
                               Bidded
                             </button>
@@ -1556,57 +858,49 @@ const Page = ({ params }: any) => {
         )}
       </section>
 
-      <section
-        className=''
-        style={{
-          margin: '0 auto',
-          width: '80%'
-        }}
-      >
+      <section className='mx-auto w-[92%] sm:w-[90%] lg:w-[80%]'>
         {productdatanew?.data?.description && (
-          <div className='container mb-12 mt-20 py-4'>
-            <div>
-              <h1 className='text-center font-Poppins  text-lg font-bold text-[#1B1B1A] md:text-start lg:text-start xl:text-start 2xl:text-start '>
-                Product Review
-              </h1>
-            </div>
+          <div className='mb-12 mt-12 py-4 sm:mt-20'>
+            <h1 className='font-Poppins text-lg font-bold text-[#1B1B1A] md:text-start'>
+              Product Review
+            </h1>
 
-            <div className='mt-8 flex flex-col items-center gap-12 md:flex-row lg:flex-row xl:flex-row 2xl:flex-row'>
-              <div className=' w-auto md:w-1/2 lg:w-1/2 xl:w-1/2 2xl:w-1/2'>
-                <h1 className='font-Poppins font-normal leading-[29px] text-[#363636]'>
+            <div className='mt-6 flex flex-col gap-6 md:mt-8 md:flex-row md:gap-12'>
+              <div className='w-full md:w-1/2'>
+                <p className='font-Poppins text-sm leading-7 text-[#363636] sm:text-base'>
                   {productdatanew?.data?.description}
-                </h1>
+                </p>
               </div>
 
-              <div className='flex flex-wrap sm:flex-nowrap '>
-                <div className='relative mt-6 '>
+              <div className='grid grid-cols-2 gap-3 sm:gap-4'>
+                <div className='overflow-hidden rounded-lg'>
                   <Image
                     src={
                       productdatanew?.data?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
-                        : `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdatanew.data.images[0].image}`
+                        : `https://staging.ajiroba.ng/media/${productdatanew?.data?.images?.[1]?.image}`
                     }
                     alt='Product Image'
                     width={400}
                     height={400}
-                    sizes='(max-width: 768px) 50vw, 280px'
+                    sizes='(max-width: 768px) 45vw, 280px'
                     quality={90}
-                    className='object-cover w-full h-auto'
+                    className='object-cover w-full h-auto rounded-lg'
                   />
                 </div>
-                <div className='relative mt-4 opacity-35 sm:ml-4 sm:mt-0'>
+                <div className='overflow-hidden rounded-lg opacity-35'>
                   <Image
                     src={
                       productdatanew?.data?.images?.[1]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdatanew?.data.images[1].image}`
-                        : `https://staging.ajiroba.ng/media/${productdatanew?.data.images[0].image}`
+                        ? `https://staging.ajiroba.ng/media/${productdatanew.data.images[1].image}`
+                        : `https://staging.ajiroba.ng/media/${productdatanew?.data?.images?.[0]?.image}`
                     }
                     alt='Product Image'
                     width={400}
                     height={400}
-                    sizes='(max-width: 768px) 50vw, 280px'
+                    sizes='(max-width: 768px) 45vw, 280px'
                     quality={90}
-                    className='object-cover w-full h-auto'
+                    className='object-cover w-full h-auto rounded-lg'
                   />
                 </div>
               </div>
@@ -1615,194 +909,110 @@ const Page = ({ params }: any) => {
         )}
       </section>
 
-      <section
-        className=''
-        style={{
-          margin: '0 auto',
-          width: '80%'
-        }}
-      >
-        {productdata?.data?.reviews && (
-          <div className='container mb-12 mt-20 py-4'>
-            <div>
-              <h1 className='text-center font-Poppins  text-lg font-bold text-[#1B1B1A] md:text-start lg:text-start xl:text-start 2xl:text-start '>
-                Product Review
-              </h1>
-            </div>
-
-            <div className='mt-8 flex flex-col items-center gap-12 md:flex-row lg:flex-row xl:flex-row 2xl:flex-row'>
-              <div className=' w-1/2'>
-                <h1 className='font-Poppins font-normal leading-[29px] text-[#363636]'>
-                  {productdata?.data?.description}
-                </h1>
-              </div>
-
-              <div className='flex flex-wrap sm:flex-nowrap '>
-                <div className='relative mt-6 '>
-                  <Image
-                    src={
-                      productdata?.data?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
-                        : ''
-                    }
-                    alt='Product Image'
-                    width={400}
-                    height={400}
-                    sizes='(max-width: 768px) 50vw, 280px'
-                    quality={90}
-                    className='object-cover w-full h-auto'
-                  />
-                </div>
-                <div className='relative mt-4 opacity-35 sm:ml-4 sm:mt-0'>
-                  <Image
-                    src={
-                      productdata?.data?.images?.[1]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[1].image}`
-                        : ''
-                    }
-                    alt='Product Image'
-                    width={400}
-                    height={400}
-                    sizes='(max-width: 768px) 50vw, 280px'
-                    quality={90}
-                    className='object-cover w-full h-auto'
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+      <section className='mx-auto w-[92%] sm:w-[90%] lg:w-[80%]'>
+        {productdatanew?.data?.reviews && <CustomerReview data={productdatanew} />}
       </section>
 
-      <section
-        className=''
-        style={{
-          margin: '0 auto',
-          width: '80%'
-        }}
-      >
-        {productdatanew?.data?.reviews && <CustomerReview data={productdata} />}
-      </section>
-
-      <section
-        className='container py-4  '
-        style={{
-          margin: '0 auto',
-          width: '80%'
-        }}
-      >
-        <div>
-          <h1 className='mb-12 mt-8 text-center font-Poppins text-lg font-medium text-[#353131] md:text-start lg:text-start xl:text-start 2xl:text-start'>
-            Other Related Products
-          </h1>
-        </div>
+      <section className='mx-auto w-[92%] sm:w-[90%] lg:w-[80%] py-4'>
+        <h1 className='mb-8 mt-6 font-Poppins text-lg font-medium text-[#353131] sm:mb-12 sm:mt-8 md:text-start'>
+          Other Related Products
+        </h1>
 
         {productdatanew?.data?.related_products && (
-          <RelatedAuctionDetails
-            cardInfo={productdatanew?.data?.related_products}
-          />
+          <RelatedAuctionDetails cardInfo={productdatanew.data.related_products} />
         )}
       </section>
-      {/*           {productdatafetching && <Loading />} */}
       {loadingdata && <Loading />}
 
+      {/* Make Payment Modal */}
       <ModalComponent
         content={
-          <div className='  px-6 py-4'>
+          <div className='px-3 py-3 sm:px-6 sm:py-4'>
             <div className='flex flex-col items-center justify-center'>
-              <h1 className='text-center text-lg font-bold'>Make Payment</h1>
-              <p className='text-center text-sm font-normal'>
+              <h1 className='text-center font-Poppins text-base font-bold sm:text-lg'>Make Payment</h1>
+              <p className='text-center font-Poppins text-xs text-gray-500 sm:text-sm'>
                 Kindly select your payment option
               </p>
             </div>
 
-            <div className='mt-4 rounded border border-[#D2D2D2] bg-[#F6F6F6] px-4 py-4 shadow-lg'>
-              <div>
-                <p className='mb-4 text-base text-[#111111]  '>
-                  Payment Method
-                </p>
-              </div>
+            <div className='mt-4 rounded-lg border border-gray-200 bg-[#FAFAFA] px-3 py-3 sm:px-4 sm:py-4'>
+              <p className='mb-3 font-Poppins text-sm font-medium text-[#111111] sm:mb-4 sm:text-base'>
+                Payment Method
+              </p>
 
-              <form action=''>
-                <div className='mb-4'>
+              <form>
+                <label
+                  htmlFor='wallet_balance'
+                  className='mb-3 flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors has-[:checked]:border-[#F25E26] has-[:checked]:bg-[#FFF8F5]'
+                >
+                  <input
+                    type='radio'
+                    id='wallet_balance'
+                    name='payment_method'
+                    value='wallet_balance'
+                    onChange={() => setPaymentMethod('wallet_balance')}
+                    className='mt-0.5 accent-[#F25E26]'
+                  />
                   <div>
-                    <input
-                      type='radio'
-                      id='wallet_balance'
-                      name='payment_method'
-                      value='wallet_balance'
-                      onChange={() => handlePaymentSelection('wallet_balance')}
-                      className='accent-[#F25E26]'
-                    />
-                    <label className='ml-2' htmlFor='wallet_balance'>
-                      Wallet
-                    </label>
-                  </div>
-                  <div className='ml-4'>
-                    <small className='text-sm text-[#A09F9F]'>
+                    <span className='font-Poppins text-sm font-medium'>Wallet</span>
+                    <p className='mt-0.5 font-Poppins text-xs text-gray-400'>
                       {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
-                    </small>
+                    </p>
                   </div>
-                </div>
+                </label>
 
-                <div>
+                <label
+                  htmlFor='wallet_point'
+                  className='flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors has-[:checked]:border-[#F25E26] has-[:checked]:bg-[#FFF8F5]'
+                >
+                  <input
+                    type='radio'
+                    id='wallet_point'
+                    name='payment_method'
+                    value='wallet_point'
+                    onChange={() => setPaymentMethod('wallet_point')}
+                    className='mt-0.5 accent-[#F25E26]'
+                  />
                   <div>
-                    <input
-                      type='radio'
-                      id='wallet_point'
-                      name='payment_method'
-                      value='wallet_point'
-                      onChange={() => handlePaymentSelection('wallet_point')}
-                      className='accent-[#F25E26]'
-                    />
-                    <label className='ml-2' htmlFor='wallet_point'>
-                      Pay With Wallet And Ajiroba Point
-                    </label>
+                    <span className='font-Poppins text-sm font-medium'>Wallet + Ajiroba Points</span>
+                    <p className='mt-0.5 font-Poppins text-xs text-gray-400'>
+                      {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}{' '}
+                      (Wallet) &amp; {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()}{' '}
+                      (Points)
+                    </p>
                   </div>
-                  <div className='ml-4'>
-                    <small className='text-sm text-[#A09F9F]'>
-                      {/*      ₦ */}
-                      {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
-                      (Wallet) And{' '}
-                      {userInfo?.data?.my_wallet[0]?.point?.toLocaleString()}{' '}
-                      (Ajiroba Points)
-                    </small>
-                  </div>
-                </div>
+                </label>
               </form>
             </div>
 
             <form
-              action=''
-              className='mb-4  mt-8 flex flex-col'
+              className='mt-5 flex flex-col sm:mt-8'
               onSubmit={handleSubmit(submitFormf)}
             >
-              <div className='flex flex-col'>
-                <InputAction
-                  label='Enter Pin'
-                  type='password'
-                  name='password'
-                  placeholder='****'
-                  register={register}
-                  errors={errors.password}
-                  HiEyeSlash={<FaRegEyeSlash />}
-                  HiEye={<FaRegEye />}
-                />
-                <div className='text-xs text-red-700'>
-                  {errors?.password?.message}
-                </div>
-
-                <button
-                  className={`mt-8 w-full rounded bg-[#FCDFD4] px-12 py-2 text-sm font-bold text-[#2A2A2A] ${
-                    !paymentMethod
-                      ? 'cursor-not-allowed opacity-50'
-                      : 'hover:bg-[#F25E26] hover:text-white'
-                  }`}
-                  disabled={!paymentMethod}
-                >
-                  {paymentstatus === 'pending' ? '...' : 'Pay'}
-                </button>
+              <InputAction
+                label='Enter Pin'
+                type='password'
+                name='password'
+                placeholder='****'
+                register={register}
+                errors={errors.password}
+                HiEyeSlash={<FaRegEyeSlash />}
+                HiEye={<FaRegEye />}
+              />
+              <div className='text-xs text-red-700'>
+                {errors?.password?.message}
               </div>
+
+              <button
+                className={`mt-5 w-full rounded-lg py-3 font-Poppins text-sm font-bold text-[#2A2A2A] transition-colors sm:mt-8 sm:text-base ${
+                  !paymentMethod
+                    ? 'cursor-not-allowed bg-gray-200 opacity-50'
+                    : 'bg-[#FCDFD4] hover:bg-[#F25E26] hover:text-white'
+                }`}
+                disabled={!paymentMethod}
+              >
+                {paymentstatus === 'pending' ? '...' : 'Pay'}
+              </button>
             </form>
           </div>
         }
@@ -1812,158 +1022,131 @@ const Page = ({ params }: any) => {
         handleCancel={() => setmakepayment(false)}
       />
 
+      {/* Wallet Pin Modal */}
       <ModalComponent
         content={
-          <div className='flex flex-col justify-center'>
+          <div className='flex flex-col px-3 py-3 sm:px-6 sm:py-4'>
             <div className='flex flex-col items-center justify-center'>
-              <p className='font-Poppins text-xl font-bold text-[#2A2A2A]'>
+              <p className='font-Poppins text-base font-bold text-[#2A2A2A] sm:text-xl'>
                 Wallet Pin
               </p>
-              <small className='font-Poppins text-lg text-[#504D4D]'>
+              <small className='font-Poppins text-sm text-[#504D4D] sm:text-lg'>
                 Kindly enter your wallet pin
               </small>
             </div>
 
             <form
-              action=''
-              className='mb-4 mt-8 flex flex-col items-center justify-center'
+              className='mt-5 flex flex-col sm:mt-8'
               onSubmit={handleSubmit(submitForm)}
             >
-              <div className='flex flex-col'>
-                <Input
-                  label='Enter Pin'
-                  type='password'
-                  name='password'
-                  placeholder='****'
-                  register={register}
-                  errors={errors.password}
-                  HiEyeSlash={<FaRegEyeSlash />}
-                  HiEye={<FaRegEye />}
-                />
-                <div className='text-xs text-red-700'>
-                  {errors?.password?.message}
-                </div>
-
-                <button
-                  className={`' } mt-8 w-full rounded bg-[#FCDFD4] px-12 py-2 text-sm font-bold
-                                    text-[#2A2A2A]`}
-                >
-                  {verifystatus === 'pending' ? '...' : 'Pay'}
-                </button>
+              <Input
+                label='Enter Pin'
+                type='password'
+                name='password'
+                placeholder='****'
+                register={register}
+                errors={errors.password}
+                HiEyeSlash={<FaRegEyeSlash />}
+                HiEye={<FaRegEye />}
+              />
+              <div className='text-xs text-red-700'>
+                {errors?.password?.message}
               </div>
+
+              <button
+                className='mt-5 w-full rounded-lg bg-[#FCDFD4] py-3 font-Poppins text-sm font-bold text-[#2A2A2A] transition-colors hover:bg-[#F25E26] hover:text-white sm:mt-8 sm:text-base'
+              >
+                {verifystatus === 'pending' ? '...' : 'Pay'}
+              </button>
             </form>
           </div>
         }
         isModalOpen={confirmordermodal}
-        showModal={showConfirmOrder}
+        showModal={() => setConfirmOrder(true)}
         handleOk={() => {}}
-        handleCancel={handlecloseOrder}
+        handleCancel={() => setConfirmOrder(false)}
       />
 
+      {/* Bid Modal */}
       <ModalComponent
         content={
-          <div className='flex flex-col  px-6 py-4'>
+          <div className='flex flex-col px-3 py-3 sm:px-6 sm:py-4'>
             <AjirobaLogo />
 
-            <div
-              onClick={() => setbidopen(false)}
-              className='mb-4 cursor-pointer self-start font-Poppins text-red-500'
-            >
-              Back
+            <div className='flex items-center justify-between py-2'>
+              <div
+                onClick={() => setbidopen(false)}
+                className='cursor-pointer font-Poppins text-sm text-red-500'
+              >
+                Back
+              </div>
+              <span className='rounded-full bg-[#FFF3EE] px-3 py-1 font-Poppins text-xs font-medium text-[#F25E26]'>
+                Raffle Draw
+              </span>
             </div>
 
-            <div className='flex flex-wrap justify-between py-2'>
-              {/* {console.log(bidData, 'bidData')} */}
-              <div>
-                <div className='mb-4  flex space-x-2 text-sm text-gray-700'>
-                  <span className='font-Poppins'>{bidData?.category}</span>
-                  <span>|</span>
-                  <span className='font-Poppins font-medium'>
-                    {bidData?.name}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <span className='font-Poppins font-medium'>Raffle Draw</span>
-              </div>
+            <div className='mb-3 flex items-center space-x-2 text-xs text-gray-500 sm:text-sm'>
+              <span className='font-Poppins'>{bidData?.category}</span>
+              <span>|</span>
+              <span className='font-Poppins font-medium'>{bidData?.name}</span>
             </div>
 
-            <div className='flex w-full flex-col items-start justify-between gap-4 lg:flex-row'>
-              <div className='mb-4 flex w-full justify-center lg:mb-0 lg:w-1/2'>
-                <div className='relative flex h-60 w-48 items-center justify-center rounded-md'>
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${bidData?.images[0] || ''}`}
-                    alt={bidData?.name || 'Product Image'}
-                    fill
-                    className='rounded-md object-cover'
-                  />
-
-                  <div className='absolute inset-0 rounded-md bg-black opacity-50'></div>
-
-                  <div className='absolute inset-0 z-10 flex flex-col items-center justify-center text-white'>
-                    <div className='rounded-lg bg-orange-500 p-3 text-center'>
-                      <span className='block text-sm'>Raffle Ticket</span>
-                      <span className='text-sm font-bold'>₦ {ticketPrice}</span>
-                    </div>
+            <div className='flex flex-col gap-4 sm:flex-row sm:items-start'>
+              <div className='relative mx-auto flex h-40 w-32 flex-shrink-0 items-center justify-center rounded-lg sm:mx-0 sm:h-52 sm:w-40'>
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${bidData?.images[0] || ''}`}
+                  alt={bidData?.name || 'Product Image'}
+                  fill
+                  className='rounded-lg object-cover'
+                  sizes='(max-width: 640px) 128px, 160px'
+                />
+                <div className='absolute inset-0 rounded-lg bg-black/40' />
+                <div className='absolute inset-0 z-10 flex flex-col items-center justify-center text-white'>
+                  <div className='rounded-lg bg-[#F25E26] px-4 py-2 text-center'>
+                    <span className='block text-[10px] sm:text-xs'>Raffle Ticket</span>
+                    <span className='text-sm font-bold sm:text-base'>₦ {ticketPrice}</span>
                   </div>
                 </div>
               </div>
 
-              <div className='flex w-full flex-col space-y-4 lg:w-1/2'>
+              <div className='flex w-full flex-col gap-3'>
                 <div>
-                  <label className='font-Poppins text-gray-700'>Product</label>
+                  <label className='font-Poppins text-xs text-gray-500 sm:text-sm'>Product</label>
                   <input
                     type='text'
-                    value={bidData?.name}
+                    value={bidData?.name || ''}
                     readOnly
-                    className='mt-1 w-full rounded border border-gray-300 p-2 font-Poppins'
+                    className='mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-Poppins text-sm'
                   />
                 </div>
 
-                <div className='flex flex-col items-center justify-between gap-8 space-y-4 sm:flex-row sm:space-y-0'>
-                  <div className='flex w-full flex-col items-center sm:w-1/2'>
-                    <label className='mb-4 font-Poppins text-gray-700'>
-                      Ticket Price (₦)
+                <div className='flex items-end justify-between gap-3'>
+                  <div className='flex flex-col'>
+                    <label className='font-Poppins text-xs text-gray-500 sm:text-sm'>
+                      Ticket Price
                     </label>
-                    <div className='flex items-center'>
-                      {/*  <button
-                            className="px-2 py-1 bg-gray-200 rounded"
-
-                            disabled={ticketCount <= 1}
-                          >
-                            -
-                          </button> */}
-                      <span className='mx-4 text-sm font-bold'>
-                        {' '}
-                        {formatCurrency(ticketPrice)}
-                      </span>
-                      {/*   <button
-                            className="px-2 py-1 bg-gray-200 rounded"
-
-                          >
-                            +
-                          </button> */}
-                    </div>
+                    <span className='mt-1 font-Poppins text-sm font-bold text-[#1B1B1A] sm:text-base'>
+                      {formatCurrency(ticketPrice)}
+                    </span>
                   </div>
 
-                  <div className='flex w-full flex-col items-center sm:w-1/2'>
-                    <label className='mb-4 font-Poppins text-gray-700'>
-                      No of Ticket
+                  <div className='flex flex-col items-center'>
+                    <label className='font-Poppins text-xs text-gray-500 sm:text-sm'>
+                      Quantity
                     </label>
-                    <div className='flex items-center'>
+                    <div className='mt-1 flex items-center gap-2'>
                       <button
-                        className='rounded bg-gray-200 px-2 py-1'
+                        className='flex h-7 w-7 items-center justify-center rounded-md bg-gray-200 text-sm font-bold transition-colors hover:bg-gray-300 disabled:opacity-40 sm:h-8 sm:w-8'
                         onClick={handleDecrease}
                         disabled={ticketCount <= 1}
                       >
                         -
                       </button>
-                      <span className='mx-4 text-sm font-bold'>
+                      <span className='w-8 text-center font-Poppins text-sm font-bold'>
                         {ticketCount}
                       </span>
                       <button
-                        className='rounded bg-orange-500 px-2 py-1 text-white'
+                        className='flex h-7 w-7 items-center justify-center rounded-md bg-[#F25E26] text-sm font-bold text-white transition-colors hover:bg-[#d94f1e] sm:h-8 sm:w-8'
                         onClick={handleIncrease}
                       >
                         +
@@ -1972,28 +1155,15 @@ const Page = ({ params }: any) => {
                   </div>
                 </div>
 
-                <div className='flex justify-end'>
-                  {/*  <button
-                        onClick={() => {
-                          return (
-                            setbidopen(!bidopen), setViewTicket(!viewticket)
-                          );
-                        }}
-                        className="text-orange-500 font-Poppins text-xs mt-1"
-                      >
-                        View Ticket
-                      </button> */}
-                </div>
-
                 <div>
-                  <label className='font-Poppins text-gray-700'>
-                    Amount (₦)
+                  <label className='font-Poppins text-xs text-gray-500 sm:text-sm'>
+                    Total Amount
                   </label>
                   <input
                     type='text'
                     value={formatCurrency(totalAmount)}
                     readOnly
-                    className='mt-1 w-full rounded border border-gray-300 p-2 font-Poppins font-bold'
+                    className='mt-1 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-Poppins text-sm font-bold sm:text-base'
                   />
                 </div>
 
@@ -2001,9 +1171,10 @@ const Page = ({ params }: any) => {
                   text='Proceed'
                   type='submit'
                   handleClick={() => {
-                    return (setmakepayment(!makepayment), setbidopen(!bidopen))
+                    setmakepayment(true)
+                    setbidopen(false)
                   }}
-                  className='my-10 w-full rounded-lg bg-[#FCDFD4] p-3 hover:bg-[#F25E26] hover:text-white'
+                  className='mt-2 w-full rounded-lg bg-[#FCDFD4] py-3 font-Poppins text-sm font-bold text-[#2A2A2A] transition-colors hover:bg-[#F25E26] hover:text-white sm:text-base'
                 />
               </div>
             </div>
@@ -2015,141 +1186,34 @@ const Page = ({ params }: any) => {
         handleCancel={() => setbidopen(false)}
       />
 
+      {/* Success Bid Modal */}
       <ModalComponent
         content={
-          <div className='  px-6 py-4'>
-            <div className='flex flex-col items-center justify-center'>
-              <h1 className='text-center text-lg font-bold'>Make Payment</h1>
-              <p className='text-center text-sm font-normal'>
-                Kindly select your payment option
-              </p>
-            </div>
-
-            <div className='mt-4 rounded border border-[#D2D2D2] bg-[#F6F6F6] px-4 py-4 shadow-lg'>
-              <div>
-                <p className='mb-4 text-base text-[#111111]  '>
-                  Payment Method
-                </p>
-              </div>
-
-              <form action=''>
-                <div className='mb-4'>
-                  <div>
-                    <input
-                      type='radio'
-                      id='wallet_balance'
-                      name='payment_method'
-                      value='wallet_balance'
-                      onChange={() => handlePaymentSelection('wallet_balance')}
-                      className='accent-[#F25E26]'
-                    />
-                    <label className='ml-2' htmlFor='wallet_balance'>
-                      Wallet
-                    </label>
-                  </div>
-                  <div className='ml-4'>
-                    <small className='text-sm text-[#A09F9F]'>
-                      {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}
-                    </small>
-                  </div>
-                </div>
-
-                <div>
-                  <div>
-                    <input
-                      type='radio'
-                      id='wallet_point'
-                      name='payment_method'
-                      value='wallet_point'
-                      onChange={() => handlePaymentSelection('wallet_point')}
-                      className='accent-[#F25E26]'
-                    />
-                    <label className='ml-2' htmlFor='wallet_point'>
-                      Pay With Wallet And Ajiroba Point
-                    </label>
-                  </div>
-                  <div className='ml-4'>
-                    <small className='text-sm text-[#A09F9F]'>
-                      {formatCurrency(userInfo?.data?.my_wallet[0]?.balance)}{' '}
-                      (Wallet) And{' '}
-                      {formatCurrency(userInfo?.data?.my_wallet[0]?.point)}{' '}
-                      (Ajiroba Points)
-                    </small>
-                  </div>
-                </div>
-              </form>
-            </div>
-
-            <form
-              action=''
-              className='mb-4  mt-8 flex flex-col'
-              onSubmit={handleSubmit(submitFormf)}
-            >
-              <div className='flex flex-col'>
-                <InputAction
-                  label='Enter Pin'
-                  type='password'
-                  name='password'
-                  placeholder='****'
-                  register={register}
-                  errors={errors.password}
-                  HiEyeSlash={<FaRegEyeSlash />}
-                  HiEye={<FaRegEye />}
-                />
-                <div className='text-xs text-red-700'>
-                  {errors?.password?.message}
-                </div>
-
-                <button
-                  className={`mt-8 w-full rounded bg-[#FCDFD4] px-12 py-2 text-sm font-bold text-[#2A2A2A] ${
-                    !paymentMethod
-                      ? 'cursor-not-allowed opacity-50'
-                      : 'hover:bg-[#F25E26] hover:text-white'
-                  }`}
-                  disabled={!paymentMethod}
-                >
-                  {paymentstatus === 'pending' ? '...' : 'Pay'}
-                </button>
-              </div>
-            </form>
-          </div>
-        }
-        isModalOpen={makepayment}
-        showModal={() => setmakepayment(!makepayment)}
-        handleOk={() => setmakepayment(false)}
-        handleCancel={() => setmakepayment(false)}
-      />
-
-      <ModalComponent
-        content={
-          <div className='  px-6 py-4'>
+          <div className='px-3 py-4 sm:px-6'>
             <div className='flex items-center justify-center py-2'>
               <Image src={verify} width={60} height={60} alt='icon' />
             </div>
             <div className='flex flex-col items-center justify-center'>
-              <h1 className='text-center text-lg font-bold'>Successful</h1>
-              <p className='text-center text-sm font-normal'>
+              <h1 className='text-center font-Poppins text-base font-bold sm:text-lg'>Successful</h1>
+              <p className='mt-1 text-center font-Poppins text-xs text-gray-500 sm:text-sm'>
                 You have entered into raffle draw for this product. Good luck
               </p>
             </div>
 
-            <div className='flex flex-col items-center justify-center'>
+            <div className='mt-4 flex flex-col items-center gap-3'>
               <DefaultButton
                 text='Proceed'
-                /*  text={status === 'pending' ? 'loading...' : "Save"} */
-                className='mb-4 mt-4 rounded-md bg-[#F25E26] p-2 px-4 text-white'
+                className='w-full rounded-lg bg-[#F25E26] py-3 font-Poppins text-sm font-bold text-white transition-colors hover:bg-[#d94f1e] sm:w-auto sm:px-10'
                 type='submit'
-                handleClick={() => setSuccessbid(!successbid)}
+                handleClick={() => setSuccessbid(false)}
               />
               <button
                 onClick={() => {
-                  return (
-                    setbidopen(false),
-                    setViewTicket(!viewticket),
-                    setSuccessbid(!successbid)
-                  )
+                  setbidopen(false)
+                  setViewTicket(true)
+                  setSuccessbid(false)
                 }}
-                className='mt-1 font-Poppins text-xs text-orange-500'
+                className='font-Poppins text-xs text-[#F25E26] transition-colors hover:text-[#d94f1e]'
               >
                 View Ticket
               </button>
@@ -2162,172 +1226,108 @@ const Page = ({ params }: any) => {
         handleCancel={() => setSuccessbid(false)}
       />
 
+      {/* View Ticket Modal */}
       <ModalComponent
         content={
-          <div className='flex flex-col px-6 py-4'>
+          <div className='flex flex-col px-3 py-3 sm:px-6 sm:py-4'>
             <AjirobaLogo />
 
-            <div className='flex flex-wrap justify-between py-2'>
-              {/*   <div>
-                    <div className="flex  space-x-2 text-gray-700 text-sm mb-4">
-                      <span className="font-Poppins">{ticketData?.data?.category}</span>
-
-                      <span>|</span>
-                      <span className="font-Poppins font-medium">{ticketData?.data?.subcategory}</span>
-                    </div>
-                  </div> */}
-
+            <div className='flex items-center justify-between py-2'>
               <div
-                onClick={() => setbidopen(false)}
-                className=' mb-4 cursor-pointer font-Poppins text-red-500'
+                onClick={() => setViewTicket(false)}
+                className='cursor-pointer font-Poppins text-sm text-red-500'
               >
                 Back
               </div>
+              <div className='flex space-x-2 text-xs text-gray-700 sm:text-sm'>
+                <span className='font-Poppins'>
+                  {ticketData?.data?.category}
+                </span>
+                <span>|</span>
+                <span className='font-Poppins font-medium'>
+                  {ticketData?.data?.subcategory}
+                </span>
+              </div>
+            </div>
 
-              <div>
-                <div>
-                  <div className='mb-4  flex space-x-2 text-sm text-gray-700'>
-                    <span className='font-Poppins'>
-                      {ticketData?.data?.category}
-                    </span>
-
-                    <span>|</span>
-                    <span className='font-Poppins font-medium'>
-                      {ticketData?.data?.subcategory}
-                    </span>
-                  </div>
+            <div className='my-4 rounded-lg border border-gray-100 bg-[#FAFAFA] p-3 sm:my-8 sm:border-0 sm:bg-transparent sm:p-0'>
+              <div className='flex items-center justify-between gap-2 sm:justify-around'>
+                <div className='flex flex-col items-center'>
+                  <span className='font-Poppins text-[10px] text-gray-500 sm:text-xs'>Ticket Price</span>
+                  <span className='mt-1 font-Poppins text-sm font-bold text-[#1B1B1A] sm:text-base'>
+                    {formatCurrency(ticketData?.data?.ticket_price)}
+                  </span>
+                </div>
+                <div className='h-8 w-px bg-gray-200 sm:hidden' />
+                <div className='flex flex-col items-center'>
+                  <span className='font-Poppins text-[10px] text-gray-500 sm:text-xs'>Qty</span>
+                  <span className='mt-1 font-Poppins text-sm font-bold text-[#1B1B1A] sm:text-base'>
+                    {ticketData?.data?.ticket_quantity ?? 0}
+                  </span>
+                </div>
+                <div className='h-8 w-px bg-gray-200 sm:hidden' />
+                <div className='flex flex-col items-center'>
+                  <span className='font-Poppins text-[10px] text-gray-500 sm:text-xs'>Total</span>
+                  <span className='mt-1 font-Poppins text-sm font-bold text-[#F25E26] sm:text-base'>
+                    {formatCurrency(ticketData?.data?.total_amount)}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Ticket Info Row */}
-            <div className='my-8 flex flex-row items-center justify-between gap-8'>
-              {/* Ticket Price */}
-              <div className='flex flex-col items-center'>
-                <label className='mb-2 font-Poppins text-gray-700'>
-                  Ticket Price (₦)
-                </label>
-                <div className='flex items-center'>
-                  <button className='rounded bg-gray-200 px-2 py-1' disabled>
-                    -
-                  </button>
-                  <input
-                    type='text'
-                    value={formatCurrency(ticketData?.data?.ticket_price)}
-                    readOnly
-                    className='mx-4 w-20 rounded border border-gray-300 bg-gray-100 text-center text-sm font-bold'
-                  />
-                  <button className='rounded bg-gray-200 px-2 py-1' disabled>
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* No of Ticket */}
-              <div className='flex flex-col items-center'>
-                <label className='mb-2 font-Poppins text-gray-700'>
-                  No of Ticket
-                </label>
-                <div className='flex items-center'>
-                  <button className='rounded bg-gray-200 px-2 py-1' disabled>
-                    -
-                  </button>
-                  <input
-                    type='text'
-                    value={ticketData?.data?.ticket_quantity ?? 0}
-                    readOnly
-                    className='mx-4 w-12 rounded border border-gray-300 bg-gray-100 text-center text-sm font-bold'
-                  />
-                  <button className='rounded bg-gray-200 px-2 py-1' disabled>
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* {
-                    console.log(ticketData?.data, 'ticketData?.data?.ticket_quantity')
-                  } */}
-
-              {/* Amount */}
-              <div className='flex flex-col items-center'>
-                <label className='mb-2 font-Poppins text-gray-700'>
-                  Amount (₦)
-                </label>
-                <input
-                  type='text'
-                  value={formatCurrency(ticketData?.data?.total_amount)}
-                  readOnly
-                  className='w-24 rounded border border-gray-400 bg-gray-300 text-center text-sm font-bold'
-                  style={{ color: '#888' }}
-                />
-              </div>
-            </div>
-
-            {/*  <div className="flex flex-col justify-center items-center">
-                  <h1 className="text-center font-bold text-lg">
-                    Raffle Drawww
-                  </h1>
-                </div> */}
-
-            <div className='mt-6'>
-              <table className='w-full border-collapse border border-gray-300'>
+            <div className='overflow-x-auto'>
+              <table className='w-full border-collapse border border-gray-300 text-xs sm:text-sm'>
                 <thead>
                   <tr className='bg-[#FCDFD4] text-left'>
-                    <th className='border border-gray-300 p-3 font-Poppins text-sm font-medium text-[#121212]'>
+                    <th className='border border-gray-300 px-2 py-2.5 sm:p-3 font-Poppins font-medium text-[#121212]'>
                       S/N
                     </th>
-                    <th className='border border-gray-300 p-3 font-Poppins text-sm font-medium text-[#121212]'>
+                    <th className='border border-gray-300 px-2 py-2.5 sm:p-3 font-Poppins font-medium text-[#121212]'>
                       Ticket Type
                     </th>
-                    <th className='border border-gray-300 p-3 font-Poppins text-sm font-medium text-[#121212]'>
+                    <th className='border border-gray-300 px-2 py-2.5 sm:p-3 font-Poppins font-medium text-[#121212]'>
                       Ticket Number
                     </th>
                   </tr>
                 </thead>
-                <tbody className='mt-8'>
-                  {
-                    // Sample data when ticketData is not available
+                <tbody>
+                  {(
+                    ticketData?.data?.ticket_details || [
+                      { ticket_type: 'Regular', ticket_number: 'RT-001' },
+                      { ticket_type: 'VIP', ticket_number: 'VT-002' },
+                      { ticket_type: 'Regular', ticket_number: 'RT-003' }
+                    ]
+                  ).map(
                     (
-                      ticketData?.data?.ticket_details || [
-                        { ticket_type: 'Regular', ticket_number: 'RT-001' },
-                        { ticket_type: 'VIP', ticket_number: 'VT-002' },
-                        { ticket_type: 'Regular', ticket_number: 'RT-003' }
-                      ]
-                    ).map(
-                      (
-                        item: { ticket_type: string; ticket_number: string },
-                        index: number
-                      ) => {
-                        return (
-                          <tr key={index + 1}>
-                            <td className='border border-gray-300 p-3  font-Poppins text-sm font-medium text-[#121212]'>
-                              {index + 1}
-                            </td>
-                            <td className='border border-gray-300 p-3  font-Poppins text-sm font-medium text-[#121212]'>
-                              {item?.ticket_type}
-                            </td>
-                            <td
-                              className='cursor-pointer border border-gray-300 p-3 font-Poppins text-sm font-medium text-[#121212] underline'
-                              onClick={() => {
-                                setSelectedTicket({
-                                  ...item,
-                                  ticket_price: ticketData?.data?.ticket_price,
-                                  purchase_date:
-                                    ticketData?.data?.purchase_date,
-                                  product: ticketData?.data?.product_name,
-                                  raffle_date: ticketData?.data?.raffle_date,
-                                  raffle_time: ticketData?.data?.raffle_time
-                                })
-                                setShowTicketModal(true)
-                              }}
-                            >
-                              {item?.ticket_number}
-                            </td>
-                          </tr>
-                        )
-                      }
+                      item: { ticket_type: string; ticket_number: string },
+                      index: number
+                    ) => (
+                      <tr key={index + 1} className='hover:bg-[#FFF8F5] transition-colors'>
+                        <td className='border border-gray-300 px-2 py-2.5 sm:p-3 font-Poppins font-medium text-[#121212]'>
+                          {index + 1}
+                        </td>
+                        <td className='border border-gray-300 px-2 py-2.5 sm:p-3 font-Poppins font-medium text-[#121212]'>
+                          {item?.ticket_type}
+                        </td>
+                        <td
+                          className='cursor-pointer border border-gray-300 px-2 py-2.5 sm:p-3 font-Poppins font-medium text-[#F25E26] underline'
+                          onClick={() => {
+                            setSelectedTicket({
+                              ...item,
+                              ticket_price: ticketData?.data?.ticket_price,
+                              purchase_date: ticketData?.data?.purchase_date,
+                              product: ticketData?.data?.product_name,
+                              raffle_date: ticketData?.data?.raffle_date,
+                              raffle_time: ticketData?.data?.raffle_time
+                            })
+                            setShowTicketModal(true)
+                          }}
+                        >
+                          {item?.ticket_number}
+                        </td>
+                      </tr>
                     )
-                  }
+                  )}
                 </tbody>
               </table>
             </div>
@@ -2359,9 +1359,7 @@ const Page = ({ params }: any) => {
         />
       )}
 
-      <div className=''>
-        <Footer />
-      </div>
+      <Footer />
     </main>
   )
 }

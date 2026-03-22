@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { CiMenuKebab } from "react-icons/ci";
-import Dropdown from "./Dropdown";
-import DropDownAuction from "./DropDownAuction";
 import { ModalProfile } from "./ModalProfile";
 import { DefaultButton } from "@/app/component/Button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import Cookies from "js-cookie";
@@ -63,12 +59,9 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
   // const userToken = token;
   const userToken_ = Cookies.get("token") as string;
 
-  const tkn_: string = Cookies.get("token") as string;
-
   const {
     data: auctioninfo,
     isLoading: auctionLoading,
-    error: ordererror,
   } = useGetOrderWinsData(
     "/api/auctionwins",
     "get_auctionwins_details",
@@ -77,7 +70,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
 
-  const { data: userInfo, isLoading: userLoading } = useGetDatanew(url, 'get_user_details', userToken_ || " ");
+  const { data: userInfo } = useGetDatanew(url, 'get_user_details', userToken_ || " ");
 
   //  console.log(userInfo?.data, 'userInfo')
 
@@ -98,18 +91,6 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
     return { ...item, tag: tag };
   });
-
-
-
-
-
-  // const openProducts = auctioninfo?.data?.data?.closed.map(
-  //   (item: { id: any }) => {
-  //     return { ...item, tag: ["closed", 'redeem items', 'Download winning Advice'] }; // Add tag as an array with "open" for consistency
-  //   },
-  // );
-
-
 
 
 
@@ -241,7 +222,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
       const data = await response.json();
       if (data.status === "success") {
         setAccountName(data.data.accountName);
-        // Map bank code to bank name from loaded banks
+        // Map bank code to bank name from loaded banks 
         const found = banks.find((b: any) => b.code === selectedBank);
         setValidatedBankName(found?.name || "");
         toast.success("Account details validated successfully");
@@ -484,11 +465,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     }
   };
 
-  const {
-    data: banksData,
-    isLoading: isBanksLoading,
-    error: banksError,
-  } = useGetBanksData(
+  const { data: banksData } = useGetBanksData(
     "/api/banks",
     "get_banks",
     userToken
@@ -511,24 +488,10 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     /*  resolver: yupResolver(ChangePass), */
   });
 
-  const {
-    reset: resetDeleteForm,
-    register: registerDeleteForm,
-    handleSubmit: handleSubmitDelete,
-    formState: { errors: deleteErrors },
-  } = useForm({
+  const { handleSubmit: handleSubmitDelete } = useForm({
     mode: "all",
     // resolver: yupResolver(/* your delete form schema */),
   });
-
-  const { isLoggedIn, user, token } = useAuthStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    user: state.user,
-    token: state.token,
-  }));
-
-
-  // const userToken = token;
 
   const handleSuccess = (data: any) => {
     Setreviewerror("");
@@ -629,20 +592,13 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     reset();
   };
 
-  const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+  const { status } = useMutateData(
     "review order",
     handleSuccess,
     handleError,
   );
 
-  const {
-    data: datad,
-    error: errord,
-    isError: isErrord,
-    isSuccess: isSussessd,
-    mutate: mutated,
-    status: statusd,
-  } = useMutateData("delete order", handleSuccess, handleError);
+  const { mutate: mutated } = useMutateData("delete order", handleSuccess, handleError);
 
   const submitFormdelete = async (data: any, event: any) => {
     event.preventDefault();
@@ -726,11 +682,10 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
-                    layout="fixed"
                     width={100}
                     height={80}
-                    objectFit="cover"
-                    className="rounded-lg"
+                    className="rounded-lg object-cover"
+                    style={{ width: '100px', height: 'auto' }}
                   />
                 </div>
 
@@ -1279,8 +1234,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                     disabled={isLoadingBanks}
                   >
                     <option value="">Select bank</option>
-                    {banks.map((bank: any) => (
-                      <option key={bank.code} value={bank.code}>
+                    {banks.map((bank: any, index: number) => (
+                      <option key={`${bank.code}-${index}`} value={bank.code}>
                         {bank.name}
                       </option>
                     ))}

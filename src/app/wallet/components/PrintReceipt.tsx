@@ -28,10 +28,6 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
 
 
 
-
-
-
-
   // const { token } = useAuthStore((state) => ({
   //   token: state.token
   // }));
@@ -424,91 +420,85 @@ export const PrintReceipt = ({ receipt, setreceipt }: any) => {
       {!download ? (
         <CustomModal isOpen={receipt}>
           {receipt && (
-            <div ref={modalRef} className="inset-0 flex items-center justify-center p-4 sm:p-6 bg-opacity-50 z-50">
-              <div className="flex flex-col items-center p-6 max-w-lg w-full shadow-lg rounded-lg">
-                <div className="flex">
-                  <h1 className="text-2xl font-semibold mb-6 text-center mt-2">Generate Statement</h1>
-                </div>
+            <div ref={modalRef}>
+              <h1 className="text-xl sm:text-2xl font-semibold text-center text-[#1B1B1A]">Generate Statement</h1>
+              <p className="text-center text-xs sm:text-sm text-gray-500 mt-1 mb-6">Select a date range and format to download your wallet statement.</p>
 
-                {/* Date Inputs */}
-                <div className="w-full mb-6">
-                  <h2 className="font-semibold mb-4">Set Duration</h2>
-                  <div className="flex flex-col sm:flex-row justify-between w-full gap-4">
-                    {/* Start Date */}
-                    <div className="flex flex-col w-full sm:w-1/2">
-                      <label className="mb-2 font-medium">Start Date</label>
-                      <div className="relative">
-                        <FaCalendarAlt className="absolute top-1/2 transform -translate-y-1/2 left-3 text-orange-500" />
-                        <input
-                          type="date"
-                          className="w-full border border-gray-300 rounded-md px-10 py-2 focus:outline-none"
-                          value={startDate}
-                          onChange={handleStartDateChange}
-                        />
-                      </div>
+              {/* Date Inputs */}
+              <div className="w-full mb-6">
+                <h2 className="font-semibold text-sm sm:text-base mb-3 text-[#1B1B1A]">Set Duration</h2>
+                <div className="flex flex-col sm:flex-row w-full gap-3 sm:gap-4">
+                  <div className="flex flex-col w-full sm:w-1/2">
+                    <label className="mb-1.5 text-sm font-medium text-[#555]">Start Date</label>
+                    <div className="relative">
+                      <FaCalendarAlt className="absolute top-1/2 -translate-y-1/2 left-3 text-[#F25E26] text-sm" />
+                      <input
+                        type="date"
+                        className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:border-[#F25E26] transition-colors"
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                      />
                     </div>
-
-                    {/* End Date */}
-                    <div className="flex flex-col w-full sm:w-1/2">
-                      <label className="mb-2 font-medium">End Date</label>
-                      <div className="relative">
-                        <FaCalendarAlt className="absolute top-1/2 transform -translate-y-1/2 left-3 text-orange-500" />
-                        <input
-                          type="date"
-                          className="w-full border border-gray-300 rounded-md px-10 py-2 focus:outline-none"
-                          value={endDate}
-                          onChange={handleEndDateChange}
-                        />
-                      </div>
+                  </div>
+                  <div className="flex flex-col w-full sm:w-1/2">
+                    <label className="mb-1.5 text-sm font-medium text-[#555]">End Date</label>
+                    <div className="relative">
+                      <FaCalendarAlt className="absolute top-1/2 -translate-y-1/2 left-3 text-[#F25E26] text-sm" />
+                      <input
+                        type="date"
+                        className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:border-[#F25E26] transition-colors"
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                      />
                     </div>
                   </div>
                 </div>
-
-                {/* File Format Selection */}
-                <div className="w-full mb-6">
-                  <h2 className="font-medium mb-4">Generate as:</h2>
-                  <div className="flex justify-center gap-6">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="format"
-                        value="pdf"
-                        checked={format === 'pdf'}
-                        onChange={handleFormatChange}
-                        className="mr-2 accent-[#f25e26]"
-                      />
-                      PDF
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="format"
-                        value="excel"
-                        checked={format === 'excel'}
-                        onChange={handleFormatChange}
-                        className="mr-2 accent-[#f25e26]"
-                      />
-                      Excel File
-                    </label>
-                  </div>
-                </div>
-
-                {/* Generate Button */}
-                <button
-                  className="px-8 text-sm font-normal rounded-lg bg-[#FCDFD4] py-2 transition delay-300 duration-300 ease-in-out hover:bg-[#E84526] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={handleGenerate}
-                  disabled={isGenerating || !startDate || !endDate}
-                >
-                  {isGenerating ? 'Generating...' : 'Generate'}
-                </button>
-
-                {/* Error Display */}
-                {error && (
-                  <div className="mt-4 text-red-500 text-sm text-center">
-                    Failed to fetch statement data. Please try again.
-                  </div>
-                )}
               </div>
+
+              {/* File Format Selection */}
+              <div className="w-full mb-6">
+                <h2 className="font-medium text-sm sm:text-base mb-3 text-[#1B1B1A]">Generate as:</h2>
+                <div className="flex gap-4 sm:gap-6 sm:justify-center">
+                  <label className="flex items-center gap-2 cursor-pointer rounded-lg border border-gray-200 px-4 py-2.5 sm:py-2 text-sm transition-colors has-[:checked]:border-[#F25E26] has-[:checked]:bg-[#FFF8F5]">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="pdf"
+                      checked={format === 'pdf'}
+                      onChange={handleFormatChange}
+                      className="accent-[#f25e26]"
+                    />
+                    PDF
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer rounded-lg border border-gray-200 px-4 py-2.5 sm:py-2 text-sm transition-colors has-[:checked]:border-[#F25E26] has-[:checked]:bg-[#FFF8F5]">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="excel"
+                      checked={format === 'excel'}
+                      onChange={handleFormatChange}
+                      className="accent-[#f25e26]"
+                    />
+                    Excel File
+                  </label>
+                </div>
+              </div>
+
+              {/* Generate Button */}
+              <button
+                className="w-full sm:w-auto sm:mx-auto sm:flex sm:px-12 justify-center rounded-lg bg-[#FCDFD4] px-8 py-3 sm:py-2 text-sm font-medium text-[#2A2A2A] transition-all duration-200 hover:bg-[#E84526] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleGenerate}
+                disabled={isGenerating || !startDate || !endDate}
+              >
+                {isGenerating ? 'Generating...' : 'Generate'}
+              </button>
+
+              {/* Error Display */}
+              {error && (
+                <div className="mt-4 text-red-500 text-sm text-center">
+                  Failed to fetch statement data. Please try again.
+                </div>
+              )}
             </div>
           )}
         </CustomModal>

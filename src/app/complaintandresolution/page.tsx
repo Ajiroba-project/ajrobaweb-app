@@ -119,7 +119,7 @@ const SelfHelpOption = ({ text, onClick }: {
               Back
             </p>
             <div className="text-center">
-              <HeadingText title="Live Chat" />
+              <HeadingText title="Complaints / Resolution" />
             </div>
           </div>
         </div>
@@ -155,13 +155,13 @@ const SelfHelpOption = ({ text, onClick }: {
 
           {/* Buttons */}
           <div className="flex justify-center md:justify-start flex-wrap space-x-4">
-             <button onClick={() => {
+             {/* <button onClick={() => {
                     router.push("/mainlivechat");
                   }}
             className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
           >
             Chat Now
-          </button>
+          </button> */}
                      <button onClick={() => router.back()}
             className=" mt-4 font-Poppins px-12 py-2 text-sm border border-[#E84526]  bg-[#ffffff] hover:[#FCDFD4] text-[#2A2A2A]  font-semibold rounded"
           >
@@ -323,14 +323,14 @@ const SelfHelpOption = ({ text, onClick }: {
           </div>
 
           <div className="flex justify-end">
-            <button
+            {/* <button
             onClick={() => {
                     router.push("/mainlivechat");
                   }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -410,14 +410,14 @@ const SelfHelpOption = ({ text, onClick }: {
           </div>
 
           <div className="flex justify-end">
-            <button
+            {/* <button
              onClick={() => {
                     router.push("/mainlivechat");
                   }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -496,14 +496,14 @@ const SelfHelpOption = ({ text, onClick }: {
           </div>
 
           <div className="flex justify-end">
-            <button
+            {/* <button
          onClick={() => {
                     router.push("/mainlivechat");
                   }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -584,14 +584,14 @@ const SelfHelpOption = ({ text, onClick }: {
           </div>
 
           <div className="flex justify-end">
-            <button
+            {/* <button
             onClick={() => {
                     router.push("/mainlivechat");
                   }}
               className=" mt-4 px-12 py-2 text-sm bg-[#FCDFD4] hover:[#FCDFD4] text-[#2A2A2A] font-semibold font-Poppins rounded"
             >
               Chat Now
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -670,7 +670,7 @@ If the problem persists, clear your browser cache or try using a different brows
             </div>
           </div>
 
-          <div className="flex justify-end">
+          {/* <div className="flex justify-end">
             <button
              onClick={() => {
                     router.push("/mainlivechat");
@@ -679,7 +679,7 @@ If the problem persists, clear your browser cache or try using a different brows
             >
               Chat Now
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <div></div>

@@ -217,12 +217,17 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
     const cookieToken = Cookies.get("token");
     const userToken = (token ?? cookieToken) ?? "";
     const isAuthenticated = Boolean(userToken) && Boolean(isLoggedIn);
-  
+
+    const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => {
-      if (!isAuthenticated) {
+      setHasMounted(true);
+    }, []);
+
+    useEffect(() => {
+      if (hasMounted && !isAuthenticated) {
         router.replace("/signin");
       }
-    }, [isAuthenticated, router]);
+    }, [hasMounted, isAuthenticated, router]);
   
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
   
@@ -677,6 +682,10 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
       }
     };
   
+    if (!hasMounted) {
+      return <p className="text-center text-gray-500 py-8">Loading...</p>;
+    }
+
     if (!isAuthenticated) {
       return null;
     }
@@ -717,11 +726,10 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
                     <Image
                       src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                       alt={val?.auction[0]?.name}
-                      layout="fixed"
                       width={100}
                       height={80}
-                      objectFit="cover"
-                      className="rounded-lg"
+                      className="rounded-lg object-cover"
+                      style={{ width: '100px', height: 'auto' }}
                     />
                   </div>
   
@@ -1183,8 +1191,8 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
                     disabled={isLoadingBanks}
                   >
                     <option value="">Select a bank</option>
-                    {banks.map((bank: any) => (
-                      <option key={bank.code} value={bank.code}>
+                    {banks.map((bank: any, index: number) => (
+                      <option key={`${bank.code}-${index}`} value={bank.code}>
                         {bank.name}
                       </option>
                     ))}

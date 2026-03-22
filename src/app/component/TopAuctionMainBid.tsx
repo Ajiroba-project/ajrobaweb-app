@@ -762,6 +762,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
                         <Image
                           src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                           fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           alt="human hair"
                           className="object-contain p-4"
                         />
@@ -861,6 +862,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
                         src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${bidData?.images[0] || ''}`}
                         alt={bidData?.name || "Product Image"}
                         fill
+                        sizes="(max-width: 640px) 80vw, 200px"
                         className="object-cover rounded-md"
                       />
 

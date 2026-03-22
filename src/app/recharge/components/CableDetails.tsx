@@ -236,65 +236,51 @@ export const CableDetails = () => {
           </div>
 
           <CustomModal isOpen={printreceipt}>
-            <section className="container flex flex-col ">
-              <div className="flex justify-between items-center">
-                <Image src={Brand} alt="brand-logo" />
-                <h2 className=" font-Poppins text-[#2A2A2A] font-normal   lg:text-xl md:text-xl leading-3 capitalize">
-                  {"Beneficiaries"}
-                </h2>
+            <section className='flex items-center justify-between gap-4'>
+              <div className='flex min-w-0 items-center gap-2 sm:gap-3'>
+                <Image src={Brand} alt='brand-logo' className='h-5 w-auto flex-shrink-0 sm:h-8' />
+                <h2 className='truncate font-Poppins text-sm font-semibold text-[#2A2A2A] sm:text-base'>Beneficiaries</h2>
               </div>
-              <p
-                className="brand1 py-4 cursor-pointer font-Poppins text-sm underline"
+              <button
+                className='flex-shrink-0 font-Poppins text-xs text-[#E84526] transition-colors hover:text-[#d94f1e] sm:text-sm'
                 onClick={() => setprintreceipt(false)}
               >
-                Back
-              </p>
+                Close
+              </button>
             </section>
 
-            <div className="p-6 bg-gray-100 min-h-screen">
-              <div className="space-y-4">
-                {transformedData && transformedData.length > 0 ? (
-                  transformedData.map((item: TransformedDataItem) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-center">
-                        {item.icon && (
-                          <Image
-                            src={item.icon}
-                            alt={item.type}
-                            width={40}
-                            className="w-10 h-10 rounded-full mr-4"
-                            height={40}
-                          />
-                        )}
-
-                        <div>
-                          <p className="text-gray-900 font-semibold">
-                            {item.number}
-                          </p>
-                          <p className="text-gray-500 text-sm">{item.type}</p>
+            <div className='mt-4 space-y-3'>
+              {transformedData && transformedData.length > 0 ? (
+                transformedData.map((item: TransformedDataItem) => (
+                  <div
+                    key={item.id}
+                    className='flex items-center justify-between rounded-xl border border-[#F0F0F0] bg-[#FAFAFA] px-3 py-3 transition-colors hover:bg-[#FFF8F5] sm:px-5 sm:py-4'
+                  >
+                    <div className='flex min-w-0 items-center gap-3'>
+                      {item.icon && (
+                        <div className='flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-1.5 sm:h-11 sm:w-11'>
+                          <Image src={item.icon} alt={item.type} width={44} height={44} className='h-full w-full object-contain' />
                         </div>
+                      )}
+                      <div className='min-w-0'>
+                        <p className='truncate font-Poppins text-sm font-medium text-[#2A2A2A] sm:text-base'>{item.number}</p>
+                        <p className='font-Poppins text-xs text-[#8C8C8C]'>{item.type}</p>
                       </div>
-
-                      <button
-                        onClick={() => handleUseClick(item.number, item.type)}
-                        className="px-4 py-2 bg-[#FCDFD4] text-[#2A2A2A] font-medium rounded-lg hover:bg-[#FCDFD4]"
-                      >
-                        Use
-                      </button>
                     </div>
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg">
-                    <div className="text-center">
-                      <p className="text-gray-500 text-lg font-medium mb-2">No Beneficiaries Available</p>
-                      <p className="text-gray-400 text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
-                    </div>
+                    <button
+                      onClick={() => handleUseClick(item.number, item.type)}
+                      className='ml-3 flex-shrink-0 rounded-lg bg-[#FCDFD4] px-4 py-2 font-Poppins text-xs font-medium text-[#2A2A2A] transition-colors hover:bg-[#F25E26] hover:text-white sm:px-5 sm:text-sm'
+                    >
+                      Use
+                    </button>
                   </div>
-                )}
-              </div>
+                ))
+              ) : (
+                <div className='flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E0E0E0] py-10'>
+                  <p className='font-Poppins text-sm font-medium text-[#8C8C8C] sm:text-base'>No Beneficiaries Available</p>
+                  <p className='mt-1 font-Poppins text-xs text-[#ABABAB] sm:text-sm'>You haven&apos;t saved any beneficiaries yet.</p>
+                </div>
+              )}
             </div>
           </CustomModal>
         </form>

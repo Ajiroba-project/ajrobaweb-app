@@ -97,23 +97,41 @@ const tkn_: string = Cookies.get('token') as string;
           </div>
           <div>
             <h3 className="capitalize text-[#6E6E6E]">Phone*</h3>
-            <p className="text-semibold capitalize">{userData?.phone}</p>
+            <p className="text-semibold capitalize">{userData?.phone || 'N/A'}</p>
           </div>
           <div>
             <h3 className="capitalize text-[#6E6E6E]">Address*</h3>
-            <p className="text-semibold capitalize">{userData?.address}</p>
+            <p className="text-semibold capitalize">{userData?.address || 'N/A'}</p>
           </div>
+
+          <div>
+            <h3 className="capitalize text-[#6E6E6E]">Gender*</h3>
+            <p className="text-semibold capitalize">{userData?.gender || 'N/A'}</p>
+          </div>
+
+
+          <div>
+            <h3 className="capitalize text-[#6E6E6E]">Date of Birth*</h3>
+            <p className="text-semibold capitalize">{userData?.date_of_birth || 'N/A'}</p>
+          </div>
+          
           <div>
             <h3 className="capitalize text-[#6E6E6E]">State</h3>
-            <p className="text-semibold capitalize">{userData?.state}</p>
+            <p className="text-semibold capitalize">{userData?.state || 'N/A'}</p>
           </div>
+
+          <div>
+            <h3 className="capitalize text-[#6E6E6E]">City</h3>
+            <p className="text-semibold capitalize">{userData?.city || 'N/A'}</p>
+          </div>
+
           <div>
             <h3 className="capitalize text-[#6E6E6E]">Local Government Area (LGA)</h3>
-            <p className="text-semibold capitalize">{userData?.lga}</p>
+            <p className="text-semibold capitalize">{userData?.lga || 'N/A'}</p>
           </div>
           <div>
             <h3 className="capitalize text-[#6E6E6E]">Residential Agency Number</h3>
-            <p className="text-semibold capitalize">{userData?.residential || userData?.residency}</p>
+            <p className="text-semibold capitalize">{userData?.residential || userData?.residency || 'N/A'}</p>
           </div>
         </div>
       ) : (

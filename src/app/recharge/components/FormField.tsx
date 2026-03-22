@@ -79,8 +79,7 @@ export const InputField = ({
           name={name}
           type={toggle ? 'text' : type}
           placeholder={placeholder}
-            placeholder-gray-500
-          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] border border-[#A09F9F]  text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : 'placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
           {...register(name, { required: true })}
           disabled={isdisabled}
           inputMode={inputMode}
@@ -94,7 +93,7 @@ export const InputField = ({
           <span
             onClick={handleTogglePasswordVisibility}
             className={`absolute right-3 top-[3.3rem] cursor-pointer  text-xl transition duration-200 ${
-              toggle ? 'text-blue-500' : 'text-gray-400'
+              toggle ? 'text-[#f25e26]' : 'text-gray-400'
             }`}
           >
             {toggle ? <FaRegEye /> : <FaRegEyeSlash />}
@@ -134,8 +133,7 @@ export const InputFieldRounded = ({
           name={name}
           type={toggle ? 'text' : type}
           placeholder={placeholder}
-            placeholder-gray-500
-          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] text-sm font-medium font-Poppins  text-[#111111]  xlw-[300px] h-12 w-auto rounded-lg border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : 'placeholder-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] xlw-[300px] h-12 w-auto rounded-lg border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
           {...register(name, { required: true })}
           disabled={isdisabled}
         />
@@ -144,7 +142,7 @@ export const InputFieldRounded = ({
           <span
             onClick={handleTogglePasswordVisibility}
             className={`absolute right-3 top-[3.3rem] cursor-pointer  text-xl transition duration-200 ${
-              toggle ? 'text-blue-500' : 'text-gray-400'
+              toggle ? 'text-[#f25e26]' : 'text-gray-400'
             }`}
           >
             {toggle ? <FaRegEye /> : <FaRegEyeSlash />}

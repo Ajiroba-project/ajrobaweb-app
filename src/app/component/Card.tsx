@@ -1055,9 +1055,9 @@ export const CategoryCard = () => {
                   <Image
                     src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
                     alt="product"
-                    layout="fill"
-                    className="fixed-size-image"
-                    objectFit="cover"
+                    fill
+                    className="fixed-size-image object-cover"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   // onError={handleImageError}
 
                   />

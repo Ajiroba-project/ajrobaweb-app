@@ -1,7 +1,14 @@
-img {
-    /*    max-width: none !important; */
-}
-
 .images-map {
     max-width: none !important;
+}
+
+/* Hide scrollbar on thumbnail strip while keeping scroll behavior */
+@media (max-width: 767px) {
+    .thumbnail-strip::-webkit-scrollbar {
+        display: none;
+    }
+    .thumbnail-strip {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 }

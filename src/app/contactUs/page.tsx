@@ -138,46 +138,53 @@ const ContactUsPage = () => {
   return (
     <Fragment>
       <Header />
-      <main className='container mt-[3rem] '>
+      <main className='mx-auto w-[92%] py-8 sm:w-[90%] sm:py-12 lg:w-[80%]'>
         <DefaultBreadCrumb paths={decodedPaths} />
-        <div className='flex flex-col items-center justify-center'>
-          <HeadingText title='Contact us' />
-          <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
+
+        <section className='py-6 sm:py-8'>
+          <div className='mb-4 sm:mb-8 sm:text-center'>
+            <HeadingText title='Contact us' />
+          </div>
+          <p className='font-Poppins text-sm leading-relaxed text-[#6E6E6E] sm:text-center sm:text-base lg:mx-auto lg:w-4/5'>
             Our customer support team is available during regular business hours
             to provide assistance and ensure your experience with us is smooth
             and enjoyable. We look forward to hearing from you
           </p>
-        </div>
+        </section>
 
-        <div className='m-[4rem] flex flex-col justify-between gap-4 pb-4 lg:flex-row'>
-          <div className='flex flex-col items-center gap-2'>
-            <Image src={call} alt='call' />
-            <p className='font-semibold'>Phone Number</p>
-            <p>+2347038809512</p>
+        <section className='py-6 sm:py-10'>
+          <div className='grid grid-cols-1 gap-5 sm:grid-cols-3 lg:mx-auto lg:w-4/5'>
+            <div className='flex flex-col items-center gap-2 rounded-xl bg-[#F6F6F6] p-6 text-center sm:p-8'>
+              <Image src={call} alt='call' />
+              <p className='font-Poppins font-semibold text-[#2A2A2A]'>Phone Number</p>
+              <p className='font-Poppins text-sm text-[#6E6E6E]'>+2347038809512</p>
+            </div>
+
+            <div className='flex flex-col items-center gap-2 rounded-xl bg-[#F6F6F6] p-6 text-center sm:p-8'>
+              <Image src={location} alt='location' />
+              <p className='font-Poppins font-semibold text-[#2A2A2A]'>Location</p>
+              <p className='font-Poppins text-sm text-[#6E6E6E]'>Head Office: 1 PraiseHill Estate, Arepo, Ogun State.</p>
+            </div>
+
+            <div className='flex flex-col items-center gap-2 rounded-xl bg-[#F6F6F6] p-6 text-center sm:p-8'>
+              <Image src={message} alt='message' />
+              <p className='font-Poppins font-semibold text-[#2A2A2A]'>Email Address</p>
+              <p className='font-Poppins text-sm text-[#6E6E6E]'>support@ajiroba.com</p>
+            </div>
           </div>
+        </section>
 
-          <div className='flex flex-col items-center gap-2'>
-            <Image src={location} alt='location' />
-            <p className='font-semibold'>Location</p>
-            <p>Head Office: 1 PraiseHill Estate, Arepo, Ogun State.</p>
+        <section className='py-6 sm:py-10'>
+          <div className='mb-4 sm:mb-8 sm:text-center'>
+            <HeadingText title='Send Us a Message' />
           </div>
-
-          <div className='flex flex-col items-center gap-2'>
-            <Image src={message} alt='message' />
-            <p className='font-semibold'>Email Address</p>
-            <p>support@ajiroba.com</p>
-          </div>
-        </div>
-
-        <div className='my-[5rem] flex flex-col items-center justify-center'>
-          <HeadingText title='Send Us a Message' />
-          <p className='py-2 text-center text-[#6E6E6E] lg:w-3/4'>
+          <p className='mb-6 font-Poppins text-sm leading-relaxed text-[#6E6E6E] sm:mb-8 sm:text-center sm:text-base lg:mx-auto lg:w-4/5'>
             Have a question, suggestion, or just want to say hello? {`We'd`}{' '}
             love to hear from you! Use the form below to send us a message, and
             our dedicated team will get back to you as soon as possible.
           </p>
           <form
-            className='my-[4rem] grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2 lg:grid-cols-2'
+            className='grid w-full grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:mx-auto lg:w-4/5'
             onSubmit={handleSubmit(sumbitForm)}
           >
             <div className='flex flex-col'>
@@ -221,9 +228,8 @@ const ContactUsPage = () => {
               <div className='text-xs text-red-700'>
                 {errors?.['phone']?.message}
               </div>
-
             </div>
-            <div>
+            <div className='flex flex-col'>
               <Input
                 name='subject'
                 placeholder='Subject'
@@ -238,11 +244,11 @@ const ContactUsPage = () => {
               </div>
             </div>
 
-            <div className='md:col-span-2 lg:col-span-2'>
+            <div className='md:col-span-2'>
               <textarea
                 placeholder='Message'
                 rows={3}
-                className='w-full resize-none border bg-[#F6F6F6] px-8 py-4 text-[#504D4D] focus:text-[#504D4D]'
+                className='w-full resize-none rounded-md border bg-[#F6F6F6] px-8 py-4 text-[#504D4D] focus:text-[#504D4D]'
                 {...register('message', { required: true })}
                 maxLength={1000}
               ></textarea>
@@ -250,7 +256,7 @@ const ContactUsPage = () => {
                 {errors?.['message']?.message}
               </div>
             </div>
-            <div className='flex justify-center md:justify-start lg:justify-start'>
+            <div className='md:col-span-2'>
               <DefaultButton
                 text={`${status === 'pending' ? 'Sending...' : 'Send Message'}`}
                 type='submit'
@@ -259,14 +265,13 @@ const ContactUsPage = () => {
               />
             </div>
           </form>
-        </div>
-        <div className='fixed bottom-20'>
+        </section>
+
+        <div className='fixed bottom-10'>
           <ChatBox isOpen={isOpen} />
         </div>
       </main>
-      <div className=''>
-        <Footer />
-      </div>
+      <Footer />
     </Fragment>
   )
 }

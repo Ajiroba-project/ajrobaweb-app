@@ -69,7 +69,11 @@ function Page() {
     setValue
   } = useForm({
     mode: 'all',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email_or_phone: '',
+      password: '',
+    }
   })
 
   const handleSuccess = (data: any) => {

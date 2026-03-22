@@ -273,7 +273,7 @@ const WrappedPage = () => {
   return (
     <>
       <div className="px-4 py-8 content-container">
-        <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
+        <nav className="flex justify-center py-4 md:block md:px-7 lg:px-14">
           <Link href={"/"}>
             <Image src={Brand} alt="brand-logo" />
           </Link>
@@ -284,7 +284,7 @@ const WrappedPage = () => {
           menu="Start using our e-commerce for all your needs, buy a ticket and start winning through a raffle draw"
         />
 
-        <div className=" flex justify-center items-center mb-20 px-4 ">
+        <div className="flex justify-center items-center mb-12 sm:mb-20">
           <form
             onSubmit={handleSubmit(sumbitForm)}
             className="w-full max-w-2xl"
@@ -483,11 +483,7 @@ const WrappedPage = () => {
                   render={({ field }) => (
                     <div>
                       <select
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12"
-                        style={{
-                          border: "1px solid #D9D9D9",
-                          borderRadius: "0.25rem",
-                        }}
+                        className="text-sm w-full h-auto p-2.5 border border-[#D9D9D9] rounded-lg font-Inter font-normal focus:outline-none bg-white appearance-none"
                         value={field.value || ''}
                         onChange={(event) => {
                           const value = event.target.value;
@@ -520,11 +516,7 @@ const WrappedPage = () => {
                   render={({ field }) => (
                     <div>
                       <select
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12"
-                        style={{
-                          border: "1px solid #D9D9D9",
-                          borderRadius: "0.25rem",
-                        }}
+                        className="text-sm w-full h-auto p-2.5 border border-[#D9D9D9] rounded-lg font-Inter font-normal focus:outline-none bg-white appearance-none disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                         disabled={!selectedState}
                         value={field.value || ''}
                         onChange={(event) => {
@@ -746,7 +738,8 @@ const WrappedPage = () => {
                 id="agreement"
                 {...register("agree_terms")}
                 value="true"
-                className="mr-2 text-wdc-inactivebutton focus:outline-none"
+                className="mr-2 text-wdc-inactivebutton focus:outline-none "
+                style={{ accentColor: "#F25E26" } as React.CSSProperties}
               />
               <span
                 className="text-sm"
@@ -795,102 +788,69 @@ const WrappedPage = () => {
                 /*       backgroundPosition: "top", */
               }}
             >
-              <div className="bg-[#F6F6F6] items-center cursor-pointer p-8">
+              <div className="bg-[#F6F6F6] items-center cursor-pointer px-4 py-5 sm:p-8">
                 <div className="flex justify-between items-center">
-                  <div className="">
-                    <Link href={"/"}>
-                      <Image src={Brand} alt="" />
-                    </Link>
-                  </div>
-
-                  <div>
-                    <IoIosClose size={32} />
-                  </div>
+                  <Link href={"/"}>
+                    <Image src={Brand} alt="" />
+                  </Link>
+                  <IoIosClose size={32} />
                 </div>
 
-                <p className="flex justify-center font-Poppins font-normal text-[#2A2A2A] text-base items-center">
+                <p className="flex justify-center font-Poppins font-normal text-[#2A2A2A] text-base items-center mt-3">
                   Terms and Conditions
                 </p>
               </div>
 
-              <div className="p-8 flex flex-col gap-5">
+              <div className="px-4 py-5 sm:p-8 flex flex-col gap-5">
                 <div>
-                  <div>
-                    <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Age declaration
-                    </h1>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                      This platform is open to users who are at least 18 years
-                      old as at the time of transacting on the platform
-                    </p>
-                  </div>
+                  <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-base sm:text-lg">
+                    Age declaration
+                  </h1>
+                  <p className="text-sm font-Poppins text-[#2A2A2A] font-normal mt-1">
+                    This platform is open to users who are at least 18 years
+                    old as at the time of transacting on the platform
+                  </p>
                 </div>
 
                 <div>
-                  <div>
-                    <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Tickets Cancellation
-                    </h1>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                      Once a ticket is bought for any products, such a ticket
-                      can no longer be cancelled
-                    </p>
-                  </div>
+                  <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-base sm:text-lg">
+                    Tickets Cancellation
+                  </h1>
+                  <p className="text-sm font-Poppins text-[#2A2A2A] font-normal mt-1">
+                    Once a ticket is bought for any products, such a ticket
+                    can no longer be cancelled
+                  </p>
                 </div>
 
                 <div>
-                  <div>
-                    <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Refund Policy
-                    </h1>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                      There is no refund for any ticket already bought on the
-                      platform as every ticket is deemed to be use or loose
-                    </p>
-                  </div>
+                  <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-base sm:text-lg">
+                    Refund Policy
+                  </h1>
+                  <p className="text-sm font-Poppins text-[#2A2A2A] font-normal mt-1">
+                    There is no refund for any ticket already bought on the
+                    platform as every ticket is deemed to be use or loose
+                  </p>
                 </div>
 
-
                 <div>
-                  <div>
-                    <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Raffle Draw Winning
-                    </h1>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
+                  <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-base sm:text-lg">
+                    Raffle Draw Winning
+                  </h1>
+                  <p className="text-sm font-Poppins text-[#2A2A2A] font-normal mt-1">
                     There is no guarantee that you win the item you bid for as the raffle draw process is purely a game of chance with everyone as represented by every ticket has equal winning opportunity. However, you may increase your chances of winning by buying as many tickets as possible for your item of choice on auction.
-                    </p>
-                  </div>
+                  </p>
                 </div>
-
 
                 <div>
-                  <div>
-                    <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-lg">
-                      Winning Redemption
-                    </h1>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-Poppins text-[#2A2A2A] font-normal">
-                      Any item won on the platform can be redeemed through physical delivery of
-                      the items to you or through a gift voucher which can be redeemed at any of our designated stores or in some instances through cash tranfer to the winner where cash transfer
-                      remains the only efficient and feasible option
-                    </p>
-                  </div>
+                  <h1 className="text-[#2A2A2A] font-Poppins font-semibold text-base sm:text-lg">
+                    Winning Redemption
+                  </h1>
+                  <p className="text-sm font-Poppins text-[#2A2A2A] font-normal mt-1">
+                    Any item won on the platform can be redeemed through physical delivery of
+                    the items to you or through a gift voucher which can be redeemed at any of our designated stores or in some instances through cash tranfer to the winner where cash transfer
+                    remains the only efficient and feasible option
+                  </p>
                 </div>
-
               </div>
             </div>
             <div></div>

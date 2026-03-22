@@ -40,9 +40,10 @@ export const RelatedAuctionDetails = ({ cardInfo }) => {
                             <Image
                                 src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                                 alt="product"
-                                className="object-contain max-h-full max-w-full"
+                                className="object-contain max-h-full"
                                 width={120}
                                 height={120}
+                                style={{ width: 'auto', height: 'auto' }}
                             />
                         </div>
                         <div className='p-4'>

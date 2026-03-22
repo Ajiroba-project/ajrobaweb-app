@@ -974,7 +974,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           )}
 
           <div className='relative z-50'>
-            <div className=' flex w-full py-2 overflow-visible'>
+            <div className='flex w-full items-center justify-between py-2 overflow-visible'>
               
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>
