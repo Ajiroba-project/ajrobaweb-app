@@ -592,7 +592,6 @@ const Page = ({ params }: any) => {
                         alt="Product Thumbnail"
                         width={100}
                         height={100}
-                        objectFit="cover"
                       />
                     </div>
                   ))}
@@ -608,7 +607,6 @@ const Page = ({ params }: any) => {
                         alt="Product Image"
                         width={400}
                         height={400}
-                        objectFit="cover"
                         className="object-cover"
                       />
                     ) : productdata?.data?.images?.[0] ? (
@@ -617,7 +615,6 @@ const Page = ({ params }: any) => {
                         alt="Product Image"
                         width={400}
                         height={400}
-                        objectFit="cover"
                         className="object-cover"
                       />
                     ) : (
@@ -780,7 +777,6 @@ const Page = ({ params }: any) => {
                     alt="Product Image"
                     width={200}
                     height={200}
-                    objectFit="cover"
                     className="object-cover"
                   />
                 </div>
@@ -796,7 +792,6 @@ const Page = ({ params }: any) => {
                     alt="Product Image"
                     width={200}
                     height={200}
-                    objectFit="cover"
                     className="object-cover"
                   />
                 </div>

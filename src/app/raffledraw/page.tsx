@@ -1,5 +1,5 @@
 'use client'
-import { Fragment, useState, useEffect, useMemo, Suspense } from 'react'
+import { Fragment, useState, useEffect, useMemo, useRef, Suspense } from 'react'
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
 import { AuctionBanner } from '../component/AuctionBanner'
@@ -19,45 +19,22 @@ import {
   PickersLayout,
   PickersLayoutProps
 } from '@mui/x-date-pickers/PickersLayout'
-import { Title } from '../component/Title'
-
-// Add this helper function to get auction dates from the data
-const extractAuctionDates = (data: any[]) => {
-  return data.map(
-    (item: { auctionDate: string | number | Date }) =>
-      new Date(item.auctionDate)
-  ) // Ensure `auctionDate` is in a valid format
-}
-
-interface AuctionItem {
-  starts_in: string
-  id: number
-  title: string
-  description: string
-  imageUrl: string
-  auctionDate: string // Add auction date to the interface
-}
 
 interface AuctionResponse {
-  data: AuctionItem[]
+  data: any[]
 }
 
-// Helper to parse "29 June, 2025" to Date
-const parseAuctionDate = (dateStr: string) =>
-  parse(dateStr, 'dd MMMM, yyyy', new Date())
+const ITEMS_PER_PAGE = 12
 
 const AuctionPage = () => {
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState<number>(0)
-  const [filteredData, setFilteredData] = useState<any[]>([])
-  const [itemsPerPage] = useState<number>(12)
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
   const [calendarOpen, setCalendarOpen] = useState(true)
   const [tempDate, setTempDate] = useState<Date | null>(selectedDate)
 
   const {
     data: auctionInfo,
-    isLoading: auctionLoading,
     isFetching: auctionfetching
   } = useQueryData<AuctionResponse>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auctions/`,
@@ -65,29 +42,15 @@ const AuctionPage = () => {
     true
   )
 
-  // Extract and set auction dates
-  const auctionDates = useMemo(() => {
-    if (auctionInfo?.data) {
-      return extractAuctionDates(auctionInfo.data)
-    }
-    return []
-  }, [auctionInfo])
+  const filteredData = useMemo(() => {
+    if (!auctionInfo?.data) return []
+    return auctionInfo.data.slice(
+      currentPage * ITEMS_PER_PAGE,
+      (currentPage + 1) * ITEMS_PER_PAGE
+    )
+  }, [currentPage, auctionInfo?.data])
 
-  useMemo(() => {
-    if (auctionInfo?.data) {
-      const filteredProducts = auctionInfo?.data.slice(
-        currentPage * itemsPerPage,
-        (currentPage + 1) * itemsPerPage
-      )
-      setFilteredData(filteredProducts)
-    }
-  }, [currentPage, itemsPerPage, auctionInfo])
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
-
-  const pageCount = Math.ceil((auctionInfo?.data.length || 0) / itemsPerPage)
+  const pageCount = Math.ceil((auctionInfo?.data?.length ?? 0) / ITEMS_PER_PAGE)
 
   const { setHeaderNav, headerNav } = userNavStore(state => ({
     setHeaderNav: state.setHeaderNav,
@@ -98,65 +61,62 @@ const AuctionPage = () => {
     if (headerNav !== 'auction') {
       setHeaderNav('Auction Deals')
     }
-  }, [headerNav, setHeaderNav]) // Add `path` as a dependency to avoid unnecessary updates
+  }, [headerNav, setHeaderNav])
 
-  // Check if there are active auctions based on current data
-  const isAuctionActive = auctionInfo?.data.some(
-    item => item.starts_in !== 'Raffle Ended'
-  )
+  const isAuctionActive = auctionInfo?.data?.some(
+    (item: any) => item.starts_in !== 'Raffle Ended'
+  ) ?? false
 
-  // Exclude dates that are not part of the auction dates
-  const excludedDates = auctionDates.filter(date => {
-    const today = new Date()
-    return date < today // Example: Exclude past dates
-  })
-
-  // Inside your component:
   const auctionDatesParsed = useMemo(() => {
+    if (!filteredData.length) return []
     return filteredData
       .map((item: any) => parse(item.start_date, 'dd MMMM, yyyy', new Date()))
       .filter((date: Date) => !isNaN(date.getTime()))
   }, [filteredData])
 
-  const handleOk = () => {
+  // Refs keep handlers fresh without changing CustomDatePickerLayout identity
+  const handlersRef = useRef({
+    handleOk: () => {},
+    handleCancel: () => {}
+  })
+  handlersRef.current.handleOk = () => {
     setSelectedDate(tempDate)
     setCalendarOpen(false)
   }
-
-  const handleCancel = () => {
-    setTempDate(selectedDate) // revert temp selection
+  handlersRef.current.handleCancel = () => {
+    setTempDate(selectedDate)
     setCalendarOpen(false)
   }
 
-  // --- Custom Layout INSIDE the component, using closure for handlers ---
-  function CustomDatePickerLayout(props: PickersLayoutProps<any>) {
-    return (
-      <div style={{ position: 'relative' }}>
-        <PickersLayout {...props} />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 2,
-            mt: 2,
-            mb: 2,
-            px: 2
-          }}
-        >
-          <Button color='warning' onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button color='warning' onClick={handleOk}>
-            OK
-          </Button>
-        </Box>
-      </div>
-    )
-  }
-
-  {
-    auctionfetching && <Loading />
-  }
+  // Stable layout component — never remounts, reads handlers from ref
+  const CustomDatePickerLayout = useMemo(
+    () =>
+      function Layout(props: PickersLayoutProps<any>) {
+        return (
+          <div style={{ position: 'relative' }}>
+            <PickersLayout {...props} />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 2,
+                mt: 2,
+                mb: 2,
+                px: 2
+              }}
+            >
+              <Button color='warning' onClick={() => handlersRef.current.handleCancel()}>
+                Cancel
+              </Button>
+              <Button color='warning' onClick={() => handlersRef.current.handleOk()}>
+                OK
+              </Button>
+            </Box>
+          </div>
+        )
+      },
+    []
+  )
 
   return (
     <Fragment>
@@ -164,12 +124,11 @@ const AuctionPage = () => {
         <Header />
       </header>
 
-      {/* Spacer to offset fixed header height on small/medium screens */}
-      <div className='h-24 md:h-28 lg:h-32'></div>
+      <div className='h-24 md:h-28 lg:h-32' />
 
       <div className='container mb-8 py-4'>
-        <p className='text-center  font-Poppins text-sm font-extrabold text-[#504D4D]  md:text-[20px] lg:text-[20px] xl:text-[20px] 2xl:text-[20px]'>
-          {'Raffle Draw Products'}
+        <p className='text-center font-Poppins text-sm font-extrabold text-[#504D4D] md:text-[20px] lg:text-[20px] xl:text-[20px] 2xl:text-[20px]'>
+          Raffle Draw Products
         </p>
       </div>
 
@@ -183,10 +142,8 @@ const AuctionPage = () => {
             View All Raffle Draw Video
           </div>
 
-          {/* Date Input */}
-
           <div>
-            <span className=' mb-4 py-8 font-Poppins font-bold text-xl'>Raffle Calendar</span>
+            <span className='mb-4 py-8 font-Poppins font-bold text-xl'>Raffle Calendar</span>
             {isAuctionActive ? (
               <div className='mt-2'>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -261,27 +218,23 @@ const AuctionPage = () => {
         </section>
 
         <section className='my-4'>
-          {/*       <h1>Auction</h1> */}
-
           {auctionfetching ? (
             <Loading />
           ) : (
             <AuctionComp
               cardInfo={filteredData}
               currentPage={currentPage}
-              cardsNum={itemsPerPage}
+              cardsNum={ITEMS_PER_PAGE}
             />
           )}
           <Pagination
             pageCount={pageCount}
-            onPageChange={({ selected }) => handlePageChange(selected)}
-            className='my-6 flex items-center justify-center gap-4 '
+            onPageChange={({ selected }) => setCurrentPage(selected)}
+            className='my-6 flex items-center justify-center gap-4'
           />
         </section>
       </main>
-      <div className=''>
-        <Footer />
-      </div>
+      <Footer />
     </Fragment>
   )
 }

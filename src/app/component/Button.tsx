@@ -13,7 +13,7 @@ type ButtonProps = {
 export const DefaultButton = ({ text, type, handleClick, className, disabled }: ButtonProps) => {
     return (
         <>
-            <button className={`${className}`} type={type} onClick={handleClick} disabled={disabled}>
+            <button className={`whitespace-nowrap ${className}`} type={type} onClick={handleClick} disabled={disabled}>
                 {text}
             </button>
 

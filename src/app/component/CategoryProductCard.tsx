@@ -64,10 +64,9 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
                 <Image
                   src={`https://staging.ajiroba.ng/media/${value?.image}`}
                   alt="product"
-                  className=""
                   width={100}
                   height={100}
-                  objectFit="cover"
+                  className="object-cover"
                 />
               </div>
             </div>

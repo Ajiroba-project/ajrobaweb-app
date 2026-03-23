@@ -22,6 +22,15 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { pickersDayClasses } from "@mui/x-date-pickers/PickersDay";
 import { format } from "date-fns";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const datePickerTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#F25E26",
+    },
+  },
+});
 
 type ProfileFormValues = {
   first_name: string;
@@ -504,7 +513,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
         </div>
 
 
-        <div className="flex flex-col mt-2 w-2/6">
+        <div className="flex flex-col mt-2 w-full lg:w-1/2">
           <label className='mb-2 text-sm text-[#111111] font-Poppins font-medium'>Date of Birth*</label>
           <Controller
             name="date_of_birth"
@@ -517,6 +526,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
                   : null;
 
               return (
+                <ThemeProvider theme={datePickerTheme}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     value={dateValue}
@@ -585,6 +595,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
                     }}
                   />
                 </LocalizationProvider>
+                </ThemeProvider>
               );
             }}
           />

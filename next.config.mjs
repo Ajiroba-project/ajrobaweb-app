@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
-import path from 'path';
 
 const nextConfig = {
-    webpack: (config) => {
-        config.resolve.modules.push(path.resolve('./'));
-        return config;
-    },
+    turbopack: {},
 
     images: {
+        qualities: [75, 80, 90, 100],
         remotePatterns: [
             {
                 protocol: 'https',

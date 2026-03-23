@@ -41,7 +41,7 @@ const Input: React.FC<InputProps> = ({
                     type={showPassword ? "text" : type}
                     name={name}
                     placeholder={placeholder}
-                    className={`px-8 h-12 focus:text-black border placeholder:text-sm rounded w-auto xl:w-[300px] 2xl:w-[300px] md:w-[300px] xlw-[300px] lg:w-[300px] ${className || ""}`}
+                    className={`px-8 h-12 focus:text-black border placeholder:text-sm rounded w-full ${className || ""}`}
                     {...register(name, { required: true })}
                     maxLength={maxLength}
                     {...props}

@@ -150,11 +150,25 @@ body {
 
 .swiper-pagination-bullet {
   border: 1px solid white !important;
+  width: 10px !important;
+  height: 10px !important;
+}
 
-  width: var(--swiper-pagination-bullet-width,
-      var(--swiper-pagination-bullet-size, 15px)) !important;
-  height: var(--swiper-pagination-bullet-height,
-      var(--swiper-pagination-bullet-size, 15px)) !important;
+@media (min-width: 640px) {
+  .swiper-pagination-bullet {
+    width: 15px !important;
+    height: 15px !important;
+  }
+}
+
+.carousel-swiper .swiper-pagination {
+  bottom: 8px !important;
+}
+
+@media (min-width: 640px) {
+  .carousel-swiper .swiper-pagination {
+    bottom: 16px !important;
+  }
 }
 
 .custom-shape {
@@ -339,3 +353,14 @@ textarea {
 /* } */
 /* } */
 /* } */
+
+@media (max-width: 575px) {
+  .modal-mobile-friendly.ant-modal {
+    max-width: calc(100vw - 32px) !important;
+    margin: 16px auto !important;
+  }
+  .modal-mobile-friendly .ant-modal-content {
+    padding: 12px !important;
+    border-radius: 12px !important;
+  }
+}

@@ -132,7 +132,7 @@ export default function PointsHistoryModal({ isOpen, onClose, userId }: Props) {
 
   const content = (
     <div className=" relative">
-      <button aria-label="Close" onClick={onClose} className="absolute right-0 -top-2 text-gray-700">×</button>
+      {/* <button aria-label="Close" onClick={onClose} className="absolute right-0 -top-2 text-gray-700">×</button> */}
       <div className="text-center mb-6 mt-2">
         <h2 className="text-xl font-semibold">Ajiroba Points</h2>
         <p className="text-gray-500 text-sm">Here is the list of all Ajiroba points you have received.</p>

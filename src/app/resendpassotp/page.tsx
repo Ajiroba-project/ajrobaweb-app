@@ -3,17 +3,15 @@ import Link from "next/link";
 import Brand from "../asset/logo.svg";
 import passwordlock from "../asset/passwordlock.svg";
 import Image from "next/image";
-import AuthHero from "../component/AuthHero";
+import { HeroSubText } from "../component/AuthHero";
 import { DefaultButton } from "../component/Button";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
 import Input from "../component/Input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useMutateData } from "@/hooks/useMutateData";
-import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function Page() {
     type dataProps = {
@@ -34,24 +32,15 @@ function Page() {
     const {
         reset,
         register,
-        control,
         handleSubmit,
         formState: { errors },
-        trigger,
-        watch,
-        setValue,
     } = useForm({
         mode: "all",
         resolver: yupResolver(schema),
     });
 
-
-
     const handleSuccess = (data: any) => {
-
-
         if (data.status === 200) {
-
             toast.success(`${data?.data?.message}`, {
                 position: "top-right",
                 autoClose: 2000,
@@ -61,11 +50,9 @@ function Page() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-                onClose: () => router.push('/otpverification')
-
-            })
-            reset()
-
+                onClose: () => router.push("/otpverification"),
+            });
+            reset();
         } else if (data.status === 403 || data.status === 404) {
             toast.error(`${data?.data?.message}`, {
                 position: "top-right",
@@ -76,11 +63,10 @@ function Page() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-
             });
-            reset()
+            reset();
         } else {
-            toast.error(`${'An Error Occured'}`, {
+            toast.error(`${"An Error Occured"}`, {
                 position: "top-right",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -89,14 +75,13 @@ function Page() {
                 draggable: true,
                 progress: undefined,
                 theme: "light",
-
             });
             reset();
         }
     };
 
     const handleError = (error: any) => {
-        toast.error(`${'An Error Occured'}`, {
+        toast.error(`${"An Error Occured"}`, {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -105,46 +90,40 @@ function Page() {
             draggable: true,
             progress: undefined,
             theme: "light",
-
         });
         reset();
-
     };
 
-    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+    const { mutate, status } = useMutateData(
         "signup",
         handleSuccess,
         handleError,
     );
 
-
-
     const sumbitForm = async (data: dataProps) => {
         reset();
 
-        // console.log(data, 'datatata')
         mutate({
             url: "/api/resendpassotp",
-            payload: data
+            payload: data,
         });
     };
 
     return (
-        <>
-            <div className="px-8">
-        {/*         <ToastContainer closeOnClick /> */}
-                <nav className="Brand-logo  p-6 lg:px-14 px-7 lg:block xl:block 2xl:block md:block   flex justify-center ">
-                    <Link href={"/"}>
-                        <Image src={Brand} alt="brand-logo" />
-                    </Link>
-                </nav>
+        <div className="px-4 content-container">
+            <nav className="flex justify-center py-4 md:block md:px-7 lg:px-14">
+                <Link href={"/"}>
+                    <Image src={Brand} alt="brand-logo" />
+                </Link>
+            </nav>
 
-                <AuthHero
+            <div className="flex flex-col items-center py-8 sm:py-12">
+                <HeroSubText
                     title="Resend OTP"
                     menu="No worries! An OTP will be sent to reset your password"
                 />
 
-                <section className="flex justify-center items-center mb-8 mt-10">
+                <section className="mb-8 mt-10 flex items-center justify-center">
                     <Image
                         src={passwordlock}
                         alt="password-logo"
@@ -153,10 +132,13 @@ function Page() {
                     />
                 </section>
 
-                <div className=" flex justify-center ">
-                    <form onSubmit={handleSubmit(sumbitForm)}>
-                        <div className="grid xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 2xl:grid-cols-1 grid-cols-1 gap-8 px-3 ">
-                            <div className="flex flex-col">
+                <div className="flex w-full justify-center">
+                    <form
+                        onSubmit={handleSubmit(sumbitForm)}
+                        className="w-full max-w-md px-2 py-6 sm:px-4"
+                    >
+                        <div className="mt-4 grid grid-cols-1 gap-6">
+                            <div className="flex w-full flex-col">
                                 <Input
                                     label="Email"
                                     type="text"
@@ -170,31 +152,21 @@ function Page() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-center items-center mt-4">
-                            {/* <DefaultButton
-                                type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm"
-                                text="Proceed"
-                                handleClick={() => console.log("")}
-                            /> */}
+                        <div className="mt-4 flex w-full items-center justify-center">
                             <DefaultButton
                                 type="submit"
-                                className=" w-full bg-[#FCDFD4] h-10 text-sm hover:bg-[#E84526] hover:text-white"
-                                // text="Proceed"
-                                text={status === 'pending' ? 'loading...' : "Proceed"}
-                            // handleClick={() => console.log("")}
+                                className="h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white"
+                                text={
+                                    status === "pending"
+                                        ? "loading..."
+                                        : "Proceed"
+                                }
                             />
                         </div>
-
-
                     </form>
-
-
-
                 </div>
-
             </div>
-        </>
+        </div>
     );
 }
 

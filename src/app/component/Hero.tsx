@@ -121,8 +121,8 @@ export const Hero = () => {
                   />
                 </svg>
                 <div className='flex flex-col items-start leading-tight'>
-                  <span className='text-white text-xs sm:text-sm font-medium'>Google Play</span>
-                  <span className='text-white text-center items-center justify-center text-xs sm:text-sm font-medium'>Store</span>
+                  <span className='text-white text-xs sm:text-sm font-medium'>Google Play Store</span>
+                  {/* <span className='text-white text-center items-center justify-center text-xs sm:text-sm font-medium'>Store</span> */}
                 </div>
               </a>
 
@@ -185,8 +185,9 @@ export const Hero = () => {
                 <Image
                   src={qualityIcon}
                   alt='Quality icon'
+                  width={40}
+                  height={40}
                   className='h-10 w-10'
-                  sizes='80px'
                   priority
                   quality={90}
                 />
@@ -199,8 +200,9 @@ export const Hero = () => {
                 <Image
                   src={timelyIcon}
                   alt='Timely Delivery icon'
+                  width={40}
+                  height={40}
                   className='h-10 w-10'
-                  sizes='80px'
                   priority
                   quality={90}
                 />
@@ -213,8 +215,9 @@ export const Hero = () => {
                 <Image
                   src={affordabilityIcon}
                   alt='Affordability icon'
+                  width={40}
+                  height={40}
                   className='h-10 w-10'
-                  sizes='80px'
                   priority
                   quality={90}
                 />
@@ -227,8 +230,9 @@ export const Hero = () => {
                 <Image
                   src={consistencyIcon}
                   alt='Consistency icon'
+                  width={40}
+                  height={40}
                   className='h-10 w-10'
-                  sizes='80px'
                   priority
                   quality={90}
                 />
@@ -241,8 +245,9 @@ export const Hero = () => {
                 <Image
                   src={credibilityIcon}
                   alt='Credibility icon'
+                  width={40}
+                  height={40}
                   className='h-10 w-10'
-                  sizes='80px'
                   priority
                   quality={90}
                 />

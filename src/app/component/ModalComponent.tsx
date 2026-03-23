@@ -7,7 +7,7 @@ interface ModalComponentProps {
     handleOk?: () => void;
     handleCancel?: () => void;
      showModal?: () => void;
-     width?: number;
+     width?: number | string;
 }
 
 const ModalComponent: React.FC<ModalComponentProps> = ({ width, content, handleOk, handleCancel, isModalOpen }) => {
@@ -20,7 +20,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ width, content, handleO
             onCancel={handleCancel}
             width={width}
             centered
-           
+            styles={{
+              body: { padding: 0 },
+            }}
+            className='modal-mobile-friendly'
         >
             <div>
                 {content}

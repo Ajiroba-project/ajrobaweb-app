@@ -163,53 +163,52 @@ export const AirtimeDetails = () => {
           </div>
 
           <CustomModal isOpen={printreceipt}>
-
-            <section className='flex flex-col'>
-              <div className='flex items-center justify-between'>
-                <Image src={Brand} alt='brand-logo' />
-                <h2 className='font-Poppins text-[#2A2A2A] font-medium text-base md:text-xl leading-none'>Beneficiaries</h2>
+            <section className='flex items-center justify-between gap-4'>
+              <div className='flex min-w-0 items-center gap-2 sm:gap-3'>
+                <Image src={Brand} alt='brand-logo' className='h-5 w-auto flex-shrink-0 sm:h-8' />
+                <h2 className='truncate font-Poppins text-sm font-semibold text-[#2A2A2A] sm:text-base'>Beneficiaries</h2>
               </div>
-              <button className='text-left text-[#E84526] underline mt-3 font-Poppins text-sm' onClick={() => setprintreceipt(false)}>Back</button>
+              <button
+                className='flex-shrink-0 font-Poppins text-xs text-[#E84526] transition-colors hover:text-[#d94f1e] sm:text-sm'
+                onClick={() => setprintreceipt(false)}
+              >
+                Close
+              </button>
             </section>
 
-
-
-            <div className="pt-2">
-              <div className="space-y-5">
-                {transformedData && transformedData.length > 0 ? (
-                  transformedData.map((item: TransformedDataItem) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between rounded-xl bg-[#F8F8F8] px-6 py-5 border border-[#F0F0F0]"
-                    >
-                      <div className="flex items-center gap-4">
-                        {item.icon && (
-                          <Image src={item.icon} alt={item.type} width={44} height={44} className="w-11 h-11 rounded-full" />
-                        )}
-                        <div className="leading-tight">
-                          <p className="text-[15px] md:text-base text-[#2A2A2A] font-medium tracking-[0.2px]">{item.number}</p>
-                          <p className="text-xs text-[#8C8C8C] mt-1">{item.type}</p>
+            <div className='mt-4 space-y-3'>
+              {transformedData && transformedData.length > 0 ? (
+                transformedData.map((item: TransformedDataItem) => (
+                  <div
+                    key={item.id}
+                    className='flex items-center justify-between rounded-xl border border-[#F0F0F0] bg-[#FAFAFA] px-3 py-3 transition-colors hover:bg-[#FFF8F5] sm:px-5 sm:py-4'
+                  >
+                    <div className='flex min-w-0 items-center gap-3'>
+                      {item.icon && (
+                        <div className='flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-1.5 sm:h-11 sm:w-11'>
+                          <Image src={item.icon} alt={item.type} width={44} height={44} className='h-full w-full object-contain' />
                         </div>
+                      )}
+                      <div className='min-w-0'>
+                        <p className='truncate font-Poppins text-sm font-medium text-[#2A2A2A] sm:text-base'>{item.number}</p>
+                        <p className='font-Poppins text-xs text-[#8C8C8C]'>{item.type}</p>
                       </div>
-                      <button
-                        onClick={() => handleUseClick(item.number, item.type)}
-                        className="px-5 py-2 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] text-sm font-medium hover:opacity-90"
-                      >
-                        Use
-                      </button>
                     </div>
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <div className="text-center">
-                      <p className="text-[#8C8C8C] text-lg font-medium mb-2">No Beneficiaries Available</p>
-                      <p className="text-[#8C8C8C] text-sm">You haven &rsquo; t saved any beneficiaries yet.</p>
-                    </div>
+                    <button
+                      onClick={() => handleUseClick(item.number, item.type)}
+                      className='ml-3 flex-shrink-0 rounded-lg bg-[#FCDFD4] px-4 py-2 font-Poppins text-xs font-medium text-[#2A2A2A] transition-colors hover:bg-[#F25E26] hover:text-white sm:px-5 sm:text-sm'
+                    >
+                      Use
+                    </button>
                   </div>
-                )}
-              </div>
+                ))
+              ) : (
+                <div className='flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E0E0E0] py-10'>
+                  <p className='font-Poppins text-sm font-medium text-[#8C8C8C] sm:text-base'>No Beneficiaries Available</p>
+                  <p className='mt-1 font-Poppins text-xs text-[#ABABAB] sm:text-sm'>You haven&apos;t saved any beneficiaries yet.</p>
+                </div>
+              )}
             </div>
-
           </CustomModal>
         </form>
       </div>

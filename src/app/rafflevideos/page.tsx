@@ -2,33 +2,20 @@
 
 import { Header } from '../component/Header'
 import { Footer } from '../component/Footer'
-import { Fragment } from 'react';
-import { Suspense } from 'react';
-import { raffle } from '../static-data';
-import { useState } from 'react';
-import { CloseAuction } from '../raffledraw-wins/components/CloseAuction';
+import { Fragment, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useGetOrderWinsData } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
-import { PastAuction } from '../raffledraw-wins/components/PastAuction';
+
+const PastAuction = dynamic(
+    () => import('../raffledraw-wins/components/PastAuction').then(mod => ({ default: mod.PastAuction })),
+    { ssr: false, loading: () => <p className="text-center text-gray-500 py-8">Loading...</p> }
+);
 
 const RaffleVideosPage = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 2;
-    const totalPages = Math.ceil(raffle.length / itemsPerPage);
-    // console.log(totalPages, 'totalPages')
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedRaffle = raffle.slice(startIndex, endIndex);
-
     const userToken = Cookies.get('token') as string;
 
-
-  
-    const { data: auctioninfo, isLoading: auctionLoading, error: ordererror } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken);
-
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const { data: auctioninfo } = useGetOrderWinsData('/api/auctionwins', "get_auctionwins_details", userToken);
 
     return (
         <Fragment>
@@ -43,11 +30,7 @@ const RaffleVideosPage = () => {
                             Click on the image to view the past raffle draws.
                         </small>
                     </div>
-
-                    
-
-
-<PastAuction product={auctioninfo?.data?.data?.closed} />
+                    <PastAuction product={auctioninfo?.data?.data?.closed} />
                 </div>
             </main>
             <div className='content-container'>

@@ -332,11 +332,10 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
-                    layout="fixed"
                     width={100}
                     height={80}
-                    objectFit="cover"
-                    className="rounded-lg"
+                    className="rounded-lg object-cover"
+                    style={{ width: '100px', height: 'auto' }}
                   />
                 </div>
 

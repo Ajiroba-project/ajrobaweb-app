@@ -36,8 +36,7 @@ select[name="state"]+.dropdown-container .option {
 }
 
 /* Target the selected option */
-select[name="state"]+.dropdown-container .option:selected {
-    /* Your styles here */
+select[name="state"]+.dropdown-container .option:checked {
     background-color: aqua !important;
     color: blue !important;
 }

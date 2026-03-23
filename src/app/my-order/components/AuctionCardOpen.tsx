@@ -1,27 +1,16 @@
-"use  client";
-import React, { SetStateAction, useState, useEffect } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { CiMenuKebab } from "react-icons/ci";
-import Dropdown from "./Dropdown";
-
 
 import DropDownAuction from "./DropDownAuction";
 import { ModalProfile } from "./ModalProfile";
 import { DefaultButton } from "@/app/component/Button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import { useGetOrderWinsData, useGetBanksData } from "@/hooks/useGetData";
 import Cookies from "js-cookie";
-import { CustomModal } from "@/app/component/Modal";
-import maskgroup from "@/app/asset/image/Maskgroup.svg";
-import Barcode from "@/app/asset/image/barcode.svg";
-import Link from "next/link";
-import Brand from "@/app/asset/logo.svg";
-import bikecode from '@/app/asset/image/bikecode.svg'
-import DropDownAuctionWin from "./DropDownAuctionWin";
 import WinningAdviceModal from "./WinningAdviceModal";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { escapeHtml } from "@/utils/escapeHtml";
@@ -47,28 +36,12 @@ type Order = {
     ticket_number?: string;
 };
 
-type ButtonProps = {
-    text: string;
-    className: string;
-    type: "button" | "submit";
-    handleClick?: () => void | Promise<void>;
-    disabled?: boolean;
-};
-
 type Bank = {
     name: string;
     code: string;
 };
 
-type BanksResponse = {
-    status: string;
-    message: string;
-    data: Bank[];
-};
-
 const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
-    /* console.log(product, 'product') */
-
     const [selectedTransaction, setSelectedTransaction] = useState<Order | null>(
         null,
     );
@@ -77,12 +50,10 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
 
     const [success, setSuccess] = useState(false);
     const [successdelete, setSuccessdelete] = useState(false);
-    const [selectedRating, setSelectedRating] = useState(0);
     const [reviewerror, Setreviewerror] = useState("");
     const [reviewerrordelete, Setreviewerrordelete] = useState("");
     const [isModalOpen, setModalOpen] = useState(false);
     const [isdeleteModalOpen, setisdeleteModalOpen] = useState(false);
-    const [isSussessModal, setisSucceessModal] = useState(false);
     const [isWinningAdviseModalOpen, setIsWinningAdviseModalOpen] = useState(false);
     const [isWinningAdvice, setIsWinningAdvice] = useState(false);
     const [isMerchantsModalOpen, setIsMerchantsModalOpen] = useState(false);
@@ -126,7 +97,6 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         }
 
         if (option === "Download") {
-            // Use the stored voucher data for this transaction
             const transactionId = transaction.id;
             if (transactionId && storedVoucherData[transactionId]) {
                 setVoucherData(storedVoucherData[transactionId]);
@@ -142,35 +112,15 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         }
     };
 
-    const {
-        reset,
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
+    const { reset } = useForm({
         mode: "all",
-        /*  resolver: yupResolver(ChangePass), */
     });
 
-    const {
-        reset: resetDeleteForm,
-        register: registerDeleteForm,
-        handleSubmit: handleSubmitDelete,
-        formState: { errors: deleteErrors },
-    } = useForm({
+    const { handleSubmit: handleSubmitDelete } = useForm({
         mode: "all",
-        // resolver: yupResolver(/* your delete form schema */),
     });
-
-    const { isLoggedIn, user, token } = useAuthStore((state) => ({
-        isLoggedIn: state.isLoggedIn,
-        user: state.user,
-        token: state.token,
-    }));
 
     const userToken = (Cookies.get("token") as string) || "";
-
-    /*  const userToken = token; */
 
     const handleSuccess = (data: any) => {
         Setreviewerror("");
@@ -241,7 +191,6 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
             reset();
         } else {
             toast.error(`${data?.data?.message} `, {
-                /*    toast.error(`${"An Error Occured" || "Error"}`, { */
                 position: "top-right",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -256,8 +205,6 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     };
 
     const handleError = (error: any) => {
-        // console.log(data, "datttataaa", error);
-        // console.log(error, "errrr");
         toast.error(`${"An Error Occured"}`, {
             position: "top-right",
             autoClose: 2000,
@@ -271,28 +218,16 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         reset();
     };
 
-    const { data, error, isError, isSuccess, mutate, status } = useMutateData(
+    const { status } = useMutateData(
         "review order",
         handleSuccess,
         handleError,
     );
 
-    const {
-        data: datad,
-        error: errord,
-        isError: isErrord,
-        isSuccess: isSussessd,
-        mutate: mutated,
-        status: statusd,
-    } = useMutateData("delete order", handleSuccess, handleError);
+    const { mutate: mutated } = useMutateData("delete order", handleSuccess, handleError);
 
     const submitFormdelete = async (data: any, event: any) => {
         event.preventDefault();
-
-        console.log(errors);
-
-
-        //  console.log(selectedTransactiondelete, "Payload being submitted - BEFORE");
 
         if (!selectedTransactiondelete) {
             console.error("No transaction selected for deletion");
@@ -313,19 +248,15 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     const Closefuncdelete = () => {
         setisdeleteModalOpen(false);
         setSuccessdelete(false);
-        // setSelectedRating(0);
         reset();
         Setreviewerrordelete("");
     };
 
     const userToken_ = Cookies.get("token") as string;
 
-    const tkn_: string = Cookies.get("token") as string;
-
     const {
         data: auctioninfo,
         isLoading: auctionLoading,
-        error: ordererror,
     } = useGetOrderWinsData(
         "/api/auctionwins",
         "get_auctionwins_details",
@@ -388,7 +319,6 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     const filteredMerchants = merchants.filter((merchant: any) =>
         merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    // const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
 
     const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string, merchantName: string) => {
         setIsProcessingGiftCard(true);
@@ -454,11 +384,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
         }
     };
 
-    const {
-        data: banksData,
-        isLoading: isBanksLoading,
-        error: banksError,
-    } = useGetBanksData(
+    const { data: banksData } = useGetBanksData(
         `${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/banks/`,
         "get_banks",
         userToken
@@ -565,11 +491,10 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     <Image
                                         src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                                         alt={val?.auction[0]?.name}
-                                        layout="fixed"
                                         width={100}
                                         height={80}
-                                        objectFit="cover"
-                                        className="rounded-lg"
+                                        className="rounded-lg object-cover"
+                                        style={{ width: '100px', height: 'auto' }}
                                     />
                                 </div>
 
@@ -577,44 +502,8 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     <p className=" font-semibold">{val?.auction[0]?.name}</p>
                                     <p>Ticket Number: {val?.ticket_number} </p>
 
-                                    <p>Ticket Price: {formatCurrency(val?.ticket_price)}</p> 
+                                    <p>Ticket Price: {formatCurrency(val?.ticket_price)}</p>
                                     <div className="mt-5 flex gap-3 flex-wrap">
-                                        {/*    {val.tag &&
-                      val.tag.map((value: string, index: number) => (
-                        <p
-                          key={index}
-                          onClick={() => {
-                            if (!val.won) return;
-
-                            if (value === "redeem items") {
-                              if (val.redeemed) {
-                                // Handle download voucher click
-                                handleOptionClick("Download", val);
-                              } else {
-                                handleOptionClick("Redeem", val);
-                              }
-                            } else if (value === "winning advise") {
-                              handleOptionClick("winning advise", val);
-                            }
-                          }}
-                          className={`text-xs ${!val.won ? "opacity-50 cursor-not-allowed" : ""
-                            } ${value === "open" || value === "delivered"
-                              ? "bg-green-200 text-emerald-800"
-                              : value === "close"
-                                ? "bg-rose-200 text-red-800"
-                                : value === "redeem items"
-                                  ? val.redeemed
-                                    ? "bg-green-700 text-white cursor-pointer" // Style for Download Voucher
-                                    : "bg-blue-700 text-white cursor-pointer"  // Style for Redeem Items
-                                  : value === "winning advise"
-                                    ? "bg-[#F25E26] text-white cursor-pointer"
-                                    : "bg-[#F25E26] text-white"
-                            } rounded-xl px-2.5 py-1`}
-                        >
-                          {value === "redeem items" && val.redeemed ? "Download Voucher" : value}
-                        </p>
-                      ))} */}
-
                                         {val.tag &&
                                             val.tag.map((value: string, index: number) => (
                                                 <p
@@ -1008,8 +897,8 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
                                     disabled={isLoadingBanks}
                                 >
                                     <option value="">Select a bank</option>
-                                    {banks.map((bank: any) => (
-                                        <option key={bank.code} value={bank.code}>
+                                    {banks.map((bank: any, index: number) => (
+                                        <option key={`${bank.code}-${index}`} value={bank.code}>
                                             {bank.name}
                                         </option>
                                     ))}

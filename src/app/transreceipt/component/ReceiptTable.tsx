@@ -1,8 +1,5 @@
 import React from 'react'
-// import {Data} from '../data'
 import { userNavStore } from '@/store/store'
-// import { userNavStore } from '@/store/store'
-
 
 interface TransactionData {
   beneficiary: string;
@@ -19,96 +16,44 @@ interface TransactionData {
 }
 
 interface DataProps {
- /*  Data: {
-    data: TransactionData[];
-  }; */
-   Data:  TransactionData[];
+   Data: TransactionData[];
 }
 
+const ReceiptRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
+  <div className='flex flex-col gap-0.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2'>
+    <span className='font-Poppins text-xs sm:text-sm font-medium capitalize text-[#F25E26]'>
+      {label}
+    </span>
+    <span className='font-Poppins text-sm sm:text-base font-semibold text-[#2A2A2A] break-words text-left sm:text-right sm:max-w-[60%]'>
+      {value}
+    </span>
+  </div>
+);
+
 export const ReceiptTable: React.FC<DataProps> = ({ Data }) => {
-  const userNav =userNavStore( state =>state.userNav)
-
-
-//   console.log(userNav)
-
-// console.log(Data?.data[1]?.sender)
+  const formattedDate = Data[0]?.date_created
+    ? new Date(Data[0].date_created).toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      })
+    : '';
 
   return (
-    <div style={{
-        margin: '0 auto',
-        width: '90%'
-      }}  className='container flex flex-col items-center justify-center overflow-x-auto'>
-      <table className=' min-w-full  '>
-        <tbody>
-          {
-        /*   userNav === 'Data' ? ( */
-            <tr className='flex flex-col divide-y divide-gray-300'>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-              Beneficiary
-                </span>
-                <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.beneficiary}</span>
-              </td>
-             <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-              Sender
-                </span>
-             <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[1]?.sender}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-                  Transaction Type
-                </span>
-   <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.channel}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-                 Transaction Date
-                </span>
-                <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>
-                  {new Date(Data[0]?.date_created).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                  })}
-                </span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-                Transaction Status
-                </span>
- <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.status}</span>
-              </td>
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-                Description
-                </span>
- <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.description}</span>
-              </td>
-             {/*   <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-                Description
-                </span>
-
-              </td> */}
-              <td className='flex items-center justify-between py-2'>
-                <span className='brand1 font-medium text-sm capitalize font-Poppins text-[#F25E26]'>
-                Transaction Reference
-                </span>
-                 <span className='font-semibold text-[#2A2A2A] font-Poppins text-base'>{Data[0]?.reference}</span>
-                {/* <span className='font-semibold'>{Data.transaction}</span> */}
-              </td>
-
-            </tr>
-
-
-          }
-        </tbody>
-      </table>
+    <div className='mx-auto w-[92%] sm:w-[90%]'>
+      <div className='divide-y divide-gray-200 rounded-xl border border-gray-100 bg-white px-4 sm:px-6 sm:border-0 sm:rounded-none sm:bg-transparent'>
+        <ReceiptRow label="Beneficiary" value={Data[0]?.beneficiary} />
+        <ReceiptRow label="Sender" value={Data[1]?.sender} />
+        <ReceiptRow label="Transaction Type" value={Data[0]?.channel} />
+        <ReceiptRow label="Transaction Date" value={formattedDate} />
+        <ReceiptRow label="Transaction Status" value={Data[0]?.status} />
+        <ReceiptRow label="Description" value={Data[0]?.description} />
+        <ReceiptRow label="Transaction Reference" value={Data[0]?.reference} />
+      </div>
     </div>
   )
 }

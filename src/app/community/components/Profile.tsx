@@ -91,7 +91,7 @@ export const Profile = () => {
     <section className="relative flex gap-5">
       {/* Mobile Menu Toggle */}
       <span
-        className="absolute left-0 top-0 cursor-pointer text-[#f25e26] lg:hidden z-50"
+        className="absolute left-0 top-0 cursor-pointer text-[#f25e26] lg:hidden z-50 p-4"
         onClick={() => setSideNav(!sideNav)}
       >
         <LuMenu className="text-2xl" />
@@ -177,7 +177,7 @@ export const Profile = () => {
       </section>
 
       {/* Main Content Area */}
-      <section className="span-2 flex w-full flex-col lg:items-center pt-16 lg:pt-0">
+      <section className="span-2 flex w-full flex-col lg:items-center pt-2 lg:pt-0">
         <div className="mt-12 flex ">
           <MainLayout />
         </div>

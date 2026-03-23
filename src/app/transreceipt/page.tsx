@@ -48,77 +48,7 @@ const WrappedPage = () => {
       });
   }, [order_id, userToken]);
 
-  // const handleDownloadReceipt = async () => {
-  //   if (!productInfo) {
-  //     console.error('No product info available');
-  //     return;
-  //   }
-
-  //   // Get the receipt container element
-  //   const receiptElement = document.getElementById('receipt-container');
-  //   if (!receiptElement) {
-  //     console.error('Receipt container not found');
-  //     return;
-  //   }
-
-  //   try {
-  //     // Create canvas from the receipt element
-  //     const canvas = await html2canvas(receiptElement, {
-  //       scale: 2,
-  //       useCORS: true,
-  //       logging: false,
-  //       backgroundColor: '#ffffff',
-  //       width: receiptElement.scrollWidth,
-  //       height: receiptElement.scrollHeight,
-  //       onclone: (clonedDoc) => {
-  //         const clonedElement = clonedDoc.getElementById('receipt-container');
-  //         if (clonedElement) {
-  //           clonedElement.style.width = '100%';
-  //           clonedElement.style.height = 'auto';
-  //           clonedElement.style.position = 'relative';
-  //           clonedElement.style.backgroundColor = '#ffffff';
-  //         }
-  //       }
-  //     });
-
-  //     // Create PDF with the same dimensions as the canvas
-  //     const imgWidth = 210; // A4 width in mm
-  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //     const pdf = new jsPDF('p', 'mm', 'a4');
-
-  //     // Add the image to the PDF
-  //     pdf.addImage(
-  //       canvas.toDataURL('image/png'),
-  //       'PNG',
-  //       0,
-  //       0,
-  //       imgWidth,
-  //       imgHeight
-  //     );
-
-  //     // If content is too long, add it to multiple pages
-  //     if (imgHeight > 297) { // A4 height in mm
-  //       const pageCount = Math.ceil(imgHeight / 297);
-  //       for (let i = 1; i < pageCount; i++) {
-  //         pdf.addPage();
-  //         pdf.addImage(
-  //           canvas.toDataURL('image/png'),
-  //           'PNG',
-  //           0,
-  //           -(297 * i),
-  //           imgWidth,
-  //           imgHeight
-  //         );
-  //       }
-  //     }
-
-  //     // Save the PDF
-  //     pdf.save('ajiroba_transaction_receipt.pdf');
-  //   } catch (error) {
-  //     console.error('Error generating PDF:', error);
-  //   }
-  // };
-
+  
 
   const imageToBase64 = (img: HTMLImageElement): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -238,50 +168,53 @@ const WrappedPage = () => {
   };
 
 
-  if (loading) return <div className='text-center'>Loading...</div>;
-  if (productError) return <div className='text-center text-red-500'>{productError}</div>;
+  if (loading) return <div className='flex min-h-screen items-center justify-center font-Poppins text-sm text-gray-500'>Loading...</div>;
+  if (productError) return <div className='flex min-h-screen items-center justify-center font-Poppins text-sm text-red-500'>{productError}</div>;
 
   return (
     <section>
       <div id="receipt-container" className="bg-white min-h-screen">
-        <div className='bg-gray-100 py-8'>
-          <div style={{ margin: '0 auto', width: '90%' }}>
+        {/* Header */}
+        <div className='bg-gray-100 py-6 sm:py-8'>
+          <div className='mx-auto w-[92%] sm:w-[90%]'>
             <Header />
           </div>
         </div>
-        <div className='flex flex-col items-center py-8'>
-          <p className='brand3 text-[#A09F9F] font-Poppins text-[12px]'>Transaction Amount</p>
-          <p className='text-2xl font-semibold font-Poppins'>
+
+        {/* Transaction Amount */}
+        <div className='flex flex-col items-center py-6 sm:py-8'>
+          <p className='font-Poppins text-xs text-[#A09F9F]'>Transaction Amount</p>
+          <p className='mt-1 text-2xl sm:text-3xl font-semibold font-Poppins text-[#1B1B1A]'>
             {formatCurrency(productInfo?.data[0]?.amount)}
           </p>
         </div>
+
+        {/* Receipt Details */}
         <section>
-          <div>
-            {productInfo?.data ? <ReceiptTable Data={productInfo.data} /> : <p>No data available</p>}
-          </div>
+          {productInfo?.data ? <ReceiptTable Data={productInfo.data} /> : <p className='text-center text-sm text-gray-400 py-8'>No data available</p>}
         </section>
 
-        <section className='container py-8' style={{
-          margin: '0 auto',
-          width: '90%'
-        }} >
-          <p className='text-sm font-semibold font-Poppins'>Download our mobile App on:</p>
-        </section>
+        {/* App Download & Actions */}
+        <section className='mx-auto w-[92%] sm:w-[90%] py-6 sm:py-8'>
+          <p className='text-sm font-semibold font-Poppins text-[#1B1B1A]'>Download our mobile App on:</p>
 
-        <section className='container my-4 flex flex-col items-center gap-8'>
-          <div className='flex justify-center gap-3'>
-            <Image src={androidstore} alt='android' width={190} height={60} className='cursor-pointer' />
-            <Image src={applestore} alt='apple' width={190} height={60} className='cursor-pointer' />
+          <div className='flex justify-center gap-3 mt-4'>
+            <Image src={androidstore} alt='android' width={190} height={60} className='cursor-pointer w-[140px] sm:w-[190px] h-auto' />
+            <Image src={applestore} alt='apple' width={190} height={60} className='cursor-pointer w-[140px] sm:w-[190px] h-auto' />
           </div>
-          <p className='brand3 container text-center font-medium text-[12px] text-[#A09F9F] mt-12 font-Poppins'>
+
+          <p className='text-center text-[11px] sm:text-xs text-[#A09F9F] mt-8 sm:mt-12 font-Poppins leading-relaxed'>
             This electronically generated receipt is provided for informational purposes only and is not a legally binding document.
           </p>
-          <DefaultButton
-            text='Download Receipt'
-            type='button'
-            handleClick={handleDownloadReceipt}
-            className='my-6 rounded-lg bg-[#FCDFD4] text-[#2A2A2A] p-4 px-10 hover:bg-[#F25E26] hover:text-white'
-          />
+
+          <div className='flex justify-center mt-6'>
+            <DefaultButton
+              text='Download Receipt'
+              type='button'
+              handleClick={handleDownloadReceipt}
+              className='w-full sm:w-auto rounded-lg bg-[#FCDFD4] text-[#2A2A2A] p-3 sm:p-4 px-8 sm:px-10 text-sm font-medium hover:bg-[#F25E26] hover:text-white transition-colors'
+            />
+          </div>
         </section>
       </div>
     </section>
