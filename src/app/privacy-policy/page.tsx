@@ -33,7 +33,7 @@ const PrivacyPage = () => {
           Privacy Policy for Ajiroba Ecommerce Platform
         </h1>
         <section
-          className='container '
+          className=' '
           style={{
             margin: '0 auto',
             width: '94%',

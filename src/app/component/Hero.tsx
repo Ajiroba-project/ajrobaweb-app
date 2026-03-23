@@ -121,8 +121,8 @@ export const Hero = () => {
                   />
                 </svg>
                 <div className='flex flex-col items-start leading-tight'>
-                  <span className='text-white text-xs sm:text-sm font-medium'>Google Play</span>
-                  <span className='text-white text-center items-center justify-center text-xs sm:text-sm font-medium'>Store</span>
+                  <span className='text-white text-xs sm:text-sm font-medium'>Google Play Store</span>
+                  {/* <span className='text-white text-center items-center justify-center text-xs sm:text-sm font-medium'>Store</span> */}
                 </div>
               </a>
 

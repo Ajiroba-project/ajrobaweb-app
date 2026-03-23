@@ -24,11 +24,12 @@ interface ProductData {
 }
 
 const Page = ({ params }: any) => {
+  const resolvedParams = React.use(params) as { id: string };
   const router = useRouter();
   useAuthMiddleware(router);
 
   const [data, setData] = useState<any>(
-    raffle.filter((val) => val.host === params.id),
+    raffle.filter((val) => val.host === resolvedParams.id),
   );
   const [playState, setPlayState] = useState<boolean>(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -38,12 +39,12 @@ const Page = ({ params }: any) => {
   const [videoWatched, setVideoWatched] = useState(false);
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdownValue, setCountdownValue] = useState(5);
-  const [enforceTime, setEnforceTime] = useState(0); // Track enforced time on page
-  const [raffleStartTime, setRaffleStartTime] = useState<number>(0); // When raffle actually started
-  const [remainingEnforceTime, setRemainingEnforceTime] = useState(0); // Remaining enforced time
+  const [enforceTime, setEnforceTime] = useState(0);
+  const [raffleStartTime, setRaffleStartTime] = useState<number>(0);
+  const [remainingEnforceTime, setRemainingEnforceTime] = useState(0);
 
   const userToken = (Cookies.get("token") as string) || "";
-  const product_id = params?.id;
+  const product_id = resolvedParams?.id;
   const [productdatanew, setProductDataNew] = useState<ProductData | null>(null);
 
   const fetchWithAuth = useCallback(async (url: string) => {
@@ -230,9 +231,9 @@ const Page = ({ params }: any) => {
 
 
   useEffect(() => {
-    const filtered = raffle.filter((val) => val.host === params.id);
+    const filtered = raffle.filter((val) => val.host === resolvedParams.id);
     setData(filtered);
-  }, [params.id]);
+  }, [resolvedParams.id]);
 
   // Handle video end event
   const handleVideoEnded = () => {

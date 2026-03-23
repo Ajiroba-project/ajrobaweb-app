@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { use, useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { raffleWinner } from "@/app/static-data";
 import { DefaultButton } from "@/app/component/Button";
 import { useRouter } from "next/navigation";
@@ -51,7 +52,7 @@ interface AuctionResponse {
   subcategory?: any;
 }
 
-const Page = ({ params }: { params: Promise<{ id: string }> }) => {
+const RaffleWinnersPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id: product_id } = use(params);
   const userToken = (Cookies.get("token") as string) || "";
 
@@ -683,14 +684,16 @@ const renderRows = () => {
           </div>
         </div>
 
-        <div className="w-full sm:w-8/12 md:w-6/12 lg:w-4/12 mx-auto flex justify-center items-center gap-2 mt-4">
-          <div className="border border-orange-300 px-4 py-2 rounded">
-            <p className="text-black font-bold text-center whitespace-nowrap text-sm sm:text-base">Total Winners</p>
+        
+          <div className="w-full sm:w-8/12 md:w-6/12 lg:w-4/12 mx-auto flex justify-center items-center gap-2 mt-4">
+            <div className="border border-orange-300 px-4 py-2 rounded">
+              <p className="text-black font-bold text-center whitespace-nowrap text-sm sm:text-base">Total Winners</p>
+            </div>
+            <div className="border border-orange-300 px-4 py-2 rounded">
+              <p className="text-black font-bold text-center">{ showWinners ? displayedData?.length : 0}</p>
+            </div>
           </div>
-          <div className="border border-orange-300 px-4 py-2 rounded">
-            <p className="text-black font-bold text-center">{displayedData?.length}</p>
-          </div>
-        </div>
+
 
         {loadingdata ? (
           <div className="flex flex-col items-center justify-center min-h-[400px]">
@@ -738,5 +741,14 @@ const renderRows = () => {
     </>
   );
 };
+
+const Page = dynamic(() => Promise.resolve(RaffleWinnersPage), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25E26]"></div>
+    </div>
+  ),
+});
 
 export default Page;

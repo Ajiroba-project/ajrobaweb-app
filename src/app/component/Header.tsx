@@ -94,7 +94,9 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
     setIsSearching(true);
     setSearchError(null);
 
-    const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+    const timeoutId = setTimeout(() => {
+      controller.abort(new DOMException('Search timeout', 'AbortError'));
+    }, SEARCH_TIMEOUT_MS);
 
     try {
       const token = Cookies.get("token") as string;
@@ -112,6 +114,11 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
         signal: controller.signal,
       });
 
+      // Ignore stale responses if a newer search superseded this one
+      if (abortControllerRef.current !== controller) {
+        return;
+      }
+
       const data = await response.json();
       const results = data?.data?.results ?? [];
       setSearchResults(Array.isArray(results) ? results : []);
@@ -119,17 +126,31 @@ function Search({ isMobile = false, onClose }: { isMobile?: boolean; onClose?: (
         setSearchError('Search is temporarily unavailable. Please try again.');
       }
     } catch (error: unknown) {
-      if ((error as Error)?.name === 'AbortError') {
-        setSearchError('Search took too long. Please try again.');
-      } else {
-        setSearchError('Search is temporarily unavailable. Please try again.');
+      const err = error as Error;
+      const isAbort = err?.name === 'AbortError';
+
+      // New search started — this request was intentionally cancelled; do nothing
+      if (isAbort && abortControllerRef.current !== controller) {
+        return;
       }
+
+      if (isAbort) {
+        // Still the active request: timeout (or rare race)
+        setSearchError('Search took too long. Please try again.');
+        setSearchResults([]);
+        return;
+      }
+
+      setSearchError('Search is temporarily unavailable. Please try again.');
       setSearchResults([]);
       console.error('Search error:', error);
     } finally {
       clearTimeout(timeoutId);
-      abortControllerRef.current = null;
-      setIsSearching(false);
+      // Only clear ref / spinner for this request so we don't clobber a newer in-flight search
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+        setIsSearching(false);
+      }
     }
   }, [isLoggedIn]);
 

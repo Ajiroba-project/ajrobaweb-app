@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { notif_id: string } }
+  { params }: { params: Promise<{ notif_id: string }> }
 ) {
   try {
-    const { notif_id } = params;
+    const { notif_id } = await params;
     
     // Get the authorization token from headers
     const authHeader = request.headers.get('authorization');

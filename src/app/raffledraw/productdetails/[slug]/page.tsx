@@ -488,9 +488,10 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
 
   const handleSuccess = useCallback((data: any) => {
     const status = data?.data?.status || data?.status
-    if ([200, 201].includes(status)) {
+    if ([200, 201].includes(status) || status === 'success') {
       setBidData(null)
       localStorage.setItem('pin_id', 'yes')
+      console.log(data, 'data')
       showToast('success', data?.data?.message || 'PIN verified successfully', () => {
         if (data?.data?.message?.includes('Order placed successfully. Order Code')) {
           router.push('/profile')
@@ -517,7 +518,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
 
   const handleSuccessbidpayment = useCallback((data: any) => {
     const status = data?.data?.status || data?.status
-    if ([200, 201].includes(status)) {
+    if ([200, 201].includes(status) || status === 'success') {
       setTicketData(data?.data)
       setSuccessbid(true)
       showToast('success', data?.data?.message || 'Bid payment successful')
@@ -528,6 +529,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
   }, [reset, showToast])
 
   const handleErrorbidpayment = useCallback(() => {
+    console.log('error')
     showToast('error', 'An error occurred')
     reset()
   }, [reset, showToast])
@@ -540,7 +542,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
 
   const handleSuccesspayment = useCallback((data?: any) => {
     const status = data?.data?.status || data?.status
-    if ([200, 201].includes(status)) {
+    if ([200, 201].includes(status) || status === 'success') {
       setBidData(null)
       setbidopen(false)
       setmakepayment(false)
