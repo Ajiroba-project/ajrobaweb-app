@@ -106,9 +106,7 @@ const DataPage = () => {
 
   return (
     <Fragment>
-      <header className='fixed z-50 w-full'>
-        <Header />
-      </header>
+      <Header />
 
       {/* Spacer to offset fixed header height on small/medium screens */}
       <div className='h-24 md:h-28 lg:h-32'></div>

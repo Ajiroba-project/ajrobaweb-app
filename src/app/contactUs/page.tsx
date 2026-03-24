@@ -138,6 +138,7 @@ const ContactUsPage = () => {
   return (
     <Fragment>
       <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
       <main className='mx-auto w-[92%] py-8 sm:w-[90%] sm:py-12 lg:w-[80%]'>
         <DefaultBreadCrumb paths={decodedPaths} />
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { FaThumbsUp, FaRegCommentDots, FaShareAlt } from "react-icons/fa";
 import { FiBookmark } from "react-icons/fi";
-import clock from "../../asset/image/clock.svg";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -350,18 +349,16 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
               <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">
                 {item?.content}
               </h3>
-              <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
-                <Image
-                  src={
-                    item?.images?.[0]?.image
-                      ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
-                      : ""
-                  }
-                  alt="Bracelet"
-                  width={100}
-                  height={100}
-                />
-              </div>
+              {item?.images?.[0]?.image && (
+                <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
+                  <Image
+                    src={`https://staging.ajiroba.ng/media/${item.images[0].image}`}
+                    alt="Bracelet"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+              )}
               <div className="flex justify-between items-center text-gray-600 flex-wrap">
                 <span
                   className="flex items-center font-Poppins font-normal text-[#252525] text-sm cursor-pointer"
@@ -411,17 +408,15 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 )}
               >
                 <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
-                  <Image
-                    src={
-                      item?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
-                        : ""
-                    }
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+                  {item?.images?.[0]?.image && (
+                    <Image
+                      src={`https://staging.ajiroba.ng/media/${item.images[0].image}`}
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  )}
                   <input
                     type="text"
                     placeholder="Write your comment"
@@ -494,17 +489,15 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   return (
                     <div key={key} className="mt-4">
                       <div className="flex gap-2 items-start flex-wrap">
-                        <Image
-                          src={
-                            item?.user?.profile_image
-                              ? `${item?.user?.profile_image}`
-                              : ""
-                          }
-                          alt="Commenter"
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
+                        {item?.user?.profile_image && (
+                          <Image
+                            src={item.user.profile_image}
+                            alt="Commenter"
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                        )}
                         <div>
                           <div className="flex items-center justify-center gap-2 flex-wrap">
                             <p className="font-semibold font-Poppins">
@@ -560,18 +553,16 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">
                   {item?.post?.content || "No data Available"}
                 </h3>
-                <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
-                  <Image
-                    src={
-                      item?.post?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
-                        : ""
-                    }
-                    alt="Bracelet"
-                    width={100}
-                    height={100}
-                  />
-                </div>
+                {item?.post?.images?.[0]?.image && (
+                  <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
+                    <Image
+                      src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                      alt="Bracelet"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                )}
                 <div className="flex justify-between items-center text-gray-600">
 
 
@@ -626,17 +617,15 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   )}
                 >
                   <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
-                    <Image
-                      src={
-                        item?.post?.images?.[0]?.image
-                          ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
-                          : ""
-                      }
-                      alt="Profile"
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
+                    {item?.post?.images?.[0]?.image && (
+                      <Image
+                        src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                    )}
                     <input
                       type="text"
                       placeholder="Write your comment"
@@ -710,17 +699,15 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                     return (
                       <div key={key} className="mt-4">
                         <div className="flex gap-2 items-start">
-                          <Image
-                            src={
-                              item?.user?.profile_image
-                                ? `${item?.user?.profile_image}`
-                                : ""
-                            }
-                            alt="Commenter"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
+                          {item?.user?.profile_image && (
+                            <Image
+                              src={item.user.profile_image}
+                              alt="Commenter"
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                          )}
                           <div>
                             <div className="flex items-center justify-center gap-2">
                               <p className="font-semibold font-Poppins">
@@ -774,18 +761,16 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
               <h3 className=" leading-5 text-sm text-[#252525] font-Poppins font-normal">
                 {item?.post?.content}
               </h3>
-              <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
-                <Image
-                  src={
-                    item?.post?.images?.[0]?.image
-                      ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
-                      : ""
-                  }
-                  alt="Bracelet"
-                  width={100}
-                  height={100}
-                />
-              </div>
+              {item?.post?.images?.[0]?.image && (
+                <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
+                  <Image
+                    src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                    alt="Bracelet"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+              )}
               <div className="flex justify-between items-center text-gray-600">
                 <span
                   className="flex items-center font-Poppins font-normal text-[#252525] text-sm cursor-pointer"
@@ -821,17 +806,15 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 )}
               >
                 <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
-                  <Image
-                    src={
-                      item?.post?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
-                        : ""
-                    }
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+                  {item?.post?.images?.[0]?.image && (
+                    <Image
+                      src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  )}
                   <input
                     type="text"
                     placeholder="Write your comment"
@@ -905,17 +888,15 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   return (
                     <div key={key} className="mt-4">
                       <div className="flex gap-2 items-start">
-                        <Image
-                          src={
-                            item?.user?.profile_image
-                              ? `${item?.user?.profile_image}`
-                              : ""
-                          }
-                          alt="Commenter"
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
+                        {item?.user?.profile_image && (
+                          <Image
+                            src={item.user.profile_image}
+                            alt="Commenter"
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                        )}
                         <div>
                           <div className="flex items-center justify-center gap-2">
                             <p className="font-semibold font-Poppins">

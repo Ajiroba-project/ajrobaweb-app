@@ -227,12 +227,10 @@ const Page = () => {
     <>
       <Suspense>
         {/* Fixed Header - Responsive */}
-        <header className='fixed z-50 w-full'>
-          <Header />
-        </header>
+        <Header />
 
         {/* Main Content - Responsive Padding */}
-        <main className='w-full overflow-x-hidden pt-20 sm:pt-24 md:pt-28 '>
+        <main className='w-full overflow-x-hidden pt-24 sm:pt-24 md:pt-28 lg:pt-32'>
           {/* Hero Section - Full Width */}
           <section className=' w-full'>
             <div className='w-full'>

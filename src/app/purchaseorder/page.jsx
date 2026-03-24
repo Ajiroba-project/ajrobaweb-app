@@ -206,9 +206,8 @@ const WrappedPage = () => {
 
     <section className="bg-[#F6F6F6] min-h-screen">
       <div id="receipt-container">
-        <header className="z-50">
-          <Header />
-        </header>
+        <Header />
+        <div className='h-24 md:h-28 lg:h-32'></div>
 
         <section className="bg-[#F6F6F6] container mx-auto px-4 md:px-0">
           <div onClick={() => router.back()} className="cursor-pointer flex justify-start mb-4">

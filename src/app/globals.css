@@ -11,11 +11,13 @@
   color-scheme: light;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   @apply bg-white text-gray-900;
-  /* Smoother scrolling on mobile and prevent horizontal drag */
   -webkit-overflow-scrolling: touch;
-  overflow-x: hidden;
 }
 
 /* Single layout standard: max width + responsive padding for Header, Hero, all sections, Footer */

@@ -304,6 +304,7 @@ const Page = ({ params }: any) => {
         <main>
             {/*     <ToastContainer /> */}
             <Header />
+            <div className='h-24 md:h-28 lg:h-32'></div>
             <Breadcrumb paths={verifiedpaths} text={undefined} />
 
             <div onClick={() => router.back()}>

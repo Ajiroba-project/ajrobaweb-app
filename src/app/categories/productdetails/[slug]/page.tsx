@@ -534,6 +534,7 @@ const Page = ({ params }: any) => {
   return (
     <main>
       <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
       <ProductBreadcrumb
         paths={["Categories", productdata?.category, null]}
         text={undefined}

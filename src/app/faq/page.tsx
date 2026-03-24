@@ -14,7 +14,8 @@ const FAQPage = () => {
   return (
     <Fragment>
       <Header />
-      <main className='container mb-[5rem] mt-8 '>
+      <div className='h-24 md:h-28 lg:h-32'></div>
+      <main className='container mb-[5rem]'>
         <div className='flex items-center justify-center my-12 mt-12'>
           <HeadingText title='Frequently Asked Questions' />
         </div>

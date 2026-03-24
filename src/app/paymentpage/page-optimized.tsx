@@ -395,6 +395,7 @@ const Page = () => {
     <Suspense fallback={<Loading />}>
       <main>
         <Header />
+        <div className='h-24 md:h-28 lg:h-32'></div>
 
         <div style={{ margin: "0 auto", width: "95%", maxWidth: "100%" }}>
           <div onClick={() => router.back()}>

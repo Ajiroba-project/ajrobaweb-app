@@ -120,9 +120,7 @@ const AuctionPage = () => {
 
   return (
     <Fragment>
-      <header className='fixed z-50 w-full'>
-        <Header />
-      </header>
+      <Header />
 
       <div className='h-24 md:h-28 lg:h-32' />
 

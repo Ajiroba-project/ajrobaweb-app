@@ -55,11 +55,7 @@ const CatPage = () => {
 
   return (
     <>
-      <header className="fixed w-full" style={{
-        zIndex: 1000,
-      }}>
-        <Header />
-      </header>
+      <Header />
       <main className="pt-[20vh]" >
         <Title title="Categories" />
         {/*   <div className='container justify-center items-center flex flex-col mb-5'> */}

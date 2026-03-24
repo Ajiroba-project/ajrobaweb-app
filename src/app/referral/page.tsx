@@ -114,13 +114,11 @@ const ReferralPage = () => {
 
     return (
         <Fragment>
-            <section className='fixed z-50 w-full'>
-                <Header />
-            </section>
+            <Header />
 
             <main className='container mx-auto '>
 
-              <div className='bg-[#F6F6F6]  pt-[20vh] content-container'>
+              <div className='bg-[#F6F6F6]  pt-[10vh] md:pt-[20vh]   content-container'>
                 <div className=''>
                   <p onClick={() => router.back()} className='text-[#F25E26] underline '>Back</p>
                   <TitleText text='Refer And Earn' />

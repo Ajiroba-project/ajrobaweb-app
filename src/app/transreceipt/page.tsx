@@ -175,11 +175,8 @@ const WrappedPage = () => {
     <section>
       <div id="receipt-container" className="bg-white min-h-screen">
         {/* Header */}
-        <div className='bg-gray-100 py-6 sm:py-8'>
-          <div className='mx-auto w-[92%] sm:w-[90%]'>
-            <Header />
-          </div>
-        </div>
+        <Header />
+        <div className='h-24 md:h-28 lg:h-32 bg-gray-100'></div>
 
         {/* Transaction Amount */}
         <div className='flex flex-col items-center py-6 sm:py-8'>

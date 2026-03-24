@@ -89,18 +89,12 @@ export const Profile = () => {
 
   return (
     <section className="relative flex gap-5">
-      {/* Mobile Menu Toggle */}
-      <span
-        className="absolute left-0 top-0 cursor-pointer text-[#f25e26] lg:hidden z-50 p-4"
-        onClick={() => setSideNav(!sideNav)}
-      >
-        <LuMenu className="text-2xl" />
-      </span>
+      
 
       {/* Mobile Overlay */}
       {sideNav && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[1001] lg:hidden"
           onClick={() => setSideNav(false)}
         />
       )}
@@ -109,13 +103,13 @@ export const Profile = () => {
       <section
         className={`content-container my-8  ${
           sideNav
-            ? 'fixed left-0 top-0 h-full w-80 max-w-[85vw] flex-col bg-white px-4 pt-[4rem] z-50 transform translate-x-0'
-            : 'fixed left-0 top-0 h-full w-80 max-w-[85vw] flex-col bg-white px-4 pt-[4rem] z-50 transform -translate-x-full'
-        } lg:relative lg:flex lg:h-fit lg:w-[20dvw] lg:bg-transparent lg:pt-0 lg:transform-none lg:translate-x-0 transition-transform duration-300 ease-in-out lg:transition-none`}
+            ? 'fixed left-0 top-0 h-full w-80 max-w-[85vw] flex-col bg-white pt-[7rem] px-4 z-[1002] transform translate-x-0'
+            : 'fixed left-0 top-0 h-full w-80 max-w-[85vw] flex-col bg-white pt-[7rem] px-4 z-[1002] transform -translate-x-full'
+        } lg:relative lg:z-auto lg:flex lg:h-fit lg:w-[20dvw] lg:bg-transparent lg:pt-0 lg:transform-none lg:translate-x-0 transition-transform duration-300 ease-in-out lg:transition-none`}
       >
         {/* Mobile-only close button and professional styling */}
         <button
-          className="lg:hidden absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+          className="lg:hidden absolute top-[7.5rem] right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
           onClick={() => setSideNav(false)}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,7 +172,17 @@ export const Profile = () => {
 
       {/* Main Content Area */}
       <section className="span-2 flex w-full flex-col lg:items-center pt-2 lg:pt-0">
-        <div className="mt-12 flex ">
+        {!sideNav && (
+          <div className="static top-24 self-start lg:hidden z-10 py-2">
+            <span
+              className="cursor-pointer text-[#f25e26] rounded-full bg-white shadow-md p-2.5 inline-flex"
+              onClick={() => setSideNav(true)}
+            >
+              <LuMenu className="text-2xl" />
+            </span>
+          </div>
+        )}
+        <div className="mt-2 flex w-full">
           <MainLayout />
         </div>
       </section>

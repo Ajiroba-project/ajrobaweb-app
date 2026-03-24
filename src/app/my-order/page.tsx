@@ -18,15 +18,13 @@ const MyOrder = () => {
 
     return (
         <section>
-            <header className="z-50">
-                <Header />
-            </header>
+            <Header />
+            <div className='h-24 md:h-28 lg:h-32'></div>
 
             <main className='container ' style={{
                 width: '95%',
                 maxWidth: '100%',
                 margin: '0 auto',
-                marginTop: '20px'
             }}>
                 <Profile />
             </main>

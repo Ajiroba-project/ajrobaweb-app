@@ -243,11 +243,8 @@ const WrappedPage = () => {
   return (
     <section>
       <div id="receipt-container" className="bg-white min-h-screen">
-        <div className="bg-gray-100 py-8">
-          <div style={{ margin: "0 auto", width: "90%" }}>
-            <Header />
-          </div>
-        </div>
+        <Header />
+        <div className='h-24 md:h-28 lg:h-32 bg-gray-100'></div>
         <div className="flex flex-col items-center py-8">
           <p className="brand3 text-[#A09F9F] font-Poppins text-[16px]">
             Transaction Amount

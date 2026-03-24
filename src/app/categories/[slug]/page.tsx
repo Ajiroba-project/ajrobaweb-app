@@ -385,6 +385,7 @@ const CategoryPage = () => {
   return (
     <main>
       <Header onSearch={setSearchQuery} />
+      <div className='h-24 md:h-28 lg:h-32'></div>
 
       <Breadcrumb paths={verifiedpaths} text={undefined} />
 

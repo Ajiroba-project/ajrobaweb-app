@@ -19,9 +19,7 @@ const RaffleVideosPage = () => {
 
     return (
         <Fragment>
-            <header className="fixed z-50 w-full">
-                <Header />
-            </header>
+            <Header />
             <main className="w-full min-h-[80vh] bg-[#fafafa] pt-[13vh] pb-8 flex flex-col items-center">
                 <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <h2 className="text-center text-2xl font-bold mb-8 mt-4 text-[#2A2A2A]">Past Raffle Draws</h2>
