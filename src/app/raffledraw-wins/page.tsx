@@ -15,11 +15,10 @@ const ProfileAuctionwins = () => {
 
     return (
         <section>
-            <header className="z-50">
-                <Header />
-            </header>
+            <Header />
+            <div className='h-24 md:h-28 lg:h-32'></div>
 
-            <main className='content-container mt-8'>
+            <main className='content-container'>
                 <Profile />
             </main>
 

@@ -104,6 +104,7 @@ const SelfHelpOption = ({ text, onClick }: {
   return (
   <Fragment>
       <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
       <main className="">
         <div className=" bg-[#F6F6F6] py-4">
           <div className="">

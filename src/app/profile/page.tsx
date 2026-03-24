@@ -1,58 +1,20 @@
 'use client'
-import React, { Suspense } from 'react'
+import React from 'react'
+import dynamic from 'next/dynamic'
 import { Header } from '../component/Header'
-import { Profile } from './components/Profile'
-import { PhotoUpload } from "./components/PhotoUpload"
-import { userProfile } from "@/store/store"
-import { useRouter } from 'next/navigation'
-// import useAuthMiddleware from '@/hooks/useAuth'
-import AuthMiddleware from '@/hooks/useAuth'
+import Loading from '../component/Loading'
 
-const ProfilePage = () => {
-  const router = useRouter()
-
-  /*  useAuthMiddleware(router) */
-  AuthMiddleware(router)
-
-  const profile = userProfile(state => state.profile)
-
-  return (
-    <section>
-      <header className="z-50">
-        <Header />
-      </header>
-
-      {/* <main className='container ' style={{
-        width: '95%',
-        maxWidth: '100%',
-        margin: '0 auto',
-        marginTop: '20px'
-      }}> */}
-
-
-<main className=' mt-8' style={{
-       
-      }}>
-   
-
-        <div className='content-container'>
-          <Profile />
-        </div>
-      </main>
-
-      {profile && <PhotoUpload />}
-
-    </section>
-  )
-}
-
-// export default Page
+const ProfilePageContent = dynamic(() => import('./ProfilePageContent'), {
+  ssr: false,
+  loading: () => <Loading />,
+})
 
 export default function Page() {
   return (
-    // You could have a loading skeleton as the `fallback` too
-    <Suspense>
-      <ProfilePage />
-    </Suspense>
+    <section>
+      <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
+      <ProfilePageContent />
+    </section>
   )
 }

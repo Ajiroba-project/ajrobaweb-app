@@ -215,9 +215,8 @@ const WrappedPage = () => {
 
   return (
     <section className="bg-[#F6F6F6] min-h-screen">
-      <header className="z-50">
-        <Header />
-      </header>
+      <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
 
       <section className="bg-[#F6F6F6] container">
         <div className="">

@@ -38,9 +38,7 @@ const RechargePage = () => {
 
   return (
     <Fragment>
-      <section className='fixed z-50 w-full'>
-        <Header />
-      </section>
+      <Header />
 
       <main className='container'>
         <section className='pt-[20vh]'>

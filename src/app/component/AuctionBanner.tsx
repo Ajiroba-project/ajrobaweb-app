@@ -10,7 +10,7 @@ export const AuctionBanner = ({ text, banner }: BannerProps) => {
     <section className='w-full'>
       <h2 className='sr-only'>{text}</h2>
       {/* Mobile: natural aspect ratio, edge-to-edge */}
-      <div className='-mx-8 w-[calc(100%+4rem)] sm:hidden'>
+      <div className='sm:hidden'>
         <Image
           src={banner}
           alt={text || 'Auction banner'}

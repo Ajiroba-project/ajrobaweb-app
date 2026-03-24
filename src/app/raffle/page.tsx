@@ -12,9 +12,7 @@ const RafflePage = () => {
   const router = useRouter();
   return (
     <>
-      <header className="fixed z-50 w-full">
-        <Header />
-      </header>
+      <Header />
 
       <main className="w-full pt-[13vh] md:pt-[20vh] lg:pt-[20vh] content-container">
         <div className=" mx-auto  max-w-[1440px]">

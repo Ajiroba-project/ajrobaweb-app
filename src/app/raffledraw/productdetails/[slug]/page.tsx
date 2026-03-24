@@ -676,6 +676,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
   return (
     <main className='content-container'>
       <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
       <div className='content-container'>
         <ProductBreadcrumb
           paths={['Raffle Draw', productdatanew?.data?.category_name, null]}

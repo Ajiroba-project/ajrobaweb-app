@@ -337,9 +337,7 @@ const Page = ({ params }: any) => {
 
   return (
     <section className="z-auto">
-      <header className="fixed z-50 w-full">
-        <Header />
-      </header>
+      <Header />
       <div className="w-full bg-[#F6F6F6] pt-[20vh]">
         <div className="container flex flex-col">
          {/*  <p

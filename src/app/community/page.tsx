@@ -20,9 +20,8 @@ const CommunityPage = () => {
 
     return (
         <section>
-            <header className="z-50">
-                <Header />
-            </header>
+            <Header />
+            <div className='h-24 md:h-28 lg:h-32'></div>
 
             <main className='r ' style={{
                 // width: '95%',

@@ -44,6 +44,7 @@ const LiveChatPage = () => {
   return (
     <Fragment>
       <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
       <main>
         <div className="bg-[#F6F6F6] py-4">
           <div className="mx-auto w-[92%] sm:w-[90%] lg:w-[80%]">

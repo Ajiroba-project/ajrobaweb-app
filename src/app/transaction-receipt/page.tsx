@@ -15,9 +15,8 @@ const Page = () => {
     
   return (
     <section>
-      <div className='bg-gray-100 py-8'>
-        <Header />
-      </div>
+      <Header />
+      <div className='h-24 md:h-28 lg:h-32 bg-gray-100'></div>
       <div className='flex flex-col items-center py-8'>
         <p className='brand3'>Transaction Amount</p>
         <p className='text-xl font-bold'>₦0.00</p>

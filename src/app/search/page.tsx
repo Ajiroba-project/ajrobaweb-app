@@ -409,6 +409,7 @@ const WrappedSearchPage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
+        <div className='h-24 md:h-28 lg:h-32'></div>
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Search</h1>
@@ -423,6 +424,7 @@ const WrappedSearchPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+      <div className='h-24 md:h-28 lg:h-32'></div>
       
       <div className="container mx-auto px-4 py-8">
         {/* Search Header */}
