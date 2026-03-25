@@ -479,7 +479,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
                   placeholder="****"
                   register={register}
                   errors={errors.password}
-                  HiEyeSlash={<FaRegEyeSlash />}
+                  HiEyeSlash={<FaRegEyeSlash color='#f25e26' />}
                   HiEye={<FaRegEye />}
                 />
                 <div className="text-xs text-red-700">

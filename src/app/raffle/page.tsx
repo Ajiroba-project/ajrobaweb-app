@@ -60,6 +60,7 @@ const RafflePage = () => {
                 src={raffle_img}
                 alt="Raffle illustration"
                 fill
+                sizes="(max-width: 1024px) 100vw, 500px"
                 style={{ objectFit: "contain" }}
                 priority
               />

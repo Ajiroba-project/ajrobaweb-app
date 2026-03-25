@@ -110,13 +110,12 @@ export const AirtimeDetails = () => {
   }
 
   return (
-    <div className=' flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12'>
+    <div className='flex flex-col items-center gap-4 bg-[#F6F6F6] px-4 py-12'>
       <Formtitle
         title='Buy Airtime'
         subtitle='Top up your airtime on our platform'
-
       />
-      <div className=''>
+      <div className='w-full max-w-[400px]'>
         <form
           className='flex flex-col gap-3'
           onSubmit={handleSubmit(sumbitForm)}
@@ -132,7 +131,7 @@ export const AirtimeDetails = () => {
             showlabel={false}
             value={watch("network")} // Ensure value updates
             onChange={(e) => setValue("network", e.target.value)} // Update manually
-            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F] selector"
+            className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
           />
 
 

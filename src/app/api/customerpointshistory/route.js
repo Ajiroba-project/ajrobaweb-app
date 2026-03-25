@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 export async function GET(request) {
     try {
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const token = cookieStore.get('token');
 
         const { searchParams } = new URL(request.url);
@@ -55,7 +55,7 @@ export async function GET(request) {
         return NextResponse.json({ data, status });
     } catch (error) {
         // console.error('Error processing request:', error.message);
-        return NextResponse.error(new Error('Internal Server Error'));
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 

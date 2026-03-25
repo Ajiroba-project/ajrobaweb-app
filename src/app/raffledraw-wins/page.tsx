@@ -1,36 +1,23 @@
 'use client'
-import React, { Suspense } from 'react'
+import React from 'react'
+import dynamic from 'next/dynamic'
 import { Header } from '../component/Header'
-import { Profile } from './components/Profile'
-import { PhotoUpload } from "./components/PhotoUpload"
-import { userProfile } from "@/store/store"
-import { useRouter } from 'next/navigation'
-import AuthMiddleware from '@/hooks/useAuthAuctionwins'
 
-const ProfileAuctionwins = () => {
-    const router = useRouter()
-    AuthMiddleware(router)
-
-    const profile = userProfile(state => state.profile)
-
-    return (
+const ProfileAuctionwins = dynamic(() => import('./components/ProfileAuctionwinsContent'), {
+    ssr: false,
+    loading: () => (
         <section>
             <Header />
             <div className='h-24 md:h-28 lg:h-32'></div>
-
             <main className='content-container'>
-                <Profile />
+                <div className="flex min-h-[60vh] items-center justify-center">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#F25E26]"></div>
+                </div>
             </main>
-
-            {profile && <PhotoUpload />}
         </section>
-    )
-}
+    ),
+})
 
 export default function Page() {
-    return (
-        <Suspense>
-            <ProfileAuctionwins />
-        </Suspense>
-    )
+    return <ProfileAuctionwins />
 }

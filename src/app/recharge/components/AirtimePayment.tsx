@@ -487,8 +487,8 @@ export const AirtimePayment = () => {
                   placeholder="****"
                   register={register}
                   errors={errors.password}
-                  HiEyeSlash={<FaRegEyeSlash />}
-                  HiEye={<FaRegEye />}
+                  HiEyeSlash={<FaRegEyeSlash color='#f25e26' />}
+                  HiEye={<FaRegEye  />}
                 />
                 <div className="text-xs text-red-700">
                   {errors?.password?.message}

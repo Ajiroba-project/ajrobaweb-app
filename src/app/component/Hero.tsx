@@ -58,6 +58,7 @@ export const Hero = () => {
             src={whyBg}
             alt='Why Ajiroba background'
             fill
+            sizes="100vw"
             className='object-cover object-center'
             priority
             quality={90}

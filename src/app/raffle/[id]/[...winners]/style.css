@@ -18,13 +18,13 @@
 @media (max-width: 639px) {
   .p-rd {
     overflow: hidden;
-    max-width: 52px;
+    max-width: 40px;
     margin-left: auto;
     margin-right: auto;
     height: 28px;
   }
   .p-rd::after {
-    font: 800 20px system-ui;
+    font: 800 18px system-ui;
     left: auto;
     right: 2px;
     transform: none;

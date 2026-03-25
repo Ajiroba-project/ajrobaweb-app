@@ -278,209 +278,13 @@ const RaffleWinnersPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
 
-//   const renderRows = () => {
-//     if (!showWinners) {
-//       return (
-//         <>
-//           {
-
-
-//             <table className="w-full border-separate border-spacing-y-4">
-//               <thead className="bg-white text-[#F25E26]">
-//                 <tr className="tracking-wide">
-//                   {thead.map((header) => (
-//                     <th
-//                       className={`${header === "S/N"
-//                         ? "rounded-bl-3xl"
-//                         : header === "Ticket Price"
-//                           ? "rounded-br-3xl"
-//                           : header === `Phone Number`
-//                             ? "rounded-br-3xl  text-left"
-//                             : "text-center"
-//                         } p-3 text-2xl font-semibold capitalize lg:w-max`}
-//                       key={header}
-//                     >
-//                       {header === "Ticket Number" ? (
-//                         <div className="flex flex-col items-center">
-//                            <span className="text-2xl text-[#F25E26] font-normal">(Winner)</span>
-//                           <span>{header} </span>
-                         
-//                         </div>
-//                       ) : (
-//                         header
-//                       )}
-//                     </th>
-//                   ))}
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {currentItems?.map((val: any, index: number) => (
-//                   <tr className="text-white h-1" key={index}>
-//                     <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-//                       <p className="text-lg font-semibold">
-//                         {indexOfFirstItem + index + 1}
-//                       </p>
-//                     </td>
-
-//                     <td className=" text-center h-[16px]">
-//                       <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-//                         {val?.product || "Loading..."}
-//                       </p>
-//                     </td>
-                  
-//                     <td className="pl-6 p-0 h-[16px] w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold">
-//                       <p className="p-rd mx-2 flex w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2 text-center text-lg tracking-[0.5em] text-black">
-//                         {/* Counter animation */}
-//                       </p>
-//                     </td>
-//                       <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-//                         <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-//                           {showWinners 
-//                             ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
-//                             : "*********"}
-//                         </p>
-//                       </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           }
-//           <div className="flex justify-center mt-4">
-//             <button
-//               onClick={handlePrevPage}
-//               disabled={currentPage === 1}
-//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
-//                 ? "bg-gray-400 cursor-not-allowed"
-//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
-//                 } text-white`}
-//             >
-//               Previous
-//             </button>
-
-//             <span className="mx-4 text-lg text-white">
-//               Page {currentPage} of {totalPages}
-//             </span>
-
-//             <button
-//               onClick={handleNextPage}
-//               disabled={currentPage === totalPages}
-//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
-//                 ? "bg-gray-400 cursor-not-allowed"
-//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
-//                 } text-white`}
-//             >
-//               Next
-//             </button>
-//           </div>
-//         </>
-//       );
-//     } else {
-//       return (
-//         <>
-//           {
-//             <table className="w-full border-separate border-spacing-y-4">
-//               <thead className="bg-white text-[#F25E26]">
-//                 <tr className="tracking-wide">
-//                   {thead.map((header) => (
-//                     <th
-//                       className={`${header === "S/N"
-//                         ? "rounded-bl-3xl"
-//                         : header === "Ticket Price"
-//                           ? "rounded-br-3xl"
-//                           : header === `Phone Number`
-//                             ? "rounded-br-3xl  text-left"
-//                             : "text-center"
-//                         } p-3 text-2xl font-semibold capitalize lg:w-max`}
-//                       key={header}
-//                     >
-//                      {header === "Ticket Number" ? (
-//                         <div className="flex flex-col items-center">
-//                            <span className="text-xs text-[#F25E26] font-normal">(Winner)</span>
-//                           <span>{header} </span>
-                         
-//                         </div>
-//                       ) : (
-//                         header
-//                       )}
-//                     </th>
-//                   ))}
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {currentItems?.map((val: any, index: number) => (
-//                   <tr className="text-white h-1" key={index}>
-//                     <td className="rounded-tl-[30px] rounded-br-[20px]  relative flex items-center justify-center h-16 w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000]  text-white font-bold">
-//                       <p className="text-lg font-semibold">
-//                         {indexOfFirstItem + index + 1}
-//                       </p>
-//                     </td>
-
-//                     <td className=" text-center h-[16px]">
-//                       <p className="custom-shape pt-3 pb-8 mx-4 w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000]  text-xl font-semibold">
-//                         {val.product}
-//                       </p>
-//                     </td>
-//                     <td className="pl-6 p-0 h-[16px]  w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-lg font-semibold ">
-//                       <p className="  mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-2  text-center text-lg tracking-[0.5em] text-black">
-//                         {val.ticket_number}
-//                       </p>
-//                     </td>
-//                     <td className="h-[16px] rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-//                       <p className="cursor-pointer px-2 py-1 text-lg font-semibold tracking-wider">
-
-                     
-
-// {
-//   val?.phone_number ? maskPhone(val.phone_number) : "N/A"
-// }
-
-//                       </p>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           }
-
-//           <div className="flex justify-center mt-4">
-//             <button
-//               onClick={handlePrevPage}
-//               disabled={currentPage === 1}
-//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === 1
-//                 ? "bg-gray-400 cursor-not-allowed"
-//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
-//                 } text-white`}
-//             >
-//               Previous
-//             </button>
-
-//             <span className="mx-4 text-lg text-white">
-//               Page {currentPage} of {totalPages}
-//             </span>
-
-//             <button
-//               onClick={handleNextPage}
-//               disabled={currentPage === totalPages}
-//               className={`px-4 py-2 mx-2 rounded-lg ${currentPage === totalPages
-//                 ? "bg-gray-400 cursor-not-allowed"
-//                 : "bg-[#F25E26] hover:bg-[#EA7000]"
-//                 } text-white`}
-//             >
-//               Next
-//             </button>
-//           </div>
-//         </>
-//       );
-//     }
-//   };
-
 
 const renderRows = () => {
   if (!showWinners) {
     return (
       <>
         <div className="overflow-x-auto -mx-2 sm:mx-0">
-          <table className="w-full border-separate border-spacing-y-4 min-w-[520px]">
+          <table className="w-full border-separate border-spacing-y-3 sm:border-spacing-y-4 min-w-0 sm:min-w-[520px]">
             <thead className="bg-white text-[#F25E26]">
               <tr className="tracking-wide">
                 {thead.map((header) => (
@@ -492,12 +296,12 @@ const renderRows = () => {
                         : header === `Phone Number`
                           ? "rounded-br-3xl text-left"
                           : "text-center"
-                      } p-2 sm:p-3 text-sm sm:text-xl lg:text-2xl font-semibold capitalize whitespace-nowrap`}
+                      } p-1.5 sm:p-3 text-[11px] sm:text-xl lg:text-2xl font-semibold capitalize whitespace-nowrap`}
                     key={header}
                   >
                     {header === "Ticket Number" ? (
                       <div className="flex flex-col items-center">
-                        <span className="text-sm sm:text-xl lg:text-2xl text-[#F25E26] font-normal">(Winner)</span>
+                        <span className="text-[8px] sm:text-xl lg:text-2xl text-[#F25E26] font-normal">(Winner)</span>
                         <span>{header}</span>
                       </div>
                     ) : (
@@ -510,23 +314,23 @@ const renderRows = () => {
             <tbody>
               {currentItems?.map((val: any, index: number) => (
                 <tr className="text-white h-1" key={index}>
-                  <td className="rounded-tl-[20px] sm:rounded-tl-[30px] rounded-br-[14px] sm:rounded-br-[20px] relative flex items-center justify-center h-12 sm:h-16 w-8 sm:w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000] text-white font-bold">
-                    <p className="text-sm sm:text-lg font-semibold">
+                  <td className="rounded-tl-[14px] sm:rounded-tl-[30px] rounded-br-[10px] sm:rounded-br-[20px] relative flex items-center justify-center h-10 sm:h-16 w-6 sm:w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000] text-white font-bold">
+                    <p className="text-xs sm:text-lg font-semibold">
                       {indexOfFirstItem + index + 1}
                     </p>
                   </td>
-                  <td className="text-center h-[16px]">
-                    <p className="custom-shape pt-2 sm:pt-3 pb-6 sm:pb-8 mx-1 sm:mx-2 lg:mx-4 w-[120px] sm:w-[180px] lg:w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000] text-sm sm:text-lg lg:text-xl font-semibold truncate">
+                  <td className="text-center h-auto sm:h-[16px]">
+                    <p className="custom-shape py-2 sm:pt-3 sm:pb-8 mx-0.5 sm:mx-2 lg:mx-4 w-[80px] sm:w-[180px] lg:w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000] text-[10px] sm:text-lg lg:text-xl font-semibold break-words leading-tight sm:truncate">
                       {val?.product || "Loading..."}
                     </p>
                   </td>
-                  <td className="pl-2 sm:pl-4 lg:pl-6 p-0 h-[16px] w-[130px] sm:w-[200px] lg:w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-sm sm:text-lg font-semibold">
-                    <p className="p-rd mx-1 sm:mx-2 flex w-[100px] sm:w-[150px] lg:w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-1 sm:px-2 text-center text-xs sm:text-base lg:text-lg tracking-[0.3em] sm:tracking-[0.5em] text-black">
+                  <td className="pl-1 sm:pl-4 lg:pl-6 p-0 h-auto sm:h-[16px] w-[90px] sm:w-[200px] lg:w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-[11px] sm:text-lg font-semibold">
+                    <p className="p-rd mx-0.5 sm:mx-2 flex w-[70px] sm:w-[150px] lg:w-[200px] cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-0.5 sm:px-2 text-center text-[10px] sm:text-base lg:text-lg tracking-[0.15em] sm:tracking-[0.5em] text-black">
                       {/* Counter animation */}
                     </p>
                   </td>
-                  <td className="h-[16px] rounded-tr-[28px] sm:rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-                    <p className="cursor-pointer px-1 sm:px-2 py-1 text-xs sm:text-base lg:text-lg font-semibold tracking-wider whitespace-nowrap">
+                  <td className="h-[16px] rounded-tr-[20px] sm:rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                    <p className="cursor-pointer px-0.5 sm:px-2 py-1 text-[10px] sm:text-base lg:text-lg font-semibold tracking-normal sm:tracking-wider whitespace-nowrap">
                       {showWinners 
                         ? val?.phone_number ? maskPhone(val.phone_number) : "N/A"
                         : "*********"}
@@ -571,7 +375,7 @@ const renderRows = () => {
     return (
       <>
         <div className="overflow-x-auto -mx-2 sm:mx-0">
-          <table className="w-full border-separate border-spacing-y-4 min-w-[520px]">
+          <table className="w-full border-separate border-spacing-y-3 sm:border-spacing-y-4 min-w-0 sm:min-w-[520px]">
             <thead className="bg-white text-[#F25E26]">
               <tr className="tracking-wide">
                 {thead.map((header) => (
@@ -583,12 +387,12 @@ const renderRows = () => {
                         : header === `Phone Number`
                           ? "rounded-br-3xl text-left"
                           : "text-center"
-                      } p-2 sm:p-3 text-sm sm:text-xl lg:text-2xl font-semibold capitalize whitespace-nowrap`}
+                      } p-1.5 sm:p-3 text-[11px] sm:text-xl lg:text-2xl font-semibold capitalize whitespace-nowrap`}
                     key={header}
                   >
                     {header === "Ticket Number" ? (
                       <div className="flex flex-col items-center">
-                        <span className="text-[10px] sm:text-xs text-[#F25E26] font-normal">(Winner)</span>
+                        <span className="text-[8px] sm:text-xs text-[#F25E26] font-normal">(Winner)</span>
                         <span>{header}</span>
                       </div>
                     ) : (
@@ -601,23 +405,23 @@ const renderRows = () => {
             <tbody>
               {currentItems?.map((val: any, index: number) => (
                 <tr className="text-white h-1" key={index}>
-                  <td className="rounded-tl-[20px] sm:rounded-tl-[30px] rounded-br-[14px] sm:rounded-br-[20px] relative flex items-center justify-center h-12 sm:h-16 w-8 sm:w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000] text-white font-bold">
-                    <p className="text-sm sm:text-lg font-semibold">
+                  <td className="rounded-tl-[14px] sm:rounded-tl-[30px] rounded-br-[10px] sm:rounded-br-[20px] relative flex items-center justify-center h-10 sm:h-16 w-6 sm:w-10 bg-gradient-to-b from-[#E84526] to-[#EA7000] text-white font-bold">
+                    <p className="text-xs sm:text-lg font-semibold">
                       {indexOfFirstItem + index + 1}
                     </p>
                   </td>
-                  <td className="text-center h-[16px]">
-                    <p className="custom-shape pt-2 sm:pt-3 pb-6 sm:pb-8 mx-1 sm:mx-2 lg:mx-4 w-[120px] sm:w-[180px] lg:w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000] text-sm sm:text-lg lg:text-xl font-semibold truncate">
+                  <td className="text-center h-auto sm:h-[16px]">
+                    <p className="custom-shape py-2 sm:pt-3 sm:pb-8 mx-0.5 sm:mx-2 lg:mx-4 w-[80px] sm:w-[180px] lg:w-[247px] cursor-pointer rounded-l-2xl bg-gradient-to-r from-[#E84526] to-[#EA7000] text-[10px] sm:text-lg lg:text-xl font-semibold break-words leading-tight sm:truncate">
                       {val.product}
                     </p>
                   </td>
-                  <td className="pl-2 sm:pl-4 lg:pl-6 p-0 h-[16px] w-[130px] sm:w-[200px] lg:w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-sm sm:text-lg font-semibold">
-                    <p className="mx-1 sm:mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-1 sm:px-2 text-center text-xs sm:text-base lg:text-lg tracking-[0.3em] sm:tracking-[0.5em] text-black">
+                  <td className="pl-1 sm:pl-4 lg:pl-6 p-0 h-auto sm:h-[16px] w-[90px] sm:w-[200px] lg:w-[278px] bg-gradient-to-r from-[#E84526] to-[#EA7000] text-center text-[11px] sm:text-lg font-semibold">
+                    <p className="mx-0.5 sm:mx-2 flex w-fit cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-200 px-0.5 sm:px-2 text-center text-[10px] sm:text-base lg:text-lg tracking-[0.15em] sm:tracking-[0.5em] text-black">
                       {val.ticket_number}
                     </p>
                   </td>
-                  <td className="h-[16px] rounded-tr-[28px] sm:rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
-                    <p className="cursor-pointer px-1 sm:px-2 py-1 text-xs sm:text-base lg:text-lg font-semibold tracking-wider whitespace-nowrap">
+                  <td className="h-[16px] rounded-tr-[20px] sm:rounded-tr-[39px] bg-gradient-to-l from-[#E84526] to-[#EA7000] text-center">
+                    <p className="cursor-pointer px-0.5 sm:px-2 py-1 text-[10px] sm:text-base lg:text-lg font-semibold tracking-normal sm:tracking-wider whitespace-nowrap">
                       {val?.phone_number ? maskPhone(val.phone_number) : "N/A"}
                     </p>
                   </td>

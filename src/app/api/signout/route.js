@@ -6,7 +6,7 @@ export async function POST(request) {
   try {
     const cacheBuster = `cache=${Date.now()}`;
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
   /*   console.log(token, 'token') */
@@ -34,6 +34,6 @@ export async function POST(request) {
     return NextResponse.json({ status });
   } catch (error) {
     console.error("Error processing request:", error.message);
-    return NextResponse.error(new Error("Internal Server Error"));
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

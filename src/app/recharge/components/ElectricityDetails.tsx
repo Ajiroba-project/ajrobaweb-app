@@ -214,13 +214,12 @@ export const ElectricityDetails = () => {
   };
 
   return (
-    <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
+    <div className="flex flex-col items-center gap-4 bg-[#F6F6F6] px-4 py-12">
       <Formtitle
-        // className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
         title="Electricity Recharge"
         subtitle="Recharge your electricity with ease"
       />
-      <div className="">
+      <div className="w-full max-w-[400px]">
         <form
           className="flex flex-col gap-3"
           onSubmit={handleSubmit(sumbitForm)}
@@ -231,7 +230,7 @@ export const ElectricityDetails = () => {
           } */}
 
 
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <SelectField
               name="decoder"
               register={register}
@@ -241,13 +240,11 @@ export const ElectricityDetails = () => {
               showlabel={false}
               value={watch("decoder")}
               onChange={(e) => setValue("decoder", e.target.value)}
-              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div>
 
-
-
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <SelectField
               name='meter'
               register={register}
@@ -257,15 +254,11 @@ export const ElectricityDetails = () => {
               showlabel={false}
               value={watch("meter")}
               onChange={(e) => setValue("meter", e.target.value)}
-              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div>
 
-
-
-
-
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <InputField
               name="iucnumber"
               register={register}
@@ -284,12 +277,12 @@ export const ElectricityDetails = () => {
               options={dataPlan}
               label="Select Package/Bundle"
               showlabel={false}
-              className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full max-w-full truncate h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div> */}
 
 
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <CurrencyInputField
               name="elecamount"
               register={register}
@@ -302,7 +295,7 @@ export const ElectricityDetails = () => {
           </div>
 
 
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <InputField
               name="elecphone"
               register={register}

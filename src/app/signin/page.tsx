@@ -4,7 +4,7 @@ import Brand from '../asset/logo.svg'
 import Image from 'next/image'
 import AuthHero, { HeroSubText } from '../component/AuthHero'
 import { DefaultButton } from '../component/Button'
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 // import Input from '../component/Input'
@@ -13,16 +13,15 @@ import { FaRegEyeSlash } from 'react-icons/fa'
 import { FaRegEye } from 'react-icons/fa6'
 import { useMutateData } from '@/hooks/useMutateData'
 import { ToastContainer, toast } from 'react-toastify'
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import { Input } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 
 import { useAuthStore } from '@/store/store'
 
 // import 'react-toastify/dist/ReactToastify.css'
 import { useState, useEffect, useRef } from 'react'
 // import Cookies from 'js-cookie'
-import Cookies from "js-cookie";
-
+import Cookies from 'js-cookie'
 
 function Page() {
   type dataProps = {
@@ -40,8 +39,6 @@ function Page() {
   )
 
   const schema = yup.object().shape({
-
-
     email_or_phone: emailOrPhoneNumberSchema.required(
       'Email or phone number is required'
     ),
@@ -49,7 +46,7 @@ function Page() {
     password: yup
       .string()
       .required('Password is required')
-      .min(6, "Must be 6 characters and above")
+      .min(6, 'Must be 6 characters and above')
   })
 
   const { setUser, isLoggedIn, setAuthCookie } = useAuthStore(state => ({
@@ -72,7 +69,7 @@ function Page() {
     resolver: yupResolver(schema),
     defaultValues: {
       email_or_phone: '',
-      password: '',
+      password: ''
     }
   })
 
@@ -94,17 +91,17 @@ function Page() {
       })
       // console.log(data, 'datat')
       setAuthCookie(data?.data?.token, 0)
-      Cookies.set("token", data?.data?.token, { expires: 1 });
+      Cookies.set('token', data?.data?.token, { expires: 1 })
       setUser(data?.data)
-      
+
       // Save email if remember me is checked
       if (rememberMe) {
-        Cookies.set("remembered_email", data.email_or_phone, { expires: 30 }); // Save for 30 days
+        Cookies.set('remembered_email', data.email_or_phone, { expires: 30 }) // Save for 30 days
       } else {
         // Remove saved email if remember me is unchecked
-        Cookies.remove("remembered_email");
+        Cookies.remove('remembered_email')
       }
-      
+
       //  Cookies.set('ik', JSON.stringify(data?.data?.token), { sameSite: 'strict' });
 
       reset()
@@ -119,7 +116,6 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-
     } else if (data.status === 401) {
       toast.error(`${'Incorrect login details'}`, {
         position: 'top-right',
@@ -131,8 +127,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-
-    } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
+    } else if (
+      data.status === 403 &&
+      data?.data?.message === 'Incorrect login details'
+    ) {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -141,11 +139,13 @@ function Page() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: 'light'
         /* onClose: () => router.push("/otpverification"), */
-      });
-
-    } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
+      })
+    } else if (
+      data.status === 403 &&
+      data?.data?.message !== 'Incorrect login details'
+    ) {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -154,14 +154,10 @@ function Page() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
-        onClose: () => router.push("/otpverification"),
-      });
-
-    }
-
-
-    else {
+        theme: 'light',
+        onClose: () => router.push('/otpverification')
+      })
+    } else {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -172,12 +168,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-
     }
   }
 
   const handleError = (error: any) => {
-
     toast.error(`${'An Error Occured'}`, {
       position: 'top-right',
       autoClose: 2000,
@@ -188,7 +182,6 @@ function Page() {
       progress: undefined,
       theme: 'light'
     })
-
   }
 
   // Modified success handler to handle remember me
@@ -205,20 +198,22 @@ function Page() {
         theme: 'light',
         onClose: () => router.push('/')
       })
-      
+
       setAuthCookie(data?.data?.token, 0)
-      Cookies.set("token", data?.data?.token, { expires: 1 });
+      Cookies.set('token', data?.data?.token, { expires: 1 })
       setUser(data?.data)
-      Cookies.set("user", JSON.stringify(data?.data), { expires: 1 });
-      
+      Cookies.set('user', JSON.stringify(data?.data), { expires: 1 })
+
       // Save email if remember me is checked, using the last submitted value
       if (rememberMe && lastEmailOrPhone.current) {
-        Cookies.set("remembered_email", lastEmailOrPhone.current, { expires: 30 }); // Save for 30 days
+        Cookies.set('remembered_email', lastEmailOrPhone.current, {
+          expires: 30
+        }) // Save for 30 days
       } else {
         // Remove saved email if remember me is unchecked
-        Cookies.remove("remembered_email");
+        Cookies.remove('remembered_email')
       }
-      
+
       reset()
     } else if (data.status === 404) {
       toast.error(`${data?.data?.message}`, {
@@ -231,7 +226,6 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-
     } else if (data.status === 401) {
       toast.error(`${'Incorrect login details'}`, {
         position: 'top-right',
@@ -243,8 +237,10 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-
-    } else if (data.status === 403 && data?.data?.message === "Incorrect login details") {
+    } else if (
+      data.status === 403 &&
+      data?.data?.message === 'Incorrect login details'
+    ) {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -253,10 +249,12 @@ function Page() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
-      });
-
-    } else if (data.status === 403 && data?.data?.message !== "Incorrect login details") {
+        theme: 'light'
+      })
+    } else if (
+      data.status === 403 &&
+      data?.data?.message !== 'Incorrect login details'
+    ) {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
         autoClose: 2000,
@@ -265,10 +263,9 @@ function Page() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
-        onClose: () => router.push("/otpverification"),
-      });
-
+        theme: 'light',
+        onClose: () => router.push('/otpverification')
+      })
     } else {
       toast.error(`${data?.data?.message}`, {
         position: 'top-right',
@@ -280,7 +277,6 @@ function Page() {
         progress: undefined,
         theme: 'light'
       })
-
     }
   }
 
@@ -290,21 +286,21 @@ function Page() {
     handleError
   )
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const lastEmailOrPhone = useRef<string | undefined>(undefined);
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
+  const lastEmailOrPhone = useRef<string | undefined>(undefined)
 
   // Load saved email on component mount
   useEffect(() => {
-    const savedEmail = Cookies.get('remembered_email');
+    const savedEmail = Cookies.get('remembered_email')
     if (savedEmail) {
-      setValue('email_or_phone', savedEmail);
-      setRememberMe(true);
+      setValue('email_or_phone', savedEmail)
+      setRememberMe(true)
     }
-  }, [setValue]);
+  }, [setValue])
 
   const sumbitForm = async (data: dataProps) => {
-    lastEmailOrPhone.current = data.email_or_phone;
+    lastEmailOrPhone.current = data.email_or_phone
     // console.log(data, 'datatat')
 
     mutate({
@@ -313,68 +309,62 @@ function Page() {
     })
   }
 
-
   return (
     <>
-
-
-
-
-
-      <div className="px-4 content-container">
-        <nav className="Brand-logo flex justify-center p-6 px-7 md:block lg:block lg:px-14 xl:block 2xl:block">
-          <Link href={"/"}>
-            <Image src={Brand} alt="brand-logo" />
+      <div className='content-container px-4'>
+        <nav className='Brand-logo flex justify-center px-7 py-4 sm:p-6 md:block lg:block lg:px-14 xl:block 2xl:block'>
+          <Link href={'/'}>
+            <Image src={Brand} alt='brand-logo' />
           </Link>
         </nav>
 
-        <div className="flex justify-center items-center flex-col min-h-[90vh]">
-          <HeroSubText title="Welcome Back" menu="Sign in to shop on Ajiroba" />
+        <div className='flex min-h-0 flex-col items-center sm:min-h-[80vh] sm:justify-center'>
+          <HeroSubText title='Welcome Back' menu='Sign in to shop on Ajiroba' />
 
-          <div className="mb-20 flex justify-center w-full">
+          <div className='mb-10 flex w-full justify-center sm:mb-20'>
             <form
               onSubmit={handleSubmit(sumbitForm)}
-              className="w-full max-w-sm p-4 md:p-8"
+              className='w-full max-w-sm p-4 md:p-8'
             >
-              <div className="mt-4 grid grid-cols-1 gap-8">
-                <div className="flex flex-col">
-                  <label className="text-sm" htmlFor="email_or_phone">
+              <div className='mt-4 grid grid-cols-1 gap-8'>
+                <div className='flex flex-col'>
+                  <label className='text-sm' htmlFor='email_or_phone'>
                     Email Address/Phone Number*
                   </label>
                   <Controller
-                    name="email_or_phone"
+                    name='email_or_phone'
                     control={control}
                     render={({ field }) => (
                       <input
-                        type="text"
+                        type='text'
                         {...field}
-                        placeholder="Enter your Email or Phone number"
-                        className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
+                        placeholder='Enter your Email or Phone number'
+                        className='h-auto w-full rounded-lg border p-2.5 font-Inter text-sm font-normal focus:outline-none'
                       />
                     )}
                   />
-                  <div className="text-xs text-red-700">
+                  <div className='text-xs text-red-700'>
                     {errors?.email_or_phone?.message}
                   </div>
                 </div>
 
-                <div className="flex flex-col">
-                  <label className="text-sm" htmlFor="password">
+                <div className='flex flex-col'>
+                  <label className='text-sm' htmlFor='password'>
                     Password
                   </label>
                   <Controller
-                    name="password"
+                    name='password'
                     control={control}
                     render={({ field }) => (
-                      <div className="relative">
+                      <div className='relative'>
                         <input
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           {...field}
-                          placeholder="***********"
-                          className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal focus:outline-none"
+                          placeholder='***********'
+                          className='h-auto w-full rounded-lg border p-2.5 font-Inter text-sm font-normal focus:outline-none'
                         />
                         <div
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
+                          className='absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-sm leading-5'
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
@@ -382,48 +372,57 @@ function Page() {
                       </div>
                     )}
                   />
-                  <div className="text-xs text-red-700">
+                  <div className='text-xs text-red-700'>
                     {errors?.password?.message}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-center">
+              <div className='mt-4 flex items-center justify-center'>
                 <DefaultButton
-                  type="submit"
-                  className="rounded-lg h-10 w-full bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  text={status === "pending" ? "loading..." : "Sign in"}
-                  handleClick={() => console.log("")}
-                  disabled={!watch('email_or_phone') || !watch('password') || status === "pending"}
+                  type='submit'
+                  className='h-10 w-full rounded-lg bg-[#FCDFD4] text-sm hover:bg-[#E84526] hover:text-white disabled:cursor-not-allowed disabled:opacity-50'
+                  text={status === 'pending' ? 'loading...' : 'Sign in'}
+                  handleClick={() => console.log('')}
+                  disabled={
+                    !watch('email_or_phone') ||
+                    !watch('password') ||
+                    status === 'pending'
+                  }
                 />
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+              <div className='mt-4 flex flex-wrap items-center justify-between gap-2'>
                 <div>
                   <input
-                    type="checkbox"
-                    id="rememberMe"
+                    type='checkbox'
+                    id='rememberMe'
                     checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="mr-2 accent-[#E84526]"
+                    onChange={e => setRememberMe(e.target.checked)}
+                    className='mr-2 accent-[#E84526]'
                   />
-                  <label htmlFor="rememberMe" className="text-sm cursor-pointer">
+                  <label
+                    htmlFor='rememberMe'
+                    className='cursor-pointer text-sm'
+                  >
                     Remember me
                   </label>
                 </div>
-                <div onClick={() => router.push("forgot-password")}>
-                  <span className="cursor-pointer text-sm">Forgot password?</span>
+                <div onClick={() => router.push('forgot-password')}>
+                  <span className='cursor-pointer text-sm'>
+                    Forgot password?
+                  </span>
                 </div>
               </div>
 
-              <div className="mt-6 flex items-center justify-center">
-                <small className="text-sm text-[#353131] font-normal font-Poppins">
+              <div className='mt-6 flex items-center justify-center'>
+                <small className='font-Poppins text-sm font-normal text-[#353131]'>
                   Don’t have an account?
                   <span
-                    onClick={() => router.push("/signup")}
-                    className="cursor-pointer text-base text-[#F25E26] ml-2"
+                    onClick={() => router.push('/signup')}
+                    className='ml-2 cursor-pointer text-base text-[#F25E26]'
                   >
-                    {" "}
+                    {' '}
                     Sign up
                   </span>
                 </small>
@@ -432,7 +431,6 @@ function Page() {
           </div>
         </div>
       </div>
-
     </>
   )
 }

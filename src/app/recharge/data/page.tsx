@@ -154,7 +154,7 @@ const DataPage = () => {
                 className='absolute inset-0 bg-black/40'
                 onClick={() => toggleSidebar(false)}
               ></div>
-              <div className='absolute left-0 top-0 h-full w-80 max-w-[90vw] overflow-y-auto bg-[#F6F6F6] p-6 shadow-2xl'>
+              <div className='absolute left-0 top-0 h-full w-80 max-w-[90vw] overflow-y-auto bg-[#F6F6F6] px-6 pb-6 pt-28 shadow-2xl'>
                 <SideMenu />
               </div>
             </div>
@@ -214,7 +214,7 @@ const DataPage = () => {
             className='absolute inset-0 bg-black/40'
             onClick={() => toggleSidebar(false)}
           ></div>
-          <div className='absolute left-0 top-0 h-full w-65 max-w-[90vw] overflow-y-auto bg-[#F6F6F6] p-6 shadow-2xl'>
+          <div className='absolute left-0 top-0 h-full w-65 max-w-[90vw] overflow-y-auto bg-[#F6F6F6] px-6 pb-6 pt-16 shadow-2xl'>
             <SideMenu />
           </div>
         </div>

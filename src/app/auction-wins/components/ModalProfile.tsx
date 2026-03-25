@@ -33,10 +33,10 @@ export const ModalProfile: React.FC<ModalProfileProps> = ({
     <>
       {isOpen && (
         <section className="fixed left-0 top-0 z-50 flex h-full w-screen items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="mb-8 flex h-auto flex-col items-center justify-center gap-6 rounded-md bg-white p-8">
+          <div className="flex h-auto w-full max-w-lg flex-col items-center justify-center gap-4 rounded-md bg-white p-4 sm:gap-6 sm:p-6 max-h-[90vh] overflow-y-auto">
             {icon && <Image src={icon} alt="icon" />}
-            {title && <h2 className="text-xl font-semibold">{title}</h2>}
-            {children && <div className="my-4">{children}</div>}
+            {title && <h2 className="font-semibold flex text-center items-center justify-center lg:text-lg text-sm">{title}</h2>}
+            {children && <div className="w-full">{children}</div>}
             {/* <div className='mt-5 flex justify-center gap-4'>
               <button
                 className={`rounded-md bg-[#F25E26] p-2 text-white ${buttonclass}`}

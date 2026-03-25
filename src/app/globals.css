@@ -6,6 +6,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Force light mode and ensure text contrast */
 :root {
   color-scheme: light;
@@ -174,9 +184,13 @@ body {
 }
 
 .custom-shape {
-  clip-path: polygon(0 0, 85% 0, 91% 33%, 96% 69%, 100% 100%, 84% 77%, 0% 75%);
-  /* width:247px;
-  height:87px; */
+  clip-path: none;
+}
+
+@media (min-width: 640px) {
+  .custom-shape {
+    clip-path: polygon(0 0, 85% 0, 91% 33%, 96% 69%, 100% 100%, 84% 77%, 0% 75%);
+  }
 }
 
 /* *{

@@ -722,14 +722,13 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
   
                   <div onClick={() =>
                     router.push(`/raffle/${val?.auction[0]?.auction_id}/winners`)
-                  } className="relative  flex gap-4 border p-3 flex-wrap  cursor-pointer"> {/* Container height control */}
+                  } className="relative min-h-[80px] w-[100px] shrink-0 self-stretch cursor-pointer overflow-hidden rounded-lg">
                     <Image
                       src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                       alt={val?.auction[0]?.name}
-                      width={100}
-                      height={80}
+                      fill
+                      sizes="100px"
                       className="rounded-lg object-cover"
-                      style={{ width: '100px', height: 'auto' }}
                     />
                   </div>
   

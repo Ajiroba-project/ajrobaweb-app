@@ -330,6 +330,7 @@ export const ProductCard = ({ cardInfo, isLoading = false }: any) => {
                     src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className='object-contain p-4'
                   />
                 </div>
@@ -644,6 +645,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
                     src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className='object-contain p-4'
                   />
                 </div>
@@ -953,6 +955,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
                     src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className='object-contain p-4'
                   />
                 </div>
@@ -1186,6 +1189,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
                     src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className='object-contain p-4'
                   />
                 </div>
@@ -1336,6 +1340,7 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
                     src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className='object-contain p-4'
                   />
                 </div>
@@ -1813,6 +1818,7 @@ export const ProductCardMain = ({ cardInfo, isLoading = false }: any) => {
                         <Image
                           src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
                           fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           alt="image"
                           className="object-contain p-4"
                         />
@@ -2161,6 +2167,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                         <Image
                           src={`https://staging.ajiroba.ng/media/${value?.image}`}
                           fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           alt="image"
                           className="object-contain p-4"
                         />
@@ -2308,6 +2315,7 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                     >
                       <Image
                         fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         src={`https://staging.ajiroba.ng/media/${value?.images
                           ? value?.images[0]?.image
                           : value?.image[0]?.image

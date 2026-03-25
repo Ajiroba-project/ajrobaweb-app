@@ -97,7 +97,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
   return (
     <div
-      className='fixed inset-0 z-50 flex flex-col items-center justify-start overflow-y-auto bg-black/40 p-2 sm:p-4'
+      className='fixed inset-0 z-[1001] flex flex-col items-center justify-start overflow-y-auto bg-black/40 px-2 pb-2 pt-28 sm:p-4 sm:pt-4'
       onClick={onClose}
     >
       <div className='sm:min-h-auto flex min-h-full w-full max-w-[850px] flex-col gap-2 sm:gap-4'>
@@ -212,7 +212,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                     <span className='min-w-[120px] text-xs text-black sm:min-w-[160px] sm:text-sm'>
                       Item Won:
                     </span>
-                    <span className='font-b w-full border-b-2 border-dotted border-gray-500 pb-1 text-xs text-black sm:ml-1 sm:flex-1 sm:text-sm font-bold '>
+                    <span className='font-b w-full border-b-2 border-dotted border-gray-500 pb-1 text-xs font-bold text-black sm:ml-1 sm:flex-1 sm:text-sm '>
                       {adviceData.prize}
                     </span>
                   </div>
@@ -268,7 +268,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                     <span className='min-w-[120px] text-xs text-black sm:min-w-[180px] sm:text-sm'>
                       Estimated Market Value of Item:
                     </span>
-                    <span className='w-full border-b-2 border-dotted border-gray-500 pb-1 text-xs text-black sm:ml-1 sm:flex-1 sm:text-sm font-bold'>
+                    <span className='w-full border-b-2 border-dotted border-gray-500 pb-1 text-xs font-bold text-black sm:ml-1 sm:flex-1 sm:text-sm'>
                       {formatCurrency(adviceData.estimated_value)}
                     </span>
                   </div>
@@ -278,41 +278,39 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
               {/* Instructions */}
               <div className='mb-4'>
                 <p className='text-sm leading-relaxed text-black'>
-                  Kindly proceed to your Ajiroba dashboard to redeem your winning{' '}
-                  <span className="italic">(you can check page 2 of this letter for steps to redeem your winning)</span>
+                  Kindly proceed to your Ajiroba dashboard to redeem your
+                  winning{' '}
+                  <span className='italic'>
+                    (you can check page 2 of this letter for steps to redeem
+                    your winning)
+                  </span>
                 </p>
               </div>
 
-
               <div className='mb-4'>
                 <p className='text-sm leading-relaxed text-black'>
-                   For any clarification, kindly contact us
-                  via the channels at the bottom of this letter.
+                  For any clarification, kindly contact us via the channels at
+                  the bottom of this letter.
                 </p>
               </div>
 
               <div className='mb-6'>
                 <p className='text-sm leading-relaxed text-black'>
                   Thank you for patronising us.
-              
                   <br />
-               
                 </p>
               </div>
 
               <div className=''>
-                <p className='text-sm leading-relaxed text-black font-bold italic'>
-                Keep buying tickets,keep winning!!!
+                <p className='text-sm font-bold italic leading-relaxed text-black'>
+                  Keep buying tickets,keep winning!!!
                   <br />
                 </p>
               </div>
 
-
               <div className='mb-6'>
-                <p className='text-sm leading-relaxed text-black '>
-              
-                  <br />
-                  <p>CONGRATULATIONS!!!</p>
+                <p className='text-sm font-bold leading-relaxed text-black'>
+                  CONGRATULATIONS!!!
                 </p>
               </div>
 
@@ -324,20 +322,17 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                       <strong>For:</strong> Ajiroba Technologies Ltd
                     </div>
 
-
-                  <div className='my-4 flex items-center justify-start'>
-                    <img
-                      src={mrsajirobasignature.src}
-                      alt='Signature of Mrs Ajiroba'
-                      className='h-auto w-[160px] max-w-full'
-                    />
-                  </div>
+                    <div className='my-4 flex items-center justify-start'>
+                      <img
+                        src={mrsajirobasignature.src}
+                        alt='Signature of Mrs Ajiroba'
+                        className='h-auto w-[160px] max-w-full'
+                      />
+                    </div>
                     <div className='my-5'>
                       <strong>CHIEF (MRS) AYOOLA. A</strong>
                     </div>
-                    <div>
-                      The Yeye Ajiroba and MD/CEO
-                    </div>
+                    <div>The Yeye Ajiroba and MD/CEO</div>
                   </div>
                 </div>
                 <div className='text-right'>
@@ -345,100 +340,98 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                 </div>
               </div>
 
-           
-
-
-
-
               {/* Footer Contact Info */}
-<div className='flex items-center justify-between overflow-x-auto rounded-md bg-[#F1F1F1] p-3 text-xs'>
-  {/* Contact Information Row */}
-  <div className='flex min-w-0 flex-1 items-center gap-4'>
-    {/* Customer careline */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-0.5'>
-      <PhoneCall size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Customer careline
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          07038809512
-        </span>
-      </div>
-    </div>
+              <div className='flex items-center justify-between overflow-x-auto rounded-md bg-[#F1F1F1] p-3 text-xs'>
+                {/* Contact Information Row */}
+                <div className='flex min-w-0 flex-1 items-center gap-4'>
+                  {/* Customer careline */}
+                  <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-0.5'>
+                    <PhoneCall size={12} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Customer careline
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        07038809512
+                      </span>
+                    </div>
+                  </div>
 
-    {/* Email */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
-      <MailIcon size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Email
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          support@ajiroba.com
-        </span>
-      </div>
-    </div>
+                  {/* Email */}
+                  <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+                    <MailIcon size={12} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Email
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        support@ajiroba.com
+                      </span>
+                    </div>
+                  </div>
 
-    {/* Instagram */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
-      <BsInstagram size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Instagram
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          @ajiroba.com
-        </span>
-      </div>
-    </div>
+                  {/* Instagram */}
+                  <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+                    <BsInstagram
+                      size={12}
+                      className='flex-shrink-0 text-black'
+                    />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Instagram
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        @ajiroba.com
+                      </span>
+                    </div>
+                  </div>
 
-    {/* Website */}
-    <div className='flex min-w-0 items-center gap-1.5 pr-4'>
-      <GlobeIcon size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Website
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          www.ajiroba.com
-        </span>
-      </div>
-    </div>
-  </div>
+                  {/* Website */}
+                  <div className='flex min-w-0 items-center gap-1.5 pr-4'>
+                    <GlobeIcon size={12} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Website
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        www.ajiroba.com
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-  {/* App Stores */}
-  <div className='flex flex-shrink-0 gap-2'>
-    {/* Google Play Store */}
-    <div className='flex items-center gap-1.5 rounded bg-black px-3 py-1.5'>
-      <SmartphoneIcon size={14} className='flex-shrink-0 text-white' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[7px] text-white opacity-80'>
-          GET IT ON
-        </span>
-        <span className='text-[9px] font-semibold text-white'>
-          Google Play
-        </span>
-      </div>
-    </div>
+                {/* App Stores */}
+                <div className='flex flex-shrink-0 gap-2'>
+                  {/* Google Play Store */}
+                  <div className='flex items-center gap-1.5 rounded bg-black px-3 py-1.5'>
+                    <SmartphoneIcon
+                      size={14}
+                      className='flex-shrink-0 text-white'
+                    />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[7px] text-white opacity-80'>
+                        GET IT ON
+                      </span>
+                      <span className='text-[9px] font-semibold text-white'>
+                        Google Play
+                      </span>
+                    </div>
+                  </div>
 
-    {/* App Store */}
-    <div className='flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5'>
-      <BsApple size={14} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[7px] text-black opacity-70'>
-          Download on the
-        </span>
-        <span className='text-[9px] font-semibold text-black'>
-          App Store
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
+                  {/* App Store */}
+                  <div className='flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5'>
+                    <BsApple size={14} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[7px] text-black opacity-70'>
+                        Download on the
+                      </span>
+                      <span className='text-[9px] font-semibold text-black'>
+                        App Store
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -558,16 +551,18 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                 </p>
                 <div className='flex flex-col  gap-3 sm:flex-row sm:gap-6'>
                   <div>
-                    <p className=' underline underline-offset-2 text-black font-bold'>
+                    <p className=' font-bold text-black underline underline-offset-2'>
                       Customer Careline
                     </p>
                     <p className='text-xs text-black sm:text-sm'>07038809512</p>
                   </div>
                   <div>
-                    <p className=' underline underline-offset-2 text-black font-bold'>
+                    <p className=' font-bold text-black underline underline-offset-2'>
                       Email
                     </p>
-                    <p className='text-xs text-black sm:text-sm'>support@ajiroba.com</p>
+                    <p className='text-xs text-black sm:text-sm'>
+                      support@ajiroba.com
+                    </p>
                   </div>
                 </div>
               </div>
@@ -587,96 +582,98 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
                 <p className='text-sm font-medium text-black'>Page 2</p>
               </div>
 
-            
-
-
-
               {/* Footer Contact Info */}
-<div className='flex items-center justify-between overflow-x-auto rounded-md bg-[#F1F1F1] p-3 text-xs'>
-  {/* Contact Information Row */}
-  <div className='flex min-w-0 flex-1 items-center gap-4'>
-    {/* Customer careline */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-0.5'>
-      <PhoneCall size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Customer careline
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          07038809512
-        </span>
-      </div>
-    </div>
+              <div className='flex items-center justify-between overflow-x-auto rounded-md bg-[#F1F1F1] p-3 text-xs'>
+                {/* Contact Information Row */}
+                <div className='flex min-w-0 flex-1 items-center gap-4'>
+                  {/* Customer careline */}
+                  <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-0.5'>
+                    <PhoneCall size={12} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Customer careline
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        07038809512
+                      </span>
+                    </div>
+                  </div>
 
-    {/* Email */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
-      <MailIcon size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Email
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          support@ajiroba.com
-        </span>
-      </div>
-    </div>
+                  {/* Email */}
+                  <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+                    <MailIcon size={12} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Email
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        support@ajiroba.com
+                      </span>
+                    </div>
+                  </div>
 
-    {/* Instagram */}
-    <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
-      <BsInstagram size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Instagram
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          @ajiroba.com
-        </span>
-      </div>
-    </div>
+                  {/* Instagram */}
+                  <div className='flex min-w-0 items-center gap-1.5 border-r border-gray-400 pr-4'>
+                    <BsInstagram
+                      size={12}
+                      className='flex-shrink-0 text-black'
+                    />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Instagram
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        @ajiroba.com
+                      </span>
+                    </div>
+                  </div>
 
-    {/* Website */}
-    <div className='flex min-w-0 items-center gap-1.5 pr-4'>
-      <GlobeIcon size={12} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
-          Website
-        </span>
-        <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
-          www.ajiroba.com
-        </span>
-      </div>
-    </div>
-  </div>
+                  {/* Website */}
+                  <div className='flex min-w-0 items-center gap-1.5 pr-4'>
+                    <GlobeIcon size={12} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[10px] text-black underline underline-offset-2 sm:text-xs'>
+                        Website
+                      </span>
+                      <span className='text-[10px] font-semibold text-[#2A2A2A] sm:text-xs'>
+                        www.ajiroba.com
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-  {/* App Stores */}
-  <div className='flex flex-shrink-0 gap-2'>
-    {/* Google Play Store */}
-    <div className='flex items-center gap-1.5 rounded bg-black px-3 py-1.5'>
-      <SmartphoneIcon size={14} className='flex-shrink-0 text-white' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[7px] text-white opacity-80'>
-          GET IT ON
-        </span>
-        <span className='text-[9px] font-semibold text-white'>
-          Google Play
-        </span>
-      </div>
-    </div>
+                {/* App Stores */}
+                <div className='flex flex-shrink-0 gap-2'>
+                  {/* Google Play Store */}
+                  <div className='flex items-center gap-1.5 rounded bg-black px-3 py-1.5'>
+                    <SmartphoneIcon
+                      size={14}
+                      className='flex-shrink-0 text-white'
+                    />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[7px] text-white opacity-80'>
+                        GET IT ON
+                      </span>
+                      <span className='text-[9px] font-semibold text-white'>
+                        Google Play
+                      </span>
+                    </div>
+                  </div>
 
-    {/* App Store */}
-    <div className='flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5'>
-      <BsApple size={14} className='flex-shrink-0 text-black' />
-      <div className='flex flex-col leading-tight'>
-        <span className='text-[7px] text-black opacity-70'>
-          Download on the
-        </span>
-        <span className='text-[9px] font-semibold text-black'>
-          App Store
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
+                  {/* App Store */}
+                  <div className='flex items-center gap-1.5 rounded border border-gray-300 bg-white px-3 py-1.5'>
+                    <BsApple size={14} className='flex-shrink-0 text-black' />
+                    <div className='flex flex-col leading-tight'>
+                      <span className='text-[7px] text-black opacity-70'>
+                        Download on the
+                      </span>
+                      <span className='text-[9px] font-semibold text-black'>
+                        App Store
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

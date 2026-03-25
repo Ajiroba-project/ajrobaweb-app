@@ -171,18 +171,17 @@ export const CableDetails = () => {
   };
 
   return (
-    <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
+    <div className="flex flex-col items-center gap-4 bg-[#F6F6F6] px-4 py-12">
       <Formtitle
-        // className="text-center w-1/2  leading-5 font-semibold text-[#2A2A2A] font-Poppins text-base"
         title="Buy Cable Subscription"
-        subtitle="Enjoy your best  TV programs by purchasing your subscription on our platform"
+        subtitle="Enjoy your best TV programs by purchasing your subscription on our platform"
       />
-      <div className="">
+      <div className="w-full max-w-[400px]">
         <form
           className="flex flex-col gap-3"
           onSubmit={handleSubmit(sumbitForm)}
         >
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <SelectField
               name="decoder"
               register={register}
@@ -192,11 +191,11 @@ export const CableDetails = () => {
               showlabel={false}
               value={watch("decoder")}
               onChange={(e) => setValue("decoder", e.target.value)}
-              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div>
 
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <InputField
               name="iucnumber"
               register={register}
@@ -207,7 +206,7 @@ export const CableDetails = () => {
             />
           </div>
 
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <SelectField
               name="bundle"
               register={register}
@@ -215,7 +214,7 @@ export const CableDetails = () => {
               options={dataPlan}
               label="Select Package/Bundle"
               showlabel={false}
-              className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full max-w-full truncate h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div>
 

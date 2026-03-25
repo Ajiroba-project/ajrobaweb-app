@@ -79,7 +79,7 @@ export const InputField = ({
           name={name}
           type={toggle ? 'text' : type}
           placeholder={placeholder}
-          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : 'placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : 'placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] h-12 w-full rounded-lg px-5 focus:text-black'}`}
           {...register(name, { required: true })}
           disabled={isdisabled}
           inputMode={inputMode}
@@ -96,7 +96,7 @@ export const InputField = ({
               toggle ? 'text-[#f25e26]' : 'text-gray-400'
             }`}
           >
-            {toggle ? <FaRegEye /> : <FaRegEyeSlash />}
+            {toggle ? <FaRegEye /> : <FaRegEyeSlash  />}
           </span>
         ) : null}
 
@@ -257,7 +257,7 @@ export const SelectField = ({
           className={
             className
               ? className
-              : `xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]`
+              : 'h-12 w-full rounded border px-5 focus:text-black'
           }
         >
           <option value='' className='text-wdc-textbody'>
@@ -296,7 +296,14 @@ export const SelectField = ({
       <input type='hidden' name={name} value={selectedValue} ref={reg.ref} />
 
       <Select value={selectedValue} onValueChange={handleValueChange} disabled={isdisabled}>
-        <SelectTrigger className={`${className ? className : 'xl-[300px] h-12 w-auto rounded border px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'} selector`} style={style}>
+        <SelectTrigger
+          className={
+            className
+              ? className.replace(/\bpr-\S+/g, '').replace(/\bselector\b/g, '').trim()
+              : 'h-12 w-full rounded border px-5 focus:text-black'
+          }
+          style={style}
+        >
           <SelectValue placeholder={label ? ` ${label}` : ''} />
         </SelectTrigger>
         <SelectContent className='' style={{ backgroundColor: '#ffffff', color: '#2A2A2A' }}>
@@ -540,7 +547,7 @@ export const CurrencyInputField = ({
           name={name}
           type="text"
           placeholder={placeholder}
-          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : ' placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] xlw-[300px] h-12 w-auto rounded-lg px-5 focus:text-black md:w-[300px] lg:w-[300px] xl:w-[350px] 2xl:w-[300px]'}`}
+          className={`${isdisabled ? 'cursor-not-allowed' : ''} ${classname ? classname : 'placeholder-[#A09F9F] border border-[#A09F9F] text-sm font-medium font-Poppins text-[#111111] h-12 w-full rounded-lg px-5 focus:text-black'}`}
           value={displayValue}
           onChange={handleInputChange}
           onFocus={handleFocus}

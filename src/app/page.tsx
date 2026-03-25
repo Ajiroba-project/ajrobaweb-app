@@ -352,6 +352,7 @@ const Page = () => {
                 src={exploreBg}
                 alt='Explore Ajiroba background'
                 fill
+                sizes="100vw"
                 className='object-cover object-top'
                 priority
                 sizes='(max-width: 1440px) 100vw, 1440px'
