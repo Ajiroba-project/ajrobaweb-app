@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import rechargebannermobile from '../asset/image/recharge-banner_mobile.png'
 
 type BannerProps = {
   text: string
@@ -12,7 +13,7 @@ export const AuctionBanner = ({ text, banner }: BannerProps) => {
       {/* Mobile: natural aspect ratio, edge-to-edge */}
       <div className='sm:hidden'>
         <Image
-          src={banner}
+          src={rechargebannermobile}
           alt={text || 'Auction banner'}
           priority
           sizes='100vw'

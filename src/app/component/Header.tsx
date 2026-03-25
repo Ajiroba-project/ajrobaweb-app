@@ -2484,7 +2484,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>
                 <Link href={'/'} className={`${isOpen ? 'opacity-50' : ''} transition-opacity duration-200`}>
-                  <Image src={Brand} alt='brand-logo' className='h-8 sm:h-10 w-auto' />
+                  <Image src={Brand} alt='brand-logo' className='h-8 sm:h-10 w-auto' priority loading="eager" />
                 </Link>
               </div>
 

@@ -157,17 +157,17 @@ export const DataDetails = () => {
   };
 
   return (
-    <div className=" flex flex-col items-center justify-center gap-4 bg-[#F6F6F6] py-12">
+    <div className="flex flex-col items-center gap-4 bg-[#F6F6F6] px-4 py-12">
       <Formtitle
         title="Buy Data"
         subtitle="We have different data plans that suite your needs"
       />
-      <div className="">
+      <div className="w-full max-w-[400px]">
         <form
           className="flex flex-col gap-3"
           onSubmit={handleSubmit(sumbitForm)}
         >
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <SelectField
               name="datanetwork"
               register={register}
@@ -177,12 +177,11 @@ export const DataDetails = () => {
               showlabel={false}
               value={watch("datanetwork")} // Ensure value updates
               onChange={(e) => setValue("datanetwork", e.target.value)} // Update manually
-              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div>
 
-
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <SelectField
               name="datadata"
               register={register}
@@ -199,13 +198,11 @@ export const DataDetails = () => {
                   setValue("dataamount", amt, { shouldValidate: true, shouldDirty: true });
                 }
               }}
-              className="text-sm w-full max-w-full truncate  h-auto p-2.5 border rounded-lg font-Inter font-normal pr-12 border-[#A09F9F]"
+              className="text-sm w-full max-w-full truncate h-auto p-2.5 border rounded-lg font-Inter font-normal border-[#A09F9F]"
             />
           </div>
 
-
-
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <InputField
               name="dataphone"
               register={register}
@@ -218,7 +215,7 @@ export const DataDetails = () => {
 
 
 
-          <div className="w-full max-w-[350px]">
+          <div className="w-full">
             <CurrencyInputField
               name="dataamount"
               register={register}

@@ -88,7 +88,7 @@ const WinningAdviceModal: React.FC<WinningAdviceModalProps> = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-black/40 px-2 py-4 overflow-y-auto"
+            className="fixed inset-0 z-[1001] flex flex-col items-center justify-start bg-black/40 px-2 pb-4 pt-28 sm:px-2 sm:py-4 sm:pt-4 overflow-y-auto"
             onClick={onClose}
         >
             <div className="flex flex-col gap-4 w-full max-w-[850px]">

@@ -44,7 +44,7 @@ export const ReceiptTable: React.FC<DataProps> = ({ Data }) => {
     : '';
 
   return (
-    <div className='mx-auto w-[92%] sm:w-[90%]'>
+    <div>
       <div className='divide-y divide-gray-200 rounded-xl border border-gray-100 bg-white px-4 sm:px-6 sm:border-0 sm:rounded-none sm:bg-transparent'>
         <ReceiptRow label="Beneficiary" value={Data[0]?.beneficiary} />
         <ReceiptRow label="Sender" value={Data[1]?.sender} />

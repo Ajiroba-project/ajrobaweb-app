@@ -599,21 +599,18 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                 key={index}
                 className="relative my-2 flex gap-4 border p-3 flex-wrap"
               >
-                <div className="relative  flex gap-4 border p-3 flex-wrap "
-
+                <div
+                  className="relative min-h-[80px] w-[100px] shrink-0 self-stretch cursor-pointer overflow-hidden rounded-lg"
                   onClick={() =>
                     router.push(`/raffledraw/productdetails/${val?.auction[0]?.auction_id}`)
                   }
                 >
-                  {" "}
-                 
                   <Image
                     src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
-                    width={100}
-                    height={80}
+                    fill
+                    sizes="100px"
                     className="rounded-lg object-cover"
-                    style={{ width: '100px', height: 'auto' }}
                   />
                 </div>
 
@@ -622,10 +619,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   <p>Ticket Number: {val?.ticket_number} </p>
                   <p>Ticket Price: {formatCurrency(val?.ticket_price)} </p>
                 
-                  <div className="mt-5 flex gap-3 flex-wrap">
-
-
-
+                  <div className="mt-5 flex flex-wrap gap-1.5 sm:gap-2">
                     {val.tag &&
                       val.tag.map((value: string, index: number) => (
                         <p
@@ -635,7 +629,6 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
                             if (value === "redeem items") {
                               if (val.redeemed) {
-                                // Handle download voucher click
                                 handleOptionClick("Download", val);
                               } else {
                                 handleOptionClick("Redeem", val);
@@ -644,19 +637,19 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                               handleOptionClick("Download winning Advice", val);
                             }
                           }}
-                          className={`text-xs ${!val.won || value === "close" ? "opacity-50 cursor-not-allowed" : ""
+                          className={`whitespace-nowrap text-[10px] sm:text-xs ${!val.won || value === "close" ? "opacity-50 cursor-not-allowed" : ""
                             } ${value === "open" || value === "delivered"
                               ? "bg-green-200 text-emerald-800"
                               : value === "close"
                                 ? "bg-rose-200 text-red-800"
                                 : value === "redeem items"
                                   ? val.redeemed
-                                    ? "bg-green-700 text-white cursor-pointer" // Style for Download Voucher
-                                    : "bg-blue-700 text-white cursor-pointer"  // Style for Redeem Items
+                                    ? "bg-green-700 text-white cursor-pointer"
+                                    : "bg-blue-700 text-white cursor-pointer"
                                   : value === "Download winning Advice"
                                     ? "bg-[#F25E26] text-white cursor-pointer"
                                     : "bg-[#F25E26] text-white"
-                            } rounded-xl px-2.5 py-1`}
+                            } rounded-xl px-2 py-0.5 sm:px-2.5 sm:py-1`}
                         >
                           {value === "redeem items" && val.redeemed ? "Redeemed" : value}
                         </p>
@@ -845,30 +838,30 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
           title="Select Merchant"
           handleEvent={() => setIsMerchantsModalOpen(false)}
         >
-          <div className="flex flex-col p-4">
-            <div className="mb-4">
+          <div className="flex flex-col">
+            <div className="mb-3">
               <input
                 type="text"
                 placeholder="Search merchants..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#F25E26]"
+                className="w-full p-2.5 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#F25E26]"
               />
             </div>
 
             {isLoadingMerchants ? (
-              <div className="text-center py-4">Loading merchants...</div>
+              <div className="text-center py-4 text-sm">Loading merchants...</div>
             ) : (
-              <div className="max-h-[300px] overflow-y-auto">
+              <div className="max-h-[40vh] sm:max-h-[300px] overflow-y-auto -mx-4 sm:mx-0">
                 {filteredMerchants.length === 0 ? (
-                  <div className="text-center py-4 text-gray-500">
+                  <div className="text-center py-4 text-gray-500 text-sm">
                     No merchants found
                   </div>
                 ) : (
                   filteredMerchants.map((merchant: any) => (
                     <div
                       key={merchant.code}
-                      className="p-3 border-b hover:bg-gray-50 cursor-pointer"
+                      className="px-4 py-3 sm:px-3 border-b hover:bg-gray-50 cursor-pointer"
                       onClick={() => {
                         if (selectedTransaction?.id) {
                           const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
@@ -882,8 +875,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                         }
                       }}
                     >
-                      <p className="font-medium">{merchant.name}</p>
-                      <p className="text-sm text-gray-500 mb-1">Code: {merchant.code}</p>
+                      <p className="font-medium text-sm truncate">{merchant.name}</p>
+                      <p className="text-xs text-gray-500 mb-1">Code: {merchant.code}</p>
                       {Array.isArray(merchant.stores) && merchant.stores.length > 0 && (
                         <div className="text-xs text-gray-600">
                           {(expandedMerchants[merchant.code] ? merchant.stores : merchant.stores.slice(0, 3)).map((store: string, idx: number) => (
@@ -892,7 +885,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                           {merchant.stores.length > 3 && (
                             <button
                               type="button"
-                              className="italic text-[#F25E26] mt-1"
+                              className="italic text-[#F25E26] mt-1 text-xs"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setExpandedMerchants((prev) => ({
@@ -914,10 +907,10 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
               </div>
             )}
 
-            <div className="mt-6 flex justify-between gap-4 flex-wrap">
+            <div className="mt-4 pt-3 border-t">
               <DefaultButton
                 text="Back"
-                className="rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26]"
+                className="w-full rounded-md border-2 border-[#F25E26] p-2 px-4 text-[#F25E26] text-sm"
                 type="button"
                 handleClick={() => {
                   setIsMerchantsModalOpen(false);

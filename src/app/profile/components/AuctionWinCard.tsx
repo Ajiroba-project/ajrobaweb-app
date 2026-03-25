@@ -326,16 +326,13 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                 key={index}
                 className="relative my-2 flex gap-4 border p-3 flex-wrap"
               >
-                <div className="relative  flex gap-4 border p-3 flex-wrap h-[120px]">
-                  {" "}
-                  {/* Container height control */}
+                <div className="relative min-h-[80px] w-[100px] shrink-0 self-stretch cursor-pointer overflow-hidden rounded-lg">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${val?.auction[0]?.images[0]}`}
                     alt={val?.auction[0]?.name}
-                    width={100}
-                    height={80}
+                    fill
+                    sizes="100px"
                     className="rounded-lg object-cover"
-                    style={{ width: '100px', height: 'auto' }}
                   />
                 </div>
 

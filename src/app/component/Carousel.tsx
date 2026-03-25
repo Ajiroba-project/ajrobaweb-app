@@ -175,8 +175,8 @@ export const CarouselSwiper = () => {
               <Image
                 src={slide.mobileSrc}
                 alt={slide.alt}
-                priority={index === 0}
-                loading={index === 0 ? 'eager' : 'lazy'}
+                priority
+                loading="eager"
                 sizes="100vw"
                 className="w-full h-auto object-contain"
               />
@@ -188,8 +188,8 @@ export const CarouselSwiper = () => {
                 src={slide.desktopSrc}
                 alt={slide.alt}
                 fill
-                priority={index === 0}
-                loading={index === 0 ? 'eager' : 'lazy'}
+                priority
+                loading="eager"
                 sizes="(max-width: 1024px) 100vw, 1440px"
                 className="object-cover object-center"
               />

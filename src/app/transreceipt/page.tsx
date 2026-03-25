@@ -1,6 +1,7 @@
 'use client'
 import React, { Suspense, useEffect, useState } from 'react';
-import { Header } from './component/Header';
+import { Header as AppHeader } from '../component/Header';
+import { Header as ReceiptHeader } from './component/Header';
 import { Tables } from './component/Tables';
 import { DefaultButton } from '../component/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -172,11 +173,12 @@ const WrappedPage = () => {
   if (productError) return <div className='flex min-h-screen items-center justify-center font-Poppins text-sm text-red-500'>{productError}</div>;
 
   return (
-    <section>
-      <div id="receipt-container" className="bg-white min-h-screen">
-        {/* Header */}
-        <Header />
-        <div className='h-24 md:h-28 lg:h-32 bg-gray-100'></div>
+    <section className='min-h-screen bg-gray-50'>
+      {/* <AppHeader /> */}
+      {/* <div className='h-24 md:h-28 lg:h-32'></div> */}
+
+      <div id="receipt-container" className="content-container bg-white py-6 sm:py-8">
+        <ReceiptHeader />
 
         {/* Transaction Amount */}
         <div className='flex flex-col items-center py-6 sm:py-8'>
@@ -192,7 +194,7 @@ const WrappedPage = () => {
         </section>
 
         {/* App Download & Actions */}
-        <section className='mx-auto w-[92%] sm:w-[90%] py-6 sm:py-8'>
+        <section className='py-6 sm:py-8'>
           <p className='text-sm font-semibold font-Poppins text-[#1B1B1A]'>Download our mobile App on:</p>
 
           <div className='flex justify-center gap-3 mt-4'>

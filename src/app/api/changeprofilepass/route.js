@@ -57,6 +57,6 @@ export async function PUT(request) {
     } catch (error) {
         // Handle any errors gracefully
         console.error('Error processing request:', error.message);
-        return NextResponse.error(new Error('Internal Server Error'));
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

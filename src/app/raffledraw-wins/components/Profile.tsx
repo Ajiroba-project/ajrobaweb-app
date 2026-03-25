@@ -111,6 +111,8 @@ export const Profile = () => {
                 alt={'profile'}
                 className="w-24 h-24 rounded-full object-cover"
                 draggable={false}
+                priority
+                loading="eager"
               />
 
               <span

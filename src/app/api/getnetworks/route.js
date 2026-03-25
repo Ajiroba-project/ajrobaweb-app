@@ -8,7 +8,7 @@ export async function POST(request) {
 
         /*        const token_ = request.headers.get('authorization')?.replace('Token ', ''); */
 
-        const cookieStore = cookies()
+        const cookieStore = await cookies()
         const token = cookieStore.get('token')
 
         console.log(token_, 'token_');
@@ -47,6 +47,6 @@ export async function POST(request) {
         return NextResponse.json({ data, status });
     } catch (error) {
         console.error('Error processing request:', error.message);
-        return NextResponse.error(new Error('Internal Server Error'));
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
