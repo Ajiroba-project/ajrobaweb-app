@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import photo from '../../asset/image/photo.png';
-import { ProfileContent } from './ProfileContent';
 import { IoIosCamera } from 'react-icons/io';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { LuMenu } from 'react-icons/lu';
@@ -75,6 +74,7 @@ export const Profile = () => {
   // console.log(profileurl, 'profileurl')
 
   const userphoto = profileurl || userDetails?.profile_image_url || '';
+  const avatarSrc = userphoto || photo;
 
   const menu = [
     { name: 'my profile', path: '/profile' },
@@ -128,17 +128,22 @@ export const Profile = () => {
                     : 'Community'}
           </h3>
           <div className={`${activeMenu === 'my order' || activeMenu === 'wallet' || activeMenu === 'wallet' || activeMenu === 'community' || activeMenu === 'auction wins' || activeMenu === 'my profile' ? 'border rounded flex flex-col px-2' : 'flex flex-col px-2'}`}>
-            <div className="relative justify-center flex items-center mt-2">
-              <Image
-                src={userphoto || photo}
-                width={112}
-                height={112}
-                alt={'profile'}
-                className="w-28 h-28 rounded-full object-cover"
-                draggable={false}
-                priority
-                loading="eager"
-              />
+            <div className="relative mt-2 flex justify-center items-center">
+              <div className="relative h-[112px] w-[112px] shrink-0 overflow-hidden rounded-full">
+                <Image
+                  key={
+                    typeof avatarSrc === 'string' ? avatarSrc : 'profile-placeholder'
+                  }
+                  src={avatarSrc}
+                  alt="profile"
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                  draggable={false}
+                  priority
+                  loading="eager"
+                />
+              </div>
 
               <span
                 className="absolute bottom-[0.3rem] lg:bottom-[0.3rem] right-[3.3rem] lg:right-[3.3rem] cursor-pointer rounded-full bg-[#FCDFD4] p-1"

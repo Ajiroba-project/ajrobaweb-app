@@ -1503,6 +1503,7 @@ import { AuctionMarquee } from './Auction-Marquee';
 import React from 'react';
 import Cookies from "js-cookie";
 import axios from "axios";
+import { handleNetworkError, apiCallWithRetry } from "@/lib/networkErrorHandler";
 
 interface HeaderProps {
   onSearch?: React.Dispatch<React.SetStateAction<string>>;
@@ -2200,21 +2201,43 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
-      headers: headers,
+    const makeRequest = async () => {
+      const response = await axios.request({
+        method: "GET",
+        maxBodyLength: Infinity,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
+        headers: headers,
+        timeout: 20000, // staging / slow networks
+      });
+      return response;
     };
 
     try {
-      const response = await axios.request(config);
-      const newCartCount = Number(response.data?.data?.[0]?.cart_items_count || 0);
-      setCartCount(newCartCount); // Update global cart count
-      setCartItemsn(response.data?.data[0]?.items || []);
+      const response = await apiCallWithRetry(makeRequest, {
+        showToast: false, // Don't show toast for cart - it's background data
+        logError: false, // Avoid noisy console.error for expected timeouts / offline
+        shouldRetry: true,
+        maxRetries: 2,
+        retryDelay: 1000,
+        onError: (error) => {
+          // Silently handle cart errors - user doesn't need to see every network error for cart
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Cart fetch failed after retries:', error.message);
+          }
+          setError('Unable to load cart');
+        },
+      });
+
+      if (response) {
+        const newCartCount = Number(response.data?.data?.[0]?.cart_items_count || 0);
+        setCartCount(newCartCount); // Update global cart count
+        setCartItemsn(response.data?.data[0]?.items || []);
+        setError(""); // Clear any previous errors on success
+      }
     } catch (error) {
-      setError("Error loading cart items");
-      console.error("Cart fetch error:", error);
+      // Error already handled by apiCallWithRetry
+      setCartCount(0);
+      setCartItemsn([]);
     } finally {
       setLoading(false);
     }
@@ -2484,7 +2507,14 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
               {/* Left Section - Logo */}
               <div className='flex items-center gap-2 flex-shrink-0'>
                 <Link href={'/'} className={`${isOpen ? 'opacity-50' : ''} transition-opacity duration-200`}>
-                  <Image src={Brand} alt='brand-logo' className='h-8 sm:h-10 w-auto' priority loading="eager" />
+                  <Image
+                    src={Brand}
+                    alt='brand-logo'
+                    className='h-8 sm:h-10 w-auto'
+                    priority
+                    loading='eager'
+                    fetchPriority='high'
+                  />
                 </Link>
               </div>
 
@@ -2648,7 +2678,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
               {/* Mobile Menu Header */}
               <div className='flex items-center justify-between p-4 border-b border-gray-200'>
                 <Link href={'/'} onClick={() => setIsOpen(false)}>
-                  <Image src={Brand} alt='brand-logo' className='h-8 w-auto' />
+                  <Image
+                    src={Brand}
+                    alt='brand-logo'
+                    className='h-8 w-auto'
+                    loading='eager'
+                  />
                 </Link>
                 <button 
                   onClick={hamburgerfunc}

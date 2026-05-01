@@ -31,6 +31,9 @@ export const ElectricityPayment = () => {
 
   }));
 
+
+  // console.log(customerElectricityDetails, 'customerElectricityDetails')
+
   const bundleString = ElectricityDetails?.bundle || ""; // Ensure it's a string
 const amountMatch = bundleString.match(/-₦(\d+)/); // Match the number after "-₦"
 

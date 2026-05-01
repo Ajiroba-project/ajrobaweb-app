@@ -88,7 +88,7 @@ const DataPage = () => {
 
   const Step = ({ props }: any) => {
     return (
-      <div className='mt-2 w-full py-2 lg:w-64 lg:flex-none'>
+      <div className=' w-full py-2 lg:w-64 lg:flex-none'>
         <div className='flex gap-3 overflow-x-auto pr-1 lg:flex-col lg:overflow-visible'>
           {stepperList.map((val, index) => (
             <div

@@ -48,8 +48,8 @@ export const CableReceipt = ({ beneficiaryData }: CableReceiptProps) => {
     }
   }
   return (
-    <section className='p-5 '>
-      <div className='my-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
+    <section className='px-5 pb-5 '>
+      <div className='mb-[20px] flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
         <div>
           <Image src={verify} alt='successfully' />
         </div>
