@@ -12,6 +12,14 @@ export async function PUT(request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        const upstreamPayload = {
+            ...body.payload,
+            package:
+                body.payload?.package ??
+                body.package ??
+                "",
+        };
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/cable_subscription/?${cacheBuster}`, {
             method: "POST",
             maxBodyLength: Infinity,
@@ -19,7 +27,7 @@ export async function PUT(request) {
                 "Content-Type": "application/json",
                 'Authorization': `Token ${token.value}`
             },
-            body: JSON.stringify(body.payload),
+            body: JSON.stringify(upstreamPayload),
         });
 
         const data = await res.json();

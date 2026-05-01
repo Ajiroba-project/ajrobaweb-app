@@ -127,7 +127,7 @@ export const CableDetails = () => {
   const dataPlan =
     dataPlansData?.data?.data?.map(
       (subScriptionType: { subScriptionType: string; amount: number }) =>
-        `${subScriptionType.subScriptionType} -₦${subScriptionType.amount}`,
+        `${subScriptionType.subScriptionType} ₦${subScriptionType.amount}`,
     ).filter((plan: string) => plan && plan.trim() !== '') || [];
 
   const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV"];

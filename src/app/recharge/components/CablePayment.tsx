@@ -32,9 +32,23 @@ export const CablePayment = () => {
   }));
 
   const bundleString = CableDetails?.bundle || ""; // Ensure it's a string
-  const amountMatch = bundleString.match(/-₦(\d+)/); // Match the number after "-₦"
 
-  const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
+  /** UI: keep plan + price; only replace hyphen-before-₦ so it doesn’t look like “minus”. */
+  const bundleForDisplay = bundleString.replace(/-\s*₦/g, " ₦").trim()
+
+  /** Supports `Name ₦100` (current) and legacy `Name -₦100`. Use last ₦ if multiple. */
+  const amountMatches = [...bundleString.matchAll(/₦\s*([\d,]+(?:\.\d+)?)/g)]
+  const lastAmt = amountMatches[amountMatches.length - 1]
+  const amount = lastAmt
+    ? parseInt(String(lastAmt[1]).replace(/,/g, ""), 10)
+    : 0
+
+  /** Nomba `package` field: plan name only (strip trailing price). End-anchored so inner hyphens in names stay. */
+  const cablePackageName =
+    bundleString
+      .replace(/\s*-\s*₦[\d,]+(?:\.\d+)?\s*$/i, "")
+      .replace(/\s+₦[\d,]+(?:\.\d+)?\s*$/i, "")
+      .trim() || bundleString.trim()
 
 
   //   console.log(CableDetails, 'cabbbbbb')
@@ -78,11 +92,11 @@ export const CablePayment = () => {
     // console.log(CableDetails, 'cabbbbbb')
 
     const payload = {
-
       cableTvType: CableDetails.decoder,
       payerName: userInfo?.data?.first_name,
       amount: Number(amount),
       customerId: CableDetails?.iucnumber,
+      package: cablePackageName,
     }
 
     Cookies.set("atdnew", JSON.stringify(payload));
@@ -397,7 +411,7 @@ export const CablePayment = () => {
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Package: </h3>
-              <p className='font-semibold'>{CableDetails?.bundle ? CableDetails?.bundle : 'NA'}</p>
+              <p className='font-semibold'>{bundleForDisplay || 'NA'}</p>
             </div>
 
             <div>

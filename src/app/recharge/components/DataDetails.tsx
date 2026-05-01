@@ -122,7 +122,7 @@ export const DataDetails = () => {
 
   // console.log(dataPlansData, 'dataPlansData')
 
-  const dataPlan = dataPlansData?.data?.map((plan: { plan: string; code: number }) => `${plan.plan} -₦${plan.code}`).filter((plan: any) => plan && plan.trim() !== '') || [];
+  const dataPlan = dataPlansData?.data?.map((plan: { plan: string; code: number }) => `${plan.plan} ₦${plan.code}`).filter((plan: any) => plan && plan.trim() !== '') || [];
 
   const extractAmountFromPlan = (planText: string): string | null => {
     if (!planText) return null;

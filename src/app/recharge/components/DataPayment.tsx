@@ -30,6 +30,10 @@ export const DataPayment = () => {
     dataDetails: state.dataDetails,
   }));
 
+  /** Same as cable: show plan + price; only swap `-₦` → ` ₦` so it doesn’t read as “minus”. */
+  const dataBundleForDisplay = (dataDetails?.datadata || "")
+    .replace(/-\s*₦/g, " ₦")
+    .trim();
 
   const router = useRouter();
 
@@ -385,7 +389,7 @@ export const DataPayment = () => {
 
             <div>
               <h3 className="text-[#6E6E6E]">Data Bundle</h3>
-              <p className='font-semibold'>{dataDetails?.datadata}</p>
+              <p className='font-semibold'>{dataBundleForDisplay || "NA"}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Amount</h3>
