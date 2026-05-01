@@ -40,6 +40,8 @@ const WrappedPage = () => {
     userToken || " ",
   );
 
+  // console.log(transdata, 'trAS')
+
   if (transLoading) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   }
@@ -164,40 +166,56 @@ const WrappedPage = () => {
     }
   };
 
+  // console.log()
+
   return (
     <section className="min-h-screen bg-gray-50">
       <AppHeader />
       <div className="h-24 md:h-28 lg:h-32"></div>
 
-      <div id="receipt-container" className="content-container bg-white py-6 sm:py-8">
+      <div id="receipt-container" className="content-container max-w-2xl mx-auto bg-white py-6 sm:py-8 px-4 sm:px-8 shadow-sm">
         <ReceiptHeader />
 
-        <div className="flex flex-col items-center py-6 sm:py-8">
-          <p className="font-Poppins text-xs text-[#A09F9F]">Transaction Amount</p>
-          <p className="mt-1 text-2xl font-semibold font-Poppins text-[#1B1B1A] sm:text-3xl">
-            {formatCurrency(transdata?.data?.amount)}
+        <div className="flex flex-col items-center py-6 sm:py-8 border-b border-gray-200 mb-4">
+          <p className="font-Poppins text-xs text-[#A09F9F] mb-1">Transaction Amount</p>
+          <p className="text-2xl font-bold font-Poppins text-[#1B1B1A] sm:text-3xl">
+            {transdata?.data?.total_amount 
+              ? formatCurrency(transdata?.data?.total_amount) 
+              : formatCurrency(transdata?.data?.amount)}
           </p>
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
+        <div className="space-y-0">
           {[
-            { label: "Biller", value: transdata?.data?.biller || "NA" },
-            { label: "Customer Id", value: transdata?.data?.customer_id || "NA" },
-            { label: "Date of Transaction", value: transdata?.data?.date_created || "NA" },
-            { label: "Transaction I.D", value: transdata?.data?.id || "NA" },
             { label: "Token", value: transdata?.data?.token || "NA" },
-            { label: "Customer Name", value: transdata?.data?.name || "NA" },
-            { label: "Number", value: transdata?.data?.number || "NA" },
-            { label: "Package", value: transdata?.data?.package || "NA" },
             { label: "Payment Method", value: transdata?.data?.payment_method || "NA" },
-            { label: "Phone Number", value: transdata?.data?.phoneNumber || "NA" },
-            { label: "Reference", value: transdata?.data?.reference || "NA" },
+            { label: "Customer Name", value: transdata?.data?.name || "NA" },
+            { label: "Phone Number", value: transdata?.data?.phoneNumber || transdata?.data?.number || "NA" },
+            { label: "Disco", value: transdata?.data?.biller || "NA" },
+            { label: "Meter Number", value: transdata?.data?.meter_number || transdata?.data?.customer_id || "NA" },
+            { label: "Units", value: transdata?.data?.units ? `${transdata?.data?.units} Kwh` : "NA" },
+            { label: "Token Amount", value: transdata?.data?.amount ? formatCurrency(transdata?.data?.amount) : "NA" },
+            { label: "Tax Amount", value: transdata?.data?.tax_amount ? formatCurrency(transdata?.data?.tax_amount) : "N 0.00" },
+            { label: "Total Payable", value: transdata?.data?.total_amount 
+              ? formatCurrency(transdata?.data?.total_amount) 
+              : transdata?.data?.amount 
+                ? formatCurrency(transdata?.data?.amount) 
+                : "NA" },
+            { label: "Transaction ID", value: transdata?.data?.reference || transdata?.data?.id || "NA" },
+            { label: "Date of Transaction", value: transdata?.data?.date_created ? (() => {
+              const date = new Date(transdata?.data?.date_created);
+              const day = date.getDate();
+              const suffix = day % 10 === 1 && day !== 11 ? 'st' : day % 10 === 2 && day !== 12 ? 'nd' : day % 10 === 3 && day !== 13 ? 'rd' : 'th';
+              const formattedDate = `${day}${suffix} ${date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
+              const formattedTime = date.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true });
+              return `${formattedDate}. ${formattedTime}`;
+            })() : "NA" },
           ].map((item, index) => (
             <div
               key={index}
-              className="flex flex-col gap-0.5 border-b border-gray-100 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 border-b border-gray-200 last:border-b-0"
             >
-              <span className="text-sm font-medium text-[#F25E26]">{item.label}</span>
+              <span className="text-sm text-[#F25E26] mb-1 sm:mb-0">{item.label}</span>
               <span className="text-sm font-semibold text-gray-900 sm:text-right break-all">{item.value}</span>
             </div>
           ))}

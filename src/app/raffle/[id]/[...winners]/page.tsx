@@ -62,7 +62,6 @@ const RaffleWinnersPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [productdatanew, setProductDataNew] = useState<ProductData | null>(
     null,
   );
-  const [loadingdata, setLoadingData] = useState(false);
   const [showWinners, setShowWinners] = useState(false);
   const [postRollCountdown, setPostRollCountdown] = useState<number | null>(null);
   const [isThanksOpen, setIsThanksOpen] = useState(false);
@@ -108,58 +107,11 @@ const RaffleWinnersPage = ({ params }: { params: Promise<{ id: string }> }) => {
     staleTime: 0,
   });
 
-
-
-  const fetchWithAuth = async (url: string) => {
-    setLoadingData(true);
-
-    const requestOptions: RequestInit = {
-      method: "GET",
-      headers: {
-        Authorization: `token ${userToken}`,
-      },
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(url, requestOptions);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      /*  console.log(result, "result"); */
-      setProductDataNew(result);
-      return result;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    } finally {
-      setLoadingData(false);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const data = await fetchWithAuth(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/auction/auction_tickets/?auction_id=${product_id}`,
-      ).then((data) => {
-        /*  setProductDataNew(data); */
-        // console.log(data, "data");
-
-      /*   console.log("data") */
-      })
-
-      /*   console.log(data, "data"); */
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, [product_id]);
+    if (ticketInfo != null) {
+      setProductDataNew(ticketInfo as unknown as ProductData);
+    }
+  }, [ticketInfo]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -499,7 +451,7 @@ const renderRows = () => {
           </div>
 
 
-        {loadingdata ? (
+        {ticketLoading ? (
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25E26]"></div>
             <p className="mt-4 text-gray-600">Loading raffle winners...</p>

@@ -269,7 +269,8 @@
 
 
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import Axios from 'axios'
+import Axios, { AxiosError } from 'axios'
+import { handleNetworkError } from '@/lib/networkErrorHandler'
 
 interface UserData {
   data: any
@@ -329,12 +330,30 @@ const fetchDatanew = async (
   userToken: string,
   title?: string
 ): Promise<ApiResponse> => {
-  const response = await Axios.get<ApiResponse>(url, {
-    headers: {
-      Authorization: `Token ${userToken}`
+  try {
+    const response = await Axios.get<ApiResponse>(url, {
+      headers: {
+        Authorization: `Token ${userToken}`
+      },
+      timeout: 30000, // 30 second timeout
+    })
+    return response.data
+  } catch (error) {
+    // Handle network errors silently for data fetching - don't spam user with toasts
+    if (Axios.isAxiosError(error)) {
+      const isNetworkError = !error.response;
+      if (isNetworkError) {
+        console.warn(`[Network] Failed to fetch ${title || 'data'}:`, error.message);
+        // Return empty/placeholder data instead of throwing
+        return {
+          status: 'error',
+          message: 'Network error - using cached/empty data',
+          data: null
+        } as ApiResponse;
+      }
     }
-  })
-  return response.data
+    throw error;
+  }
 }
 
 // Define the hook with type annotations

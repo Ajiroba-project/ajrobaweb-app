@@ -173,7 +173,7 @@ const AuctionPage = () => {
 
       <AuctionBanner text='Auction Deals' banner={auctionImg} />
       <main className='container my-4 content-container'>
-        <section className='my-5 flex flex-col items-center justify-between gap-5 lg:flex-row'>
+        <section className=' flex flex-col items-center justify-between gap-5 lg:flex-row'>
           <div
             className='cursor-pointer text-[#F25E26] underline lg:text-xl'
             onClick={() => router.push('/rafflevideos')}

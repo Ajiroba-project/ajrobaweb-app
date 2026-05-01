@@ -52,8 +52,8 @@ export const Receipt = ({ beneficiaryData }: ReceiptProps) => {
   }
 
   return (
-    <section className='p-5 '>
-      <div className='my-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] pt-[5em]'>
+    <section className=' '>
+      <div className='mb-5 flex flex-col items-center justify-center gap-4 rounded-sm bg-[#F6F6F6] '>
         <div>
           <Image src={verify} alt='successfully' />
         </div>

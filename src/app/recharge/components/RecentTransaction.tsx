@@ -37,6 +37,83 @@ import phedcicon from '../../asset/phedicon.jpeg'
 
 import Brand from '../../asset/logo.svg'
 
+type ReceiptCategory = 'airtime' | 'data' | 'cable' | 'electricity'
+
+/** Maps API references + descriptions → `/recharge/{segment}/receipt` segment. */
+function resolveReceiptSegment(
+  reference?: string,
+  description?: string
+): ReceiptCategory {
+  const ref = reference?.trim() || ''
+  const desc = (description || '').toLowerCase()
+
+  const fromDescription = (): ReceiptCategory | null => {
+    if (desc.includes('airtime')) return 'airtime'
+    if (
+      desc.includes('cable') ||
+      desc.includes('dstv') ||
+      desc.includes('gotv') ||
+      desc.includes('startimes') ||
+      desc.includes('showmax') ||
+      desc.includes('consattv')
+    )
+      return 'cable'
+
+    const electricityHints = [
+      'electricity',
+      'electric bill',
+      'electric ',
+      'electricity bill',
+      'meter',
+      'kwh',
+      'kilowatt',
+      'utility bill',
+      'energy token',
+      'electricity token',
+      'light bill',
+      'prepaid meter',
+      'postpaid',
+      'ibedc',
+      'ikeja',
+      'ikedc',
+      'eko disco',
+      'ekedc',
+      'benin disco',
+      'enugu disco',
+      'kaduna disco',
+      'kedco',
+      'aedc',
+      'jedc',
+      'phed',
+      'phedc',
+      'yedc'
+    ]
+    if (electricityHints.some(h => desc.includes(h))) return 'electricity'
+
+    if (desc.includes('data')) return 'data'
+    return null
+  }
+
+  const fromPrefix = (): ReceiptCategory | null => {
+    const head = ref.split('_')[0]?.toLowerCase() || ''
+    const mapped: Record<string, ReceiptCategory> = {
+      airtime: 'airtime',
+      data: 'data',
+      cable: 'cable',
+      electricity: 'electricity',
+      electric: 'electricity',
+      elec: 'electricity'
+    }
+    return mapped[head] ?? null
+  }
+
+  if (ref.startsWith('BILL')) {
+    return fromDescription() ?? 'data'
+  }
+
+  return fromPrefix() ?? fromDescription() ?? 'data'
+}
+
 export const RecentTransaction = () => {
   const userToken = Cookies.get('token') || ''
 
@@ -272,24 +349,10 @@ export const RecentTransaction = () => {
                   ? getSortedTransactions()
                   : allTransaction.slice(0, 5)
                 ).map((val, index) => {
-                  let transactionType = 'unknown'
-                  if (val.reference?.startsWith('BILL')) {
-                    if (val.description?.toLowerCase().includes('airtime')) {
-                      transactionType = 'airtime'
-                    } else if (
-                      val.description?.toLowerCase().includes('data')
-                    ) {
-                      transactionType = 'data'
-                    } else if (
-                      val.description?.toLowerCase().includes('cable')
-                    ) {
-                      transactionType = 'cable'
-                    } else {
-                      transactionType = 'data'
-                    }
-                  } else {
-                    transactionType = val.reference?.split('_')[0] || 'unknown'
-                  }
+                  const transactionType = resolveReceiptSegment(
+                    val.reference,
+                    val.description
+                  )
 
                   const url = `/recharge/${transactionType}/receipt?ref=${val.reference}`
                   const icon = getIconForTransaction(

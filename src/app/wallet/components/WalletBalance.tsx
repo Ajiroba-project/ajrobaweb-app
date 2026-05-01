@@ -31,9 +31,63 @@ import PointsHistoryModal from "./PointsHistoryModal";
 type ConfirmationModalProps = {
   amount: string;
   onClose: () => void;
+  onRefreshData?: () => Promise<any>;
 };
 
-const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
+/** Parse Django / Paystack-style error bodies */
+function extractAxiosErrorMessage(data: unknown): string {
+  if (data == null) return "";
+  if (typeof data === "string") return data;
+  if (typeof data !== "object") return String(data);
+  const o = data as Record<string, unknown>;
+  const pick = (v: unknown): string => {
+    if (typeof v === "string") return v;
+    if (Array.isArray(v))
+      return v.map((x) => (typeof x === "string" ? x : JSON.stringify(x))).join(" ");
+    return "";
+  };
+  return (
+    pick(o.message) ||
+    pick(o.error) ||
+    pick(o.detail) ||
+    pick(o.non_field_errors) ||
+    ""
+  );
+}
+
+function isLikelyPendingWalletVerification(msg: string): boolean {
+  const m = msg.toLowerCase().trim();
+  if (!m) return true;
+  return (
+    m.includes("pending") ||
+    m.includes("processing") ||
+    m.includes("not completed") ||
+    m.includes("not complete") ||
+    m.includes("not yet") ||
+    m.includes("still processing") ||
+    m.includes("awaiting") ||
+    m.includes("in progress") ||
+    (m.includes("try again") && !m.includes("invalid")) ||
+    m.includes("has not been completed") ||
+    m.includes("could not confirm") ||
+    m.includes("unable to verify") && m.includes("yet")
+  );
+}
+
+function isClearlyInvalidPaymentReference(msg: string): boolean {
+  const m = msg.toLowerCase();
+  if (!m.trim()) return false;
+  return (
+    m.includes("invalid reference") ||
+    m.includes("invalid transaction reference") ||
+    m.includes("reference is invalid") ||
+    (m.includes("not found") && m.includes("reference")) ||
+    m.includes("malformed reference") ||
+    m.includes("expired reference")
+  );
+}
+
+const ConfirmationModal = ({ amount, onClose, onRefreshData }: ConfirmationModalProps) => {
   const [loadingverify, setloadingverify] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showModalUp, setShowModalUp] = useState(false);
@@ -57,8 +111,11 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     /*    console.log(event.data, "url");
        console.log(paymentReference, "paymentReference");
        console.log(event.data?.data, "paymentReference"); */
-    if (event.data?.data?.status === 'success' && paymentReference) {
-      startVerificationLoop(paymentReference);
+    // Read reference from storage instead of relying on React state (which may be async)
+    const storedReference = localStorage.getItem("paymentReference") || Cookies.get("paymentReference");
+    
+    if (event.data?.data?.status === 'success' && storedReference) {
+      startVerificationLoop(storedReference);
     } 
      /*  if (event.data?.data?.status === 'success' && paymentReference) {
         // Payment already confirmed by gateway - no need to verify
@@ -150,13 +207,34 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
     }
   };
 
-  const verifyWalletPayment = async (reference: any, stopLoop: () => void) => {
+  const verifyWalletPayment = async (reference: any, stopLoop: () => void, onRefreshData?: () => void) => {
+    const refStr =
+      reference === undefined || reference === null ? "" : String(reference).trim();
+    // Validate reference exists before making API call
+    if (!refStr) {
+      console.error("No payment reference provided");
+      toast.error("Payment reference is missing. Please try again.");
+      // Refresh data even on validation failure
+      if (onRefreshData) onRefreshData();
+      stopLoop();
+      return;
+    }
+
     setloadingverify(true);
     let message;
     try {
       const tkn_: string = Cookies.get("token") as string;
+      
+      // Validate token exists
+      if (!tkn_) {
+        toast.error("Authentication token is missing. Please log in again.");
+        if (onRefreshData) onRefreshData();
+        stopLoop();
+        return;
+      }
+
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/verify_wallet_payment/${reference}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pay/verify_wallet_payment/${encodeURIComponent(refStr)}/`,
         {
           headers: {
             Authorization: `token ${tkn_}`,
@@ -172,6 +250,12 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       if (response.status === 200 || response.status === 201) {
         setloadingverify(false);
         message = response?.data?.message;
+        
+        // Refresh user data in background before showing success
+        if (onRefreshData) {
+          await onRefreshData();
+        }
+        
         toast.success(`${message}`, {
           closeButton: true,
           onClose: () => {
@@ -181,21 +265,102 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
         stopLoop();
       } else {
         setloadingverify(false);
+        // Refresh data even on unexpected status
+        if (onRefreshData) await onRefreshData();
         toast.error(message || "Unexpected status during verification.");
         stopLoop(); // Stop on unexpected status
       }
     } catch (error) {
       setloadingverify(false);
-      console.error(error);
 
-      // Check if it's a 500 error
-      if (axios.isAxiosError(error) && error.response?.status === 500) {
-        toast.error("Server error occurred. Please try again later.");
-        stopLoop(); // Stop retrying on 500 errors
-        return;
+      // Show more specific error messages
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const responseData = error.response?.data;
+        const serverMessage = extractAxiosErrorMessage(responseData);
+
+        if (status === 400) {
+          // Check if payment was already verified (this is actually a success case!)
+          const messageLower = serverMessage.toLowerCase();
+          const isAlreadyVerified =
+            !!serverMessage &&
+            (messageLower.includes("already verified") ||
+              messageLower.includes("already been verified") ||
+              messageLower.includes("payment already") ||
+              messageLower.includes("already processed") ||
+              (typeof responseData === "object" &&
+                responseData !== null &&
+                (responseData as { status?: string }).status === "failed" &&
+                messageLower.includes("verified")));
+
+          if (isAlreadyVerified) {
+            if (onRefreshData) {
+              await onRefreshData();
+            }
+
+            toast.success(serverMessage || "Payment verified successfully!", {
+              closeButton: true,
+              onClose: () => {
+                window.location.reload();
+              },
+            });
+            stopLoop();
+            return;
+          }
+
+          // Many gateways return 400 while payment is still pending — keep polling
+          if (isLikelyPendingWalletVerification(serverMessage)) {
+            if (process.env.NODE_ENV === "development") {
+              console.debug(
+                "[wallet verify] retryable 400 (pending):",
+                serverMessage || "(empty)"
+              );
+            }
+            return;
+          }
+
+          if (isClearlyInvalidPaymentReference(serverMessage)) {
+            toast.error(
+              serverMessage || "Invalid payment reference. Please contact support."
+            );
+            if (onRefreshData) await onRefreshData();
+            stopLoop();
+            return;
+          }
+
+          // Ambiguous 400: retry without stopping (loop max attempts still applies)
+          if (process.env.NODE_ENV === "development") {
+            console.debug("[wallet verify] ambiguous 400, will retry:", serverMessage);
+          }
+          return;
+        }
+
+        if (status === 401) {
+          toast.error("Your session has expired. Please log in again.");
+          if (onRefreshData) await onRefreshData();
+          stopLoop();
+          return;
+        }
+
+        if (status === 404) {
+          toast.error("Payment record not found.");
+          if (onRefreshData) await onRefreshData();
+          stopLoop();
+          return;
+        }
+
+        if (status && status >= 500) {
+          toast.error(serverMessage || "Server error occurred. Retrying...");
+          // Don't stop loop for 5xx errors, let it retry
+          return;
+        }
+
+        toast.error(serverMessage || `Error ${status}: Payment verification failed.`);
+        if (onRefreshData) await onRefreshData();
+      } else {
+        toast.error("Network error. Please check your connection.");
+        if (onRefreshData) await onRefreshData();
       }
-
-      toast.error(message || "Error occurred during payment verification.");
     }
   };
 
@@ -261,6 +426,8 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
       if (attempts > maxAttempts) {
         clearInterval(intervalId);
         cleanup();
+        // Refresh data even on timeout
+        if (onRefreshData) await onRefreshData();
         toast.error("Payment verification timed out. Please check your wallet balance.");
         return;
       }
@@ -271,21 +438,52 @@ const ConfirmationModal = ({ amount, onClose }: ConfirmationModalProps) => {
           isCompleted = true;
           clearInterval(intervalId);
           cleanup();
-        });
+        }, onRefreshData);
       } catch (error) {
-        // Failure case - don't stop the loop, let it retry
+        // Failure case - handle different error types appropriately
         console.error("Verification attempt failed:", error);
         
-        // Only stop if it's a critical error (like 500 server error)
-        if (axios.isAxiosError(error) && error.response?.status === 500) {
-          isCompleted = true;
-          clearInterval(intervalId);
-          cleanup();
-          toast.error("Server error occurred. Please try again later.");
-          return;
+        if (axios.isAxiosError(error)) {
+          const status = error.response?.status;
+          const responseData = error.response?.data;
+          const serverMessage = responseData?.message || responseData?.error || responseData?.detail;
+          
+          // Check if it's "already verified" - this is actually success!
+          const messageLower = serverMessage?.toLowerCase() || '';
+          const isAlreadyVerified = serverMessage && (
+            messageLower.includes('already verified') ||
+            messageLower.includes('already been verified') ||
+            messageLower.includes('payment already') ||
+            messageLower.includes('already processed') ||
+            (responseData?.status === 'failed' && messageLower.includes('verified'))
+          );
+          
+          if (status === 400 && isAlreadyVerified) {
+            console.log("✅ Payment already verified in loop - treating as success");
+            // Refresh data before stopping
+            if (onRefreshData) await onRefreshData();
+            isCompleted = true;
+            clearInterval(intervalId);
+            cleanup();
+            return;
+          }
+          
+          // Stop retrying on other 4xx client errors (these won't resolve with retries)
+          if (status && status >= 400 && status < 500) {
+            isCompleted = true;
+            clearInterval(intervalId);
+            cleanup();
+            return;
+          }
+          
+          // For 5xx errors, let it retry (server might recover)
+          if (status && status >= 500) {
+            backoffTime = Math.min(backoffTime * 2, 30000);
+            return;
+          }
         }
         
-        // For other errors, continue retrying
+        // For network errors, continue retrying with backoff
         backoffTime = Math.min(backoffTime * 2, 30000);
       }
     }, backoffTime);
@@ -524,7 +722,7 @@ export const WalletBalance = () => {
             alt="receipt"
             width={15}
             height={15}
-            className=" object-cover rounded-lg"
+            className="h-[15px] w-[15px] rounded-lg"
           />
 
           <p
@@ -556,6 +754,7 @@ export const WalletBalance = () => {
           onClose={() => {
             setShowConfirmation(false);
           }}
+          onRefreshData={refetch}
         />
       )}
 

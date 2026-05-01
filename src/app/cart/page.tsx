@@ -10,6 +10,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { Suspense } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { handleNetworkError, apiCallWithRetry } from "@/lib/networkErrorHandler";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import AuthMiddleware from '@/hooks/useAuthCart'
@@ -58,25 +59,38 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-    let config = {
-      method: "GET",
-      maxBodyLength: Infinity,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
-      headers: headers,
+    const fetchData = async () => {
+      return await axios.request({
+        method: "GET",
+        maxBodyLength: Infinity,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/commerce/cart/?session_key=${sessionKey}`,
+        headers: headers,
+        timeout: 10000, // 10 second timeout
+      });
     };
 
-    axios
-      .request(config)
-      .then((response) => {
-        setCartItemsn(response.data?.data[0]?.items);
-        // console.log(response.data?.data[0]?.items, "cart items");
-        //  localStorage.setItem('cnt', JSON.stringify(response.data?.data[0]?.items));
+    try {
+      const response = await apiCallWithRetry(fetchData, {
+        showToast: false, // Silent fail for background cart loading
+        shouldRetry: true,
+        maxRetries: 2,
+        retryDelay: 1000,
+        onError: (error) => {
+          setError("Unable to load cart items. Please check your connection.");
+        },
+      });
 
-      })
-      .catch((error) => {
-        setError("Error loading cart items");
-      })
-      .finally(() => setLoading(false));
+      if (response) {
+        setCartItemsn(response.data?.data[0]?.items || []);
+        setError(""); // Clear error on success
+      } else {
+        setCartItemsn([]);
+      }
+    } catch (error) {
+      setCartItemsn([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -112,48 +126,52 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-    try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/increase_item_quantity/`, {
+    const makeRequest = async () => {
+      return await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/increase_item_quantity/`, {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
       }, {
         headers: headers,
+        timeout: 10000,
+      });
+    };
+
+    try {
+      const response = await apiCallWithRetry(makeRequest, {
+        showToast: false, // We'll handle our own toasts
+        shouldRetry: true,
+        maxRetries: 2,
       });
 
-      // Update local state immediately for better UX
-      setCartItemsn(prevItems => 
-        prevItems.map(item => 
-          item.id === id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
+      if (response) {
+        // Update local state immediately for better UX
+        setCartItemsn(prevItems => 
+          prevItems.map(item => 
+            item.id === id 
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        );
 
-      const successMessage = response.data?.message || "Quantity increased successfully!";
-      toast.success(successMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      });
+        const successMessage = response.data?.message || "Quantity increased successfully!";
+        toast.success(successMessage, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light'
+        });
 
-      triggerCartRefresh(); // Trigger header cart refresh
+        triggerCartRefresh(); // Trigger header cart refresh
+      }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error increasing item quantity.";
-      toast.error(errorMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
+      handleNetworkError(error, {
+        showToast: true,
+        customMessage: error.response?.data?.message || "Error increasing item quantity.",
       });
     } finally {
       setOperationLoading(prev => ({ ...prev, [id]: false }));
@@ -182,48 +200,52 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-    try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/decrease_item_quantity/`, {
+    const makeRequest = async () => {
+      return await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/decrease_item_quantity/`, {
         cart_item_id: id,
         quantity: 1,
         session_key: sessionKey || null,
       }, {
         headers: headers,
+        timeout: 10000,
+      });
+    };
+
+    try {
+      const response = await apiCallWithRetry(makeRequest, {
+        showToast: false,
+        shouldRetry: true,
+        maxRetries: 2,
       });
 
-      // Update local state immediately for better UX
-      setCartItemsn(prevItems => 
-        prevItems.map(item => 
-          item.id === id 
-            ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-            : item
-        )
-      );
+      if (response) {
+        // Update local state immediately for better UX
+        setCartItemsn(prevItems => 
+          prevItems.map(item => 
+            item.id === id 
+              ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+              : item
+          )
+        );
 
-      const successMessage = response.data?.message || "Quantity decreased successfully!";
-      toast.success(successMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      });
+        const successMessage = response.data?.message || "Quantity decreased successfully!";
+        toast.success(successMessage, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light'
+        });
 
-      triggerCartRefresh(); // Trigger header cart refresh
+        triggerCartRefresh(); // Trigger header cart refresh
+      }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error decreasing item quantity.";
-      toast.error(errorMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
+      handleNetworkError(error, {
+        showToast: true,
+        customMessage: error.response?.data?.message || "Error decreasing item quantity.",
       });
     } finally {
       setOperationLoading(prev => ({ ...prev, [id]: false }));
@@ -247,43 +269,47 @@ const Page = () => {
       headers["Authorization"] = `token ${tkn_}`;
     }
 
-    try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/remove_from_cart/`, {
+    const makeRequest = async () => {
+      return await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/commerce/remove_from_cart/`, {
         data: {
           cart_item_id: id,
           session_key: sessionKey || null,
           quantity: quantity
         },
         headers: headers,
+        timeout: 10000,
+      });
+    };
+
+    try {
+      const response = await apiCallWithRetry(makeRequest, {
+        showToast: false,
+        shouldRetry: true,
+        maxRetries: 2,
       });
 
-      // Update local state immediately for better UX
-      setCartItemsn(prevItems => prevItems.filter(item => item.id !== id));
+      if (response) {
+        // Update local state immediately for better UX
+        setCartItemsn(prevItems => prevItems.filter(item => item.id !== id));
 
-      const successMessage = response.data?.message || "Item removed successfully!";
-      toast.success(successMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      });
+        const successMessage = response.data?.message || "Item removed successfully!";
+        toast.success(successMessage, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light'
+        });
 
-      triggerCartRefresh(); // Trigger header cart refresh
+        triggerCartRefresh(); // Trigger header cart refresh
+      }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || error.response?.data?.detail || "Error removing item.";
-      toast.error(errorMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
+      handleNetworkError(error, {
+        showToast: true,
+        customMessage: error.response?.data?.message || error.response?.data?.detail || "Error removing item.",
       });
     } finally {
       setOperationLoading(prev => ({ ...prev, [id]: false }));

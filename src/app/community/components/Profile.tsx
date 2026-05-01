@@ -139,7 +139,8 @@ export const Profile = () => {
                 width={50}
                 height={50}
                 alt={'profile'}
-                className="w-24 h-24 rounded-full object-cover"
+                className="rounded-full object-cover"
+                style={{ width: '96px', height: '96px' }}
                 draggable={false}
                 priority
                 loading="eager"

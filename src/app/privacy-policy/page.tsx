@@ -223,8 +223,7 @@ const PrivacyPage = () => {
             <p className='py-2  font-Poppins text-base text-black'>
               {' '}
               <span className=' underline'> 9.1.</span>
-              It is advisable that you fund your wallet with small a amount u
-              can use to buy ticket to participate in our raffle draw. However
+              It is advisable that you fund your wallet with small amount you can use to buy ticket to participate in our raffle draw. However
               if you fund with big amount, you can use such amount to buy
               tickets or other products on our platform over time as we do not
               do refund on our platform
