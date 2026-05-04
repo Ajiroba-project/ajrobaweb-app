@@ -454,7 +454,7 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
             const data = await response.json();
   
             if (data.status === "success") {
-              setMerchants(data.data);
+              setMerchants(Array.isArray(data.data) ? data.data : []);
             } else {
               toast.error(data.message || "Failed to fetch merchants");
             }
@@ -469,13 +469,6 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
       fetchMerchants();
     }, [isMerchantsModalOpen, userToken]);
   
-    // Filter merchants based on search query
-    const filteredMerchants = merchants.filter((merchant: any) =>
-      merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  
-    // const merchantName = (filteredMerchants[0] as { name: string })?.name || '';
-
     const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string, merchantName: string, merchantCode: string) => {
   
   

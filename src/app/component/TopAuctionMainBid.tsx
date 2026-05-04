@@ -523,9 +523,9 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
   });
 
   const handleBidClick = async (productId: any) => {
-    if (!userToken) {
-      console.error("Token is undefined");
-      toast.error("Please Signin", {
+    const token = Cookies.get("token")?.trim();
+    if (!token) {
+      toast.error("Please sign in to place a bid.", {
         position: "top-right",
         progress: 4,
       });
@@ -537,7 +537,7 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
       const response = await fetch("/api/bidinfo", {
         method: "GET",
         headers: {
-          Authorization: `${userToken}`,
+          Authorization: `${token}`,
           Params: productId,
         },
         cache: "no-cache",
