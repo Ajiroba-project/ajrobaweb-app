@@ -80,7 +80,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const { data: userInfo } = useGetDatanew(url, 'get_user_details', userToken_ || " ");
 
-    console.log(userInfo?.data?.address, 'userInfo')
+    // console.log(userInfo?.data?.address, 'userInfo')
 
   // console.log(userInfo?.data?.address, 'userInfo')
 
