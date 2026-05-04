@@ -8,11 +8,19 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useMutateData } from "@/hooks/useMutateNewData";
-import { useGetOrderWinsData, useGetBanksData } from "@/hooks/useGetData";
+import { useGetOrderWinsData, useGetBanksData, useGetDatanew } from "@/hooks/useGetData";
 import Cookies from "js-cookie";
 import WinningAdviceModal from "../components/WinningAdviceModal";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { escapeHtml } from "@/utils/escapeHtml";
+import {
+    ConfirmMerchantGiftModal,
+    type PendingMerchantSelection,
+} from "@/app/component/ConfirmMerchantGiftModal";
+import {
+    resolveGiftMerchants,
+    giftMerchantEmptyMessage,
+} from "@/utils/merchantAddressFilter";
 
 type AuctionProps = {
     product: any[];
@@ -59,6 +67,8 @@ const AuctionWinCardNewOpen = ({}: AuctionProps) => {
     const [voucherData, setVoucherData] = useState<any>(null);
     const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
     const [isProcessingGiftCard, setIsProcessingGiftCard] = useState(false);
+    const [pendingMerchantConfirm, setPendingMerchantConfirm] =
+        useState<PendingMerchantSelection | null>(null);
     const [isBankTransferModalOpen, setIsBankTransferModalOpen] = useState(false);
     const [banks, setBanks] = useState<Bank[]>([]);
     const [selectedBank, setSelectedBank] = useState("");
@@ -117,6 +127,12 @@ const AuctionWinCardNewOpen = ({}: AuctionProps) => {
     });
 
     const userToken = (Cookies.get("token") as string) || "";
+    const profileUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/user/view_profile/`;
+    const { data: userInfo } = useGetDatanew(
+        profileUrl,
+        "get_user_details",
+        userToken || " ",
+    );
 
     const handleSuccess = (data: any) => {
         reset();
@@ -291,7 +307,7 @@ const AuctionWinCardNewOpen = ({}: AuctionProps) => {
                     });
                     const data = await response.json();
                     if (data.status === "success") {
-                        setMerchants(data.data);
+                        setMerchants(Array.isArray(data.data) ? data.data : []);
                     } else {
                         toast.error(data.message || "Failed to fetch merchants");
                     }
@@ -306,9 +322,10 @@ const AuctionWinCardNewOpen = ({}: AuctionProps) => {
         fetchMerchants();
     }, [isMerchantsModalOpen, userToken]);
 
-    // Filter merchants based on search query
-    const filteredMerchants = merchants.filter((merchant: any) =>
-        merchant.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const { merchants: filteredMerchants, emptyKind } = resolveGiftMerchants(
+        merchants,
+        userInfo?.data?.address,
+        searchQuery,
     );
 
     const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string, merchantName: string) => {
@@ -729,24 +746,29 @@ const AuctionWinCardNewOpen = ({}: AuctionProps) => {
                             <div className="max-h-[40vh] sm:max-h-[300px] overflow-y-auto -mx-4 sm:mx-0">
                                 {filteredMerchants.length === 0 ? (
                                     <div className="text-center py-4 text-gray-500 text-sm">
-                                        No merchants found
+                                        {giftMerchantEmptyMessage(emptyKind)}
                                     </div>
                                 ) : (
-                                    filteredMerchants.map((merchant: any) => (
+                                    filteredMerchants.map((merchant: any, rowIdx: number) => (
                                         <div
-                                            key={merchant.code}
+                                            key={String(merchant?.code ?? `gift-${rowIdx}`)}
                                             className="px-4 py-3 sm:px-3 border-b hover:bg-gray-50 cursor-pointer"
                                             onClick={() => {
-                                                if (selectedTransaction?.id) {
-                                                    const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
-                                                    if (auctionId && typeof auctionId === 'string') {
-                                                        handleProcessGiftCard(auctionId, merchant.code, selectedTransaction?.id || "", merchant.name || "");
-                                                    } else {
-                                                        toast.error("Invalid auction ID");
-                                                    }
-                                                } else {
+                                                if (!selectedTransaction?.id) {
                                                     toast.error("Invalid transaction");
+                                                    return;
                                                 }
+                                                const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
+                                                if (!auctionId || typeof auctionId !== "string") {
+                                                    toast.error("Invalid auction ID");
+                                                    return;
+                                                }
+                                                setPendingMerchantConfirm({
+                                                    auctionId,
+                                                    code: merchant.code,
+                                                    ticketId: selectedTransaction.id,
+                                                    name: merchant.name || "",
+                                                });
                                             }}
                                         >
                                             <p className="font-medium text-sm truncate">{merchant.name}</p>
@@ -771,6 +793,20 @@ const AuctionWinCardNewOpen = ({}: AuctionProps) => {
                     </div>
                 </ModalProfile>
             )}
+
+            <ConfirmMerchantGiftModal
+                isOpen={pendingMerchantConfirm !== null}
+                onClose={() => setPendingMerchantConfirm(null)}
+                merchantName={pendingMerchantConfirm?.name ?? ""}
+                merchantCode={pendingMerchantConfirm?.code ?? ""}
+                isProcessing={isProcessingGiftCard}
+                onConfirm={async () => {
+                    if (!pendingMerchantConfirm) return;
+                    const p = pendingMerchantConfirm;
+                    await handleProcessGiftCard(p.auctionId, p.code, p.ticketId, p.name);
+                    setPendingMerchantConfirm(null);
+                }}
+            />
 
             {isVoucherModalOpen && voucherData && (
                 <ModalProfile

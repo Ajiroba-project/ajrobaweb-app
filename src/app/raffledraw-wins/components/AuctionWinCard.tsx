@@ -13,6 +13,14 @@ import TestWin from "./TestWin";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { escapeHtml } from "@/utils/escapeHtml";
 import deliveryicon from '@/app/asset/deliveryicon.svg'
+import {
+  ConfirmMerchantGiftModal,
+  type PendingMerchantSelection,
+} from "@/app/component/ConfirmMerchantGiftModal";
+import {
+  resolveGiftMerchants,
+  giftMerchantEmptyMessage,
+} from "@/utils/merchantAddressFilter";
 
 type AuctionProps = {
   product: any[];
@@ -72,7 +80,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const { data: userInfo } = useGetDatanew(url, 'get_user_details', userToken_ || " ");
 
-  //  console.log(userInfo?.data, 'userInfo')
+    // console.log(userInfo?.data?.address, 'userInfo')
 
   // console.log(userInfo?.data?.address, 'userInfo')
 
@@ -118,6 +126,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
   const [voucherData, setVoucherData] = useState<any>(null);
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
   const [isProcessingGiftCard, setIsProcessingGiftCard] = useState(false);
+  const [pendingMerchantConfirm, setPendingMerchantConfirm] =
+    useState<PendingMerchantSelection | null>(null);
   const [isGiftCardSuccessModalOpen, setIsGiftCardSuccessModalOpen] = useState(false);
   const [giftCardSuccessMessage, setGiftCardSuccessMessage] = useState("");
   const [giftCardResponseStatus, setGiftCardResponseStatus] = useState<"success" | "error">("success");
@@ -343,7 +353,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
           const data = await response.json();
 
           if (data.status === "success") {
-            setMerchants(data.data);
+            setMerchants(Array.isArray(data.data) ? data.data : []);
           } else {
             toast.error(data.message || "Failed to fetch merchants");
           }
@@ -365,54 +375,11 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
     }
   }, [isWinningAdviseModalOpen]);
 
-  // Helpers to filter merchants by user's address
-  const normalizeTokens = (text: string | undefined | null) => {
-    if (!text) return [] as string[];
-    const tokens = (text.toString().toLowerCase().match(/[a-z]+/g) || [])
-      .filter((t) => t.length >= 3);
-    // De-duplicate tokens
-    return Array.from(new Set(tokens));
-  };
-
-  const userAddressTokens = normalizeTokens(userInfo?.data?.address);
-
-  // console.log(userAddressTokens, "userAddressTokens")
-
-
-  // Score merchants by how closely their stores match the user's address
-  const scoreMerchant = (merchant: any): number => {
-    if (!Array.isArray(merchant?.stores) || merchant.stores.length === 0) return 0;
-    let bestScore = 0;
-    for (const store of merchant.stores) {
-      const text = store?.toString().toLowerCase() || "";
-      let s = 0;
-      for (const tok of userAddressTokens) {
-        if (text.includes(tok)) s += 1;
-      }
-      if (s > bestScore) bestScore = s;
-    }
-    return bestScore;
-  };
-
-  const merchantsWithScores = merchants
-    // Only include merchants that have stores
-    .filter((m: any) => Array.isArray(m?.stores) && m.stores.length > 0)
-    // Keep only merchants that have at least one address token match
-    .map((m: any) => ({ ...m, __score: scoreMerchant(m) }))
-    .filter((m: any) => m.__score > 0)
-    // Sort by closeness to the user's address
-    .sort((a: any, b: any) => b.__score - a.__score);
-
-  // Apply search on name or stores
-  const filteredMerchants = merchantsWithScores.filter((merchant: any) => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    const nameMatch = merchant.name?.toString().toLowerCase().includes(q);
-    const storesMatch = Array.isArray(merchant.stores)
-      ? merchant.stores.some((s: string) => s.toString().toLowerCase().includes(q))
-      : false;
-    return nameMatch || storesMatch;
-  });
+  const { merchants: filteredMerchants, emptyKind } = resolveGiftMerchants(
+    merchants,
+    userInfo?.data?.address,
+    searchQuery,
+  );
 
   const handleProcessGiftCard = async (auctionId: string, productCode: string, ticketNumber: string, merchantName: string) => {
 
@@ -928,24 +895,29 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
               <div className="max-h-[40vh] sm:max-h-[300px] overflow-y-auto -mx-4 sm:mx-0">
                 {filteredMerchants.length === 0 ? (
                   <div className="text-center py-4 text-gray-500 text-sm">
-                    No merchants found
+                    {giftMerchantEmptyMessage(emptyKind)}
                   </div>
                 ) : (
-                  filteredMerchants.map((merchant: any) => (
+                  filteredMerchants.map((merchant: any, rowIdx: number) => (
                     <div
-                      key={merchant.code}
+                      key={String(merchant?.code ?? `gift-${rowIdx}`)}
                       className="px-4 py-3 sm:px-3 border-b hover:bg-gray-50 cursor-pointer"
                       onClick={() => {
-                        if (selectedTransaction?.id) {
-                          const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
-                          if (auctionId && typeof auctionId === 'string') {
-                            handleProcessGiftCard(auctionId, merchant.code, selectedTransaction?.id || "", merchant.name || "");
-                          } else {
-                            toast.error("Invalid auction ID");
-                          }
-                        } else {
+                        if (!selectedTransaction?.id) {
                           toast.error("Invalid transaction");
+                          return;
                         }
+                        const auctionId = selectedTransaction?.auction?.[0]?.auction_id;
+                        if (!auctionId || typeof auctionId !== "string") {
+                          toast.error("Invalid auction ID");
+                          return;
+                        }
+                        setPendingMerchantConfirm({
+                          auctionId,
+                          code: merchant.code,
+                          ticketId: selectedTransaction.id,
+                          name: merchant.name || "",
+                        });
                       }}
                     >
                       <p className="font-medium text-sm truncate">{merchant.name}</p>
@@ -994,6 +966,20 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
           </div>
         </ModalProfile>
       )}
+
+      <ConfirmMerchantGiftModal
+        isOpen={pendingMerchantConfirm !== null}
+        onClose={() => setPendingMerchantConfirm(null)}
+        merchantName={pendingMerchantConfirm?.name ?? ""}
+        merchantCode={pendingMerchantConfirm?.code ?? ""}
+        isProcessing={isProcessingGiftCard}
+        onConfirm={async () => {
+          if (!pendingMerchantConfirm) return;
+          const p = pendingMerchantConfirm;
+          await handleProcessGiftCard(p.auctionId, p.code, p.ticketId, p.name);
+          setPendingMerchantConfirm(null);
+        }}
+      />
 
 
     {/* {  console.log(selectedTransaction?.auction, "selectedTransaction?.auction?.[0]?.auction_id")} */}
