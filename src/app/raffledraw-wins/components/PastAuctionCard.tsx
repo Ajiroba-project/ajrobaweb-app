@@ -662,9 +662,13 @@ export const PastAuctionCard = ({ product }: AuctionProps) => {
         if (data.status === "success") {
           setDeliverySuccessData(data.data);
           setIsAddressModalOpen(false);
-          setIsDeliverySuccessModalOpen(true);
-          // Refresh the auction data in the background
-          window.location.reload();
+          const orderCode = data.data?.auction_number;
+          toast.success(
+            orderCode
+              ? `Order placed. Your order code: ${orderCode}`
+              : "Your delivery redemption was successful.",
+          );
+          router.refresh();
         } else {
           toast.error(data.message || "Failed to process delivery redemption");
         }
