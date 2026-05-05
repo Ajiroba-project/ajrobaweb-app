@@ -581,8 +581,6 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         setDeliverySuccessData(data.data);
         setIsAddressModalOpen(false);
         setIsDeliverySuccessModalOpen(true);
-        // Refresh the auction data in the background
-        window.location.reload();
       } else {
         toast.error(data.message || "Failed to process delivery redemption");
       }
@@ -591,6 +589,11 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
     } finally {
       setIsProcessingDelivery(false);
     }
+  };
+
+  const closeDeliverySuccessModalAndRefresh = () => {
+    setIsDeliverySuccessModalOpen(false);
+    window.location.reload();
   };
 
   return (
@@ -1391,14 +1394,14 @@ const AuctionWinCardClosed = ({ product }: AuctionProps) => {
         <ModalProfile
           icon={""}
           isOpen={isDeliverySuccessModalOpen}
-          onClose={() => setIsDeliverySuccessModalOpen(false)}
+          onClose={closeDeliverySuccessModalAndRefresh}
           title=""
-          handleEvent={() => setIsDeliverySuccessModalOpen(false)}
+          handleEvent={closeDeliverySuccessModalAndRefresh}
         >
           <div className="flex flex-col items-center p-8 relative">
             {/* Close Icon */}
             <button
-              onClick={() => setIsDeliverySuccessModalOpen(false)}
+              onClick={closeDeliverySuccessModalAndRefresh}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <svg
