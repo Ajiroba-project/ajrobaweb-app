@@ -187,29 +187,46 @@ const WrappedPage = () => {
 
         <div className="space-y-0">
           {[
-            { label: "Token", value: transdata?.data?.token || "NA" },
+            { label: "Extras", value: transdata?.data?.token ? `Token: ${transdata?.data?.token}` : "NA" },
             { label: "Payment Method", value: transdata?.data?.payment_method || "NA" },
             { label: "Customer Name", value: transdata?.data?.name || "NA" },
+            {
+              label: "Address",
+              value:
+                transdata?.data?.address ||
+                transdata?.data?.customer_address ||
+                transdata?.data?.location ||
+                "NA",
+            },
             { label: "Phone Number", value: transdata?.data?.phoneNumber || transdata?.data?.number || "NA" },
             { label: "Disco", value: transdata?.data?.biller || "NA" },
             { label: "Meter Number", value: transdata?.data?.meter_number || transdata?.data?.customer_id || "NA" },
             { label: "Units", value: transdata?.data?.units ? `${transdata?.data?.units} Kwh` : "NA" },
             { label: "Token Amount", value: transdata?.data?.amount ? formatCurrency(transdata?.data?.amount) : "NA" },
             { label: "Tax Amount", value: transdata?.data?.tax_amount ? formatCurrency(transdata?.data?.tax_amount) : "N 0.00" },
-            { label: "Total Payable", value: transdata?.data?.total_amount 
-              ? formatCurrency(transdata?.data?.total_amount) 
-              : transdata?.data?.amount 
-                ? formatCurrency(transdata?.data?.amount) 
-                : "NA" },
+            {
+              label: "Total Payable",
+              value: transdata?.data?.total_amount
+                ? formatCurrency(transdata?.data?.total_amount)
+                : transdata?.data?.amount
+                  ? formatCurrency(transdata?.data?.amount)
+                  : "NA",
+            },
             { label: "Transaction ID", value: transdata?.data?.reference || transdata?.data?.id || "NA" },
-            { label: "Date of Transaction", value: transdata?.data?.date_created ? (() => {
-              const date = new Date(transdata?.data?.date_created);
-              const day = date.getDate();
-              const suffix = day % 10 === 1 && day !== 11 ? 'st' : day % 10 === 2 && day !== 12 ? 'nd' : day % 10 === 3 && day !== 13 ? 'rd' : 'th';
-              const formattedDate = `${day}${suffix} ${date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`;
-              const formattedTime = date.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true });
-              return `${formattedDate}. ${formattedTime}`;
-            })() : "NA" },
+            {
+              label: "Date of Transaction",
+              value: transdata?.data?.date_created ? (() => {
+                const date = new Date(transdata?.data?.date_created);
+                const day = date.getDate();
+                const suffix = day % 10 === 1 && day !== 11 ? "st" : day % 10 === 2 && day !== 12 ? "nd" : day % 10 === 3 && day !== 13 ? "rd" : "th";
+                const formattedDate = `${day}${suffix} ${date.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`;
+                const formattedTime = date
+                  .toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true })
+                  .replace(" ", "")
+                  .toUpperCase();
+                return `${formattedDate}. ${formattedTime}`;
+              })() : "NA",
+            },
           ].map((item, index) => (
             <div
               key={index}
