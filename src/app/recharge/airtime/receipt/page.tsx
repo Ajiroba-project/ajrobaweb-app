@@ -179,24 +179,36 @@ const WrappedPage = () => {
 
         <div className="space-y-3 sm:space-y-4">
           {[
-            { label: "Biller", value: transdata?.data?.biller || "NA" },
-            { label: "Customer Id", value: transdata?.data?.customer_id || "NA" },
+            { label: "Payment Method", value: transdata?.data?.payment_method || "NA" },
+            { label: "Customer Name", value: transdata?.data?.name || "NA" },
+            {
+              label: "Address",
+              value:
+                transdata?.data?.address ||
+                transdata?.data?.customer_address ||
+                transdata?.data?.location ||
+                "NA",
+            },
+            {
+              label: "Phone Number",
+              value: transdata?.data?.phoneNumber || transdata?.data?.number || "NA",
+            },
+            { label: "Network Provider", value: transdata?.data?.network || "NA" },
+            { label: "Amount", value: formatCurrency(transdata?.data?.amount) || "NA" },
+            { label: "Transaction I.D", value: transdata?.data?.id || "NA" },
             {
               label: "Date of Transaction",
               value: transdata?.data?.date_created
-                ? new Date(transdata?.data?.date_created).toLocaleString('en-US', {
-                    weekday: 'short', month: 'long', day: 'numeric',
-                    year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true,
+                ? new Date(transdata?.data?.date_created).toLocaleString("en-US", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
                   })
                 : "NA",
             },
-            { label: "Transaction I.D", value: transdata?.data?.id || "NA" },
-            { label: "Customer Name", value: transdata?.data?.name || "NA" },
-            { label: "Beneficiary Number", value: transdata?.data?.number || "NA" },
-            { label: "Package", value: transdata?.data?.package || "NA" },
-            { label: "Payment Method", value: transdata?.data?.payment_method || "NA" },
-            { label: "Phone Number", value: transdata?.data?.phoneNumber || "NA" },
-            { label: "Reference", value: transdata?.data?.reference || "NA" },
           ].map((item, index) => (
             <div
               key={index}
