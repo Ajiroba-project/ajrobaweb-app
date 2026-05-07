@@ -187,7 +187,7 @@ const WrappedPage = () => {
 
         <div className="space-y-0">
           {[
-            { label: "Extras", value: transdata?.data?.token ? `Token: ${transdata?.data?.token}` : "NA" },
+            { label: "Extras", value: transdata?.data?.extras ? `Token: ${transdata?.data?.extras}` : "NA" },
             { label: "Payment Method", value: transdata?.data?.payment_method || "NA" },
             { label: "Customer Name", value: transdata?.data?.name || "NA" },
             {
@@ -199,11 +199,11 @@ const WrappedPage = () => {
                 "NA",
             },
             { label: "Phone Number", value: transdata?.data?.phoneNumber || transdata?.data?.number || "NA" },
-            { label: "Disco", value: transdata?.data?.biller || "NA" },
+            { label: "Disco", value: transdata?.data?.disco || "NA" },
             { label: "Meter Number", value: transdata?.data?.meter_number || transdata?.data?.customer_id || "NA" },
             { label: "Units", value: transdata?.data?.units ? `${transdata?.data?.units} Kwh` : "NA" },
             { label: "Token Amount", value: transdata?.data?.amount ? formatCurrency(transdata?.data?.amount) : "NA" },
-            { label: "Tax Amount", value: transdata?.data?.tax_amount ? formatCurrency(transdata?.data?.tax_amount) : "N 0.00" },
+            { label: "Tax Amount", value: transdata?.data?.tax ? formatCurrency(transdata?.data?.tax) : "N 0.00" },
             {
               label: "Total Payable",
               value: transdata?.data?.total_amount

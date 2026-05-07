@@ -192,7 +192,7 @@ const WrappedPage = () => {
               value: transdata?.data?.phoneNumber || transdata?.data?.number || "NA",
             },
             { label: "Network Provider", value: transdata?.data?.network || "NA" },
-            { label: "Data Bundle", value: transdata?.data?.package || "NA" },
+            { label: "Data Bundle", value: transdata?.data?.data_bundle || "NA" },
             { label: "Amount", value: formatCurrency(transdata?.data?.amount) || "NA" },
             { label: "Transaction I.D", value: transdata?.data?.id || "NA" },
             {
