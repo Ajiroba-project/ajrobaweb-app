@@ -74,16 +74,28 @@ const walletPinSchema = yup.object().shape({
 })
 
 function parseStartsIn(startsIn = '0 Days, 0 Hr: 3 Mins Left') {
-  const daysMatch = startsIn.match(/(\d+)\s*Days/)
-  const hoursMatch = startsIn.match(/(\d+)\s*Hr/)
-  const minutesMatch = startsIn.match(/(\d+)\s*Mins/)
+  // Accept singular/plural variants: Day/Days, Hr/Hrs, Min/Mins.
+  const daysMatch = startsIn.match(/(\d+)\s*Day(?:s)?/i)
+  const hoursMatch = startsIn.match(/(\d+)\s*Hr(?:s)?/i)
+  const minutesMatch = startsIn.match(/(\d+)\s*Min(?:s)?/i)
+  const secondsMatch = startsIn.match(/(\d+)\s*Sec(?:s)?/i)
 
   const daysLeft = daysMatch ? parseInt(daysMatch[1], 10) : 0
   const hoursLeft = hoursMatch ? parseInt(hoursMatch[1], 10) : 0
   const minutesLeft = minutesMatch ? parseInt(minutesMatch[1], 10) : 0
+  const secondsLeft = secondsMatch ? parseInt(secondsMatch[1], 10) : 0
+  const hasExplicitSeconds = !!secondsMatch
+
+  // Backend string usually has no seconds. Add a small buffer so countdown
+  // does not hit 0 up to ~1 minute before backend "starts_in" rolls over.
+  const totalSeconds =
+    daysLeft * 86400 +
+    hoursLeft * 3600 +
+    minutesLeft * 60 +
+    (hasExplicitSeconds ? secondsLeft : (daysLeft || hoursLeft || minutesLeft ? 59 : 0))
 
   return {
-    totalMinutes: daysLeft * 24 * 60 + hoursLeft * 60 + minutesLeft,
+    totalSeconds,
     daysLeft,
     hoursLeft,
     minutesLeft
@@ -99,24 +111,28 @@ const AjirobaLogo = () => (
 )
 
 const CountdownTimer = memo(({ startsIn = '0 Days, 0 Hr: 0 Mins Left' }: { startsIn?: string }) => {
-  const { totalMinutes: initialTotalMinutes } = parseStartsIn(startsIn)
-  const [timeLeft, setTimeLeft] = useState(initialTotalMinutes * 60)
+  const { totalSeconds: initialTotalSeconds } = parseStartsIn(startsIn)
+  const [timeLeft, setTimeLeft] = useState(initialTotalSeconds)
 
   useEffect(() => {
-    if (initialTotalMinutes <= 0) return
+    setTimeLeft(initialTotalSeconds)
+  }, [initialTotalSeconds])
+
+  useEffect(() => {
+    if (initialTotalSeconds <= 0) return
     const timer = setInterval(() => {
       setTimeLeft(prev => Math.max(prev - 1, 0))
     }, 1000)
     return () => clearInterval(timer)
-  }, [initialTotalMinutes])
+  }, [initialTotalSeconds])
 
   const daysLeft = Math.floor(timeLeft / 86400)
   const hoursLeft = Math.floor((timeLeft % 86400) / 3600)
-  const minutesLeft = Math.floor((timeLeft % 3600) / 60)
+  const minutesLeft = Math.ceil((timeLeft % 3600) / 60)
 
   const progress =
-    initialTotalMinutes > 0
-      ? (timeLeft / (initialTotalMinutes * 60)) * 100
+    initialTotalSeconds > 0
+      ? (timeLeft / initialTotalSeconds) * 100
       : 0
 
   return (
