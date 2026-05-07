@@ -71,12 +71,18 @@ export const DataPayment = () => {
   );
 
   const handleOrderbutton = () => {
+    const selectedBundle =
+      (dataDetails?.datadata || "")
+        .split("₦")[0]
+        .replace(/-\s*$/, "")
+        .trim() || "selected bundle";
 
     const payload = {
       amount: Number(dataDetails.dataamount),
       phoneNumber: dataDetails.dataphone,
       network: dataDetails.datanetwork,
       senderName: userInfo?.data?.first_name,
+      dataBundle: selectedBundle,
     };
 
     airtimemutate({
