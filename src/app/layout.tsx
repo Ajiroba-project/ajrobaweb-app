@@ -108,9 +108,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className="light bg-white h-full">
-      <RQProviders>
-        <body className={` ${poppins.className} ${nunitoSans.className} ${inter.className} `} >
+    <html lang="en" className="light bg-white h-full" suppressHydrationWarning>
+      {/* body must be a direct child of html; RQProviders lives inside body to avoid client boundary between html/body */}
+      <body
+        className={` ${poppins.className} ${nunitoSans.className} ${inter.className} `}
+        suppressHydrationWarning
+      >
+        <RQProviders>
           <ToastContainer closeOnClick limit={1} />
           <Providers>
             {children}
@@ -130,8 +134,8 @@ export default function RootLayout({
               `}
             </Script>
           </Providers>
-        </body>
-      </RQProviders>
+        </RQProviders>
+      </body>
     </html>
   );
 }

@@ -156,6 +156,21 @@ const WrappedPage = () => {
   } = useForm({
     mode: "all",
     resolver: yupResolver(schema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      password: "",
+      referral: "",
+      address: "",
+      state: "",
+      lga: "",
+      residential: "",
+      date_of_birth: "",
+      gender: undefined,
+      agree_terms: false,
+    },
   });
 
   const handleSuccess = (data: any) => {
