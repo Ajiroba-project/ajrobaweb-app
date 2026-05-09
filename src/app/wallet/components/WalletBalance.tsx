@@ -687,7 +687,7 @@ export const WalletBalance = () => {
         <div className="flex flex-col">
           <p className="text-sm capitalize leading-snug">ajiroba points</p>
           <p className="text-sm font-semibold slashed-zero">
-            {formatCurrency(userInfo?.data?.my_wallet[0]?.balance || 0)} ({(userInfo?.data?.my_wallet[0]?.point || 0)}) Point{userInfo?.data?.my_wallet[0]?.point > 1 ? 's' : ''}
+            {formatCurrency(userInfo?.data?.my_wallet[0]?.point || 0)} ({(userInfo?.data?.my_wallet[0]?.point || 0)}) Point{userInfo?.data?.my_wallet[0]?.point > 1 ? 's' : ''}
           </p>
         </div>
         <p

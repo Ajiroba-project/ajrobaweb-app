@@ -5,7 +5,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import ModalComponent from "@/app/component/ModalComponent";
 
 type PointsItem = {
-  full_name: string;
+  name?: string;
   point: string | number;
   description: string;
   date_created: string;
@@ -108,7 +108,7 @@ export default function PointsHistoryModal({ isOpen, onClose, userId }: Props) {
     if (!search) return rows;
     const q = search.toLowerCase();
     return rows.filter(r =>
-      r.full_name.toLowerCase().includes(q) ||
+     r.name && r.name.toLowerCase().includes(q) ||
       r.description.toLowerCase().includes(q)
     );
   }, [rows, search]);
@@ -193,9 +193,9 @@ export default function PointsHistoryModal({ isOpen, onClose, userId }: Props) {
               <tr><td colSpan={4} className="px-4 py-10 text-center">No points found</td></tr>
             ) : (
               filteredRows.map((r, i) => (
-                <tr key={`${r.full_name}-${r.date_created}-${i}`} className="border-t">
+                <tr key={`${r.name}-${r.date_created}-${i}`} className="border-t">
                   <td className="px-4 py-5">{(page - 1) * (perPage || rows.length || 10) + i + 1}</td>
-                  <td className="px-4 py-5">{r.full_name}</td>
+                  <td className="px-4 py-5">{r.name}</td>
                   <td className="px-4 py-5 text-center">
                     <div className="flex flex-col items-center">
                       <span>{Number(r.point)}</span>
