@@ -40,7 +40,7 @@ const WrappedPage = () => {
     userToken || " ",
   );
 
-  // console.log(transdata, 'trAS')
+   console.log(transdata, 'trAS')
 
   if (transLoading) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
@@ -166,7 +166,12 @@ const WrappedPage = () => {
     }
   };
 
-  // console.log()
+  const tokenRaw = transdata?.data?.extras;
+  const tokenDigitCount = tokenRaw ? String(tokenRaw).replace(/\D/g, "").length : 0;
+  const rechargeNotice =
+    tokenDigitCount > 0
+      ? `Enter the ${tokenDigitCount}-digit code above to recharge your meter.`
+      : "Enter the token code above to recharge your meter.";
 
   return (
     <section className="min-h-screen bg-gray-50">
@@ -249,6 +254,10 @@ const WrappedPage = () => {
         <p className="text-center text-[11px] sm:text-xs text-[#A09F9F] mt-8 sm:mt-12 font-Poppins leading-relaxed">
           This electronically generated receipt is provided for informational
           purposes only and is not a legally binding document.
+        </p>
+
+        <p className="text-center text-sm font-medium font-Poppins text-[#1B1B1A] mt-6 sm:mt-8 px-2 leading-relaxed">
+          {rechargeNotice}
         </p>
 
         <div className="flex justify-center mt-6">
