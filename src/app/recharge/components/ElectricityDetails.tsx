@@ -135,6 +135,8 @@ export const ElectricityDetails = () => {
 
  const selectedProvider = providersList.find(provider => provider.value === selectedNetwork);
 
+//  console.log(selectedProvider?.value, 'selected providerrrr')
+
  const discoQueryValue = selectedProvider?.meta?.code
     || selectedProvider?.meta?.identifier
     || selectedProvider?.meta?.slug
@@ -142,13 +144,16 @@ export const ElectricityDetails = () => {
     || selectedProvider?.value
     || '';
 
+
+    // console.log(discoQueryValue, 'ddd')
+
   // console.log(extractedContent, 'extractedContent');
 
 
   // console.log(selectedNetwork, 'selectedNetwork')
 
  const dataplanurl = discoQueryValue
-    ? `/api/fetchcable?disco=${discoQueryValue}`
+    ? `/api/fetchcable?disco=${selectedProvider?.value}`
     : "";
 
   const { data: dataPlansData, isLoading: dataPlansLoading } = useGetDatanew(
@@ -176,7 +181,7 @@ export const ElectricityDetails = () => {
 
  const customerdetailsurl =
     debouncedCustomerId && discoQueryValue
-      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${discoQueryValue}`
+      ? `/api/discodetails?customerId=${debouncedCustomerId}&disco=${selectedProvider?.value}`
       : "";
 
   // Call API only when the user stops typing (debounced value changes)

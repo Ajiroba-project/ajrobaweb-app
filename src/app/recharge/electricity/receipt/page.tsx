@@ -40,7 +40,7 @@ const WrappedPage = () => {
     userToken || " ",
   );
 
-   console.log(transdata, 'trAS')
+  //  console.log(transdata, 'trAS')
 
   if (transLoading) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
