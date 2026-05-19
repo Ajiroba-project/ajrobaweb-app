@@ -30,6 +30,8 @@ export async function GET(request) {
             }
         });
 
+     
+
         // Check if the response is OK
         if (!res.ok) {
             const errorData = await res.json();

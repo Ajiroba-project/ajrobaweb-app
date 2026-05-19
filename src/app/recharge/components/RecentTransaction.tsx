@@ -172,7 +172,7 @@ export const RecentTransaction = () => {
       { keywords: ['ikeja'], icon: ikejaicon },
       { keywords: ['benin'], icon: beninicon },
       { keywords: ['enugu'], icon: enuguicon },
-      { keywords: ['ekedc'], icon: ekedcicon },
+      { keywords: ['eko'], icon: ekedcicon },
       { keywords: ['kaduna'], icon: kadunaicon },
       { keywords: ['kano'], icon: kanoicon },
       { keywords: ['aedc'], icon: aedcicon },
