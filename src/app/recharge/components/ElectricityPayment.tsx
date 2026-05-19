@@ -22,17 +22,20 @@ import * as yup from "yup";
 import { formatCurrency } from '@/utils/formatCurrency'
 
 export const ElectricityPayment = () => {
-  const [isHydrated, setIsHydrated] = useState(false);
+  // const [isHydrated, setIsHydrated] = useState(false);
 
-  const { setElectricityStepper, ElectricityDetails, customerElectricityDetails } = ElectricityPurchase((state) => ({
+  const { setElectricityStepper, ElectricityDetails, customerElectricitydetails } = ElectricityPurchase((state) => ({
     setElectricityStepper: state.setElectricityStepper,
-        ElectricityDetails: state.ElectricityDetails,
-        customerElectricityDetails: state.customerElectricityDetails,
-
+    ElectricityDetails: state.ElectricityDetails,
+    customerElectricitydetails: state.customerElectricitydetails,
   }));
 
-
-  // console.log(customerElectricityDetails, 'customerElectricityDetails')
+  const customerName =
+    typeof customerElectricitydetails === "string"
+      ? customerElectricitydetails
+      : customerElectricitydetails?.name ||
+        customerElectricitydetails?.customerName ||
+        "";
 
   const bundleString = ElectricityDetails?.bundle || ""; // Ensure it's a string
 const amountMatch = bundleString.match(/-₦(\d+)/); // Match the number after "-₦"
@@ -399,7 +402,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
             <div>
               <h3 className="text-[#6E6E6E]">Name: </h3>
-              <p className='font-semibold'>{customerElectricityDetails ? customerElectricityDetails : 'NA'}</p>
+              <p className='font-semibold'>{customerName || "NA"}</p>
             </div>
             <div>
               <h3 className="text-[#6E6E6E]">Meter Number: </h3>

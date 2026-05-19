@@ -27,7 +27,7 @@ export async function GET(request) {
         if (token.value) {
             headers['Authorization'] = `token ${token.value}`;
         }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/electric_customer_details?customerId=${customerId}?disco=${disco}&${cacheBuster}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/electric_customer_details?customerId=${customerId}&disco=${disco}&${cacheBuster}`, {
             method: "GET",
             maxBodyLength: Infinity,
             headers: headers,
