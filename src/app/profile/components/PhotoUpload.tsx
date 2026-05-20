@@ -1,12 +1,12 @@
 'use client'
-import React, { useState } from 'react';;
+import React, { useState } from 'react';
 import { CustomModal } from '@/app/component/Modal';
-import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
+import { userProfile, profilePhoto } from '@/store/store';
 import { IoClose } from 'react-icons/io5';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
-// import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
+import verify from '../../asset/verify.svg';
 
 interface FileProps {
   name: string;
@@ -20,11 +20,6 @@ export const PhotoUpload = () => {
     setProfile: state.setProfile,
     profile: state.profile,
   }));
-  const { token } = useAuthStore((state) => ({
-    token: state.token,
-  }));
-
-
   const userToken = Cookies.get('token') as string;
 
   const [files, setFiles] = useState<FileProps[]>([]);
@@ -84,7 +79,7 @@ export const PhotoUpload = () => {
   });
 
   const closeModal = () => {
-    setProfile(false);
+    if (profile) setProfile();
     setFiles([]);
     setUploadSuccess(false);
     setApiError(null);
@@ -118,12 +113,8 @@ export const PhotoUpload = () => {
       const responseData = await response.json();
 
       if (response.ok) {
-        /*     console.log('Response data:', responseData); */
         setUploadSuccess(true);
-        /*      console.log('Image uploaded successfully'); */
-        setProfile(false);
-        // console.log('Image uploaded successfully');
-        setProfileurl(responseData?.profile_image_url)
+        setProfileurl(responseData?.profile_image_url);
       } else {
         // Handle API errors
         const errorMessage = responseData?.message || responseData?.error || `Upload failed with status: ${response.status}`;
@@ -143,62 +134,77 @@ export const PhotoUpload = () => {
 
   return (
     <CustomModal isOpen={profile}>
-      <div className="flex justify-end">
-        <IoClose className="cursor-pointer text-xl" onClick={closeModal} />
-      </div>
-      <label htmlFor="upload" {...getRootProps()}>
-        <input {...getInputProps()} id="upload" />
-        <div className="flex w-full flex-col items-center justify-center align-middle">
-          <p>
-            <span className="brand1">Click to upload</span> or drag and drop
-          </p>
-          <p className="text-sm text-gray-300">PNG, JPG, JPEG (max 1MB, min 1KB)</p>
-        </div>
-        <div className="my-4 flex w-full items-center justify-center gap-3">
-          <hr className="w-full" />
-          <p className="text-gray-300">OR</p>
-          <hr className="w-full" />
-        </div>
-
-        {files.length > 0 && (
-          <div className="mt-4 text-center">
-            <div className="mb-4">
-              <Image 
-                src={files[0].base64} 
-                alt="Preview" 
-                width={192}
-                height={192}
-                className="mx-auto max-h-48 max-w-48 rounded-lg object-cover"
-              />
-            </div>
-            <div className="text-sm text-gray-400">
-              {files[0].name} ({(files[0].size / 1024).toFixed(1)} KB)
-            </div>
+      {uploadSuccess ? (
+        <div className="flex min-h-[280px] flex-col items-center justify-center gap-6 px-4 py-8 text-center">
+          <Image src={verify} width={60} height={60} alt="Success" />
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl font-semibold text-[#353131]">Photo updated</h2>
+            <p className="text-sm leading-6 text-[#353131]">
+              Your profile photo has been uploaded successfully.
+            </p>
           </div>
-        )}
-
-        <div className="my-2 flex w-full flex-col items-center justify-center">
-
-          <button onClick={files.length === 0 ? open : uploadImage} disabled={uploading} type="button" className="rounded-md bg-[#f25e26] px-8 py-4 text-white">
-            {files.length === 0 ? "Browse files" : "Upload"}
+          <button
+            type="button"
+            onClick={closeModal}
+            className="w-full max-w-xs rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white"
+          >
+            Done
           </button>
         </div>
-      </label>
+      ) : (
+        <>
+          <div className="flex justify-end">
+            <IoClose className="cursor-pointer text-xl" onClick={closeModal} />
+          </div>
+          <label htmlFor="upload" {...getRootProps()}>
+            <input {...getInputProps()} id="upload" />
+            <div className="flex w-full flex-col items-center justify-center align-middle">
+              <p>
+                <span className="brand1">Click to upload</span> or drag and drop
+              </p>
+              <p className="text-sm text-gray-300">PNG, JPG, JPEG (max 1MB, min 1KB)</p>
+            </div>
+            <div className="my-4 flex w-full items-center justify-center gap-3">
+              <hr className="w-full" />
+              <p className="text-gray-300">OR</p>
+              <hr className="w-full" />
+            </div>
 
-      {uploading && (
-        <div className="mt-4 text-center">
-          <p>Uploading...</p>
-        </div>
-      )}
-      {uploadSuccess && (
-        <div className="mt-4 text-center">
-          <p className="text-green-600">Image uploaded successfully!</p>
-        </div>
-      )}
-      {apiError && (
-        <div className="mt-4 text-center">
-          <p className="text-red-600 text-sm">{apiError}</p>
-        </div>
+            {files.length > 0 && (
+              <div className="mt-4 text-center">
+                <div className="mb-4">
+                  <Image
+                    src={files[0].base64}
+                    alt="Preview"
+                    width={192}
+                    height={192}
+                    className="mx-auto max-h-48 max-w-48 rounded-lg object-cover"
+                  />
+                </div>
+                <div className="text-sm text-gray-400">
+                  {files[0].name} ({(files[0].size / 1024).toFixed(1)} KB)
+                </div>
+              </div>
+            )}
+
+            <div className="my-2 flex w-full flex-col items-center justify-center">
+              <button
+                onClick={files.length === 0 ? open : uploadImage}
+                disabled={uploading}
+                type="button"
+                className="rounded-md bg-[#f25e26] px-8 py-4 text-white disabled:opacity-60"
+              >
+                {uploading ? 'Uploading...' : files.length === 0 ? 'Browse files' : 'Upload'}
+              </button>
+            </div>
+          </label>
+
+          {apiError && (
+            <div className="mt-4 text-center">
+              <p className="text-sm text-red-600">{apiError}</p>
+            </div>
+          )}
+        </>
       )}
     </CustomModal>
   );

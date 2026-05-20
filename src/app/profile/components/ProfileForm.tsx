@@ -138,13 +138,22 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
   // console.log(userData, 'userdata', Boolean(userData?.gender))
 
 
+  const resolveGenderDefault = (gender: any): any => {
+    if (gender === true || gender === 'true') return 'true';
+    if (gender === false || gender === 'false') return 'false';
+    const normalized = String(gender ?? '').toLowerCase().trim();
+    if (normalized === 'male' || normalized === 'm') return 'true';
+    if (normalized === 'female' || normalized === 'f') return 'false';
+    return '';
+  };
+
   // Prepare default values from userData
   const defaultValues = {
     first_name: userData?.first_name || userData?.firstname || '',
     last_name: userData?.last_name || userData?.lastname || '',
     email: userData?.email || '',
     Phone: userData?.phone || '',
-    gender: userData?.gender !== undefined ? Boolean(userData?.gender) : false,
+    gender: resolveGenderDefault(userData?.gender),
     address: userData?.address || '',
     state: userData?.state || '',
     lga: userData?.lga || '',
@@ -197,6 +206,13 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
         setLgas(selectedStateData.lgas);
       }
     }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData) {
+      reset(defaultValues);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
 
@@ -618,17 +634,19 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ userData }) => {
         </div>
       </form>
 
-      <div className={`${successModal ? 'absolute left-0 top-0' : 'hidden'}`}>
-        <Modal
-          buttoncount={1}
-          title='Profile Updated Successfully'
-          icon={verify}
-          buttontype='button'
-          buttonclass='w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white'
-          buttontext='Proceed to Profile'
-          handleEvent={setSuccessModal}
-        />
-      </div>
+      {successModal && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6'>
+          <Modal
+            buttoncount={1}
+            title='Profile Updated Successfully'
+            icon={verify}
+            buttontype='button'
+            buttonclass='w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white'
+            buttontext='Proceed to Profile'
+            handleEvent={setSuccessModal}
+          />
+        </div>
+      )}
 
       <div className={`${editPassword ? 'absolute left-0 top-0' : 'hidden'}`}>
         <ChangePassword />
