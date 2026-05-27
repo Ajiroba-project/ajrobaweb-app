@@ -93,13 +93,18 @@ export const CablePayment = () => {
 
     const payload = {
       cableTvType: CableDetails.decoder,
-      payerName: userInfo?.data?.first_name,
+      payerName: customerCabledetails,
       amount: Number(amount),
       customerId: CableDetails?.iucnumber,
       package: cablePackageName,
     }
 
     Cookies.set("atdnew", JSON.stringify(payload));
+
+
+    // console.log(customerCabledetails, 'customerCabledetails')
+    // console.log(payload, 'payload')
+    // console.log(CableDetails, 'cableddd')
 
     cablemutate({
       url: "/api/purchasecable",

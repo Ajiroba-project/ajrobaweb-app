@@ -89,7 +89,7 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
     /*   disco: extractedContent, */
     disco: ElectricityDetails?.decoder,
-       payerName: userInfo?.data?.first_name,
+       payerName: customerName,
       amount: Number(ElectricityDetails?.elecamount),
       customerId: ElectricityDetails?.iucnumber,
       meterType: ElectricityDetails?.meter,
@@ -98,13 +98,16 @@ const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
         Cookies.set("atdnew", JSON.stringify(payload));
 
+        // console.log(payload)
+        // console.log(ElectricityDetails, 'eeee')
 
 
-     electricitymutate({
+
+      electricitymutate({
        url: "/api/purchaseelectricity",
-       payload: { payload: payload },
+        payload: { payload: payload },
 
-     });
+      });
   };
 
   const MakePurchase = () => {
