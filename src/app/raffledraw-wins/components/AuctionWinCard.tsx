@@ -110,7 +110,6 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const [success, setSuccess] = useState(false);
   const [successdelete, setSuccessdelete] = useState(false);
-  const [selectedRating, setSelectedRating] = useState(0);
   const [reviewerror, Setreviewerror] = useState("");
   const [reviewerrordelete, Setreviewerrordelete] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -1349,7 +1348,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   className="text-[#F25E26] text-sm font-medium hover:underline ml-4"
                   onClick={() => {
                     setIsAddressModalOpen(false);
-                    setIsChangeAddressModalOpen(true);
+                    // setIsChangeAddressModalOpen(true);
+                    router.push('/profile')
                   }}
                 >
                   Change
