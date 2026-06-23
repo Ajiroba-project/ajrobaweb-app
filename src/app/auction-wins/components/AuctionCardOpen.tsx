@@ -344,7 +344,7 @@ const AuctionWinCardNewOpen = ({ product }: AuctionProps) => {
     // Filter merchants based on search query
     const { merchants: filteredMerchants, emptyKind } = resolveGiftMerchants(
         merchants,
-        userInfo?.data?.address,
+        userInfo?.data,
         searchQuery,
     );
 
