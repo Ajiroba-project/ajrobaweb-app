@@ -646,6 +646,13 @@ export const WalletBalance = () => {
   //   { name: "Alex Jones", points: 50, date: "12 Feb, 2024" },
   // ];
 
+  // console.log(userInfo?.data?.has_transaction_pin
+  //   , 'userin')
+
+  const hasTransactionPin =
+    userInfo?.data?.has_transaction_pin === true ||
+    userInfo?.data?.has_transaction_pin === "true";
+
   return (
     <div className="flex flex-col px-2">
       <div className="flex items-center justify-between">
@@ -675,12 +682,14 @@ export const WalletBalance = () => {
             {showPin ? <FaRegEyeSlash /> : <FaRegEye />}
           </div>
         </div> */}
-        <p
-          className="cursor-pointer justify-end text-end text-sm capitalize underline underline-offset-4 hover:text-[#f25e26]"
-          onClick={() => setCreatePin(!createPin)}
-        >
-          create PIN
-        </p>
+        {!hasTransactionPin && (
+          <p
+            className="cursor-pointer justify-end text-end text-sm capitalize underline underline-offset-4 hover:text-[#f25e26]"
+            onClick={() => setCreatePin(!createPin)}
+          >
+            create PIN
+          </p>
+        )}
       </div>
 
       <div className="flex justify-between py-4">
@@ -759,7 +768,11 @@ export const WalletBalance = () => {
       )}
 
       {createPin && (
-        <CreatePin createPin={createPin} setCreatePin={setCreatePin} />
+        <CreatePin
+          createPin={createPin}
+          setCreatePin={setCreatePin}
+          onPinCreated={refetch}
+        />
       )}
       {changePin && (
         <ChangePin changePin={changePin} setChangePin={setChangePin} />

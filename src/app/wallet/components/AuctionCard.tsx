@@ -336,7 +336,7 @@ const AuctionWinCardClosed = ({}: AuctionProps) => {
 
   const { merchants: filteredMerchants, emptyKind } = resolveGiftMerchants(
     merchants,
-    userInfo?.data?.address,
+    userInfo?.data,
     searchQuery,
   );
 

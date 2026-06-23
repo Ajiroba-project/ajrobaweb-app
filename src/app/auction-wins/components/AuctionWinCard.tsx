@@ -338,7 +338,7 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
 
   const { merchants: filteredMerchants, emptyKind } = resolveGiftMerchants(
     merchants,
-    userInfo?.data?.address,
+    userInfo?.data,
     searchQuery,
   );
 
@@ -1268,7 +1268,8 @@ export const AuctionWinCard = ({ product }: AuctionProps) => {
                   className="text-[#F25E26] text-sm font-medium hover:underline ml-4"
                   onClick={() => {
                     setIsAddressModalOpen(false);
-                    setIsChangeAddressModalOpen(true);
+                    // setIsChangeAddressModalOpen(true);
+                    router.push('/profile')
                   }}
                 >
                   Change

@@ -14,9 +14,9 @@ import { useForm, Controller } from "react-hook-form";
 import { useMutateData } from "@/hooks/useMutateNewData";
 import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/store'
 import Cookies from 'js-cookie';
+import { useQueryClient } from '@tanstack/react-query';
 
 type ProfileFormValues = {
   first_name: string;
@@ -39,6 +39,7 @@ export const ProfileForm: React.FC = () => {
     setEditProfile,
     editPassword,
     setEditPassword,
+    completeProfileUpdate,
   } = userProfile((state) => ({
     successModal: state.successModal,
     setSuccessModal: state.setSuccessModal,
@@ -46,10 +47,10 @@ export const ProfileForm: React.FC = () => {
     setEditProfile: state.setEditProfile,
     editPassword: state.editPassword,
     setEditPassword: state.setEditPassword,
+    completeProfileUpdate: state.completeProfileUpdate,
   }));
 
-
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const ProfileSchema = yup.object().shape({
     first_name: yup.string().required('First Name is required'),
@@ -89,7 +90,10 @@ export const ProfileForm: React.FC = () => {
     /*   console.log(data, 'datttataaa', error) */
 
     if (data.status === 201 || data.status === 200) {
-      setSuccessModal(!successModal)
+      queryClient.invalidateQueries({ queryKey: ['get_user_details'] });
+      if (!successModal) {
+        setSuccessModal();
+      }
       toast.success(`${data?.data?.message}`, {
         position: "top-right",
         autoClose: 2000,
@@ -99,7 +103,6 @@ export const ProfileForm: React.FC = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        onClose: () => router.push('/profile')
       });
       reset();
     } else if (data.status === 400 || data.status === 409) {
@@ -184,6 +187,11 @@ export const ProfileForm: React.FC = () => {
       payload: { payload: restData, token: userToken },
       token: userToken
     });
+  };
+
+  const handleProceedToProfile = () => {
+    completeProfileUpdate();
+    queryClient.invalidateQueries({ queryKey: ['get_user_details'] });
   };
 
 
@@ -411,7 +419,7 @@ export const ProfileForm: React.FC = () => {
           buttontype='button'
           buttonclass='w-full rounded-md bg-[#FCDFD4] p-4 hover:bg-[#F25E26] hover:text-white'
           buttontext='Proceed to Profile'
-          handleEvent={setSuccessModal}
+          handleEvent={handleProceedToProfile}
         />
       </div>
 

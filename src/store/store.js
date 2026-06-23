@@ -154,7 +154,8 @@ export const userProfile = create(set => ({
   setactiveMenu: text => set({ activeMenu: text }),
   setprofileUpload: text => set({ photo: text }),
   setUserDetails: text => set({ userDetails: text }),
-  setSuccessModal: () => set(state => ({ successModal: !state.successModal }))
+  setSuccessModal: () => set(state => ({ successModal: !state.successModal })),
+  completeProfileUpdate: () => set({ successModal: false, editProfile: false }),
 }))
 
 // export const DataPurchase = create(set => ({

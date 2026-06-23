@@ -116,6 +116,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-fade'
+import { IoChevronBack, IoChevronForward } from 'react-icons/io5'
 import { CarouselSkeleton } from './LoadingSkeleton'
 
 const slides = [
@@ -210,9 +211,25 @@ export const Carousel = ({ isLoading = false }: { isLoading?: boolean }) => {
     <div className="relative w-full">
       <CarouselSwiper />
 
-      <div className="swiper-button-next !w-[28px] sm:!w-[35px] rounded-full bg-[#fcdfd4] !p-[8px] sm:!p-[10px] !text-[12px] sm:!text-[15px] !h-auto !text-[#f25e26] after:!text-[12px] sm:after:!text-[15px] md:flex !hidden"></div>
+      <div
+        className="carousel-swiper-nav swiper-button-prev"
+        aria-label="Previous slide"
+        role="button"
+      >
+        <span className="carousel-swiper-nav-inner">
+          <IoChevronBack className="text-white shrink-0" aria-hidden />
+        </span>
+      </div>
 
-      <div className="swiper-button-prev !w-[28px] sm:!w-[35px] rounded-full border-2 border-white bg-transparent !p-[8px] sm:!p-[10px] !text-[12px] sm:!text-[15px] !text-white after:!text-[12px] sm:after:!text-[15px] !h-auto md:flex !hidden"></div>
+      <div
+        className="carousel-swiper-nav swiper-button-next"
+        aria-label="Next slide"
+        role="button"
+      >
+        <span className="carousel-swiper-nav-inner">
+          <IoChevronForward className="text-white shrink-0" aria-hidden />
+        </span>
+      </div>
     </div>
   )
 }

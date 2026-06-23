@@ -18,6 +18,16 @@ export type ResolveGiftMerchantsResult = {
   emptyKind: GiftMerchantEmptyKind | null;
 };
 
+/** Profile fields used to build a comma-separated location string for matching. */
+export type UserLocationInput = {
+  address?: string | null;
+  state?: string | null;
+  lga?: string | null;
+  city?: string | null;
+};
+
+export type UserAddressInput = string | UserLocationInput | null | undefined;
+
 /**
  * Words that appear in almost every formatted Nigerian address line in the
  * merchant API (e.g. "Nigeria", "State", "Road") and must not drive matching
@@ -31,7 +41,6 @@ const ADDRESS_MATCH_STOPWORDS = new Set(
     "state",
     "federal",
     "capital",
-    "fct",
     "territory",
     "the",
     "and",
@@ -96,6 +105,36 @@ const ADDRESS_MATCH_STOPWORDS = new Set(
     "bridge",
   ].map((w) => w.toLowerCase()),
 );
+
+function cleanLocationPart(value: unknown): string {
+  if (value == null) return "";
+  return String(value).trim();
+}
+
+/**
+ * Builds `"street, lga, state"` so the last segment is usually the state for matching.
+ * Accepts a raw string (legacy) or profile fields when `address` omits state/LGA.
+ */
+export function composeUserLocationForMatch(
+  input: UserAddressInput,
+): string {
+  if (input == null) return "";
+  if (typeof input === "string") return input.trim();
+
+  const address = cleanLocationPart(input.address);
+  const state = cleanLocationPart(input.state);
+  const lga = cleanLocationPart(input.lga) || cleanLocationPart(input.city);
+
+  const parts = [address, lga, state].filter((part) => part.length > 0);
+  return parts.join(", ");
+}
+
+/** Normalizes caller input to a single address string for token extraction. */
+export function normalizeUserAddressInput(
+  input: UserAddressInput,
+): string {
+  return composeUserLocationForMatch(input);
+}
 
 /**
  * Pulls letter-only tokens (length ≥ 3), drops generic stopwords, dedupes.
@@ -182,9 +221,13 @@ export function giftMerchantEmptyMessage(kind: GiftMerchantEmptyKind | null): st
 
 /** Whole-word match so "port" does not match "Airport", "off" not "Office". */
 function textContainsTokenAsWord(lowerText: string, token: string): boolean {
-  if (!token) return false;
-  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`\\b${escaped}\\b`, "i").test(lowerText);
+  if (!token || !lowerText) return false;
+  try {
+    const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\b${escaped}\\b`, "i").test(lowerText);
+  } catch {
+    return false;
+  }
 }
 
 function countTokenMatchesOnLine(lowerText: string, userTokens: string[]): number {
@@ -241,11 +284,12 @@ export function sanitizeMerchantsInput(raw: unknown): any[] {
  */
 export function filterMerchantsByUserAddress(
   merchants: any[],
-  userAddress: string | null | undefined,
+  userAddress: UserAddressInput,
 ): any[] {
   const list = Array.isArray(merchants) ? merchants : [];
+  const addressText = normalizeUserAddressInput(userAddress);
   const { primaryTokens, secondaryTokens } =
-    splitPrimarySecondaryTokens(userAddress);
+    splitPrimarySecondaryTokens(addressText);
   if (primaryTokens.length === 0) return [];
 
   const withStores = list.map((m: any) => {
@@ -277,11 +321,12 @@ export function filterMerchantsByUserAddress(
  */
 export function resolveGiftMerchants(
   rawMerchants: unknown,
-  userAddress: string | null | undefined,
-  searchQuery: string,
+  userAddress: UserAddressInput,
+  searchQuery: unknown,
 ): ResolveGiftMerchantsResult {
   const merchants = sanitizeMerchantsInput(rawMerchants);
-  const { primaryTokens } = splitPrimarySecondaryTokens(userAddress);
+  const addressText = normalizeUserAddressInput(userAddress);
+  const { primaryTokens } = splitPrimarySecondaryTokens(addressText);
 
   if (primaryTokens.length === 0) {
     return { merchants: [], emptyKind: "needs_address" };
@@ -291,7 +336,7 @@ export function resolveGiftMerchants(
     return { merchants: [], emptyKind: "empty_catalog" };
   }
 
-  const addressFiltered = filterMerchantsByUserAddress(merchants, userAddress);
+  const addressFiltered = filterMerchantsByUserAddress(merchants, addressText);
   const q =
     typeof searchQuery === "string" ? searchQuery.trim().toLowerCase() : "";
 
@@ -326,8 +371,8 @@ export function resolveGiftMerchants(
 /** @deprecated Prefer resolveGiftMerchants when you need empty-state messaging */
 export function getFilteredGiftMerchants(
   rawMerchants: unknown,
-  userAddress: string | null | undefined,
-  searchQuery: string,
+  userAddress: UserAddressInput,
+  searchQuery: unknown,
 ): any[] {
   return resolveGiftMerchants(rawMerchants, userAddress, searchQuery).merchants;
 }

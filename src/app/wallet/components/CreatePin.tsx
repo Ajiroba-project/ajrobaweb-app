@@ -11,7 +11,15 @@ import { toast } from "react-toastify";
 import * as yup from 'yup'
 import Cookies from 'js-cookie'
 
-export const CreatePin = ({ createPin, setCreatePin }: any) => {
+export const CreatePin = ({
+  createPin,
+  setCreatePin,
+  onPinCreated,
+}: {
+  createPin: boolean;
+  setCreatePin: (value: boolean) => void;
+  onPinCreated?: () => void | Promise<unknown>;
+}) => {
   const { successModal, setSuccessModal } = userProfile((state) => ({
     successModal: state.successModal,
     setSuccessModal: state.setSuccessModal,
@@ -66,7 +74,7 @@ export const CreatePin = ({ createPin, setCreatePin }: any) => {
     if (data.status === 201 || data.status === 200) {
       setSuccessModal(!successModal);
       setCreatePin(false);
-
+      void onPinCreated?.();
       reset();
     } else if (data.status === 400 || data.status === 409) {
       toast.error(`${data?.data?.message || "Password doesnt match"} `, {
