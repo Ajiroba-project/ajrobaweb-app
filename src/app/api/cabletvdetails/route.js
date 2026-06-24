@@ -14,7 +14,7 @@ export async function GET(request) {
         const cableTvType = searchParams.get("cableTvType");
         const customerId = searchParams.get("customerId");
 
-        console.log(cableTvType, customerId)
+        // console.log(cableTvType, customerId)
 
 
         const headers = {
@@ -24,7 +24,7 @@ export async function GET(request) {
         if (token.value) {
             headers['Authorization'] = `token ${token.value}`;
         }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/cable_customer_details?customerId=${customerId}?cableTvType=${cableTvType}&${cacheBuster}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pay/nomba/cable_customer_details/?customerId=${customerId}&cableTvType=${cableTvType}&${cacheBuster}`, {
             method: "GET",
             maxBodyLength: Infinity,
             headers: headers,
@@ -32,6 +32,10 @@ export async function GET(request) {
         });
 
         const data = await res.json();
+
+        // console.log(data, 'daaa')
+
+        
         const status = res.status;
 
         return NextResponse.json({ data, status });
