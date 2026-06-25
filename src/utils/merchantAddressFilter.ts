@@ -1,9 +1,13 @@
 /**
- * Gift-merchant list: **Primary** = last comma-separated segment (usually state), so
- * `"…, AREPO, Ogun"` matches any store line containing **Ogun**; area & street tokens
- * live in **secondary** and boost ranking when present. If the last segment is only
- * stopwords (e.g. “Nigeria”), primary is taken from the last two segments. Single-part
- * addresses require every token on the line. Numbers are ignored.
+ * Gift-merchant matching: a store line matches if it contains **any one** of the
+ * user's geographic **anchors** — their state, LGA, or city. Street/area tokens are
+ * **support** only and boost ranking when present but are never required. This keeps
+ * matching resilient: catalogs that list only the city (no state) still match, and a
+ * user is never shown an empty list just because the store line omits their state.
+ * Anchors are matched whole-word ("port" ≠ "Airport"); FCT/Abuja are treated as
+ * aliases; numbers and generic stopwords are ignored.
+ *
+ * Legacy raw-string input falls back to the older primary(last-segment)/secondary split.
  */
 
 export type GiftMerchantEmptyKind =
@@ -108,7 +112,32 @@ const ADDRESS_MATCH_STOPWORDS = new Set(
 
 function cleanLocationPart(value: unknown): string {
   if (value == null) return "";
-  return String(value).trim();
+  // Only accept primitives. Objects/arrays would stringify to "[object Object]"
+  // and poison matching if the API ever returns state/lga as nested objects.
+  if (typeof value === "string") return value.trim();
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value).trim();
+  }
+  return "";
+}
+
+/**
+ * Place names that are written differently in user profiles vs. merchant catalogs.
+ * A user whose state is "FCT" must still match Abuja store lines, and vice versa.
+ */
+const LOCATION_ALIASES: Record<string, string[]> = {
+  fct: ["abuja"],
+  abuja: ["fct"],
+};
+
+/** Adds known alias tokens (e.g. fct→abuja) so spelling differences don't drop matches. */
+function expandLocationAliases(tokens: string[]): string[] {
+  const out = new Set(tokens);
+  for (const t of tokens) {
+    const aliases = LOCATION_ALIASES[t];
+    if (aliases) for (const a of aliases) out.add(a);
+  }
+  return Array.from(out);
 }
 
 /**
@@ -203,6 +232,73 @@ export function splitPrimarySecondaryTokens(
   return { primaryTokens, secondaryTokens };
 }
 
+export type MatchTokens = {
+  /**
+   * Anchors taken from the user's typed **address**: the last meaningful segment
+   * (e.g. "43, akewukewe street, surulere" → "surulere"). A store matches if it
+   * contains any of these.
+   */
+  specificTokens: string[];
+  /**
+   * Broad fallback (state, then LGA/city). Used ONLY when the address matches no store,
+   * so an address whose area isn't in the catalog (e.g. "…, Arepo") still resolves to
+   * the user's state instead of showing nothing. Never widens results when the address
+   * already matched.
+   */
+  broadTokens: string[];
+  /** Earlier address tokens (street/area) — never required; used only to rank matches. */
+  supportTokens: string[];
+};
+
+/**
+ * Builds match tokens primarily from the user's **typed address**. The structured
+ * state/LGA fields are kept as a broad fallback only — applied when the address matches
+ * no store — so matching stays address-driven without leaving the user empty when their
+ * area name isn't present in the merchant catalog.
+ */
+export function buildMatchTokens(input: UserAddressInput): MatchTokens {
+  let addressText =
+    input == null
+      ? ""
+      : typeof input === "string"
+        ? input
+        : cleanLocationPart(input.address);
+
+  // Address field blank → fall back to whatever location the profile does have.
+  if (addressText === "" && input != null && typeof input !== "string") {
+    addressText = composeUserLocationForMatch({
+      state: input.state,
+      lga: input.lga,
+      city: input.city,
+    });
+  }
+
+  const { primaryTokens, secondaryTokens } =
+    splitPrimarySecondaryTokens(addressText);
+
+  // Broad fallback = state (then LGA/city) from a structured profile, if available.
+  const broadTokens =
+    input != null && typeof input !== "string"
+      ? expandLocationAliases(
+          normalizeAddressTokens(
+            [
+              cleanLocationPart(input.state),
+              cleanLocationPart(input.lga),
+              cleanLocationPart(input.city),
+            ]
+              .filter((p) => p.length > 0)
+              .join(", "),
+          ),
+        )
+      : [];
+
+  return {
+    specificTokens: expandLocationAliases(primaryTokens),
+    broadTokens,
+    supportTokens: secondaryTokens,
+  };
+}
+
 /** Safe display when the merchant list is empty */
 export function giftMerchantEmptyMessage(kind: GiftMerchantEmptyKind | null): string {
   switch (kind) {
@@ -238,27 +334,27 @@ function countTokenMatchesOnLine(lowerText: string, userTokens: string[]): numbe
   return n;
 }
 
-/** Every primary token must appear; secondary is not required (catalog omits streets). */
+/** Matches if the store line contains AT LEAST ONE anchor (state/LGA/city). */
 function storeMatchesAddressTokens(
   storeLine: string,
-  primaryTokens: string[],
-  _secondaryTokens: string[],
+  anchorTokens: string[],
 ): boolean {
-  if (primaryTokens.length === 0) return false;
+  if (anchorTokens.length === 0) return false;
   const text = storeLine?.toString().toLowerCase() || "";
-  return countTokenMatchesOnLine(text, primaryTokens) === primaryTokens.length;
+  return countTokenMatchesOnLine(text, anchorTokens) > 0;
 }
 
 function scoreMatchedStores(
   stores: string[],
-  primaryTokens: string[],
-  secondaryTokens: string[],
+  anchorTokens: string[],
+  supportTokens: string[],
 ): number {
   let best = 0;
   for (const store of stores) {
     const text = store?.toString().toLowerCase() || "";
-    let s = countTokenMatchesOnLine(text, primaryTokens);
-    s += countTokenMatchesOnLine(text, secondaryTokens);
+    // Weight anchors above support so the most location-specific stores rank first.
+    let s = countTokenMatchesOnLine(text, anchorTokens) * 2;
+    s += countTokenMatchesOnLine(text, supportTokens);
     if (s > best) best = s;
   }
   return best;
@@ -287,32 +383,35 @@ export function filterMerchantsByUserAddress(
   userAddress: UserAddressInput,
 ): any[] {
   const list = Array.isArray(merchants) ? merchants : [];
-  const addressText = normalizeUserAddressInput(userAddress);
-  const { primaryTokens, secondaryTokens } =
-    splitPrimarySecondaryTokens(addressText);
-  if (primaryTokens.length === 0) return [];
+  const { specificTokens, broadTokens, supportTokens } =
+    buildMatchTokens(userAddress);
+  if (specificTokens.length === 0 && broadTokens.length === 0) return [];
 
-  const withStores = list.map((m: any) => {
-    const raw = Array.isArray(m?.stores) ? m.stores : [];
-    const matchedStores = raw.filter((s: string) =>
-      storeMatchesAddressTokens(
-        s?.toString() ?? "",
-        primaryTokens,
-        secondaryTokens,
-      ),
-    );
-    const __score = scoreMatchedStores(
-      matchedStores,
-      primaryTokens,
-      secondaryTokens,
-    );
-    return { ...m, stores: matchedStores, __score };
-  });
+  const filterWith = (anchorTokens: string[]): any[] => {
+    if (anchorTokens.length === 0) return [];
+    const withStores = list.map((m: any) => {
+      const raw = Array.isArray(m?.stores) ? m.stores : [];
+      const matchedStores = raw.filter((s: string) =>
+        storeMatchesAddressTokens(s?.toString() ?? "", anchorTokens),
+      );
+      const __score = scoreMatchedStores(
+        matchedStores,
+        anchorTokens,
+        supportTokens,
+      );
+      return { ...m, stores: matchedStores, __score };
+    });
+    return withStores
+      .filter((m: any) => m.stores.length > 0 && m.__score > 0)
+      .sort((a: any, b: any) => b.__score - a.__score)
+      .map(({ __score, ...rest }: any) => rest);
+  };
 
-  return withStores
-    .filter((m: any) => m.stores.length > 0 && m.__score > 0)
-    .sort((a: any, b: any) => b.__score - a.__score)
-    .map(({ __score, ...rest }: any) => rest);
+  // Most-specific first (LGA/area). Only widen to the state if nothing matched,
+  // so the user sees stores near them rather than the whole state by default.
+  const specific = filterWith(specificTokens);
+  if (specific.length > 0) return specific;
+  return filterWith(broadTokens);
 }
 
 /**
@@ -325,10 +424,9 @@ export function resolveGiftMerchants(
   searchQuery: unknown,
 ): ResolveGiftMerchantsResult {
   const merchants = sanitizeMerchantsInput(rawMerchants);
-  const addressText = normalizeUserAddressInput(userAddress);
-  const { primaryTokens } = splitPrimarySecondaryTokens(addressText);
+  const { specificTokens, broadTokens } = buildMatchTokens(userAddress);
 
-  if (primaryTokens.length === 0) {
+  if (specificTokens.length === 0 && broadTokens.length === 0) {
     return { merchants: [], emptyKind: "needs_address" };
   }
 
@@ -336,7 +434,7 @@ export function resolveGiftMerchants(
     return { merchants: [], emptyKind: "empty_catalog" };
   }
 
-  const addressFiltered = filterMerchantsByUserAddress(merchants, addressText);
+  const addressFiltered = filterMerchantsByUserAddress(merchants, userAddress);
   const q =
     typeof searchQuery === "string" ? searchQuery.trim().toLowerCase() : "";
 
