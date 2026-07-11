@@ -41,7 +41,13 @@ const nextConfig = {
                 hostname: 'ajiroba.ng',
                 port: '',
                 pathname: '/**',
-            }
+            },
+            {
+                protocol: 'https',
+                hostname: 'ajiroba-prod-bucket.fra1.digitaloceanspaces.com',
+                port: '',
+                pathname: '/**',
+            },
         ],
     },
 
