@@ -38,7 +38,7 @@ export const RelatedProductsAuction = ({ cardInfo }) => {
                     <div onClick={() => router.push(`/raffledraw/productdetails/${value.id}`)} className='w-full cursor-pointer border border-gray-200 shadow-sm rounded-lg overflow-hidden hover:shadow-md transition-shadow' key={index}>
                         <div className='py-4 h-48 flex items-center justify-center bg-gray-50'>
                             <Image
-                                src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
+                                src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`}
                                 alt="product"
                                 className="object-contain max-h-full"
                                 width={120}

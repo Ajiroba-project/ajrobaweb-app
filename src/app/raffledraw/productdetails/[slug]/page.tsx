@@ -896,8 +896,8 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                   <Image
                     src={
                       productdatanew?.data?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdatanew.data.images[0].image}`
-                        : `https://staging.ajiroba.ng/media/${productdatanew?.data?.images?.[1]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[0].image}`
+                        : `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data?.images?.[1]?.image}`
                     }
                     alt='Product Image'
                     width={400}
@@ -911,8 +911,8 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                   <Image
                     src={
                       productdatanew?.data?.images?.[1]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdatanew.data.images[1].image}`
-                        : `https://staging.ajiroba.ng/media/${productdatanew?.data?.images?.[0]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[1].image}`
+                        : `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data?.images?.[0]?.image}`
                     }
                     alt='Product Image'
                     width={400}

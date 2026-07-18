@@ -261,7 +261,7 @@ const WrappedPage = () => {
                     <Image
                       width={100}
                       height={100}
-                      src={`https://staging.ajiroba.ng/media/${item.product?.images[0]?.image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.product?.images[0]?.image}`}
                       alt="product_image"
                       className="object-contain"
                     />

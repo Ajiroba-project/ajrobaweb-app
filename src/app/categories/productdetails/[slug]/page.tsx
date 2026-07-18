@@ -589,7 +589,7 @@ const Page = ({ params }: any) => {
                     >
                       <Image
                         className=" images-map w-32 h-32 object-cover rounded-lg"
-                        src={`https://staging.ajiroba.ng/media/${image.image}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${image.image}`}
                         alt="Product Thumbnail"
                         width={100}
                         height={100}
@@ -604,7 +604,7 @@ const Page = ({ params }: any) => {
                   <div className="main-image ">
                     {productdata?.data?.images?.[selectedImageIndex] ? (
                       <Image
-                        src={`https://staging.ajiroba.ng/media/${productdata.data.images[selectedImageIndex].image}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdata.data.images[selectedImageIndex].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -612,7 +612,7 @@ const Page = ({ params }: any) => {
                       />
                     ) : productdata?.data?.images?.[0] ? (
                       <Image
-                        src={`https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdata.data.images[0].image}`}
                         alt="Product Image"
                         width={400}
                         height={400}
@@ -772,7 +772,7 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdata.data.images[0].image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdata.data.images[0].image}`
                         : ""
                     }
                     alt="Product Image"
@@ -785,9 +785,9 @@ const Page = ({ params }: any) => {
                   <Image
                     src={
                       productdata?.data?.images?.[1]?.image
-                        ? `https://staging.ajiroba.ng/media/${productdata?.data?.images[1].image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdata?.data?.images[1].image}`
                         : productdata?.data?.images?.[0]?.image
-                          ? `https://staging.ajiroba.ng/media/${productdata?.data?.images[0].image}`
+                          ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdata?.data?.images[0].image}`
                           : ""
                     }
                     alt="Product Image"

@@ -352,7 +352,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
               {item?.images?.[0]?.image && (
                 <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
                   <Image
-                    src={`https://staging.ajiroba.ng/media/${item.images[0].image}`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.images[0].image}`}
                     alt="Bracelet"
                     width={100}
                     height={100}
@@ -410,7 +410,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
                   {item?.images?.[0]?.image && (
                     <Image
-                      src={`https://staging.ajiroba.ng/media/${item.images[0].image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.images[0].image}`}
                       alt="Profile"
                       width={40}
                       height={40}
@@ -556,7 +556,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 {item?.post?.images?.[0]?.image && (
                   <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
                     <Image
-                      src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.post.images[0].image}`}
                       alt="Bracelet"
                       width={100}
                       height={100}
@@ -619,7 +619,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
                     {item?.post?.images?.[0]?.image && (
                       <Image
-                        src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.post.images[0].image}`}
                         alt="Profile"
                         width={40}
                         height={40}
@@ -764,7 +764,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
               {item?.post?.images?.[0]?.image && (
                 <div className="w-full flex justify-center py-12 rounded-sm bg-[#F6F6F6]">
                   <Image
-                    src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.post.images[0].image}`}
                     alt="Bracelet"
                     width={100}
                     height={100}
@@ -808,7 +808,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 <div className="flex items-center gap-2 mt-4 bg-gray-100 p-1 rounded-lg">
                   {item?.post?.images?.[0]?.image && (
                     <Image
-                      src={`https://staging.ajiroba.ng/media/${item.post.images[0].image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item.post.images[0].image}`}
                       alt="Profile"
                       width={40}
                       height={40}

@@ -365,7 +365,7 @@ const Page = () => {
                           <div className="col-span-1">
                             <Image
                               className="w-16 h-16 sm:w-[100px] sm:h-[100px] object-cover rounded"
-                              src={`https://staging.ajiroba.ng/media/${item?.product?.images[0]?.image}`}
+                              src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.product?.images[0]?.image}`}
                               alt="Product Thumbnail"
                               height={100}
                               width={100}

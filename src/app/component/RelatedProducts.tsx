@@ -49,7 +49,7 @@ export const RelatedProducts = ({ cardInfo }: cardDetails) => {
                     <div onClick={() => router.push(`/categories/productdetails/${value.id}`)} className='w-full rounded-lg bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden' key={index}>
                         <div className='py-4 h-48 flex items-center justify-center bg-gray-50'>
                             <Image
-                                src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
+                                src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`}
                                 alt="product"
                                 className="object-contain max-h-full max-w-full"
                                 width={100}

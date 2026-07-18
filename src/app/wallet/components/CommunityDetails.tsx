@@ -354,7 +354,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 <Image
                   src={
                     item?.images?.[0]?.image
-                      ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
+                      ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.images?.[0]?.image}`
                       : ""
                   }
                   alt="Bracelet"
@@ -414,7 +414,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   <Image
                     src={
                       item?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${item?.images?.[0]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.images?.[0]?.image}`
                         : ""
                     }
                     alt="Profile"
@@ -564,7 +564,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   <Image
                     src={
                       item?.post?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.post?.images?.[0]?.image}`
                         : ""
                     }
                     alt="Bracelet"
@@ -629,7 +629,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                     <Image
                       src={
                         item?.post?.images?.[0]?.image
-                          ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                          ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.post?.images?.[0]?.image}`
                           : ""
                       }
                       alt="Profile"
@@ -778,7 +778,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                 <Image
                   src={
                     item?.post?.images?.[0]?.image
-                      ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                      ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.post?.images?.[0]?.image}`
                       : ""
                   }
                   alt="Bracelet"
@@ -824,7 +824,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
                   <Image
                     src={
                       item?.post?.images?.[0]?.image
-                        ? `https://staging.ajiroba.ng/media/${item?.post?.images?.[0]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.post?.images?.[0]?.image}`
                         : ""
                     }
                     alt="Profile"

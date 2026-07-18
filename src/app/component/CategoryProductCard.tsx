@@ -62,7 +62,7 @@ export const CategoryProductCard = ({ cardInfo }: cardDetails) => {
             <div className="py-2">
               <div className="flex items-center justify-center">
                 <Image
-                  src={`https://staging.ajiroba.ng/media/${value?.image}`}
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image}`}
                   alt="product"
                   width={100}
                   height={100}

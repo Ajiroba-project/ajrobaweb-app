@@ -327,7 +327,7 @@ export const ProductCard = ({ cardInfo, isLoading = false }: any) => {
               <div className='z-auto flex items-center justify-center h-full'>
                 <div className='relative w-full h-full flex items-center justify-center'>
                   <Image 
-                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -642,7 +642,7 @@ export const TopDealsCard = ({ cardInfo }: any) => {
               <div className='z-auto flex items-center justify-center h-full'>
                 <div className='relative w-full h-full flex items-center justify-center'>
                   <Image 
-                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -952,7 +952,7 @@ export const TopWeakCard = ({ cardInfo }: any) => {
               <div className='z-auto flex items-center justify-center h-full'>
                 <div className='relative w-full h-full flex items-center justify-center'>
                   <Image 
-                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -1053,10 +1053,10 @@ export const CategoryCard = () => {
           >
             <div className='rounded-t-2xl bg-[#F6F6F6]'>
               <div className='relative w-full md:h-80 lg:h-64 h-48 '>
-                {/* {value?.image[0]?.image && console.log(`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`, 'value?.image')} */}
+                {/* {value?.image[0]?.image && console.log(`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image[0]?.image}`, 'value?.image')} */}
                 {value?.image[0]?.image &&
                   <Image
-                    src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image[0]?.image}`}
                     alt="product"
                     fill
                     className="fixed-size-image object-cover"
@@ -1186,7 +1186,7 @@ export const AuctionCard = ({ cardInfo }: cardDetails) => {
               <div className='flex items-center justify-center mb-4 h-48'>
                 <div className='relative w-full h-full flex items-center justify-center'>
                   <Image 
-                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -1337,7 +1337,7 @@ export const AuctionCardMain = ({ cardInfo }: cardDetails) => {
               <div className='flex items-center justify-center mb-4 h-48'>
                 <div className='relative w-full h-full flex items-center justify-center'>
                   <Image 
-                    src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`} 
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`} 
                     alt='product' 
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -1439,7 +1439,7 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
           >
 
             {/*  {
-              console.log(`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`)
+              console.log(`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image[0]?.image}`)
             } */}
 
             <div className='relative flex items-center justify-center h-[300px] w-[300px]'>
@@ -1448,7 +1448,7 @@ export const CategoryFeatureCard = ({ cardInfo }: CardDetails) => {
               <div
                 className='absolute inset-0 bg-cover bg-center'
                 style={{
-                  backgroundImage: `url(https://staging.ajiroba.ng/media/${value?.image[0]?.image})`,
+                  backgroundImage: `url(${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image[0]?.image})`,
                 }}
               ></div>
 
@@ -1505,7 +1505,7 @@ export const CatFeatCard: React.FC<CardDetails & { isLoading?: boolean }> = ({ c
             <div className="w-full h-60 overflow-hidden relative rounded-lg">
               {/* Background image */}
               <Image width={50} height={50}
-                src={`https://staging.ajiroba.ng/media/${value?.image[0]?.image}`}
+                src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image[0]?.image}`}
                 alt={value.name}
                 className="object-cover w-full h-full rounded-lg"
               />
@@ -1816,7 +1816,7 @@ export const ProductCardMain = ({ cardInfo, isLoading = false }: any) => {
                     >
                       <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent w-full h-full relative">
                         <Image
-                          src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           alt="image"
@@ -2165,7 +2165,7 @@ export const ProductCategoryCard = ({ cardInfo }: any) => {
                     >
                       <div className="cursor-pointer filter brightness-95 opacity-80 bg-[#FCFCFC] hover:bg-transparent w-full h-full relative">
                         <Image
-                          src={`https://staging.ajiroba.ng/media/${value?.image}`}
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.image}`}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           alt="image"
@@ -2316,7 +2316,7 @@ export const CategoryCardMain = ({ cardInfo }: any) => {
                       <Image
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        src={`https://staging.ajiroba.ng/media/${value?.images
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images
                           ? value?.images[0]?.image
                           : value?.image[0]?.image
                           }`}

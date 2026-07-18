@@ -2,13 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import photo from '../../asset/image/photo.png';
-import { ProfileContent } from './ProfileContent';
 import { IoIosCamera } from 'react-icons/io';
 import { userProfile, useAuthStore, profilePhoto } from '@/store/store';
 import { LuMenu } from 'react-icons/lu';
 import { useGetDatanew } from '@/hooks/useGetData';
 import Cookies from 'js-cookie';
-import { WalletDetails } from './WalletDetails';
 import MainLayout from './CommunityDetails';
 import { useRouter, usePathname } from 'next/navigation';
 

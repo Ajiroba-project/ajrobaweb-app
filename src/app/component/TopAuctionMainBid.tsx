@@ -759,8 +759,9 @@ export const TopAuctionMainBid = ({ cardInfo, currentPage, cardsNum, onLoadingCh
                       }
                     >
                       <div className="bg-transparent p-0 w-full h-full relative">
+
                         <Image
-                          src={`https://staging.ajiroba.ng/media/${value?.images[0]?.image}`}
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${value?.images[0]?.image}`}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           alt="human hair"
