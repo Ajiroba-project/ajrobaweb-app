@@ -721,7 +721,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                 <div className='w-full overflow-hidden rounded-lg'>
                   {productdatanew?.data?.images?.[selectedImageIndex] ? (
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[selectedImageIndex].image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${productdatanew.data.images[selectedImageIndex].image}`}
                       alt='Product Image'
                       width={600}
                       height={600}
@@ -732,7 +732,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                     />
                   ) : productdatanew?.data?.images?.[0] ? (
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[0].image}`}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${productdatanew.data.images[0].image}`}
                       alt='Product Image'
                       width={600}
                       height={600}
@@ -760,7 +760,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                       >
                         <Image
                           className='h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20 md:h-24 md:w-24'
-                          src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${image.image}`}
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${image.image}`}
                           alt='Product Thumbnail'
                           width={96}
                           height={96}
@@ -896,8 +896,8 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                   <Image
                     src={
                       productdatanew?.data?.images?.[0]?.image
-                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[0].image}`
-                        : `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data?.images?.[1]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${productdatanew.data.images[0].image}`
+                        : `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${productdatanew?.data?.images?.[1]?.image}`
                     }
                     alt='Product Image'
                     width={400}
@@ -911,8 +911,8 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
                   <Image
                     src={
                       productdatanew?.data?.images?.[1]?.image
-                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew.data.images[1].image}`
-                        : `${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${productdatanew?.data?.images?.[0]?.image}`
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${productdatanew.data.images[1].image}`
+                        : `${process.env.NEXT_PUBLIC_BASE_URL_IMG}${productdatanew?.data?.images?.[0]?.image}`
                     }
                     alt='Product Image'
                     width={400}
