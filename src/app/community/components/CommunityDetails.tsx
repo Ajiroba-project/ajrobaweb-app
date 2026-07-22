@@ -404,7 +404,7 @@ const ContentPost = ({ activeTab }: { activeTab: string }) => {
               <div className="flex justify-center">
                 <div className="flex w-full max-w-md items-center justify-center rounded-lg bg-gray-100 p-4 sm:p-8">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}/media/${item?.images?.[0]?.image}`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${item?.images?.[0]?.image}`}
                     alt="Post image"
                     width={300}
                     height={300}

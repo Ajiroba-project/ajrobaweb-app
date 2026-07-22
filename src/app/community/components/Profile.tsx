@@ -66,7 +66,7 @@ export const Profile = () => {
 
   useEffect(() => {
     if (isLoggedIn && userInfo?.profile_image_url) {
-      setProfileurl(userInfo.profile_image_url);
+      setProfileurl(`${process.env.NEXT_PUBLIC_BASE_URL_IMG}${userInfo.profile_image_url}`);
     }
   }, [isLoggedIn, userInfo, setProfileurl]);
 
