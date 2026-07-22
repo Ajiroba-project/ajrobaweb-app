@@ -130,7 +130,7 @@ export const CableDetails = () => {
         `${subScriptionType.subScriptionType} ₦${subScriptionType.amount}`,
     ).filter((plan: string) => plan && plan.trim() !== '') || [];
 
-  const network = ["GOTV", "DSTV", "SHOWMAX", "STARTIME", "CONSAT TV"];
+  const network = ["GOTV", "DSTV", "SHOWMAX"];
 
 
   // Debounce the customerId to delay API call
